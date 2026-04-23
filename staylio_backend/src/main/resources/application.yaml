@@ -1,0 +1,54 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+spring:
+  application:
+    name: staylio_backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/staylio_db?createDatabaseIfNotExist=true
+    username: root
+    password: 123456
+  jooq:
+    sql-dialect: org.hibernate.dialect.MySQL8Dialect
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: huyhoangcs2611@gmail.com
+    password: ywfa ovly irbf gzcp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  app:
+    server-url: http://localhost:8080
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+cloudinary:
+  cloud_name: dtc7mun2h
+  api_key: 367326886449662
+  api_secret: drFhZL10Jmgt1ACgD6qnFvSLRYw
+
+jwt:
+  secret:
+    key: Ascmkkqdnmsdfrtgsyuhidj21ue120938219321ndsad
+  expired:
+    token: 3600000
+    access: 1800000        # 1 giờ = 60 * 60 * 1000
+    refresh: 608000000
