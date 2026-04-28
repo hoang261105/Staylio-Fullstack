@@ -33,9 +33,6 @@ public class User extends AuditableObject {
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;
 
-    @Column(name = "provider_id")
-    private String providerId;
-
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
