@@ -5,7 +5,7 @@ import com.example.staylio_backend.config.security.jwt.JwtAuthenticationFilter;
 import com.example.staylio_backend.config.security.jwt.JwtTokenProvider;
 import com.example.staylio_backend.config.security.mes.CustomAccessDeniedHandler;
 import com.example.staylio_backend.config.security.mes.CustomAuthenticationEntryPoint;
-import com.example.staylio_backend.config.security.principle.CustomAccountDetailsService;
+import com.example.staylio_backend.config.security.principle.CustomUserDetailsService;
 import com.example.staylio_backend.repository.BlacklistTokenRepo;
 import com.example.staylio_backend.utils.APIConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +29,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CustomAccountDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final BlacklistTokenRepo blacklistTokenRepo;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
