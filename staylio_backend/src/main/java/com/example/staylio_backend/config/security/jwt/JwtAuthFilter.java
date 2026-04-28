@@ -1,6 +1,6 @@
 package com.example.staylio_backend.config.security.jwt;
 
-import com.example.staylio_backend.config.security.principle.CustomAccountDetailsService;
+import com.example.staylio_backend.config.security.principle.CustomUserDetailsService;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.exception.TokenRevokedException;
 import com.example.staylio_backend.repository.BlacklistTokenRepo;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CustomAccountDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final BlacklistTokenRepo blacklistTokenRepo;
     private final ObjectMapper mapper;
 

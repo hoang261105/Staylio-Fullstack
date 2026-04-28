@@ -8,14 +8,14 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "user_profile")
+@Table(name = "profile")
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserProfile extends BaseObject {
+public class Profile extends BaseObject {
 
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;

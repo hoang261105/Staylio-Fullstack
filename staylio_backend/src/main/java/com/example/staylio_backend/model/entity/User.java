@@ -1,7 +1,7 @@
 package com.example.staylio_backend.model.entity;
 
 import com.example.staylio_backend.model.base.AuditableObject;
-import com.example.staylio_backend.model.enums.AccountStatus;
+import com.example.staylio_backend.model.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,13 +9,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "account")
+@Table(name = "user")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account extends AuditableObject {
+public class User extends AuditableObject {
     @Column(name = "user_name", nullable = false, length = 50)
     private String userName;
 
@@ -31,13 +31,13 @@ public class Account extends AuditableObject {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private UserProfile profile;
+    private Profile profile;
 
     @Column(name = "provider_id")
     private String providerId;
 
     @Enumerated(EnumType.STRING)
-    private AccountStatus status;
+    private UserStatus status;
 
     @Column(name = "is_email_verified")
     private Boolean isEmailVerified;

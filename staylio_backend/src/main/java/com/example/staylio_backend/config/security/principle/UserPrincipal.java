@@ -1,7 +1,7 @@
 package com.example.staylio_backend.config.security.principle;
 
-import com.example.staylio_backend.model.entity.Account;
-import com.example.staylio_backend.model.enums.AccountStatus;
+import com.example.staylio_backend.model.entity.User;
+import com.example.staylio_backend.model.enums.UserStatus;
 import com.example.staylio_backend.model.enums.Gender;
 import com.example.staylio_backend.model.enums.RoleName;
 import lombok.Getter;
@@ -16,9 +16,9 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class AccountPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails {
 
-    private final Account account;
+    private final User account;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -39,7 +39,7 @@ public class AccountPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return account.getStatus() == AccountStatus.ACTIVE;
+        return account.getStatus() == UserStatus.ACTIVE;
     }
 
     public boolean hasRole(RoleName role) {
@@ -51,7 +51,7 @@ public class AccountPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return account.getStatus() == AccountStatus.ACTIVE;
+        return account.getStatus() == UserStatus.ACTIVE;
     }
 
     public Long getId() { return account.getId(); }
