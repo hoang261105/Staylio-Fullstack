@@ -1,7 +1,11 @@
 package com.example.staylio_backend.service.impl;
 
 import com.example.staylio_backend.config.security.AppConfig;
+import com.example.staylio_backend.config.security.jwt.JwtTokenProvider;
+import com.example.staylio_backend.config.security.principle.UserPrincipal;
+import com.example.staylio_backend.dto.request.UserLoginRequest;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
+import com.example.staylio_backend.dto.response.JWTResponse;
 import com.example.staylio_backend.exception.AppException;
 import com.example.staylio_backend.model.entity.Profile;
 import com.example.staylio_backend.model.entity.Role;
@@ -17,6 +21,13 @@ import com.example.staylio_backend.service.EmailService;
 import com.example.staylio_backend.service.VerificationService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +40,8 @@ public class AuthServiceImpl implements AuthService {
     private final VerificationService verificationService;
     private final EmailService emailService;
     private final AppConfig appConfig;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public User register(UserRegisterRequest userRegisterRequest) {
@@ -80,5 +93,44 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return savedUser;
+    }
+
+    @Override
+    public JWTResponse login(UserLoginRequest userLoginRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userLoginRequest.getEmail(),
+                        userLoginRequest.getPassword()
+                )
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+
+            String accessToken = jwtTokenProvider.generateAccessToken(principal);
+            String refreshToken = jwtTokenProvider.generateRefreshToken(principal);
+
+            return JWTResponse.builder()
+                    .id(principal.getId())
+                    .email(principal.getEmail())
+                    .fullName(principal.getFullName())
+                    .phone(principal.getPhone())
+                    .address(principal.getAddress())
+                    .avatarUrl(principal.getAvatarUrl())
+                    .gender(principal.isGender())
+                    .dateOfBirth(principal.getDateOfBirth())
+                    .authorities(principal.getAuthorities())
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build();
+        } catch (BadCredentialsException e) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD_OR_EMAIL, "password");
+        } catch (LockedException e) {
+            throw new AppException(ErrorCode.ACCOUNT_LOCKED);
+        }catch (AuthenticationException e) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
     }
 }

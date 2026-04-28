@@ -1,7 +1,9 @@
 package com.example.staylio_backend.controller.auth;
 
+import com.example.staylio_backend.dto.request.UserLoginRequest;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
+import com.example.staylio_backend.dto.response.JWTResponse;
 import com.example.staylio_backend.model.entity.User;
 import com.example.staylio_backend.service.AuthService;
 import com.example.staylio_backend.service.VerificationService;
@@ -37,5 +39,13 @@ public class AuthController {
                     "Xác thực đăng kí thành công!"
             )
         );
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "Đăng nhập tài khoản")
+    public ResponseEntity<ApiResponse<JWTResponse>> login(@Valid @RequestBody UserLoginRequest userLoginRequest) {
+        JWTResponse loginResponse = authService.login(userLoginRequest);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(loginResponse, "Đăng nhập thành công!"));
     }
 }
