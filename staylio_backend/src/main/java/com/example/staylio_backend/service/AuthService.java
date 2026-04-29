@@ -10,4 +10,6 @@ public interface AuthService {
     User register(UserRegisterRequest userRegisterRequest);
 
     JWTResponse login(UserLoginRequest userLoginRequest);
+
+    void forgotPassword(String email);
 }

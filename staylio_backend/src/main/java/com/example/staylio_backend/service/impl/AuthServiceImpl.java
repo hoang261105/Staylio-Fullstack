@@ -31,6 +31,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -131,6 +133,25 @@ public class AuthServiceImpl implements AuthService {
             throw new AppException(ErrorCode.ACCOUNT_LOCKED);
         }catch (AuthenticationException e) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+    }
+
+    @Override
+    public void forgotPassword(String email) {
+        User optionalUser = accountRepo.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Không tim thấy email!"));
+
+        try {
+            String token = verificationService.createVerificationToken(optionalUser, VerificationType.RESET_PASSWORD);
+
+            String resetLink = appConfig.getFullApiUrl() + "/auth/reset-password?token=" + token;
+
+            String content = "<p>You have requested a password reset. Please click the link below:</p>" +
+                    "<a href='" + resetLink + "'>RESET PASSWORD</a>";
+
+            emailService.sendHtmlMail(email, "Password reset request", content);
+        } catch (MessagingException e){
+            throw new AppException(ErrorCode.CANNOT_SEND_EMAIL);
         }
     }
 }

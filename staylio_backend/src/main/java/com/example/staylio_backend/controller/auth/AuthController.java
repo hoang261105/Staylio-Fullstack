@@ -5,6 +5,7 @@ import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.JWTResponse;
 import com.example.staylio_backend.model.entity.User;
+import com.example.staylio_backend.model.enums.VerificationType;
 import com.example.staylio_backend.service.AuthService;
 import com.example.staylio_backend.service.VerificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,5 +48,15 @@ public class AuthController {
         JWTResponse loginResponse = authService.login(userLoginRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(loginResponse, "Đăng nhập thành công!"));
+    }
+
+    @GetMapping("/forgot-password")
+    @Operation(summary = "Quên mật khẩu")
+    public ResponseEntity<ApiResponse<String>> forgotPassword(@RequestParam String email) {
+        authService.forgotPassword(email);
+        return ResponseEntity.ok(ApiResponse.success(
+            null,
+            "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn!"
+        ));
     }
 }
