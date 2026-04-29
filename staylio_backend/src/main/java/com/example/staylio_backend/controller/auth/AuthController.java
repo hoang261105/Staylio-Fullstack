@@ -10,11 +10,14 @@ import com.example.staylio_backend.model.enums.VerificationType;
 import com.example.staylio_backend.service.AuthService;
 import com.example.staylio_backend.service.VerificationService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -78,6 +81,27 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(
                 null,
                 "Mật khẩu đã được thay đổi thành công!"
+        ));
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "Đăng xuất tài khoản")
+    public ResponseEntity<ApiResponse<String>> logout(
+            HttpServletRequest request,
+            @RequestParam String refreshToken
+    ) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String accessToken = authHeader.substring(7);
+            authService.logout(accessToken, refreshToken);
+            return ResponseEntity.ok(ApiResponse.success(
+                null,
+                 "Đăng xuất thành công!"
+            ));
+        }
+        return ResponseEntity.badRequest().body(ApiResponse.fail(
+                "Token không hợp lệ!",
+                List.of()
         ));
     }
 }
