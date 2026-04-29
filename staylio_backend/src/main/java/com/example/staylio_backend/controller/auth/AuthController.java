@@ -1,5 +1,6 @@
 package com.example.staylio_backend.controller.auth;
 
+import com.example.staylio_backend.dto.request.NewPasswordRequest;
 import com.example.staylio_backend.dto.request.UserLoginRequest;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
@@ -57,6 +58,26 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(
             null,
             "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn!"
+        ));
+    }
+
+    @GetMapping("/reset-password")
+    @Operation(summary = "Verify reset password")
+    public ResponseEntity<ApiResponse<String>> resetPassword(@RequestParam("token") String token) {
+        verificationService.validateToken(token, VerificationType.RESET_PASSWORD);
+        return ResponseEntity.ok(ApiResponse.success(token, "Token hợp lệ, bạn có thể thay đổi mật khẩu!"));
+    }
+
+    @PatchMapping("/reset-password")
+    @Operation(summary = "Đặt lại mật khẩu")
+    public ResponseEntity<ApiResponse<String>> resetPassword(
+            @RequestParam("token") String token,
+            @Valid @RequestBody NewPasswordRequest newPasswordRequest
+    ) {
+        authService.resetPassword(token, newPasswordRequest);
+        return ResponseEntity.ok(ApiResponse.success(
+                null,
+                "Mật khẩu đã được thay đổi thành công!"
         ));
     }
 }
