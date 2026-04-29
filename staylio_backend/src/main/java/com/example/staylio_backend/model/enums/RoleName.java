@@ -1,5 +1,5 @@
 package com.example.staylio_backend.model.enums;
 
 public enum RoleName {
-    ADMIN, CUSTOMER, GUEST
+    ROLE_ADMIN, ROLE_MANAGER, ROLE_CUSTOMER, ROLE_GUEST
 }

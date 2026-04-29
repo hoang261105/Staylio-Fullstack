@@ -1,4 +1,4 @@
-package com.example.staylio_backend.service.impl;
+package com.example.staylio_backend.service.impl.auth;
 
 import com.example.staylio_backend.exception.AppException;
 import com.example.staylio_backend.model.entity.User;

@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(APIConstants.PUBLIC_WHITELIST).permitAll()
+                        .requestMatchers(APIConstants.ADMIN_USER_ENDPOINTS).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/api/v1/auth/google-success", true))
