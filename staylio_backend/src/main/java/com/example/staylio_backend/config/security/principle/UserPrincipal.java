@@ -4,6 +4,7 @@ import com.example.staylio_backend.model.entity.User;
 import com.example.staylio_backend.model.enums.UserStatus;
 import com.example.staylio_backend.model.enums.Gender;
 import com.example.staylio_backend.model.enums.RoleName;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -47,7 +49,9 @@ public class UserPrincipal implements UserDetails {
                 .anyMatch(auth -> auth.getAuthority().equals(role.name()));
     }
 
-
+    public static UserPrincipal create(User user) {
+        return new UserPrincipal(user);
+    }
 
     @Override
     public boolean isEnabled() {
