@@ -5,4 +5,6 @@ import com.example.staylio_backend.dto.response.page.PaginationResponse;
 
 public interface UserService {
     PaginationResponse<UserResponseDTO> getStudentList(String search, int page, int size, String sortBy, String direction);
+
+    UserResponseDTO getUserById(Long id);
 }
