@@ -7,4 +7,13 @@ public class APIConstants {
             "/swagger-ui/**",
             "/swagger-ui.html"
     };
+
+    public static final String ADMIN_USERS = "/api/v1/admin/users";
+    public static final String ADMIN_USER_BY_ID = "/api/v1/admin/users/{id}";
+    public static final String ADMIN_USER_STATUS = "/api/v1/admin/users/{id}/status";
+    public static final String ADMIN_USER_BULK_STATUS = "/api/v1/admin/users/bulk-status";
+
+    public static final String[] ADMIN_USER_ENDPOINTS = {
+            "/api/v1/admin/users/**"
+    };
 }

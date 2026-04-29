@@ -1,4 +1,4 @@
-package com.example.staylio_backend.service.impl;
+package com.example.staylio_backend.service.impl.auth;
 
 import com.example.staylio_backend.config.security.AppConfig;
 import com.example.staylio_backend.config.security.jwt.JwtTokenProvider;
@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
             throw new AppException(ErrorCode.EMAIL_EXISTED, "email");
         }
 
-        Role defaultRole = roleRepo.findByRoleName(RoleName.CUSTOMER);
+        Role defaultRole = roleRepo.findByRoleName(RoleName.ROLE_CUSTOMER);
 
         Profile profile = Profile.builder()
                 .fullName(userRegisterRequest.getFullName())
@@ -237,7 +237,7 @@ public class AuthServiceImpl implements AuthService {
             newUser.setIsEmailVerified(true);
             newUser.setIsFirstLogin(true);
             newUser.setRole(
-                    roleRepo.findByRoleName(RoleName.CUSTOMER)
+                    roleRepo.findByRoleName(RoleName.ROLE_CUSTOMER)
             );
 
             User savedUser = accountRepo.save(newUser);

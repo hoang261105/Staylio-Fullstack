@@ -1,4 +1,4 @@
-package com.example.staylio_backend.service.impl;
+package com.example.staylio_backend.service.impl.auth;
 
 import com.example.staylio_backend.dto.request.PasswordChangeRequest;
 import com.example.staylio_backend.dto.request.ProfileRequest;
