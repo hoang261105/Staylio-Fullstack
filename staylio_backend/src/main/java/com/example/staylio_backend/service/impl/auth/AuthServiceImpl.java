@@ -93,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
                 .role(defaultRole)
                 .profile(profile)
                 .status(UserStatus.INACTIVE)
-                .isFirstLogin(false)
+                .isFirstLogin(true)
                 .isEmailVerified(false)
                 .build();
 
