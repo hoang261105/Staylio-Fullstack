@@ -3,6 +3,7 @@ package com.example.staylio_backend.service.impl;
 import com.example.staylio_backend.config.security.AppConfig;
 import com.example.staylio_backend.config.security.jwt.JwtTokenProvider;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
+import com.example.staylio_backend.dto.request.NewPasswordRequest;
 import com.example.staylio_backend.dto.request.UserLoginRequest;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.JWTResponse;
@@ -10,12 +11,14 @@ import com.example.staylio_backend.exception.AppException;
 import com.example.staylio_backend.model.entity.Profile;
 import com.example.staylio_backend.model.entity.Role;
 import com.example.staylio_backend.model.entity.User;
+import com.example.staylio_backend.model.entity.VerificationToken;
 import com.example.staylio_backend.model.enums.ErrorCode;
 import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.model.enums.UserStatus;
 import com.example.staylio_backend.model.enums.VerificationType;
 import com.example.staylio_backend.repository.AccountRepo;
 import com.example.staylio_backend.repository.RoleRepo;
+import com.example.staylio_backend.repository.VerificationTokenRepo;
 import com.example.staylio_backend.service.AuthService;
 import com.example.staylio_backend.service.EmailService;
 import com.example.staylio_backend.service.VerificationService;
@@ -31,6 +34,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @Service
@@ -40,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
     private final VerificationService verificationService;
+    private final VerificationTokenRepo verificationTokenRepo;
     private final EmailService emailService;
     private final AppConfig appConfig;
     private final AuthenticationManager authenticationManager;
@@ -153,5 +158,16 @@ public class AuthServiceImpl implements AuthService {
         } catch (MessagingException e){
             throw new AppException(ErrorCode.CANNOT_SEND_EMAIL);
         }
+    }
+
+    @Override
+    public void resetPassword(String token, NewPasswordRequest newPasswordRequest) {
+        VerificationToken verificationToken =verificationService.validateToken(token, VerificationType.RESET_PASSWORD);
+
+        User user = verificationToken.getUser();
+        user.setPasswordHash(passwordEncoder.encode(newPasswordRequest.getNewPassword()));
+        accountRepo.save(user);
+        verificationToken.setConsumedAt(LocalDateTime.now());
+        verificationTokenRepo.save(verificationToken);
     }
 }
