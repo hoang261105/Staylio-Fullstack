@@ -19,5 +19,5 @@ public interface AuthService {
 
     void logout(String accessToken, String refreshToken);
 
-    TokenResponse authenticateGoogleUser(String idTokenString);
+    TokenResponse authenticateGoogleUser(String idTokenString) throws Exception;
 }

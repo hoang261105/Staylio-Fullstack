@@ -2,20 +2,29 @@ package com.example.staylio_backend.model.entity;
 
 import com.example.staylio_backend.model.base.BaseObject;
 import com.example.staylio_backend.model.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "profile")
-@EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Profile extends BaseObject {
+public class Profile{
+    @Id
+    private Long id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @MapsId
+    @JsonBackReference
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;

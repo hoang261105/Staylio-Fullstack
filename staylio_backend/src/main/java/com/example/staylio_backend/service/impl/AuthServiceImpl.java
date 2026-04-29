@@ -22,8 +22,14 @@ import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.AuthService;
 import com.example.staylio_backend.service.EmailService;
 import com.example.staylio_backend.service.VerificationService;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,6 +42,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
@@ -54,6 +61,9 @@ public class AuthServiceImpl implements AuthService {
     private final RedisTemplate<String, String> redisTemplate;
     private final BlacklistTokenRepo blacklistTokenRepo;
     private final ProfileRepo profileRepo;
+
+    @Value(value = "${spring.security.oauth2.client.registration.google.client-id}")
+    private String googleClientId;
 
     @Override
     public User register(UserRegisterRequest userRegisterRequest) {
@@ -86,6 +96,9 @@ public class AuthServiceImpl implements AuthService {
                 .isFirstLogin(false)
                 .isEmailVerified(false)
                 .build();
+
+        profile.setUser(user);
+        user.setProfile(profile);
 
         User savedUser = accountRepo.save(user);
         String token = verificationService.createVerificationToken(savedUser, VerificationType.VERIFY_EMAIL);
@@ -197,9 +210,49 @@ public class AuthServiceImpl implements AuthService {
         blacklistTokenRepo.save(blToken);
     }
 
+    @Transactional
     @Override
-    public TokenResponse authenticateGoogleUser(String idTokenString) {
-        return null;
+    public TokenResponse authenticateGoogleUser(String idTokenString) throws Exception {
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory()) .setAudience(Collections.singletonList(googleClientId)) .build();
+
+        GoogleIdToken idToken = verifier.verify(idTokenString);
+
+        if (idToken == null) {
+            throw new RuntimeException("Token không hợp lệ!");
+        }
+
+        GoogleIdToken.Payload payload = idToken.getPayload();
+
+        if (!payload.getEmailVerified()) {
+            throw new RuntimeException("Email chưa xác thực!");
+        }
+
+        String email = payload.getEmail();
+
+        User user = accountRepo.findByEmail(email).orElseGet(() -> {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setUserName(email.split("@")[0]);
+            newUser.setStatus(UserStatus.ACTIVE);
+            newUser.setIsEmailVerified(true);
+            newUser.setIsFirstLogin(true);
+            newUser.setRole(
+                    roleRepo.findByRoleName(RoleName.CUSTOMER)
+            );
+
+            User savedUser = accountRepo.save(newUser);
+
+            Profile profile = new Profile();
+            profile.setUser(savedUser); // MapsId
+            profile.setFullName((String) payload.get("name"));
+            profile.setAvatarUrl((String) payload.get("picture"));
+
+            profileRepo.save(profile);
+
+            return savedUser;
+        });
+
+        return generateTokenResponse(user);
     }
 
     public TokenResponse generateTokenResponse(User user) {

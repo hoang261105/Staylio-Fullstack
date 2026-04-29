@@ -108,7 +108,7 @@ public class AuthController {
     }
 
     @PostMapping("/google-login")
-    public ResponseEntity<ApiResponse<TokenResponse>> googleLogin(@RequestBody GoogleLoginRequest request) {
+    public ResponseEntity<ApiResponse<TokenResponse>> googleLogin(@RequestBody GoogleLoginRequest request) throws Exception {
         TokenResponse token = authService.authenticateGoogleUser(request.getIdToken());
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(
                 token,

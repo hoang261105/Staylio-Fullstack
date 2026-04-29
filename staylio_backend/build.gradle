@@ -55,6 +55,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     implementation 'it.ozimov:embedded-redis:0.7.2'
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 

@@ -1,8 +1,10 @@
 package com.example.staylio_backend.service.impl;
 
+import com.example.staylio_backend.dto.request.PasswordChangeRequest;
 import com.example.staylio_backend.dto.request.ProfileRequest;
 import com.example.staylio_backend.dto.response.ProfileResponseDTO;
 import com.example.staylio_backend.exception.AppException;
+import com.example.staylio_backend.exception.BadRequestException;
 import com.example.staylio_backend.model.entity.Profile;
 import com.example.staylio_backend.model.entity.User;
 import com.example.staylio_backend.model.enums.ErrorCode;
@@ -11,6 +13,7 @@ import com.example.staylio_backend.repository.ProfileRepo;
 import com.example.staylio_backend.service.CloudinaryService;
 import com.example.staylio_backend.service.ProfileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,6 +25,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final ProfileRepo profileRepo;
     private final AccountRepo accountRepo;
     private final CloudinaryService cloudinaryService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ProfileResponseDTO getUserProfileById(long id) {
@@ -60,6 +64,27 @@ public class ProfileServiceImpl implements ProfileService {
         Profile updatedProfile = profileRepo.save(profile);
         accountRepo.save(user);
         return convertToDTO(updatedProfile);
+    }
+
+    @Override
+    public void changePassword(Long id, PasswordChangeRequest passwordChangeRequest) {
+        User user = accountRepo.findById(id).orElseThrow(() -> new NoSuchElementException("User with id " + id + " does not exist"));
+
+        if (!passwordEncoder.matches(passwordChangeRequest.getOldPassword(), user.getPasswordHash())){
+            throw new BadRequestException("Mật khẩu cũ không chính xác!");
+        }
+
+        if(!passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getConfirmPassword())){
+            throw new BadRequestException("Mật khẩu không khớp!");
+        }
+
+        if (passwordEncoder.matches(passwordChangeRequest.getNewPassword(), user.getPasswordHash())){
+            throw new BadRequestException("Mật khẩu mới không được giống mật khẩu cũ!");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
+        user.setIsFirstLogin(false);
+        accountRepo.save(user);
     }
 
     public ProfileResponseDTO convertToDTO(Profile profile) {

@@ -1,6 +1,7 @@
 package com.example.staylio_backend.controller.auth;
 
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
+import com.example.staylio_backend.dto.request.PasswordChangeRequest;
 import com.example.staylio_backend.dto.request.ProfileRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.ProfileResponseDTO;
@@ -54,6 +55,22 @@ public class ProfileController {
             profileService.updateInfo(userPrincipal.getId(), profileRequest),
             null,
             LocalDateTime.now()
+        ));
+    }
+
+    @PatchMapping("/change-password")
+    @Operation(summary = "Đổi mật khẩu")
+    public ResponseEntity<ApiResponse<String>> changePassword(
+            @Valid @RequestBody PasswordChangeRequest request,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+            ) {
+        profileService.changePassword(userPrincipal.getId(), request);
+        return ResponseEntity.ok(new ApiResponse<>(
+                true,
+                "Thay đổi mật khẩu thành công!",
+                null,
+                null,
+                LocalDateTime.now()
         ));
     }
 }
