@@ -1,10 +1,12 @@
 package com.example.staylio_backend.controller.auth;
 
+import com.example.staylio_backend.dto.request.GoogleLoginRequest;
 import com.example.staylio_backend.dto.request.NewPasswordRequest;
 import com.example.staylio_backend.dto.request.UserLoginRequest;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.JWTResponse;
+import com.example.staylio_backend.dto.response.TokenResponse;
 import com.example.staylio_backend.model.entity.User;
 import com.example.staylio_backend.model.enums.VerificationType;
 import com.example.staylio_backend.service.AuthService;
@@ -102,6 +104,15 @@ public class AuthController {
         return ResponseEntity.badRequest().body(ApiResponse.fail(
                 "Token không hợp lệ!",
                 List.of()
+        ));
+    }
+
+    @PostMapping("/google-login")
+    public ResponseEntity<ApiResponse<TokenResponse>> googleLogin(@RequestBody GoogleLoginRequest request) {
+        TokenResponse token = authService.authenticateGoogleUser(request.getIdToken());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(
+                token,
+                "Đăng nhập băng google thành công!"
         ));
     }
 }
