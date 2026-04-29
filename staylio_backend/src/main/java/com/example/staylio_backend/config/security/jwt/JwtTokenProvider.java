@@ -90,4 +90,10 @@ public class JwtTokenProvider {
                 .getBody()
                 .getExpiration();
     }
+
+    public long getRemainingTime(String token) {
+        Date expiration = getExpiryDateFromToken(token);
+        long remainingTime = expiration.getTime() - System.currentTimeMillis();
+        return Math.max(0, remainingTime);
+    }
 }
