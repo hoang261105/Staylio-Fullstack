@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -42,6 +43,12 @@ public class UserServiceImpl implements UserService {
                 userPage.getTotalElements()
         );
         return new PaginationResponse<>(content, paginationDTO);
+    }
+
+    @Override
+    public UserResponseDTO getUserById(Long id) {
+        User user = accountRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm thấy user!"));
+        return convertToDTO(user);
     }
 
     private UserResponseDTO convertToDTO(User user) {
