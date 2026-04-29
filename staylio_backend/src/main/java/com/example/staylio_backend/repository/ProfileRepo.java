@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProfileRepo extends JpaRepository<Profile, Long> {
+    boolean existsByPhoneAndIdNot(String phone, Long id);
 }
