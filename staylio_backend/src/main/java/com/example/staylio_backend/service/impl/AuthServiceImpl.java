@@ -24,6 +24,7 @@ import com.example.staylio_backend.service.EmailService;
 import com.example.staylio_backend.service.VerificationService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -36,6 +37,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +51,7 @@ public class AuthServiceImpl implements AuthService {
     private final AppConfig appConfig;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public User register(UserRegisterRequest userRegisterRequest) {
@@ -169,5 +172,21 @@ public class AuthServiceImpl implements AuthService {
         accountRepo.save(user);
         verificationToken.setConsumedAt(LocalDateTime.now());
         verificationTokenRepo.save(verificationToken);
+    }
+
+    @Override
+    public void logout(String accessToken, String refreshToken) {
+        verificationTokenRepo.deleteByTokenAndType(refreshToken, VerificationType.REFRESH_TOKEN);
+
+        long remainingTime = jwtTokenProvider.getRemainingTime(accessToken);
+
+        if (remainingTime > 0) {
+            redisTemplate.opsForValue().set(
+                accessToken,
+                "blacklisted",
+                remainingTime,
+                TimeUnit.MILLISECONDS
+            );
+        }
     }
 }
