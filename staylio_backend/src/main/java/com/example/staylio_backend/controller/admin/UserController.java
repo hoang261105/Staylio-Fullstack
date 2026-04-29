@@ -1,10 +1,12 @@
 package com.example.staylio_backend.controller.admin;
 
+import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.UserResponseDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(
                 userService.getUserById(id),
                 "Lấy chi tiết khách hàng thành công!"
+        ));
+    }
+
+    @PostMapping
+    @Operation(summary = "Thêm 1 tài khoản mới")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<UserResponseDTO>> createUser(
+            @Valid @RequestBody UserRegisterRequest userRegisterRequest
+            ) {
+        UserResponseDTO user = userService.createUser(userRegisterRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(
+                user,
+                "Tạo tài khoản thành công!"
         ));
     }
 }
