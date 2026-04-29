@@ -29,7 +29,7 @@ public class EmbeddedRedisConfig {
     public void stopRedis() {
         if (redisServer != null) {
             redisServer.stop();
-            System.out.println(">>> [Keep Up] Embedded Redis đã dừng.");
+            System.out.println(">>> [Staylio] Embedded Redis đã dừng.");
         }
     }
 }

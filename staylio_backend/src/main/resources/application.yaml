@@ -39,6 +39,17 @@ spring:
     redis:
       host: localhost
       port: 6379
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/api/v1/auth/google-login/oauth2/code/google"
+            scope:
+              - email
+              - profile
 
 cloudinary:
   cloud_name: dtc7mun2h

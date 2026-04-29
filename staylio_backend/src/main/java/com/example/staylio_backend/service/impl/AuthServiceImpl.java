@@ -7,7 +7,9 @@ import com.example.staylio_backend.dto.request.NewPasswordRequest;
 import com.example.staylio_backend.dto.request.UserLoginRequest;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.JWTResponse;
+import com.example.staylio_backend.dto.response.TokenResponse;
 import com.example.staylio_backend.exception.AppException;
+import com.example.staylio_backend.model.auth.BlacklistToken;
 import com.example.staylio_backend.model.entity.Profile;
 import com.example.staylio_backend.model.entity.Role;
 import com.example.staylio_backend.model.entity.User;
@@ -16,9 +18,7 @@ import com.example.staylio_backend.model.enums.ErrorCode;
 import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.model.enums.UserStatus;
 import com.example.staylio_backend.model.enums.VerificationType;
-import com.example.staylio_backend.repository.AccountRepo;
-import com.example.staylio_backend.repository.RoleRepo;
-import com.example.staylio_backend.repository.VerificationTokenRepo;
+import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.AuthService;
 import com.example.staylio_backend.service.EmailService;
 import com.example.staylio_backend.service.VerificationService;
@@ -52,6 +52,8 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
+    private final BlacklistTokenRepo blacklistTokenRepo;
+    private final ProfileRepo profileRepo;
 
     @Override
     public User register(UserRegisterRequest userRegisterRequest) {
@@ -188,5 +190,40 @@ public class AuthServiceImpl implements AuthService {
                 TimeUnit.MILLISECONDS
             );
         }
+
+        BlacklistToken blToken = new BlacklistToken();
+        blToken.setToken(accessToken);
+        blToken.setExpiredDate(jwtTokenProvider.getExpiryDateFromToken(accessToken));
+        blacklistTokenRepo.save(blToken);
+    }
+
+    @Override
+    public TokenResponse authenticateGoogleUser(String idTokenString) {
+        return null;
+    }
+
+    public TokenResponse generateTokenResponse(User user) {
+        User findUser = accountRepo.findByEmail(user.getEmail())
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy user!"));
+
+        UserPrincipal userPrincipal = new UserPrincipal(findUser);
+
+        String accessToken = jwtTokenProvider.generateAccessToken(userPrincipal);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(userPrincipal);
+
+        Profile profile = profileRepo.findById(user.getId())
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy profile!"));
+
+        return TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .user(TokenResponse.UserInfo.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .fullName(profile.getFullName())
+                        .avatar(profile.getAvatarUrl())
+                        .roleName(user.getRole().getRoleName())
+                        .build())
+                .build();
     }
 }
