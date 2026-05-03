@@ -68,4 +68,5 @@ public class UserPrincipal implements UserDetails {
     public LocalDate getDateOfBirth() { return account.getProfile() != null ? account.getProfile().getDateOfBirth() : null; }
     public String getPhone() { return account.getProfile() != null ? account.getProfile().getPhone() : null; }
     public String getAddress() { return account.getProfile() != null ? account.getProfile().getAddress() : null; }
+    public RoleName getRoleName() { return account.getRole().getRoleName(); }
 }

@@ -14,6 +14,8 @@ public enum ErrorCode {
     TOKEN_ALREADY_USED("Token đã được sử dụng!"),
     TOKEN_EXPIRED("Token đã hết hạn!"),
     CANNOT_SEND_EMAIL("Không thể gửi email!"),
+    CANNOT_LOCK_SELF("Không được khóa tài khoản chính mình!"),
+    CANNOT_LOCK_ADMIN("Không thể khóa tài khoản admin!"),
     ACCOUNT_LOCKED("Tài khoản đã bị khóa!"),
 
     // 2xxx: Validation (Regex, NotBlank, etc.)

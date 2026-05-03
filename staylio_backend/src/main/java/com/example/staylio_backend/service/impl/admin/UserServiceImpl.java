@@ -1,10 +1,12 @@
 package com.example.staylio_backend.service.impl.admin;
 
+import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.UserResponseDTO;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.exception.AppException;
+import com.example.staylio_backend.exception.BadRequestException;
 import com.example.staylio_backend.model.entity.Profile;
 import com.example.staylio_backend.model.entity.Role;
 import com.example.staylio_backend.model.entity.User;
@@ -98,6 +100,18 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = accountRepo.save(user);
         return convertToDTO(savedUser);
+    }
+
+    @Override
+    public void updateStatus(Long id, UserPrincipal userPrincipal) {
+        User user = accountRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm thấy user!"));
+
+        if (user.getId().equals(userPrincipal.getId())) {
+            throw new AppException(ErrorCode.CANNOT_LOCK_SELF);
+        }
+
+        user.setStatus(user.getStatus() == UserStatus.ACTIVE ? UserStatus.LOCKED : UserStatus.ACTIVE);
+        accountRepo.save(user);
     }
 
     private UserResponseDTO convertToDTO(User user) {
