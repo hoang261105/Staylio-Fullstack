@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -78,6 +79,21 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(
                 null,
                 "Cập nhật trạng thái thành công!"
+        ));
+    }
+
+    @PatchMapping("/bulk-status")
+    @Operation(summary = "Khóa nhiều tài khoản")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<String>> updateBulkStatus(
+            @RequestParam List<Long> ids,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestParam boolean status
+    ) {
+        userService.updateBulkStatus(ids, userPrincipal, status);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(
+                null,
+                "Cập nhật trạng thái nhiều tài khoản thành công"
         ));
     }
 }

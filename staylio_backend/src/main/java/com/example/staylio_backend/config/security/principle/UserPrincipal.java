@@ -69,4 +69,5 @@ public class UserPrincipal implements UserDetails {
     public String getPhone() { return account.getProfile() != null ? account.getProfile().getPhone() : null; }
     public String getAddress() { return account.getProfile() != null ? account.getProfile().getAddress() : null; }
     public RoleName getRoleName() { return account.getRole().getRoleName(); }
+    public UserStatus getUserStatus() { return account.getStatus(); }
 }
