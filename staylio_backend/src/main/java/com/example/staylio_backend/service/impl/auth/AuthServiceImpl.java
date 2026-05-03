@@ -154,7 +154,7 @@ public class AuthServiceImpl implements AuthService {
             throw new AppException(ErrorCode.INVALID_PASSWORD_OR_EMAIL, "password");
         } catch (LockedException e) {
             throw new AppException(ErrorCode.ACCOUNT_LOCKED);
-        }catch (AuthenticationException e) {
+        } catch (AuthenticationException e) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
     }

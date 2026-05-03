@@ -6,7 +6,6 @@ import com.example.staylio_backend.dto.response.UserResponseDTO;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.exception.AppException;
-import com.example.staylio_backend.exception.BadRequestException;
 import com.example.staylio_backend.model.entity.Profile;
 import com.example.staylio_backend.model.entity.Role;
 import com.example.staylio_backend.model.entity.User;
@@ -15,6 +14,7 @@ import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.model.enums.UserStatus;
 import com.example.staylio_backend.repository.AccountRepo;
 import com.example.staylio_backend.repository.RoleRepo;
+import com.example.staylio_backend.repository.UserRepo;
 import com.example.staylio_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final AccountRepo accountRepo;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepo roleRepo;
+    private final UserRepo userRepo;
 
     @Override
     public PaginationResponse<UserResponseDTO> getStudentList(String search, int page, int size, String sortBy, String direction) {
@@ -112,6 +113,24 @@ public class UserServiceImpl implements UserService {
 
         user.setStatus(user.getStatus() == UserStatus.ACTIVE ? UserStatus.LOCKED : UserStatus.ACTIVE);
         accountRepo.save(user);
+    }
+
+    @Override
+    public void updateBulkStatus(List<Long> ids, UserPrincipal userPrincipal, boolean status) {
+        for (Long id : ids) {
+            if (userPrincipal.getId().equals(id)) {
+                throw new AppException(ErrorCode.CANNOT_LOCK_SELF);
+            }
+        }
+
+        List<User> usersToUpdate = userRepo.findAllByIdIn(ids);
+
+        if (usersToUpdate.isEmpty()){
+            throw new NoSuchElementException("Không có tài khoản được khóa!");
+        }
+
+        UserStatus newStatus = status ? UserStatus.ACTIVE : UserStatus.LOCKED;
+        userRepo.updateStatusByIds(ids, newStatus);
     }
 
     private UserResponseDTO convertToDTO(User user) {
