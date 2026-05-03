@@ -1,5 +1,6 @@
 package com.example.staylio_backend.controller.admin;
 
+import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.UserResponseDTO;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -62,6 +64,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(
                 user,
                 "Tạo tài khoản thành công!"
+        ));
+    }
+
+    @PatchMapping("/{id}/status")
+    @Operation(summary = "Khóa tài khoản")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<String>> updateUserStatus(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ){
+        userService.updateStatus(id, userPrincipal);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(
+                null,
+                "Cập nhật trạng thái thành công!"
         ));
     }
 }
