@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -36,6 +33,23 @@ public class HotelController {
                 true,
                 "Lấy danh sách thương hiệu thành công!",
                 hotelService.findAll(search, page - 1, size, sortBy, direction),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Lấy chi tiết 1 thương hiệu khách sạn")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<HotelResponse>> getHotelById(
+            @PathVariable Long id
+    ) {
+        ApiResponse<HotelResponse> response = new ApiResponse<>(
+                true,
+                "Lấy chi tiết thương hiệu khách sạn thành công!",
+                hotelService.findById(id),
                 null,
                 LocalDateTime.now()
         );

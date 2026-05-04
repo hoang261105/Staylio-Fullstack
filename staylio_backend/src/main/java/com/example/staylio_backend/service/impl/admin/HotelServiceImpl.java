@@ -5,7 +5,6 @@ import com.example.staylio_backend.dto.response.HotelResponse;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.Hotel;
-import com.example.staylio_backend.model.entity.Profile;
 import com.example.staylio_backend.repository.HotelRepo;
 import com.example.staylio_backend.repository.ProfileRepo;
 import com.example.staylio_backend.service.HotelService;
@@ -46,8 +45,9 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public HotelResponse findById(Long aLong) {
-        return null;
+    public HotelResponse findById(Long id) {
+        Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm thấy thương hiệu khách sạn!"));
+        return convertToDTO(hotel);
     }
 
     @Override

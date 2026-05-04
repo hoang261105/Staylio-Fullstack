@@ -23,9 +23,7 @@ public class Hotel extends BaseObject {
     private String imageUrl;
 
     @OneToOne
-    @MapsId
-    @JsonBackReference
-    @JoinColumn(name = "manager_id")
+    @JoinColumn(name = "manager_id", unique = true)
     private Profile manager;
 
     @Column(name = "status")
