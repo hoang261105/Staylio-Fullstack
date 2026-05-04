@@ -3,6 +3,7 @@ package com.example.staylio_backend.controller.admin;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.HotelBranchResponse;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
+import com.example.staylio_backend.model.enums.BranchStatus;
 import com.example.staylio_backend.service.HotelBranchService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,22 @@ public class HotelBranchController {
                 true,
                 "Lấy chi tiết chi nhánh khách sạn thành công!",
                 hotelBranchService.getHotelBranchById(id),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/status")
+    @Operation(summary = "Cập nhật/Duyệt chi nhánh khách sạn")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<String>> updateStatus(@PathVariable Long id, @RequestBody BranchStatus status){
+        hotelBranchService.updateStatus(id, status);
+        ApiResponse<String> response = new ApiResponse<>(
+                true,
+                "Cập nhật/Duyệt chi nhánh khách sạn thành công!",
+                null,
                 null,
                 LocalDateTime.now()
         );
