@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -37,6 +34,21 @@ public class HotelBranchController {
                 true,
                 "Lấy danh sách chi nhánh khách sạn thành công!",
                 hotelBranchService.getHotelBranches(hotelId, search, page - 1, size, sortBy, direction),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Lấy chi tiết 1 chi nhánh khách sạn")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<HotelBranchResponse>> getHotelBranchById(@PathVariable Long id){
+        ApiResponse<HotelBranchResponse> response = new ApiResponse<>(
+                true,
+                "Lấy chi tiết chi nhánh khách sạn thành công!",
+                hotelBranchService.getHotelBranchById(id),
                 null,
                 LocalDateTime.now()
         );
