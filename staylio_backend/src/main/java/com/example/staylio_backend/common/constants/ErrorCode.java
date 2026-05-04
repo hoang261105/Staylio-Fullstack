@@ -17,6 +17,7 @@ public enum ErrorCode {
     CANNOT_LOCK_SELF("Không được khóa tài khoản chính mình!"),
     CANNOT_LOCK_ADMIN("Không thể khóa tài khoản admin!"),
     ACCOUNT_LOCKED("Tài khoản đã bị khóa!"),
+    IS_NOT_MANAGER("Vui lòng chọn 1 tài khoản manager!"),
 
     // 2xxx: Validation (Regex, NotBlank, etc.)
     INVALID_KEY("Khóa thông báo không hợp lệ"),
@@ -27,6 +28,8 @@ public enum ErrorCode {
     EMAIL_EXISTED("Email đã được sử dụng"),
     USER_NOT_EXISTED("Người dùng không tồn tại"),
     PHONE_EXISTED("Số điện thoại đã tồn tại"),
+    HOTEL_NAME_EXISTED("Tên thương hiệu đã tồn tại!"),
+    MANAGER_EXISTED("Quản lí đã có thương hiệu khách sạn!"),
 
     // 4xxx: Resources
     DATA_NOT_FOUND("Không tìm thấy dữ liệu yêu cầu"),
