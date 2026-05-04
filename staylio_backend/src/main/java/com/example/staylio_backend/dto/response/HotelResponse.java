@@ -1,5 +1,6 @@
 package com.example.staylio_backend.dto.response;
 
+import com.example.staylio_backend.model.enums.HotelStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,6 @@ public class HotelResponse {
     private String name;
     private String description;
     private String imageUrl;
-    private Boolean status;
+    private HotelStatus status;
     private String hostHotelName;
 }

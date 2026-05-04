@@ -8,6 +8,7 @@ import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.Hotel;
 import com.example.staylio_backend.model.entity.Profile;
+import com.example.staylio_backend.model.enums.HotelStatus;
 import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.repository.HotelRepo;
 import com.example.staylio_backend.repository.ProfileRepo;
@@ -35,7 +36,7 @@ public class HotelServiceImpl implements HotelService {
     public PaginationResponse<HotelResponse> findAll(String search, int page, int size, String sortBy, String direction) {
         Pageable pageable = PageRequest.of(page, size, getSort(sortBy, direction));
 
-        Page<Hotel> hotelsPage = hotelRepo.searchHotels(search, pageable);
+        Page<Hotel> hotelsPage = hotelRepo.searchActiveHotels(search, pageable);
 
         List<HotelResponse> content = hotelsPage.getContent().stream()
                 .map(this::convertToDTO)
@@ -73,16 +74,10 @@ public class HotelServiceImpl implements HotelService {
             throw new AppException(ErrorCode.IS_NOT_MANAGER);
         }
 
-        boolean isExistManagerId = hotelRepo.existsByManager(profile);
-
-        if (isExistManagerId) {
-            throw new AppException(ErrorCode.MANAGER_EXISTED);
-        }
-
         Hotel hotel = Hotel.builder()
                 .name(request.getName())
                 .description(request.getDescription())
-                .status(true)
+                .status(HotelStatus.PENDING)
                 .manager(profile)
                 .imageUrl(imageUrl)
                 .build();
@@ -105,16 +100,9 @@ public class HotelServiceImpl implements HotelService {
             throw new AppException(ErrorCode.IS_NOT_MANAGER);
         }
 
-        boolean isExistManagerId = hotelRepo.existsByManagerAndIdNot(profile, id);
-
-        if (isExistManagerId) {
-            throw new AppException(ErrorCode.MANAGER_EXISTED);
-        }
-
         Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
         hotel.setName(request.getName());
         hotel.setDescription(request.getDescription());
-        hotel.setStatus(true);
         hotel.setManager(profile);
 
         if (request.getImage() != null && !request.getImage().isEmpty()) {
@@ -131,7 +119,9 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public void delete(Long id) {
-
+        Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
+        hotel.setStatus(HotelStatus.DELETED);
+        hotelRepo.save(hotel);
     }
 
     public HotelResponse convertToDTO(Hotel hotel) {
@@ -153,5 +143,12 @@ public class HotelServiceImpl implements HotelService {
 
         return direction.equalsIgnoreCase("desc") ?
                 Sort.by(property).descending() : Sort.by(property).ascending();
+    }
+
+    @Override
+    public void updateStatus(Long id, HotelStatus status) {
+        Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
+        hotel.setStatus(status);
+        hotelRepo.save(hotel);
     }
 }
