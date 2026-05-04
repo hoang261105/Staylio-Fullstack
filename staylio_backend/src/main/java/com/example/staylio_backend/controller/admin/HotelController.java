@@ -5,6 +5,7 @@ import com.example.staylio_backend.dto.request.ProfileRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.HotelResponse;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
+import com.example.staylio_backend.model.enums.HotelStatus;
 import com.example.staylio_backend.service.HotelService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -62,49 +63,22 @@ public class HotelController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Thêm mới 1 thương hiệu khách sạn",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                content = @io.swagger.v3.oas.annotations.media.Content(
-                    mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                    schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = HotelRequest.class)
-            )
-    ))
+    @PatchMapping("/{id}/status")
+    @Operation(summary = "Duyệt thương hiệu khách sạn")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<HotelResponse>> createHotel(
-            @Valid @ModelAttribute HotelRequest hotelRequest
-    ) throws IOException {
-        ApiResponse<HotelResponse> response = new ApiResponse<>(
-                true,
-                "Thêm 1 thương hiêu khách sạn thành công!",
-                hotelService.create(hotelRequest),
-                null,
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Cập nhật thương hiệu khách sạn",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @io.swagger.v3.oas.annotations.media.Content(
-                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = HotelRequest.class)
-                    )
-    ))
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<HotelResponse>> updateHotel(
+    public ResponseEntity<ApiResponse<String>> updateHotelStatus(
             @PathVariable Long id,
-            @Valid @ModelAttribute HotelRequest hotelRequest
-    ) throws IOException {
-        ApiResponse<HotelResponse> response = new ApiResponse<>(
+            @RequestBody HotelStatus status
+    ) {
+        hotelService.updateStatus(id, status);
+        ApiResponse<String> response = new ApiResponse<>(
                 true,
-                "Cập nhật thương hiệu khách sạn thành công!",
-                hotelService.update(id, hotelRequest),
+                "Cập nhật trạng thái thành công!",
+                null,
                 null,
                 LocalDateTime.now()
         );
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 }
