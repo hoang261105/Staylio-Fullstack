@@ -1,4 +1,4 @@
-package com.example.staylio_backend.utils;
+package com.example.staylio_backend.common.utils;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

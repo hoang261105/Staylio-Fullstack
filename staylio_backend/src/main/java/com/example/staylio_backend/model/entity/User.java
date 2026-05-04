@@ -1,6 +1,6 @@
 package com.example.staylio_backend.model.entity;
 
-import com.example.staylio_backend.model.base.AuditableObject;
+import com.example.staylio_backend.common.base.AuditableObject;
 import com.example.staylio_backend.model.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;

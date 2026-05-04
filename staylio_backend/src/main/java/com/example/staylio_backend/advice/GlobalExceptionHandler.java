@@ -2,10 +2,10 @@ package com.example.staylio_backend.advice;
 
 
 import com.example.staylio_backend.dto.response.ApiResponse;
-import com.example.staylio_backend.exception.AppException;
-import com.example.staylio_backend.exception.BadRequestException;
-import com.example.staylio_backend.exception.ForbiddenException;
-import com.example.staylio_backend.model.enums.ErrorCode;
+import com.example.staylio_backend.common.exception.AppException;
+import com.example.staylio_backend.common.exception.BadRequestException;
+import com.example.staylio_backend.common.exception.ForbiddenException;
+import com.example.staylio_backend.common.constants.ErrorCode;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import jakarta.validation.ConstraintViolationException;

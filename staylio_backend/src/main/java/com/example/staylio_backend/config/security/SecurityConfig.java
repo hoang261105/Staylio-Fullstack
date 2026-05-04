@@ -7,7 +7,7 @@ import com.example.staylio_backend.config.security.mes.CustomAccessDeniedHandler
 import com.example.staylio_backend.config.security.mes.CustomAuthenticationEntryPoint;
 import com.example.staylio_backend.config.security.principle.CustomUserDetailsService;
 import com.example.staylio_backend.repository.BlacklistTokenRepo;
-import com.example.staylio_backend.utils.APIConstants;
+import com.example.staylio_backend.common.utils.APIConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

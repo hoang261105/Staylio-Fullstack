@@ -1,7 +1,7 @@
 package com.example.staylio_backend.dto.request;
 
 import com.example.staylio_backend.model.enums.Gender;
-import com.example.staylio_backend.utils.CustomDateDeserializer;
+import com.example.staylio_backend.common.utils.CustomDateDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

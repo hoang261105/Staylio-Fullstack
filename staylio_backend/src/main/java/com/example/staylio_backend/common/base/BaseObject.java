@@ -1,4 +1,4 @@
-package com.example.staylio_backend.model.base;
+package com.example.staylio_backend.common.base;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

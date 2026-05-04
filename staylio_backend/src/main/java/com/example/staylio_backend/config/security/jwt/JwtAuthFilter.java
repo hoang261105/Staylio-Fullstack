@@ -2,7 +2,7 @@ package com.example.staylio_backend.config.security.jwt;
 
 import com.example.staylio_backend.config.security.principle.CustomUserDetailsService;
 import com.example.staylio_backend.dto.response.ApiResponse;
-import com.example.staylio_backend.exception.TokenRevokedException;
+import com.example.staylio_backend.common.exception.TokenRevokedException;
 import com.example.staylio_backend.repository.BlacklistTokenRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;

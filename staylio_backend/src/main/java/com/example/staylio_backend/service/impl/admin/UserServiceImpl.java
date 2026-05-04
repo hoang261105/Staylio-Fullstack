@@ -5,11 +5,11 @@ import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.UserResponseDTO;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
-import com.example.staylio_backend.exception.AppException;
+import com.example.staylio_backend.common.exception.AppException;
 import com.example.staylio_backend.model.entity.Profile;
 import com.example.staylio_backend.model.entity.Role;
 import com.example.staylio_backend.model.entity.User;
-import com.example.staylio_backend.model.enums.ErrorCode;
+import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.model.enums.UserStatus;
 import com.example.staylio_backend.repository.AccountRepo;
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         List<RoleName> targetRoles = List.of(RoleName.ROLE_MANAGER, RoleName.ROLE_CUSTOMER);
 
         // Gọi hàm tìm kiếm có lọc Role
-        Page<User> userPage = accountRepo.findByRole_RoleNameIn(targetRoles, pageable);
+        Page<User> userPage = userRepo.searchUsersByRoles(targetRoles, search, pageable);
 
         List<UserResponseDTO> content = userPage.getContent().stream()
                 .map(this::convertToDTO)

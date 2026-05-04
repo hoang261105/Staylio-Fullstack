@@ -1,4 +1,4 @@
-package com.example.staylio_backend.utils;
+package com.example.staylio_backend.common.utils;
 
 public class APIConstants {
     public static final String[] PUBLIC_WHITELIST = {
