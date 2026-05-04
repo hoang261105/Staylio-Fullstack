@@ -17,4 +17,7 @@ public interface HotelRepo extends JpaRepository<Hotel, Long> {
     boolean existsByName(String name);
 
     boolean existsByManager(Profile manager);
+    boolean existsByManagerAndIdNot(Profile manager, Long id);
+
+    boolean existsByNameAndIdNot(String name, Long id);
 }

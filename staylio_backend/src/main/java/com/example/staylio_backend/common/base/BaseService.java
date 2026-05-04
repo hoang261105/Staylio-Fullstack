@@ -9,6 +9,6 @@ public interface BaseService<RQ, RS, ID> {
 
     RS findById(ID id);
     RS create(RQ request) throws IOException;
-    RS update(ID id, RQ request);
+    RS update(ID id, RQ request) throws IOException;
     void delete(ID id);
 }

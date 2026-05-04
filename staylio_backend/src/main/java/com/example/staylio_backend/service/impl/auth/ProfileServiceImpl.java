@@ -51,13 +51,18 @@ public class ProfileServiceImpl implements ProfileService {
             throw new AppException(ErrorCode.EMAIL_EXISTED, "email");
         }
 
-        String avatarUrl = cloudinaryService.uploadFile(profileRequest.getImage());
+        if (profileRequest.getImage() != null && !profileRequest.getImage().isEmpty()) {
+            String avatarUrl = cloudinaryService.uploadFile(profileRequest.getImage());
+            profile.setAvatarUrl(avatarUrl);
+        } else {
+            Profile oldProfile = profileRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Profile with id " + id + " does not exist"));
+            profile.setAvatarUrl(oldProfile.getAvatarUrl());
+        }
 
         profile.setFullName(profileRequest.getFullName());
         profile.setPhone(profileRequest.getPhone());
         profile.setAddress(profileRequest.getAddress());
         profile.setGender(profileRequest.getGender());
-        profile.setAvatarUrl(avatarUrl);
         profile.setDateOfBirth(profileRequest.getDateOfBirth());
         user.setEmail(profileRequest.getEmail());
 

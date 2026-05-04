@@ -83,4 +83,28 @@ public class HotelController {
         );
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Cập nhật thương hiệu khách sạn",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @io.swagger.v3.oas.annotations.media.Content(
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = HotelRequest.class)
+                    )
+    ))
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<HotelResponse>> updateHotel(
+            @PathVariable Long id,
+            @Valid @ModelAttribute HotelRequest hotelRequest
+    ) throws IOException {
+        ApiResponse<HotelResponse> response = new ApiResponse<>(
+                true,
+                "Cập nhật thương hiệu khách sạn thành công!",
+                hotelService.update(id, hotelRequest),
+                null,
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

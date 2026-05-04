@@ -92,8 +92,41 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public HotelResponse update(Long id, HotelRequest request) {
-        return null;
+    public HotelResponse update(Long id, HotelRequest request) throws IOException {
+        boolean isExistName = hotelRepo.existsByNameAndIdNot(request.getName(), id);
+
+        if (isExistName) {
+            throw new AppException(ErrorCode.HOTEL_NAME_EXISTED);
+        }
+
+        Profile profile = profileRepo.findById(request.getManagerId()).orElseThrow(() -> new NoSuchElementException("Không tim thấy quản lí thương hiệu khách sạn!"));
+
+        if (profile.getUser().getRole().getRoleName() != RoleName.ROLE_MANAGER){
+            throw new AppException(ErrorCode.IS_NOT_MANAGER);
+        }
+
+        boolean isExistManagerId = hotelRepo.existsByManagerAndIdNot(profile, id);
+
+        if (isExistManagerId) {
+            throw new AppException(ErrorCode.MANAGER_EXISTED);
+        }
+
+        Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
+        hotel.setName(request.getName());
+        hotel.setDescription(request.getDescription());
+        hotel.setStatus(true);
+        hotel.setManager(profile);
+
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+            String newImageUrl = cloudinaryService.uploadFile(request.getImage());
+            hotel.setImageUrl(newImageUrl);
+        } else {
+            Hotel oldHotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
+            hotel.setImageUrl(oldHotel.getImageUrl());
+        }
+
+        Hotel updatedHotel = hotelRepo.save(hotel);
+        return convertToDTO(updatedHotel);
     }
 
     @Override
