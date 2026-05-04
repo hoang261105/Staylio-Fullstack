@@ -22,6 +22,8 @@ public enum ErrorCode {
     // 2xxx: Validation (Regex, NotBlank, etc.)
     INVALID_KEY("Khóa thông báo không hợp lệ"),
     INVALID_PASSWORD_OR_EMAIL("Email hoặc mật khẩu không chính xác"),
+    ILLEGAL_STATUS_TRANSITION("Dữ liệu đã được phê duyệt và không thể thay đổi hoặc xóa."),
+    CANNOT_MODIFY_TERMINAL_STATE("Không thể chỉnh sửa trạng thái cuối!"),
 
     // 3xxx: Business Logic (Duplicates, DB logic)
     USER_EXISTED("Tên người dùng đã tồn tại"),

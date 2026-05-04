@@ -1,10 +1,13 @@
 package com.example.staylio_backend.service.impl.admin;
 
+import com.example.staylio_backend.common.constants.ErrorCode;
+import com.example.staylio_backend.common.exception.AppException;
 import com.example.staylio_backend.dto.response.HotelBranchResponse;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.HotelBranch;
 import com.example.staylio_backend.model.entity.Ward;
+import com.example.staylio_backend.model.enums.BranchStatus;
 import com.example.staylio_backend.repository.HotelBranchRepo;
 import com.example.staylio_backend.repository.WardRepo;
 import com.example.staylio_backend.service.HotelBranchService;
@@ -47,6 +50,26 @@ public class HotelBranchServiceImpl implements HotelBranchService {
     public HotelBranchResponse getHotelBranchById(Long id) {
         HotelBranch hotelBranch = branchRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm thấy chi nhánh khách sạn!"));
         return convertToDTO(hotelBranch);
+    }
+
+    @Override
+    public void updateStatus(Long id, BranchStatus status) {
+        HotelBranch hotelBranch = branchRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm thấy chi nhánh khách sạn!"));
+
+        if (hotelBranch.getStatus() == BranchStatus.CONFIRMED){
+            if (status == BranchStatus.DELETED || status == BranchStatus.REJECTED){
+                throw new AppException(ErrorCode.ILLEGAL_STATUS_TRANSITION);
+            }
+        }
+
+        if (hotelBranch.getStatus() == BranchStatus.REJECTED){
+            if (status == BranchStatus.CONFIRMED){
+                throw new AppException(ErrorCode.CANNOT_MODIFY_TERMINAL_STATE);
+            }
+        }
+
+        hotelBranch.setStatus(status);
+        branchRepo.save(hotelBranch);
     }
 
     public HotelBranchResponse convertToDTO(HotelBranch hotelBranch) {
