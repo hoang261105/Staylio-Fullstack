@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +41,12 @@ public class HotelBranchServiceImpl implements HotelBranchService {
                 branchPage.getTotalElements()
         );
         return new PaginationResponse<>(content, paginationDTO);
+    }
+
+    @Override
+    public HotelBranchResponse getHotelBranchById(Long id) {
+        HotelBranch hotelBranch = branchRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm thấy chi nhánh khách sạn!"));
+        return convertToDTO(hotelBranch);
     }
 
     public HotelBranchResponse convertToDTO(HotelBranch hotelBranch) {
