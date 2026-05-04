@@ -1,13 +1,11 @@
 package com.example.staylio_backend.model.entity;
 
-import com.example.staylio_backend.model.base.BaseObject;
+import com.example.staylio_backend.common.base.BaseObject;
 import com.example.staylio_backend.model.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Set;
 
 @Entity
 @Getter

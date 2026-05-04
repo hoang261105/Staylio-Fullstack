@@ -1,6 +1,6 @@
-package com.example.staylio_backend.exception;
+package com.example.staylio_backend.common.exception;
 
-import com.example.staylio_backend.model.enums.ErrorCode;
+import com.example.staylio_backend.common.constants.ErrorCode;
 
 public class AppException extends RuntimeException {
 

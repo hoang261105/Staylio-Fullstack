@@ -1,4 +1,4 @@
-package com.example.staylio_backend.exception;
+package com.example.staylio_backend.common.exception;
 
 public class ForbiddenException extends RuntimeException
 {

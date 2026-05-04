@@ -1,4 +1,4 @@
-package com.example.staylio_backend.model.enums;
+package com.example.staylio_backend.common.constants;
 
 import lombok.Getter;
 

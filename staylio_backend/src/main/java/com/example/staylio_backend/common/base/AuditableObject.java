@@ -1,4 +1,4 @@
-package com.example.staylio_backend.model.base;
+package com.example.staylio_backend.common.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

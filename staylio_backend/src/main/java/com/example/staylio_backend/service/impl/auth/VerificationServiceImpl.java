@@ -1,9 +1,9 @@
 package com.example.staylio_backend.service.impl.auth;
 
-import com.example.staylio_backend.exception.AppException;
+import com.example.staylio_backend.common.exception.AppException;
 import com.example.staylio_backend.model.entity.User;
 import com.example.staylio_backend.model.entity.VerificationToken;
-import com.example.staylio_backend.model.enums.ErrorCode;
+import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.model.enums.UserStatus;
 import com.example.staylio_backend.model.enums.VerificationType;
 import com.example.staylio_backend.repository.VerificationTokenRepo;

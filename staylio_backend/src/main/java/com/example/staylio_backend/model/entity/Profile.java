@@ -1,11 +1,9 @@
 package com.example.staylio_backend.model.entity;
 
-import com.example.staylio_backend.model.base.BaseObject;
 import com.example.staylio_backend.model.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalDate;
 
