@@ -1,0 +1,6 @@
+export enum RoleName {
+    ROLE_ADMIN = "ROLE_ADMIN",
+    ROLE_MANAGER = "ROLE_MANAGER",
+    ROLE_CUSTOMER = "ROLE_CUSTOMER",
+    ROLE_GUEST = "ROLE_GUEST",
+}

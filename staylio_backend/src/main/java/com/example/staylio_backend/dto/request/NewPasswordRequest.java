@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewPasswordRequest {
-    @NotBlank(message = "Mật khâu không được để trống!")
-    @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa và số!")
+    @NotBlank(message = "Mật khâu mới không được để trống!")
+    @Size(min = 8, message = "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa và số!")
     private String newPassword;
+
+    @NotBlank(message = "Xác nhận mật khâu mới không được để trống!")
+    @Size(min = 8, message = "Xác nhận mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa và số!")
+    private String confirmNewPassword;
 }

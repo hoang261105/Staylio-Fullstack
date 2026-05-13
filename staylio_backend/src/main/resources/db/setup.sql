@@ -1,21 +1,47 @@
 use staylio_db;
 
-INSERT INTO hotels (manager_id, created_at, description, name, status, image_url) VALUES
-    (1, NOW(), 'Khách sạn sang trọng tọa lạc ngay trung tâm quận 1 với view nhìn ra sông Sài Gòn tuyệt đẹp.', 'Saigon Grand Hotel', 'PENDING', 'https://images.unsplash.com/photo-1566073771259-6a8506099945'),
-    (4, NOW(), 'Khu nghỉ dưỡng yên tĩnh bên bờ biển với các villa biệt lập và dịch vụ spa cao cấp.', 'Blue Ocean Resort', 'CONFIRMED', 'https://images.unsplash.com/photo-1540541338287-41700207dee6'),
-    (5, NOW(), 'Không gian ấm cúng, thiết kế hiện đại phù hợp cho khách đi công tác dài ngày.', 'City Comfort Inn', 'REJECTED', 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4'),
-    (6, NOW(), 'Trải nghiệm cuộc sống gần gũi với thiên nhiên tại các căn nhà gỗ trên cao.', 'Mountain Retreat Homestay', 'DELETED', 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2'),
-    (7, NOW(), 'Khách sạn phong cách boutique với kiến trúc Đông Dương độc đáo và tinh tế.', 'Indochina Heritage Hotel', 'CONFIRMED', 'https://images.unsplash.com/photo-1544124499-58912cbddade'),
-    (8, NOW(), 'Vị trí đắc địa gần sân bay, phòng ốc sạch sẽ, tiện nghi đầy đủ cho khách quá cảnh.', 'Airport Transit Hotel', 'CONFIRMED', 'https://images.unsplash.com/photo-1551882547-ff43c63efe81');
+INSERT INTO hotels (name, description, image_url, manager_id, status, is_active, created_at) VALUES
+    ('Hotel Sunrise', 'Nice view hotel', 'img1.jpg', 6, 'CONFIRMED', true, now()),
+    ('Ocean Breeze', 'Near the beach', 'img2.jpg', 7, 'CONFIRMED', true, now()),
+    ('City Lights Hotel', 'In the city center', 'img4.jpg', 9, 'CONFIRMED', true, now()),
+    ('Mountain Retreat', 'Peaceful mountain stay', 'img3.jpg', 8, 'REJECTED', true, now()),
+    ('Golden Palace', 'Luxury hotel', 'img5.jpg', 10, 'CONFIRMED', true, now());
 
 INSERT INTO hotel_branchs (address, branch_name, image_url, status, hotel_id, ward_id, created_at, updated_at) VALUES
-                                                                                                                   ('123 Đường Lê Lợi, Quận 1', 'Chi nhánh Sài Gòn Center', 'https://images.unsplash.com/photo-1566073771259-6a8506099945', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
-                                                                                                                   ('456 Võ Nguyên Giáp, Sơn Trà', 'Chi nhánh Biển Mỹ Khê', 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
-                                                                                                                   ('78 Trần Phú, Lộc Thọ', 'Chi nhánh Nha Trang Bay', 'https://images.unsplash.com/photo-1544124499-58912cbddade', 'PENDING', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
-                                                                                                                   ('12 Hùng Vương, TP. Huế', 'Chi nhánh Cố Đô', 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
-                                                                                                                   ('09 Phan Chu Trinh, Đà Lạt', 'Chi nhánh Cao Nguyên', 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c', 'REJECTED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
-                                                                                                                   ('32 Đường Hạ Long, Bãi Cháy', 'Chi nhánh Vịnh Hạ Long', 'https://images.unsplash.com/photo-1551882547-ff43c63efe81', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
-                                                                                                                   ('102 Quang Trung, TP. Vinh', 'Chi nhánh Nghệ An', 'https://images.unsplash.com/photo-1564501049412-61c2a3083791', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
-                                                                                                                   ('22 Hai Bà Trưng, Quận Hoàn Kiếm', 'Chi nhánh Hà Nội Phố', 'https://images.unsplash.com/photo-1571896349842-33c89424de2d', 'PENDING', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
-                                                                                                                   ('55 Nguyễn Văn Linh, Ninh Kiều', 'Chi nhánh Tây Đô', 'https://images.unsplash.com/photo-1590490359683-658d3d23f972', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
-                                                                                                                   ('88 Đường 30/4, Dương Đông', 'Chi nhánh Đảo Ngọc', 'https://images.unsplash.com/photo-1512918766674-ed62b9795a3c', 'DELETED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW());
+    ('123 Đường Lê Lợi, Quận 1', 'Chi nhánh Sài Gòn Center', 'https://images.unsplash.com/photo-1566073771259-6a8506099945', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
+    ('456 Võ Nguyên Giáp, Sơn Trà', 'Chi nhánh Biển Mỹ Khê', 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
+    ('78 Trần Phú, Lộc Thọ', 'Chi nhánh Nha Trang Bay', 'https://images.unsplash.com/photo-1544124499-58912cbddade', 'PENDING', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
+    ('12 Hùng Vương, TP. Huế', 'Chi nhánh Cố Đô', 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
+    ('09 Phan Chu Trinh, Đà Lạt', 'Chi nhánh Cao Nguyên', 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c', 'REJECTED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
+    ('32 Đường Hạ Long, Bãi Cháy', 'Chi nhánh Vịnh Hạ Long', 'https://images.unsplash.com/photo-1551882547-ff43c63efe81', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
+    ('102 Quang Trung, TP. Vinh', 'Chi nhánh Nghệ An', 'https://images.unsplash.com/photo-1564501049412-61c2a3083791', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
+    ('22 Hai Bà Trưng, Quận Hoàn Kiếm', 'Chi nhánh Hà Nội Phố', 'https://images.unsplash.com/photo-1571896349842-33c89424de2d', 'PENDING', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
+    ('55 Nguyễn Văn Linh, Ninh Kiều', 'Chi nhánh Tây Đô', 'https://images.unsplash.com/photo-1590490359683-658d3d23f972', 'CONFIRMED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW()),
+    ('88 Đường 30/4, Dương Đông', 'Chi nhánh Đảo Ngọc', 'https://images.unsplash.com/photo-1512918766674-ed62b9795a3c', 'DELETED', FLOOR(1 + (RAND() * 5)), FLOOR(1 + (RAND() * 5)), NOW(), NOW());
+
+INSERT INTO hotel_branchs
+(branch_name, address, image_url, ward_id, hotel_id, capacity, status, created_at) VALUES
+
+-- hotel_id = 9
+('Staylio Hà Nội - Hồ Gươm', '45 Tràng Tiền, Hoàn Kiếm', 'https://picsum.photos/200/300?1', 5, 9, 100, 'PENDING', now()),
+('Staylio Hà Nội - Phố Cổ', '12 Hàng Bạc, Hoàn Kiếm', 'https://picsum.photos/200/300?2', 12, 9, 120, 'CONFIRMED', now()),
+('Staylio Hà Nội - Tây Hồ View', '88 Xuân Diệu, Tây Hồ', 'https://picsum.photos/200/300?3', 8, 9, 80, 'REJECTED', now()),
+('Staylio Hà Nội - Cầu Giấy Center', '120 Cầu Giấy', 'https://picsum.photos/200/300?4', 21, 9, 150, 'DELETED', now()),
+('Staylio Hà Nội - Mỹ Đình Plaza', '15 Lê Đức Thọ', 'https://picsum.photos/200/300?5', 3, 9, 90, 'CONFIRMED', now()),
+('Staylio Hà Nội - Ba Đình Heritage', '22 Kim Mã', 'https://picsum.photos/200/300?6', 17, 9, 110, 'PENDING', now()),
+('Staylio Hà Nội - Times City', '458 Minh Khai', 'https://picsum.photos/200/300?7', 9, 9, 130, 'CONFIRMED', now()),
+('Staylio Hà Nội - Long Biên Riverside', '35 Ngọc Lâm', 'https://picsum.photos/200/300?8', 25, 9, 140, 'REJECTED', now()),
+('Staylio Hà Nội - Thanh Xuân Tower', '200 Nguyễn Trãi', 'https://picsum.photos/200/300?9', 14, 9, 95, 'DELETED', now()),
+('Staylio Hà Nội - Hà Đông Plaza', '10 Quang Trung', 'https://picsum.photos/200/300?10', 30, 9, 160, 'CONFIRMED', now()),
+
+-- hotel_id = 10
+('Staylio Sài Gòn - Quận 1 Central', '25 Nguyễn Huệ, Q1', 'https://picsum.photos/200/300?11', 2, 10, 100, 'CONFIRMED', now()),
+('Staylio Sài Gòn - Bến Thành Market', '50 Lê Thánh Tôn, Q1', 'https://picsum.photos/200/300?12', 18, 10, 120, 'PENDING', now()),
+('Staylio Sài Gòn - Landmark 81 View', '720 Điện Biên Phủ, Bình Thạnh', 'https://picsum.photos/200/300?13', 6, 10, 85, 'CONFIRMED', now()),
+('Staylio Sài Gòn - Phú Nhuận Hub', '90 Nguyễn Văn Trỗi', 'https://picsum.photos/200/300?14', 27, 10, 140, 'REJECTED', now()),
+('Staylio Sài Gòn - Tân Bình Airport', '12 Trường Sơn', 'https://picsum.photos/200/300?15', 11, 10, 95, 'DELETED', now()),
+('Staylio Sài Gòn - Quận 7 Riverside', '99 Nguyễn Thị Thập', 'https://picsum.photos/200/300?16', 4, 10, 105, 'CONFIRMED', now()),
+('Staylio Sài Gòn - Thủ Đức City', '200 Võ Văn Ngân', 'https://picsum.photos/200/300?17', 23, 10, 125, 'PENDING', now()),
+('Staylio Sài Gòn - Gò Vấp Center', '88 Quang Trung', 'https://picsum.photos/200/300?18', 15, 10, 135, 'REJECTED', now()),
+('Staylio Sài Gòn - Bình Tân Plaza', '150 Tên Lửa', 'https://picsum.photos/200/300?19', 29, 10, 115, 'CONFIRMED', now()),
+('Staylio Sài Gòn - Chợ Lớn Heritage', '60 Hải Thượng Lãn Ông, Q5', 'https://picsum.photos/200/300?20', 7, 10, 150, 'DELETED', now());

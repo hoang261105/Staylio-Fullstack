@@ -1,6 +1,7 @@
 package com.example.staylio_backend.service.impl.admin;
 
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
+import com.example.staylio_backend.dto.request.BulkStatusRequest;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.UserResponseDTO;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
@@ -116,21 +117,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateBulkStatus(List<Long> ids, UserPrincipal userPrincipal, boolean status) {
-        for (Long id : ids) {
+    public void updateBulkStatus(BulkStatusRequest request, UserPrincipal userPrincipal) {
+        for (Long id : request.getIds()) {
             if (userPrincipal.getId().equals(id)) {
                 throw new AppException(ErrorCode.CANNOT_LOCK_SELF);
             }
         }
 
-        List<User> usersToUpdate = userRepo.findAllByIdIn(ids);
+        List<User> usersToUpdate = userRepo.findAllByIdIn(request.getIds());
 
         if (usersToUpdate.isEmpty()){
             throw new NoSuchElementException("Không có tài khoản được khóa!");
         }
 
-        UserStatus newStatus = status ? UserStatus.ACTIVE : UserStatus.LOCKED;
-        userRepo.updateStatusByIds(ids, newStatus);
+        userRepo.updateStatusByIds(request.getIds(), request.getStatus());
     }
 
     private UserResponseDTO convertToDTO(User user) {
@@ -140,6 +140,7 @@ public class UserServiceImpl implements UserService {
                 .fullName(user.getProfile().getFullName())
                 .avatarUrl(user.getProfile().getAvatarUrl())
                 .phone(user.getProfile().getPhone())
+                .dateOfBirth(user.getProfile().getDateOfBirth())
                 .roleName(user.getRole().getRoleName())
                 .status(user.getStatus())
                 .build();

@@ -15,8 +15,5 @@ public class HotelRequest {
     @NotBlank(message = "Vui lòng nhập mô tả!")
     private String description;
 
-    private MultipartFile image;
-
-    @NotNull(message = "Vui lòng nhập id quản lý khách sạn!")
-    private Long managerId;
+    private String imageUrl;
 }

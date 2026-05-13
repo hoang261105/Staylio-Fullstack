@@ -23,11 +23,14 @@ public class Hotel extends BaseObject {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Profile manager;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private HotelStatus status;
+
+    @Column(name = "is_active")
+    private boolean isActive;
 }

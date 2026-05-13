@@ -34,12 +34,12 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileResponseDTO updateInfo(Long id, ProfileRequest profileRequest) throws IOException {
+    public ProfileResponseDTO updateInfo(Long id, ProfileRequest profileRequest) {
         Profile profile = profileRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Profile with id " + id + " does not exist"));
 
         User user = accountRepo.findById(id).orElseThrow(() -> new NoSuchElementException("User with id " + id + " does not exist"));
 
-        boolean isExistPhone = profileRepo.existsByPhoneAndIdNot(profile.getPhone(), user.getId());
+        boolean isExistPhone = profileRepo.existsByPhoneAndIdNot(profileRequest.getPhone(), user.getId());
 
         if (isExistPhone) {
             throw new AppException(ErrorCode.PHONE_EXISTED, "phone");
@@ -51,19 +51,12 @@ public class ProfileServiceImpl implements ProfileService {
             throw new AppException(ErrorCode.EMAIL_EXISTED, "email");
         }
 
-        if (profileRequest.getImage() != null && !profileRequest.getImage().isEmpty()) {
-            String avatarUrl = cloudinaryService.uploadFile(profileRequest.getImage());
-            profile.setAvatarUrl(avatarUrl);
-        } else {
-            Profile oldProfile = profileRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Profile with id " + id + " does not exist"));
-            profile.setAvatarUrl(oldProfile.getAvatarUrl());
-        }
-
         profile.setFullName(profileRequest.getFullName());
         profile.setPhone(profileRequest.getPhone());
         profile.setAddress(profileRequest.getAddress());
         profile.setGender(profileRequest.getGender());
         profile.setDateOfBirth(profileRequest.getDateOfBirth());
+        profile.setAvatarUrl(profileRequest.getAvatarUrl());
         user.setEmail(profileRequest.getEmail());
 
         Profile updatedProfile = profileRepo.save(profile);
@@ -79,8 +72,8 @@ public class ProfileServiceImpl implements ProfileService {
             throw new BadRequestException("Mật khẩu cũ không chính xác!");
         }
 
-        if(!passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getConfirmPassword())){
-            throw new BadRequestException("Mật khẩu không khớp!");
+        if(!passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getConfirmNewPassword())){
+            throw new AppException(ErrorCode.PASSWORD_NOT_MATCH);
         }
 
         if (passwordEncoder.matches(passwordChangeRequest.getNewPassword(), user.getPasswordHash())){

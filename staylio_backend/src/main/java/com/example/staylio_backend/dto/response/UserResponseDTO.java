@@ -4,6 +4,8 @@ import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.model.enums.UserStatus;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -15,6 +17,7 @@ public class UserResponseDTO {
     private String email;
     private String avatarUrl;
     private String phone;
+    private LocalDate dateOfBirth;
     private RoleName roleName;
     private UserStatus status;
 }
