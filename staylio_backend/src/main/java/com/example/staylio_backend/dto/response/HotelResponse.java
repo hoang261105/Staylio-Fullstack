@@ -9,9 +9,11 @@ import lombok.Setter;
 @Setter
 @Builder
 public class HotelResponse {
+    private Long id;
     private String name;
     private String description;
     private String imageUrl;
     private HotelStatus status;
     private String hostHotelName;
+    private boolean isActive;
 }

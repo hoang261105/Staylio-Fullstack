@@ -38,6 +38,7 @@ public class SecurityConfig {
         JwtAuthFilter jwtFilter = new JwtAuthFilter(jwtTokenProvider, userDetailsService, blacklistTokenRepo, mapper);
 
         http
+                .cors(cors -> {})
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -46,7 +47,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/api/v1/auth/google-success", true))
-
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint(mapper))
                         .accessDeniedHandler(new CustomAccessDeniedHandler(mapper))

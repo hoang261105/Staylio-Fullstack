@@ -31,6 +31,18 @@ public class HotelBranch extends AuditableObject {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
+    @Column(name = "capacity")
+    private Integer capacity;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "phone", unique = true)
+    private String phone;
+
+    @Column(name = "is_active")
+    private boolean isActive;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private BranchStatus status;

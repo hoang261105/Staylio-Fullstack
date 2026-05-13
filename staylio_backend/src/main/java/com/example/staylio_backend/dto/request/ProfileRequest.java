@@ -16,29 +16,27 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class ProfileRequest {
-    @NotBlank(message = "Full name cannot be blank")
+    @NotBlank(message = "Họ tên không được để trống!")
     private String fullName;
 
-    @NotBlank(message = "Email cannot be blank")
-    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Invalid email format!")
+    @NotBlank(message = "Email không được để trống!")
+    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email không đúng định dạng!!")
     private String email;
 
-    @NotBlank(message = "Phone cannot be blank")
+    @NotBlank(message = "So điện thoại không được để trống!")
     @Pattern(
             regexp = "^(0|84)([35789])([0-9]{8})$",
-            message = "Invalid phone!"
+            message = "Số điện thoại không hợp lệ!"
     )
     private String phone;
 
     private String address;
 
-    @NotNull(message = "Please enter your birthday.")
+    @NotNull(message = "Vui lòng nhập ngày sinh.")
     @JsonDeserialize(using = CustomDateDeserializer.class)
-    @Past(message = "Birthday must be a past date")
+    @Past(message = "Ngày sinh phải nhỏ hơn ngày hiện tại!")
     private LocalDate dateOfBirth;
 
-    @NotNull(message = "Please select an image")
-    @Schema(description = "Avatar image file", type = "string", format = "binary")
-    private MultipartFile image;
+    private String avatarUrl;
     private Gender gender;
 }

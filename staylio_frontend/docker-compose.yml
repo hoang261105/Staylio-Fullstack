@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  staylio-user:
+    container_name: staylio_user
+    build:
+      context: . # Lấy ngữ cảnh từ thư mục gốc để nhận diện folder common
+      dockerfile: user/Dockerfile
+    ports:
+      - "3002:80" # App User chạy ở cổng 3002
+    restart: unless-stopped
+
+  staylio-admin:
+    container_name: staylio_admin
+    build:
+      context: .
+      dockerfile: admin/Dockerfile
+    ports:
+      - "3000:80" # App Admin chạy ở cổng 3000
+    restart: unless-stopped
+
+  staylio-manager:
+    container_name: staylio_manager
+    build:
+      context: .
+      dockerfile: manager/Dockerfile
+    ports:
+      - "3001:80" # App Manager chạy ở cổng 3001
+    restart: unless-stopped

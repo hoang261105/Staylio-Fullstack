@@ -2,6 +2,7 @@ package com.example.staylio_backend.service.impl.admin;
 
 import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.common.exception.AppException;
+import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.HotelRequest;
 import com.example.staylio_backend.dto.response.HotelResponse;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
@@ -15,6 +16,7 @@ import com.example.staylio_backend.repository.ProfileRepo;
 import com.example.staylio_backend.service.CloudinaryService;
 import com.example.staylio_backend.service.HotelService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -60,61 +62,12 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public HotelResponse create(HotelRequest request) throws IOException {
-        boolean isExistName = hotelRepo.existsByName(request.getName());
-
-        if (isExistName) {
-            throw new AppException(ErrorCode.HOTEL_NAME_EXISTED);
-        }
-
-        String imageUrl = cloudinaryService.uploadFile(request.getImage());
-
-        Profile profile = profileRepo.findById(request.getManagerId()).orElseThrow(() -> new NoSuchElementException("Không tim thấy quản lí thương hiệu khách sạn!"));
-
-        if (profile.getUser().getRole().getRoleName() != RoleName.ROLE_MANAGER){
-            throw new AppException(ErrorCode.IS_NOT_MANAGER);
-        }
-
-        Hotel hotel = Hotel.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .status(HotelStatus.PENDING)
-                .manager(profile)
-                .imageUrl(imageUrl)
-                .build();
-
-        Hotel savedHotel = hotelRepo.save(hotel);
-        return convertToDTO(savedHotel);
+        return null;
     }
 
     @Override
     public HotelResponse update(Long id, HotelRequest request) throws IOException {
-        boolean isExistName = hotelRepo.existsByNameAndIdNot(request.getName(), id);
-
-        if (isExistName) {
-            throw new AppException(ErrorCode.HOTEL_NAME_EXISTED);
-        }
-
-        Profile profile = profileRepo.findById(request.getManagerId()).orElseThrow(() -> new NoSuchElementException("Không tim thấy quản lí thương hiệu khách sạn!"));
-
-        if (profile.getUser().getRole().getRoleName() != RoleName.ROLE_MANAGER){
-            throw new AppException(ErrorCode.IS_NOT_MANAGER);
-        }
-
-        Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
-        hotel.setName(request.getName());
-        hotel.setDescription(request.getDescription());
-        hotel.setManager(profile);
-
-        if (request.getImage() != null && !request.getImage().isEmpty()) {
-            String newImageUrl = cloudinaryService.uploadFile(request.getImage());
-            hotel.setImageUrl(newImageUrl);
-        } else {
-            Hotel oldHotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
-            hotel.setImageUrl(oldHotel.getImageUrl());
-        }
-
-        Hotel updatedHotel = hotelRepo.save(hotel);
-        return convertToDTO(updatedHotel);
+        return null;
     }
 
     @Override
@@ -126,11 +79,13 @@ public class HotelServiceImpl implements HotelService {
 
     public HotelResponse convertToDTO(Hotel hotel) {
         return HotelResponse.builder()
+                .id(hotel.getId())
                 .name(hotel.getName())
                 .description(hotel.getDescription())
                 .status(hotel.getStatus())
                 .imageUrl(hotel.getImageUrl())
                 .hostHotelName(hotel.getManager().getFullName())
+                .isActive(hotel.isActive())
                 .build();
     }
 
@@ -150,5 +105,99 @@ public class HotelServiceImpl implements HotelService {
         Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
         hotel.setStatus(status);
         hotelRepo.save(hotel);
+    }
+
+
+
+    @Override
+    public void updateBulkActive(List<Long> ids, Boolean active) {
+        List<Hotel> hotelsToUpdate = hotelRepo.findAllByIdIn(ids);
+
+        if (hotelsToUpdate.isEmpty()){
+            throw new NoSuchElementException("Không có thương hiệu khách sạn nào đc chọn!");
+        }
+
+        hotelRepo.updateBulkActive(ids, active);
+    }
+
+    @Override
+    public HotelResponse addHotel(HotelRequest request, UserPrincipal userPrincipal) {
+        boolean isExistName = hotelRepo.existsByName(request.getName());
+
+        if (isExistName) {
+            throw new AppException(ErrorCode.HOTEL_NAME_EXISTED);
+        }
+
+        Profile profile = profileRepo.findById(userPrincipal.getId()).orElseThrow(() -> new NoSuchElementException("Không tim thấy quản lí thương hiệu khách sạn!"));
+
+        boolean isExistManager = hotelRepo.existsByManager_Id(profile.getId());
+
+        if (isExistManager){
+            throw new AppException(ErrorCode.MANAGER_EXISTED);
+        }
+
+        if (profile.getUser().getRole().getRoleName() != RoleName.ROLE_MANAGER){
+            throw new AppException(ErrorCode.IS_NOT_MANAGER);
+        }
+
+        Hotel hotel = Hotel.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .status(HotelStatus.PENDING)
+                .manager(profile)
+                .imageUrl(request.getImageUrl())
+                .isActive(true)
+                .build();
+
+        Hotel savedHotel = hotelRepo.save(hotel);
+        try {
+            return convertToDTO(savedHotel);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.MANAGER_EXISTED);
+        }
+    }
+
+    @Override
+    public HotelResponse updateHotel(Long id, HotelRequest request, UserPrincipal userPrincipal) {
+        boolean isExistName = hotelRepo.existsByNameAndIdNot(request.getName(), id);
+
+        if (isExistName) {
+            throw new AppException(ErrorCode.HOTEL_NAME_EXISTED);
+        }
+
+        Profile profile = profileRepo.findById(userPrincipal.getId()).orElseThrow(() -> new NoSuchElementException("Không tim thấy quản lí thương hiệu khách sạn!"));
+
+        if (profile.getUser().getRole().getRoleName() != RoleName.ROLE_MANAGER){
+            throw new AppException(ErrorCode.IS_NOT_MANAGER);
+        }
+
+        Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
+        hotel.setName(request.getName());
+        hotel.setDescription(request.getDescription());
+        hotel.setManager(profile);
+
+        if (request.getImageUrl() != null && !request.getImageUrl().isEmpty()) {
+            hotel.setImageUrl(request.getImageUrl());
+        } else {
+            hotel.setImageUrl(hotel.getImageUrl());
+        }
+
+        Hotel updatedHotel = hotelRepo.save(hotel);
+        return convertToDTO(updatedHotel);
+    }
+
+    @Override
+    public HotelResponse getMyHotel(UserPrincipal userPrincipal) {
+        Profile profile = profileRepo.findById(userPrincipal.getId())
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy quản lí!"));
+
+        if (profile.getUser().getRole().getRoleName() != RoleName.ROLE_MANAGER) {
+            throw new AppException(ErrorCode.IS_NOT_MANAGER);
+        }
+
+        Hotel hotel = hotelRepo.findByManager(profile)
+                .orElseThrow(() -> new AppException(ErrorCode.HOTEL_BRAND_NOT_FOUND));
+
+        return convertToDTO(hotel);
     }
 }

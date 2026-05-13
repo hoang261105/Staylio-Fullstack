@@ -1,8 +1,10 @@
 package com.example.staylio_backend.service.impl.province;
 
+import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.dto.request.ProvinceRequest;
 import com.example.staylio_backend.dto.request.WardRequest;
 import com.example.staylio_backend.dto.response.ProvinceResponse;
+import com.example.staylio_backend.dto.response.WardResponse;
 import com.example.staylio_backend.model.entity.Province;
 import com.example.staylio_backend.model.entity.Ward;
 import com.example.staylio_backend.repository.ProvinceRepo;
@@ -64,14 +66,38 @@ public class ProvinceServiceImpl implements ProvinceService {
         }
     }
 
-    public List<ProvinceResponse> getAllProvinces() {
-        List<Province> provinces = provinceRepo.findAll();
+    public List<ProvinceResponse> getAllProvinces(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return provinceRepo.findAll()
+                    .stream()
+                    .map(this::convertToResponse)
+                    .toList();
+        }
+
+        List<Province> provinces =
+                provinceRepo.findByProvinceContainingIgnoreCase(keyword);
+
         return provinces.stream().map(this::convertToResponse).toList();
     }
 
     public ProvinceResponse getProvinceById(Long id) {
         Province province = provinceRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm thấy tỉnh thành!"));
         return convertToResponse(province);
+    }
+
+    @Override
+    public List<WardResponse> getWardsByProvinceId(Long provinceId, String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return wardRepo.findAllByProvinceId(provinceId)
+                    .stream()
+                    .map(this::convertWardToResponse)
+                    .toList();
+        }
+
+        List<Ward> wards =
+                wardRepo.findByProvinceIdAndNameContainingIgnoreCase(provinceId, keyword);
+
+        return wards.stream().map(this::convertWardToResponse).toList();
     }
 
     public ProvinceResponse convertToResponse(Province province) {
@@ -82,4 +108,10 @@ public class ProvinceServiceImpl implements ProvinceService {
         );
     }
 
+    public WardResponse convertWardToResponse(Ward ward){
+        return new WardResponse(
+            ward.getId(),
+            ward.getName()
+        );
+    }
 }

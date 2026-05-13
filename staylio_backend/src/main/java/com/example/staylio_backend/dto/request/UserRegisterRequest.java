@@ -19,7 +19,7 @@ public class UserRegisterRequest {
     @Size(min = 6, max = 50, message = "Username phải từ 6 đến 50 ký tự!")
     private String userName;
 
-    @NotBlank(message = "Full name không được để trống!")
+    @NotBlank(message = "Họ và tên không được để trống!")
     private String fullName;
 
     @NotNull(message = "Vui lòng chọn giới tính.")

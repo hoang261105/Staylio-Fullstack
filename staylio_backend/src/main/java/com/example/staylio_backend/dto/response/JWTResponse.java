@@ -1,15 +1,15 @@
 package com.example.staylio_backend.dto.response;
 
 import com.example.staylio_backend.model.enums.Gender;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.staylio_backend.model.enums.UserStatus;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.Collection;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Builder
 public class JWTResponse {
@@ -20,12 +20,13 @@ public class JWTResponse {
     private Gender gender;
     private LocalDate dateOfBirth;
     private String phone;
+    private UserStatus status;
     private String address;
     private Collection<? extends GrantedAuthority> authorities;
     private String accessToken;
     private String refreshToken;
 
-    public JWTResponse(Long id, String email, String fullName, String avatarUrl, Gender gender, LocalDate dateOfBirth, String phone, String address, Collection<? extends GrantedAuthority> authorities, String accessToken, String refreshToken) {
+    public JWTResponse(Long id, String email, String fullName, String avatarUrl, Gender gender, LocalDate dateOfBirth, String phone, UserStatus status, String address, Collection<? extends GrantedAuthority> authorities, String accessToken, String refreshToken) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
@@ -33,6 +34,7 @@ public class JWTResponse {
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.phone = phone;
+        this.status = status;
         this.address = address;
         this.authorities = authorities;
         this.accessToken = accessToken;

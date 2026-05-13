@@ -1,6 +1,7 @@
 package com.example.staylio_backend.repository;
 
 import com.example.staylio_backend.model.entity.HotelBranch;
+import com.example.staylio_backend.model.enums.BranchStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,10 +11,26 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HotelBranchRepo extends JpaRepository<HotelBranch, Long> {
-    @Query("SELECT hb FROM HotelBranch hb WHERE " +
-            "(:hotelId IS NULL OR hb.hotel.id = :hotelId) AND " +
-            "(:search IS NULL OR :search = '' OR LOWER(hb.branchName) LIKE LOWER(CONCAT('%', :search, '%')))")
-    Page<HotelBranch> searchBranches(@Param("hotelId") Long hotelId,
-                                     @Param("search") String search,
-                                     Pageable pageable);
+    @Query("""
+    SELECT b FROM HotelBranch b
+    WHERE (:hotelId IS NULL OR b.hotel.id = :hotelId)
+      AND (:search IS NULL OR LOWER(b.branchName) LIKE LOWER(CONCAT('%', :search, '%')))
+      AND (:status IS NULL OR b.status = :status)
+      AND b.status <> 'DELETED'
+""")
+    Page<HotelBranch> searchBranches(
+            Long hotelId,
+            String search,
+            BranchStatus status,
+            Pageable pageable
+    );
+
+    boolean existsByBranchNameAndHotel_Id(String branchName, Long hotelId);
+    boolean existsByPhone(String phone);
+    boolean existsByBranchNameAndHotel_IdAndIdNot(
+            String branchName,
+            Long hotelId,
+            Long id
+    );
+    boolean existsByPhoneAndIdNot(String phone, Long id);
 }

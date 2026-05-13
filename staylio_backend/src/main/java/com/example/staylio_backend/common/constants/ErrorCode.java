@@ -16,7 +16,7 @@ public enum ErrorCode {
     CANNOT_SEND_EMAIL("Không thể gửi email!"),
     CANNOT_LOCK_SELF("Không được khóa tài khoản chính mình!"),
     CANNOT_LOCK_ADMIN("Không thể khóa tài khoản admin!"),
-    ACCOUNT_LOCKED("Tài khoản đã bị khóa!"),
+    ACCOUNT_LOCKED("Tài khoản đã bị khóa. Vui lòng liên hệ thêm để được hỗ trợ!"),
     IS_NOT_MANAGER("Vui lòng chọn 1 tài khoản manager!"),
 
     // 2xxx: Validation (Regex, NotBlank, etc.)
@@ -24,6 +24,8 @@ public enum ErrorCode {
     INVALID_PASSWORD_OR_EMAIL("Email hoặc mật khẩu không chính xác"),
     ILLEGAL_STATUS_TRANSITION("Dữ liệu đã được phê duyệt và không thể thay đổi hoặc xóa."),
     CANNOT_MODIFY_TERMINAL_STATE("Không thể chỉnh sửa trạng thái cuối!"),
+    PASSWORD_NOT_MATCH("Mật khẩu không khớp!"),
+    CANNOT_DELETE_BRANCH("Không thể xóa chi nhánh đã duyệt!"),
 
     // 3xxx: Business Logic (Duplicates, DB logic)
     USER_EXISTED("Tên người dùng đã tồn tại"),
@@ -32,11 +34,16 @@ public enum ErrorCode {
     PHONE_EXISTED("Số điện thoại đã tồn tại"),
     HOTEL_NAME_EXISTED("Tên thương hiệu đã tồn tại!"),
     MANAGER_EXISTED("Quản lí đã có thương hiệu khách sạn!"),
+    BRANCH_NAME_EXISTED("Tên chi nhánh đã tồn tại trong thương hiệu!"),
 
     // 4xxx: Resources
     DATA_NOT_FOUND("Không tìm thấy dữ liệu yêu cầu"),
     EMAIL_NOT_FOUND("Không tìm thấy email"),
-    USER_NOT_FOUND("Không tìm thấy người dùng");
+    USER_NOT_FOUND("Không tìm thấy người dùng"),
+    HOTEL_BRAND_NOT_FOUND("Không tìm thấy thương hiệu khách sạn!"),
+    PROVINCE_NOT_FOUND("Không tìm thấy tỉnh thành!"),
+    WARD_NOT_FOUND("Không tìm thấy xã/phường!"),
+    HOTEL_BRANCH_NOT_FOUND("Không tìm thấy chi nhánh!");
 
     private final String message;
 

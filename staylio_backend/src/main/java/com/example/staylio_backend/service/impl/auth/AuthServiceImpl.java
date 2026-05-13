@@ -4,6 +4,7 @@ import com.example.staylio_backend.config.security.AppConfig;
 import com.example.staylio_backend.config.security.jwt.JwtTokenProvider;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.NewPasswordRequest;
+import com.example.staylio_backend.dto.request.RefreshTokenRequest;
 import com.example.staylio_backend.dto.request.UserLoginRequest;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.JWTResponse;
@@ -27,10 +28,15 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -41,6 +47,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.NoSuchElementException;
@@ -55,7 +62,6 @@ public class AuthServiceImpl implements AuthService {
     private final VerificationService verificationService;
     private final VerificationTokenRepo verificationTokenRepo;
     private final EmailService emailService;
-    private final AppConfig appConfig;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
@@ -104,7 +110,7 @@ public class AuthServiceImpl implements AuthService {
         String token = verificationService.createVerificationToken(savedUser, VerificationType.VERIFY_EMAIL);
 
         try {
-            String verifyLink = appConfig.getFullApiUrl() + "/auth/verify-registration?token=" + token;
+            String verifyLink = "http://localhost:3002/verify-email?token=" + token;
 
             String content = "<h3>Dear " + savedUser.getUserName() + ",</h3>" +
                     "<p>Thank you for registering an account at Staylio.</p>" +
@@ -145,6 +151,7 @@ public class AuthServiceImpl implements AuthService {
                     .address(principal.getAddress())
                     .avatarUrl(principal.getAvatarUrl())
                     .gender(principal.isGender())
+                    .status(principal.getUserStatus())
                     .dateOfBirth(principal.getDateOfBirth())
                     .authorities(principal.getAuthorities())
                     .accessToken(accessToken)
@@ -167,7 +174,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             String token = verificationService.createVerificationToken(optionalUser, VerificationType.RESET_PASSWORD);
 
-            String resetLink = appConfig.getFullApiUrl() + "/auth/reset-password?token=" + token;
+            String resetLink = "http://localhost:3002/reset-password?token=" + token;
 
             String content = "<p>You have requested a password reset. Please click the link below:</p>" +
                     "<a href='" + resetLink + "'>RESET PASSWORD</a>";
@@ -181,6 +188,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void resetPassword(String token, NewPasswordRequest newPasswordRequest) {
         VerificationToken verificationToken =verificationService.validateToken(token, VerificationType.RESET_PASSWORD);
+
+        if (!newPasswordRequest.getNewPassword().equals(newPasswordRequest.getConfirmNewPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_NOT_MATCH);
+        }
 
         User user = verificationToken.getUser();
         user.setPasswordHash(passwordEncoder.encode(newPasswordRequest.getNewPassword()));
@@ -254,6 +265,52 @@ public class AuthServiceImpl implements AuthService {
 
         return generateTokenResponse(user);
     }
+
+    @Override
+    public String refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = null;
+
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                }
+            }
+        }
+
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new RuntimeException("Refresh token không tồn tại");
+        }
+
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new RuntimeException("Refresh token không hợp lệ");
+        }
+
+        String email = jwtTokenProvider.getEmailFromToken(refreshToken);
+
+        User user = accountRepo.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy user"));
+
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new RuntimeException("User không hợp lệ");
+        }
+
+        UserPrincipal principal = UserPrincipal.create(user);
+        String newAccessToken = jwtTokenProvider.generateAccessToken(principal);
+
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", newAccessToken)
+                .httpOnly(true)
+                .secure(false) // DEV
+                .path("/")
+                .maxAge(Duration.ofMinutes(15))
+                .sameSite("Lax")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+
+        return newAccessToken;
+    }
+
 
     public TokenResponse generateTokenResponse(User user) {
         User findUser = accountRepo.findByEmail(user.getEmail())

@@ -16,5 +16,5 @@ public class PasswordChangeRequest {
     private String newPassword;
 
     @NotBlank(message = "Xác nhận mật khẩu không được để trống!")
-    private String confirmPassword;
+    private String confirmNewPassword;
 }
