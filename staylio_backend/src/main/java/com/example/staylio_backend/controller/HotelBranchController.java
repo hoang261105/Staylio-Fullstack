@@ -19,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/hotel-branches")
@@ -46,6 +47,24 @@ public class HotelBranchController {
                                 LocalDateTime.now());
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        @GetMapping("/me")
+        @Operation(summary = "Danh sách tất cả chi nhánh của tôi")
+        @PreAuthorize("hasRole('MANAGER')")
+        public ResponseEntity<ApiResponse<List<HotelBranchResponse>>> getMyHotelBranches(
+                @RequestParam Long hotelId,
+                @AuthenticationPrincipal UserPrincipal userPrincipal
+        ){
+            ApiResponse<List<HotelBranchResponse>> response = new ApiResponse<>(
+                    true,
+                    "Lấy tất cả chi nhánh của tôi thành công!",
+                    hotelBranchService.getAllBranchesByHotelId(hotelId, userPrincipal),
+                    null,
+                    LocalDateTime.now()
+            );
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         @GetMapping("/{id}")
@@ -122,7 +141,7 @@ public class HotelBranchController {
                 hotelBranchService.updateStatus(id, request);
                 ApiResponse<String> response = new ApiResponse<>(
                                 true,
-                                "Cập nhật trạng thái chi nhánh khách sạn thành công!",
+                                "Cập nhật/Duyệt chi nhánh khách sạn thành công!",
                                 null,
                                 null,
                                 LocalDateTime.now());

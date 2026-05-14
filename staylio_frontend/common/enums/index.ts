@@ -1,1 +1,1 @@
-export type { Gender } from '@common/enums/Gender';
+export { Gender } from '@common/enums/Gender';

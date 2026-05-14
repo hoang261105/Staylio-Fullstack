@@ -5,6 +5,7 @@ export interface SearchQueryParams {
 
 export interface QueryParams extends SearchQueryParams {
   hotelId?: number;
+  hotelBranchId?: number;
   page: number;
   status?: any;
   size: number;

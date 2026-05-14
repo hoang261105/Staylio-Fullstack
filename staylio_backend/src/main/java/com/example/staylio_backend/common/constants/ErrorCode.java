@@ -26,6 +26,8 @@ public enum ErrorCode {
     CANNOT_MODIFY_TERMINAL_STATE("Không thể chỉnh sửa trạng thái cuối!"),
     PASSWORD_NOT_MATCH("Mật khẩu không khớp!"),
     CANNOT_DELETE_BRANCH("Không thể xóa chi nhánh đã duyệt!"),
+    CANNOT_CREATE_BRAND_HOTEL("Không thể tạo chi nhánh do thương hiệu chưa được duyệt!"),
+    CANNOT_CREATE_ROOM("Không thể tạo phòng do chi nhánh chưa được duyệt!"),
 
     // 3xxx: Business Logic (Duplicates, DB logic)
     USER_EXISTED("Tên người dùng đã tồn tại"),
@@ -35,6 +37,8 @@ public enum ErrorCode {
     HOTEL_NAME_EXISTED("Tên thương hiệu đã tồn tại!"),
     MANAGER_EXISTED("Quản lí đã có thương hiệu khách sạn!"),
     BRANCH_NAME_EXISTED("Tên chi nhánh đã tồn tại trong thương hiệu!"),
+    ROOM_NAME_EXISTED("Tên phòng đã tồn tại!"),
+    ROOM_NUMBER_EXISTED("Mã phòng đã tồn tại!"),
 
     // 4xxx: Resources
     DATA_NOT_FOUND("Không tìm thấy dữ liệu yêu cầu"),
@@ -43,7 +47,8 @@ public enum ErrorCode {
     HOTEL_BRAND_NOT_FOUND("Không tìm thấy thương hiệu khách sạn!"),
     PROVINCE_NOT_FOUND("Không tìm thấy tỉnh thành!"),
     WARD_NOT_FOUND("Không tìm thấy xã/phường!"),
-    HOTEL_BRANCH_NOT_FOUND("Không tìm thấy chi nhánh!");
+    HOTEL_BRANCH_NOT_FOUND("Không tìm thấy chi nhánh!"),
+    ROOM_NOT_FOUND("Không tìm thấy phòng!");
 
     private final String message;
 
