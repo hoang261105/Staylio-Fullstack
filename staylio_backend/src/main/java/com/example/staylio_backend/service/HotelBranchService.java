@@ -8,6 +8,8 @@ import com.example.staylio_backend.dto.response.HotelBranchResponse;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.enums.BranchStatus;
 
+import java.util.List;
+
 public interface HotelBranchService {
     PaginationResponse<HotelBranchResponse> getHotelBranches(Long hotelId, String search, BranchStatus status, int page, int size, String sortBy, String direction);
 
@@ -20,5 +22,7 @@ public interface HotelBranchService {
     HotelBranchResponse updateBranch(Long id, UserPrincipal principal, HotelBranchRequest request);
 
     void deleteStatus(Long id, HotelIdRequest request, UserPrincipal principal);
+
+    List<HotelBranchResponse> getAllBranchesByHotelId (Long hotelId, UserPrincipal principal);
 }
 

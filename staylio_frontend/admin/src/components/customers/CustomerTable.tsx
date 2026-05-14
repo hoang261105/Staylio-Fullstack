@@ -219,11 +219,10 @@ export default function CustomerTable({ customers }: Props) {
                         onClick={() =>
                           handleToggleStatus(customer.id, customer.status)
                         }
-                        className={`p-2 rounded-lg transition-colors ${
-                          customer.status === "LOCKED"
+                        className={`p-2 rounded-lg transition-colors ${customer.status === "LOCKED"
                             ? "hover:bg-green-50 text-green-600"
                             : "hover:bg-red-50 text-red-600"
-                        }`}
+                          }`}
                       >
                         {customer.status === "LOCKED" ? (
                           <Unlock size={16} />
@@ -241,7 +240,7 @@ export default function CustomerTable({ customers }: Props) {
       </div>
 
       {/* Detail Modal */}
-      {showDetailModal && (
+      {showDetailModal && customer && (
         <CustomerDetailModal
           customer={customer}
           onClose={() => setShowDetailModal(false)}
@@ -278,11 +277,10 @@ export default function CustomerTable({ customers }: Props) {
 
               <button
                 onClick={handleConfirm}
-                className={`px-4 py-2 text-sm text-white rounded-lg ${
-                  confirmModal.currentStatus === "LOCKED"
+                className={`px-4 py-2 text-sm text-white rounded-lg ${confirmModal.currentStatus === "LOCKED"
                     ? "bg-green-600 hover:bg-green-700"
                     : "bg-red-600 hover:bg-red-700"
-                }`}
+                  }`}
               >
                 {confirmModal.currentStatus === "LOCKED" ? "Mở khóa" : "Khóa"}
               </button>

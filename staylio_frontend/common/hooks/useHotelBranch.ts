@@ -9,6 +9,7 @@ import {
   deleteHotelBranch,
   getAllHotelBranches,
   getHotelBranchById,
+  getMyHotelBranches,
   updateHotelBranch,
 } from "@common/services/hotel_branch.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -35,6 +36,16 @@ export const useHotelBranchs = (params: QueryParams) => {
     },
   });
 };
+
+export const useMyHotelBranchs = (hotelId: number) => {
+  return useQuery<HotelBranchResponse[]>({
+    queryKey: ["myHotelBranchs", hotelId],
+    queryFn: async () => {
+      const response = await getMyHotelBranches(hotelId);
+      return response.data;
+    }
+  })
+}
 
 export const useHotelBranchById = (id: number) => {
   return useQuery<HotelBranchResponse>({

@@ -1,5 +1,6 @@
 package com.example.staylio_backend.config.security.principle;
 
+import com.example.staylio_backend.model.entity.Hotel;
 import com.example.staylio_backend.model.entity.User;
 import com.example.staylio_backend.model.enums.UserStatus;
 import com.example.staylio_backend.model.enums.Gender;

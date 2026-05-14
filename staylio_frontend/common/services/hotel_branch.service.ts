@@ -15,6 +15,17 @@ export const getAllHotelBranches = async (params: QueryParams) => {
     }
 }
 
+// Lấy danh sách chi nhánh của tôi
+export const getMyHotelBranches = async (hotelId: number) => {
+    try {
+        const response = await axiosInstance.get(`/hotel-branches/me`, { params: { hotelId } });
+        return response.data;
+    } catch (error) {
+        console.error("Lấy danh sách thất bại:", error);
+        throw error;
+    }
+}
+
 // Lấy chi tiết một chi nhánh khách sạn theo ID
 export const getHotelBranchById = async (id: number) => {
     try {

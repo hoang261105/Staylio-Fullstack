@@ -45,3 +45,55 @@ INSERT INTO hotel_branchs
 ('Staylio Sài Gòn - Gò Vấp Center', '88 Quang Trung', 'https://picsum.photos/200/300?18', 15, 10, 135, 'REJECTED', now()),
 ('Staylio Sài Gòn - Bình Tân Plaza', '150 Tên Lửa', 'https://picsum.photos/200/300?19', 29, 10, 115, 'CONFIRMED', now()),
 ('Staylio Sài Gòn - Chợ Lớn Heritage', '60 Hải Thượng Lãn Ông, Q5', 'https://picsum.photos/200/300?20', 7, 10, 150, 'DELETED', now());
+
+INSERT INTO rooms (
+    created_at,
+    room_name,
+    hotel_branch_id,
+    room_type,
+    description,
+    price,
+    max_adults,
+    max_children,
+    adult_price,
+    capacity,
+    child_price,
+    bed_info,
+    area,
+    room_number,
+    floor,
+    status,
+    is_active,
+    is_voucher_applicable
+) VALUES
+
+-- ===== BRANCH 24 =====
+(NOW(),'Single 101',24,'SINGLE','Phòng đơn',500000,2,1,250000,2,150000,'1 Queen Bed',25,'A101',1,'AVAILABLE',1,1),
+(NOW(),'Single 102',24,'SINGLE','Phòng đơn',500000,2,1,250000,2,150000,'1 Queen Bed',25,'A102',1,'AVAILABLE',1,1),
+
+(NOW(),'Double 201',24,'DOUBLE','Phòng đôi',800000,4,2,300000,4,180000,'2 Single Beds',35,'A201',2,'OCCUPIED',1,1),
+(NOW(),'Double 202',24,'DOUBLE','Phòng đôi',800000,4,2,300000,4,180000,'2 Single Beds',35,'A202',2,'OCCUPIED',1,1),
+
+(NOW(),'Suite 301',24,'SUITE','Phòng suite',1500000,4,2,400000,4,200000,'1 King Bed',50,'A301',3,'MAINTENANCE',1,1),
+(NOW(),'Suite 302',24,'SUITE','Phòng suite',1500000,4,2,400000,4,200000,'1 King Bed',50,'A302',3,'MAINTENANCE',1,1),
+(NOW(),'Suite 303',24,'SUITE','Phòng suite',1500000,4,2,400000,4,200000,'1 King Bed',50,'A303',3,'MAINTENANCE',1,1),
+
+(NOW(),'VIP 401',24,'VIP','Phòng VIP',2500000,6,2,500000,6,250000,'2 King Beds',70,'A401',4,'RESERVED',1,1),
+(NOW(),'VIP 402',24,'VIP','Phòng VIP',2500000,6,2,500000,6,250000,'2 King Beds',70,'A402',4,'RESERVED',1,1),
+(NOW(),'VIP 403',24,'VIP','Phòng VIP',2500000,6,2,500000,6,250000,'2 King Beds',70,'A403',4,'RESERVED',1,1),
+
+
+-- ===== BRANCH 25 =====
+(NOW(),'Single Room 101',25,'SINGLE','Phòng đơn',550000,2,1,260000,2,160000,'1 Queen Bed',25,'B101',1,'AVAILABLE',1,1),
+(NOW(),'Single Room 102',25,'SINGLE','Phòng đơn',550000,2,1,260000,2,160000,'1 Queen Bed',25,'B102',1,'AVAILABLE',1,1),
+
+(NOW(),'Double Room 201',25,'DOUBLE','Phòng đôi',850000,4,2,320000,4,180000,'2 Single Beds',35,'B201',2,'OCCUPIED',1,1),
+(NOW(),'Double Room 202',25,'DOUBLE','Phòng đôi',850000,4,2,320000,4,180000,'2 Single Beds',35,'B202',2,'OCCUPIED',1,1),
+
+(NOW(),'Suite Room 301',25,'SUITE','Phòng suite',1600000,4,2,420000,4,200000,'1 King Bed',50,'B301',3,'MAINTENANCE',1,1),
+(NOW(),'Suite Room 302',25,'SUITE','Phòng suite',1600000,4,2,420000,4,200000,'1 King Bed',50,'B302',3,'MAINTENANCE',1,1),
+(NOW(),'Suite Room 303',25,'SUITE','Phòng suite',1600000,4,2,420000,4,200000,'1 King Bed',50,'B303',3,'MAINTENANCE',1,1),
+
+(NOW(),'VIP Room 401',25,'VIP','Phòng VIP',2600000,6,2,520000,6,250000,'2 King Beds',70,'B401',4,'RESERVED',1,1),
+(NOW(),'VIP Room 402',25,'VIP','Phòng VIP',2600000,6,2,520000,6,250000,'2 King Beds',70,'B402',4,'RESERVED',1,1),
+(NOW(),'VIP Room 403',25,'VIP','Phòng VIP',2600000,6,2,520000,6,250000,'2 King Beds',70,'B403',4,'RESERVED',1,1);

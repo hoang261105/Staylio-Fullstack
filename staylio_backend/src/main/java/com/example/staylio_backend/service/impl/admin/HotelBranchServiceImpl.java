@@ -11,6 +11,7 @@ import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.*;
 import com.example.staylio_backend.model.enums.BranchStatus;
+import com.example.staylio_backend.model.enums.HotelStatus;
 import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.HotelBranchService;
@@ -115,6 +116,11 @@ public class HotelBranchServiceImpl implements HotelBranchService {
 
         Hotel hotel = hotelRepo.findById(request.getHotelId())
                 .orElseThrow(() -> new NoSuchElementException("Không tìm thấy thương hiệu khách sạn!"));
+
+        if (hotel.getStatus() != HotelStatus.CONFIRMED) {
+            throw new AppException(ErrorCode.CANNOT_CREATE_BRAND_HOTEL);
+        }
+
         Ward ward = wardRepo.findById(request.getWardId())
                 .orElseThrow(() -> new NoSuchElementException("Khong tìm thấy xã/phường tương ứng!"));
 
@@ -205,6 +211,21 @@ public class HotelBranchServiceImpl implements HotelBranchService {
 
         branch.setStatus(BranchStatus.DELETED);
         branchRepo.save(branch);
+    }
+
+    @Override
+    public List<HotelBranchResponse> getAllBranchesByHotelId(Long hotelId, UserPrincipal principal) {
+        List<HotelBranch> branches = branchRepo.findAllByHotel_Id(hotelId);
+
+        Profile profile = profileRepo.findById(principal.getId())
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy profile!"));
+
+        Hotel hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRAND_NOT_FOUND.getMessage()));
+
+        if (!hotel.getManager().getId().equals(profile.getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+        return branches.stream().map(this::convertToDTO).toList();
     }
 
     public HotelBranchResponse convertToDTO(HotelBranch hotelBranch) {

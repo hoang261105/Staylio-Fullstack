@@ -5,6 +5,7 @@ import { InputField } from "../../../../common/components/InputField";
 import type { UserRegisterRequest } from "../../../../common/interfaces/request/UserRegisterRequest";
 import { useApiErrors } from "../../../../common/hooks/useApiErrors";
 import { useCreateCustomerMutation } from "../../../../common/hooks/useCustomers";
+import { Gender } from "@common/enums";
 
 interface CustomerFormProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ export default function CustomerForm({ isOpen, onClose }: CustomerFormProps) {
     userName: "",
     fullName: "",
     email: "",
-    gender: "MALE",
+    gender: Gender.MALE as Gender,
     dateOfBirth: new Date().toISOString().split("T")[0],
     password: ""
   });
@@ -30,14 +31,14 @@ export default function CustomerForm({ isOpen, onClose }: CustomerFormProps) {
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     clearAllErrors();
-    
+
     try {
       await mutateAsync();
       setFormData({
         userName: "",
         fullName: "",
         email: "",
-        gender: "",
+        gender: Gender.MALE as Gender,
         dateOfBirth: new Date().toISOString().split("T")[0],
         password: ""
       })
@@ -60,15 +61,15 @@ export default function CustomerForm({ isOpen, onClose }: CustomerFormProps) {
       <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50/50">
           <h2 className="text-xl font-semibold text-gray-900">Thêm khách hàng mới</h2>
-          <button 
+          <button
             type="button"
-            onClick={handleClose} 
+            onClick={handleClose}
             className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
             <InputField
@@ -82,7 +83,7 @@ export default function CustomerForm({ isOpen, onClose }: CustomerFormProps) {
               required
               placeholder="Nhập tên đăng nhập"
             />
-            
+
             <InputField
               label="Họ và tên"
               value={formData.fullName}
@@ -94,7 +95,7 @@ export default function CustomerForm({ isOpen, onClose }: CustomerFormProps) {
               required
               placeholder="Nhập họ và tên"
             />
-            
+
             <InputField
               label="Email"
               type="email"
@@ -107,7 +108,7 @@ export default function CustomerForm({ isOpen, onClose }: CustomerFormProps) {
               required
               placeholder="Nhập địa chỉ email"
             />
-            
+
             <InputField
               label="Mật khẩu"
               type="password"
@@ -132,14 +133,14 @@ export default function CustomerForm({ isOpen, onClose }: CustomerFormProps) {
               error={fieldErrors.dateOfBirth}
               required
             />
-            
+
             <div className="mb-4">
               <label className="block text-sm mb-2">Giới tính <span className="text-red-500">*</span></label>
               <div className="relative">
                 <select
                   value={formData.gender}
                   onChange={(e) => {
-                    setFormData({ ...formData, gender: e.target.value });
+                    setFormData({ ...formData, gender: e.target.value as Gender });
                     clearFieldError("gender");
                   }}
                   className={`w-full box-border px-4 py-3 border ${fieldErrors.gender ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors bg-white appearance-none`}
@@ -158,7 +159,7 @@ export default function CustomerForm({ isOpen, onClose }: CustomerFormProps) {
               {fieldErrors.gender && <p className="text-xs text-red-500 mt-1">{fieldErrors.gender}</p>}
             </div>
           </div>
-          
+
           <div className="mt-8 flex justify-end gap-3 pt-6 border-t border-gray-100">
             <button
               type="button"

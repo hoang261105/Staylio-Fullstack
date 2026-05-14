@@ -1,0 +1,258 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react";
+import Select from "react-select";
+import { X, Loader2 } from "lucide-react";
+import { InputField } from "@common/components/InputField";
+import { useHotelByManager } from "@common/hooks/useHotels";
+import { useMyHotelBranchs } from "@common/hooks/useHotelBranch";
+import { useUpdateRoomMutation } from "@common/hooks/useRooms";
+import { useApiErrors } from "@common/hooks/useApiErrors";
+import { RoomType } from "@common/enums/RoomType";
+import type { RoomRequest } from "@common/interfaces/request/RoomRequest";
+import type { RoomResponse } from "@common/interfaces/response/RoomResponse";
+
+type SelectOption = { value: number; label: string };
+
+const rsStyles = {
+  control: (base: object, s: { isFocused: boolean; isDisabled: boolean }) => ({
+    ...base,
+    borderColor: s.isFocused ? "#0066FF" : "#D1D5DB",
+    boxShadow: s.isFocused ? "0 0 0 1px #0066FF" : "none",
+    borderRadius: "0.5rem",
+    padding: "2px 0",
+    opacity: s.isDisabled ? 0.5 : 1,
+    "&:hover": { borderColor: "#0066FF" },
+  }),
+  placeholder: (base: object) => ({ ...base, color: "#9CA3AF", fontSize: "0.875rem" }),
+  singleValue: (base: object) => ({ ...base, fontSize: "0.875rem" }),
+  option: (base: object, s: { isSelected: boolean; isFocused: boolean }) => ({
+    ...base,
+    fontSize: "0.875rem",
+    backgroundColor: s.isSelected ? "#0066FF" : s.isFocused ? "#EFF6FF" : "white",
+    color: s.isSelected ? "white" : "#111827",
+  }),
+  menuPortal: (base: object) => ({ ...base, zIndex: 9999 }),
+};
+
+const initForm: RoomRequest = {
+  roomName: "",
+  roomType: RoomType.SINGLE,
+  description: "",
+  hotelBranchId: 0,
+  price: 0,
+  maxAdults: 2,
+  maxChildren: 1,
+  capacity: 2,
+  adultPrice: 0,
+  childPrice: 0,
+  bedInfo: "",
+  area: 0,
+  roomNumber: "",
+  floor: 1,
+};
+
+interface RoomFormUpdateProps {
+  onClose: () => void;
+  isOpen: boolean;
+  room: RoomResponse | null;
+}
+
+export default function RoomFormUpdate({ onClose, isOpen, room }: RoomFormUpdateProps) {
+  const { data: hotel } = useHotelByManager();
+  const { data: branches, isLoading: loadingBranches } = useMyHotelBranchs(hotel?.id ?? 0);
+
+  const [formData, setFormData] = useState<RoomRequest>(initForm);
+  const [selectedBranch, setSelectedBranch] = useState<SelectOption | null>(null);
+
+  const { mutateAsync: updateRoom, isPending } = useUpdateRoomMutation(room?.id ?? 0, formData);
+  const { fieldErrors, handleApiErrors, clearFieldError, clearAllErrors } = useApiErrors();
+
+  const branchOptions: SelectOption[] =
+    branches?.map((b) => ({ value: b.id, label: b.hotelBranchName })) ?? [];
+
+  useEffect(() => {
+    if (isOpen && room) {
+      setFormData({
+        roomName: room.roomName,
+        roomType: room.roomType as RoomType,
+        description: room.description,
+        hotelBranchId: room.hotelBranchId,
+        price: room.price,
+        maxAdults: room.maxAdults,
+        maxChildren: room.maxChildren,
+        capacity: room.capacity,
+        adultPrice: room.adultPrice,
+        childPrice: room.childPrice,
+        bedInfo: room.bedInfo,
+        area: room.area,
+        roomNumber: room.roomNumber,
+        floor: room.floor,
+      });
+
+      if (branches && branches.length > 0) {
+        const branch = branches.find((b) => b.id === room.hotelBranchId);
+        if (branch) {
+          setSelectedBranch({ value: branch.id, label: branch.hotelBranchName });
+        } else {
+          setSelectedBranch({ value: room.hotelBranchId, label: room.hotelBranchName });
+        }
+      } else {
+        setSelectedBranch({ value: room.hotelBranchId, label: room.hotelBranchName });
+      }
+    }
+  }, [isOpen, room, branches]);
+
+  if (!isOpen) return null;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    if (["price", "maxAdults", "maxChildren", "capacity", "adultPrice", "childPrice", "area", "floor"].includes(name)) {
+      setFormData((prev) => ({ ...prev, [name]: value === "" ? "" : Number(value) }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+    clearFieldError(name);
+  };
+
+  const handleBranchChange = (option: SelectOption | null) => {
+    setSelectedBranch(option);
+    setFormData((prev) => ({ ...prev, hotelBranchId: option?.value ?? 0 }));
+    clearFieldError("hotelBranchId");
+  };
+
+  const handleClose = () => {
+    clearAllErrors();
+    onClose();
+  }
+
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    clearAllErrors();
+    try {
+      await updateRoom();
+      onClose();
+    } catch (error: any) {
+      const serverResponse = error?.response?.data?.errors;
+      if (serverResponse) handleApiErrors(serverResponse);
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      onClick={(e) => e.target === e.currentTarget && handleClose()}
+    >
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50/50 shrink-0">
+          <h2 className="text-xl font-semibold text-gray-900">Cập nhật phòng</h2>
+          <button type="button" onClick={handleClose} className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="overflow-y-auto flex-1 p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
+            <InputField label="Tên phòng" name="roomName" value={formData.roomName}
+              onChange={handleChange} error={fieldErrors.roomName} placeholder="VD: Phòng Superior Giường Đôi" required />
+
+            <InputField label="Số phòng" name="roomNumber" value={formData.roomNumber}
+              onChange={handleChange} error={fieldErrors.roomNumber} placeholder="VD: 101" required />
+
+            <div className="mb-4">
+              <label className="block text-sm mb-2">Loại phòng <span className="text-red-500">*</span></label>
+              <div className="relative">
+                <select
+                  name="roomType"
+                  value={formData.roomType}
+                  onChange={handleChange}
+                  className={`w-full box-border px-4 py-3 border ${fieldErrors.roomType ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors bg-white appearance-none`}
+                  required
+                >
+                  <option value={RoomType.SINGLE}>Tiêu chuẩn (Standard)</option>
+                  <option value={RoomType.DOUBLE}>Cao cấp (Deluxe)</option>
+                  <option value={RoomType.SUITE}>Phòng Suite</option>
+                  <option value={RoomType.VIP}>Phòng VIP</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+              {fieldErrors.roomType && <p className="text-xs text-red-500 mt-1">{fieldErrors.roomType}</p>}
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm mb-2">Chi nhánh <span className="text-red-500">*</span></label>
+              <Select<SelectOption>
+                options={branchOptions} value={selectedBranch} onChange={handleBranchChange}
+                isLoading={loadingBranches} placeholder="Chọn chi nhánh..."
+                noOptionsMessage={() => "Không tìm thấy"} loadingMessage={() => "Đang tải..."}
+                styles={rsStyles} menuPortalTarget={document.body} required
+              />
+              {fieldErrors.hotelBranchId && <p className="text-xs text-red-500 mt-1">{fieldErrors.hotelBranchId}</p>}
+            </div>
+
+            <InputField label="Giá mỗi đêm (VNĐ)" name="price" type="number"
+              value={formData.price.toString()} error={fieldErrors.price} placeholder="VD: 500000" min={0}
+              onChange={handleChange} required />
+
+            <InputField label="Sức chứa tiêu chuẩn" name="capacity" type="number"
+              value={formData.capacity.toString()} error={fieldErrors.capacity} placeholder="VD: 2" min={1}
+              onChange={handleChange} required />
+
+            <InputField label="Số người lớn tối đa" name="maxAdults" type="number"
+              value={formData.maxAdults.toString()} error={fieldErrors.maxAdults} placeholder="VD: 2" min={1}
+              onChange={handleChange} required />
+
+            <InputField label="Số trẻ em tối đa" name="maxChildren" type="number"
+              value={formData.maxChildren.toString()} error={fieldErrors.maxChildren} placeholder="VD: 1" min={0}
+              onChange={handleChange} required />
+
+            <InputField label="Phụ phí người lớn (VNĐ)" name="adultPrice" type="number"
+              value={formData.adultPrice.toString()} error={fieldErrors.adultPrice} placeholder="VD: 100000" min={0}
+              onChange={handleChange} />
+
+            <InputField label="Phụ phí trẻ em (VNĐ)" name="childPrice" type="number"
+              value={formData.childPrice.toString()} error={fieldErrors.childPrice} placeholder="VD: 50000" min={0}
+              onChange={handleChange} />
+
+            <InputField label="Diện tích (m²)" name="area" type="number"
+              value={formData.area.toString()} error={fieldErrors.area} placeholder="VD: 30" min={1}
+              onChange={handleChange} required />
+
+            <InputField label="Tầng" name="floor" type="number"
+              value={formData.floor.toString()} error={fieldErrors.floor} placeholder="VD: 1" min={1}
+              onChange={handleChange} required />
+          </div>
+
+          <div className="mb-4">
+            <InputField label="Thông tin giường" name="bedInfo" value={formData.bedInfo}
+              onChange={handleChange} error={fieldErrors.bedInfo} placeholder="VD: 1 giường đôi lớn" required />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm mb-2">Mô tả chi tiết</label>
+            <textarea name="description" value={formData.description} onChange={handleChange}
+              placeholder="Mô tả các tiện nghi, hướng nhìn của phòng..." rows={4}
+              className={`w-full box-border px-4 py-3 border ${fieldErrors.description ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors resize-none text-sm`} />
+            {fieldErrors.description && <p className="text-xs text-red-500 mt-1">{fieldErrors.description}</p>}
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+            <button type="button" onClick={handleClose}
+              className="px-6 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+              Hủy
+            </button>
+            <button type="submit" disabled={isPending}
+              className="flex items-center gap-2 px-6 py-2.5 bg-[#0066FF] text-white font-medium rounded-lg hover:bg-[#0052CC] shadow-sm shadow-blue-500/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+              {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+              {isPending ? "Đang cập nhật..." : "Lưu thay đổi"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

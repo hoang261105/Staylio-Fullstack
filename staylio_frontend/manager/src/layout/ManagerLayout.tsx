@@ -9,6 +9,7 @@ import {
   X,
   Bell,
   Search,
+  Bed,
 } from "lucide-react";
 import { useProfile } from "@common/hooks/useProfile";
 import { useQueryClient } from "@tanstack/react-query";
@@ -22,6 +23,7 @@ interface ManagerLayoutProps {
 const NAVIGATION_ITEMS = [
   { name: "Tổng quan", path: "/manager/dashboard", icon: LayoutDashboard },
   { name: "Chi nhánh của tôi", path: "/manager/branches", icon: Building2 },
+  { name: "Quản lí phòng", path: "/manager/rooms", icon: Bed },
   { name: "Cài đặt", path: "/settings", icon: Settings },
 ];
 
