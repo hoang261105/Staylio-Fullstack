@@ -3,6 +3,7 @@ import Pagination from "../../../../common/components/Pagination";
 import type { RoomResponse } from "../../../../common/interfaces/response/RoomResponse";
 import { RoomStatus } from "../../../../common/enums/RoomStatus";
 import { RoomType } from "../../../../common/enums/RoomType";
+import { getUtilityIcon } from "../../../../common/utils/iconUtils";
 
 interface RoomListViewProps {
   rooms: RoomResponse[];
@@ -38,10 +39,10 @@ export default function RoomListView({
   };
 
   const typeLabels = {
-    [RoomType.STANDARD]: "Standard",
-    [RoomType.DELUXE]: "Deluxe",
+    [RoomType.SINGLE]: "Phòng đơn",
+    [RoomType.DOUBLE]: "Phòng đôi",
     [RoomType.SUITE]: "Suite",
-    [RoomType.VIP]: "VIP",
+    [RoomType.VIP]: "Phòng VIP",
   };
 
   return (
@@ -113,6 +114,18 @@ export default function RoomListView({
                         <Maximize className="w-3.5 h-3.5 text-gray-400" />
                         <span>{room.area} m²</span>
                       </div>
+                      {room.utilities && room.utilities.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2 pt-2 border-t border-gray-100">
+                          {room.utilities.map((util) => {
+                            const Icon = getUtilityIcon(util.iconName);
+                            return (
+                              <div key={util.id} className="p-1 bg-gray-50 rounded-md border border-gray-100 text-gray-500" title={util.title}>
+                                <Icon className="w-3.5 h-3.5" />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -129,9 +142,8 @@ export default function RoomListView({
                   <td className="px-6 py-4">
                     <div className="flex flex-col gap-2 items-start">
                       <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${
-                          statusColors[room.status] || "bg-gray-50 text-gray-700 border-gray-200"
-                        }`}
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${statusColors[room.status] || "bg-gray-50 text-gray-700 border-gray-200"
+                          }`}
                       >
                         {statusLabels[room.status] || room.status}
                       </span>

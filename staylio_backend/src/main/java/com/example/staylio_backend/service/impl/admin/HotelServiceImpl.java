@@ -61,12 +61,12 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public HotelResponse create(HotelRequest request) throws IOException {
+    public HotelResponse create(HotelRequest request) {
         return null;
     }
 
     @Override
-    public HotelResponse update(Long id, HotelRequest request) throws IOException {
+    public HotelResponse update(Long id, HotelRequest request) {
         return null;
     }
 

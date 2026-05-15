@@ -6,6 +6,7 @@ import { InputField } from "@common/components/InputField";
 import { useHotelByManager } from "@common/hooks/useHotels";
 import { useMyHotelBranchs } from "@common/hooks/useHotelBranch";
 import { useCreateRoomMutation } from "@common/hooks/useRooms";
+import { useAllUtilities } from "@common/hooks/useUtilities";
 import { useApiErrors } from "@common/hooks/useApiErrors";
 import { RoomType } from "@common/enums/RoomType";
 import type { RoomRequest } from "@common/interfaces/request/RoomRequest";
@@ -56,6 +57,7 @@ const initForm: RoomRequest = {
   area: 0,
   roomNumber: "",
   floor: 1,
+  utilityIds: [],
 };
 
 export default function RoomFormAdd({
@@ -69,6 +71,7 @@ export default function RoomFormAdd({
   const { data: branches, isLoading: loadingBranches } = useMyHotelBranchs(
     hotel?.id ?? 0,
   );
+  const { data: utilities, isLoading: loadingUtilities } = useAllUtilities();
 
   const [formData, setFormData] = useState<RoomRequest>(initForm);
   const [selectedBranch, setSelectedBranch] = useState<SelectOption | null>(
@@ -83,6 +86,9 @@ export default function RoomFormAdd({
 
   const branchOptions: SelectOption[] =
     branches?.map((b) => ({ value: b.id, label: b.hotelBranchName })) ?? [];
+
+  const utilityOptions: SelectOption[] =
+    utilities?.map((u: any) => ({ value: u.id, label: u.title })) ?? [];
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -116,6 +122,11 @@ export default function RoomFormAdd({
     setSelectedBranch(option);
     setFormData((prev) => ({ ...prev, hotelBranchId: option?.value ?? 0 }));
     clearFieldError("hotelBranchId");
+  };
+
+  const handleUtilitiesChange = (options: readonly SelectOption[]) => {
+    setFormData((prev) => ({ ...prev, utilityIds: options.map((o) => o.value) }));
+    clearFieldError("utilityIds");
   };
 
   const handleClose = () => {
@@ -328,6 +339,27 @@ export default function RoomFormAdd({
               placeholder="VD: 1 giường đôi lớn"
               required
             />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm mb-2">Tiện ích phòng</label>
+            <Select<SelectOption, true>
+              isMulti
+              options={utilityOptions}
+              value={utilityOptions.filter((opt) => formData.utilityIds?.includes(opt.value))}
+              onChange={handleUtilitiesChange}
+              isLoading={loadingUtilities}
+              placeholder="Chọn tiện ích..."
+              noOptionsMessage={() => "Không tìm thấy tiện ích"}
+              loadingMessage={() => "Đang tải..."}
+              styles={rsStyles}
+              menuPortalTarget={document.body}
+            />
+            {fieldErrors.utilityIds && (
+              <p className="text-xs text-red-500 mt-1">
+                {fieldErrors.utilityIds}
+              </p>
+            )}
           </div>
 
           <div className="mb-4">

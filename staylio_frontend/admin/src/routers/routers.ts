@@ -6,6 +6,7 @@ import AdminHotels from "../pages/AdminHotels";
 import AdminHotelBranches from "../pages/AdminHotelBranches";
 import AdminRooms from "../pages/AdminRooms";
 import NotFound from "../../../common/components/NotFound";
+import AdminUtilities from "../pages/AdminUtilities";
 
 export const routers = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ export const routers = createBrowserRouter([
     {
         path: "/admin/rooms",
         Component: AdminRooms
+    },
+    {
+        path: "/admin/utilities",
+        Component: AdminUtilities
     },
     {
         path: "*",

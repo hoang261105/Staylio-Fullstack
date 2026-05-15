@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -81,4 +82,12 @@ public class Room extends BaseObject {
 
     @Column(name = "is_voucher_applicable")
     private Boolean isVoucherApplicable;
+
+    @ManyToMany
+    @JoinTable(
+            name = "room_utility",
+            joinColumns = @JoinColumn(name = "room_id"),
+            inverseJoinColumns = @JoinColumn(name = "utility_id")
+    )
+    private Set<Utility> utilities;
 }

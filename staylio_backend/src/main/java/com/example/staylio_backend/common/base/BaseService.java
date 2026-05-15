@@ -8,7 +8,7 @@ public interface BaseService<RQ, RS, ID> {
     PaginationResponse<RS> findAll(String search, int page, int size, String sortBy, String direction);
 
     RS findById(ID id);
-    RS create(RQ request) throws IOException;
-    RS update(ID id, RQ request) throws IOException;
+    RS create(RQ request) ;
+    RS update(ID id, RQ request);
     void delete(ID id);
 }

@@ -39,6 +39,7 @@ public enum ErrorCode {
     BRANCH_NAME_EXISTED("Tên chi nhánh đã tồn tại trong thương hiệu!"),
     ROOM_NAME_EXISTED("Tên phòng đã tồn tại!"),
     ROOM_NUMBER_EXISTED("Mã phòng đã tồn tại!"),
+    UTILITY_TITLE_EXISTED("Tên tiện ích đã tồn tại!"),
 
     // 4xxx: Resources
     DATA_NOT_FOUND("Không tìm thấy dữ liệu yêu cầu"),
@@ -48,7 +49,8 @@ public enum ErrorCode {
     PROVINCE_NOT_FOUND("Không tìm thấy tỉnh thành!"),
     WARD_NOT_FOUND("Không tìm thấy xã/phường!"),
     HOTEL_BRANCH_NOT_FOUND("Không tìm thấy chi nhánh!"),
-    ROOM_NOT_FOUND("Không tìm thấy phòng!");
+    ROOM_NOT_FOUND("Không tìm thấy phòng!"),
+    UTILITY_NOT_FOUND("Không tìm thấy tiện ích!");
 
     private final String message;
 

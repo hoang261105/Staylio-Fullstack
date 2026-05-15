@@ -8,19 +8,14 @@ import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.RoomRequest;
 import com.example.staylio_backend.dto.request.RoomStatusRequest;
 import com.example.staylio_backend.dto.response.RoomResponse;
+import com.example.staylio_backend.dto.response.UtilityResponse;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
-import com.example.staylio_backend.model.entity.Hotel;
-import com.example.staylio_backend.model.entity.HotelBranch;
-import com.example.staylio_backend.model.entity.Profile;
-import com.example.staylio_backend.model.entity.Room;
+import com.example.staylio_backend.model.entity.*;
 import com.example.staylio_backend.model.enums.BranchStatus;
 import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.model.enums.RoomStatus;
-import com.example.staylio_backend.repository.HotelBranchRepo;
-import com.example.staylio_backend.repository.HotelRepo;
-import com.example.staylio_backend.repository.ProfileRepo;
-import com.example.staylio_backend.repository.RoomRepo;
+import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,8 +26,11 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,34 +38,49 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepo roomRepo;
     private final HotelBranchRepo branchRepo;
     private final ProfileRepo profileRepo;
+    private final UtilityRepo utilityRepo;
 
     @Override
-    public PaginationResponse<RoomResponse> getAllRooms(String search, Long hotelBranchId, int page, int size, RoomStatus status, String sortBy, String direction) {
+    public PaginationResponse<RoomResponse> getAllRooms(
+            String search,
+            Long hotelBranchId,
+            int page,
+            int size,
+            RoomStatus status,
+            String sortBy,
+            String direction
+    ) {
         Pageable pageable = PageRequest.of(page, size, getSort(sortBy, direction));
-
         UserPrincipal principal = SecurityUtils.getCurrentUser();
 
+        Page<Room> roomsPage;
+
         if (principal.hasRole(RoleName.ROLE_MANAGER)) {
-            if (hotelBranchId == null) {
-                throw new BadRequestException("Vui lòng chọn chi nhánh");
+            if (hotelBranchId != null) {
+                boolean owned = branchRepo.existsByIdAndHotelManagerId(
+                        hotelBranchId,
+                        principal.getId()
+                );
+
+                if (!owned) {
+                    throw new AccessDeniedException("Bạn không có quyền xem phòng của chi nhánh này");
+                }
+
+                roomsPage = roomRepo.searchRooms(hotelBranchId, search, status, pageable);
+            } else {
+                roomsPage = roomRepo.findAllRooms(
+                        search,
+                        status,
+                        pageable
+                );
             }
-
-            boolean owned = branchRepo.existsByIdAndHotelManagerId(
-                    hotelBranchId,
-                    principal.getId()
-            );
-
-            if (!owned) {
-                throw new AccessDeniedException("Bạn không có quyền xem phòng của chi nhánh này");
+        } else {
+            if (hotelBranchId != null) {
+                roomsPage = roomRepo.searchRooms(hotelBranchId, search, status, pageable);
+            } else {
+                roomsPage = roomRepo.findAllRooms(search, status, pageable);
             }
         }
-
-        Page<Room> roomsPage = roomRepo.searchRooms(
-                hotelBranchId,
-                search,
-                status,
-                pageable
-        );
 
         List<RoomResponse> roomResponses = roomsPage.getContent().stream()
                 .map(this::convertToDTO)
@@ -131,6 +144,12 @@ public class RoomServiceImpl implements RoomService {
 
         BigDecimal roomPrice = calculateRoomPrice(request);
 
+        Set<Utility> utilities = new HashSet<>(
+                utilityRepo.findAllByIdInAndIsDeletedFalse(
+                        request.getUtilityIds()
+                )
+        );
+
         Room room = Room.builder()
                 .roomName(request.getRoomName())
                 .roomType(request.getRoomType())
@@ -149,6 +168,7 @@ public class RoomServiceImpl implements RoomService {
                 .status(RoomStatus.AVAILABLE)
                 .isActive(true)
                 .isVoucherApplicable(false)
+                .utilities(utilities)
                 .build();
 
         Room savedRoom = roomRepo.save(room);
@@ -181,6 +201,12 @@ public class RoomServiceImpl implements RoomService {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
+        Set<Utility> utilities = new HashSet<>(
+                utilityRepo.findAllByIdInAndIsDeletedFalse(
+                        request.getUtilityIds()
+                )
+        );
+
         Room room = roomRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.ROOM_NOT_FOUND.getMessage()));
         BigDecimal roomPrice = calculateRoomPrice(request);
         room.setRoomName(request.getRoomName());
@@ -200,6 +226,7 @@ public class RoomServiceImpl implements RoomService {
         room.setStatus(RoomStatus.AVAILABLE);
         room.setIsActive(true);
         room.setIsVoucherApplicable(false);
+        room.setUtilities(utilities);
 
         Room updatedRoom = roomRepo.save(room);
         return convertToDTO(updatedRoom);
@@ -269,6 +296,18 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public RoomResponse convertToDTO(Room room) {
+        Set<UtilityResponse> utilities = room.getUtilities()
+                .stream()
+                .filter(u -> !Boolean.TRUE.equals(u.getIsDeleted()))
+                .map(u -> new UtilityResponse(
+                        u.getId(),
+                        u.getTitle(),
+                        u.getIconName(),
+                        u.getDescription(),
+                        u.getIsDeleted()
+                ))
+                .collect(Collectors.toSet());
+
         return new RoomResponse(
                 room.getId(),
                 room.getHotelBranch().getId(),
@@ -288,7 +327,8 @@ public class RoomServiceImpl implements RoomService {
                 room.getFloor(),
                 room.getStatus(),
                 room.getIsActive(),
-                room.getIsVoucherApplicable()
+                room.getIsVoucherApplicable(),
+                utilities
         );
     }
 

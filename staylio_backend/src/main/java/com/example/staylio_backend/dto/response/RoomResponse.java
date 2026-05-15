@@ -1,10 +1,12 @@
 package com.example.staylio_backend.dto.response;
 
+import com.example.staylio_backend.model.entity.Utility;
 import com.example.staylio_backend.model.enums.RoomStatus;
 import com.example.staylio_backend.model.enums.RoomType;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,4 +33,5 @@ public class RoomResponse {
     private RoomStatus status;
     private Boolean isActive;
     private Boolean isVoucherApplicable;
+    private Set<UtilityResponse> utilities;
 }
