@@ -15,4 +15,5 @@ export interface RoomRequest {
     area: number;
     roomNumber: string;
     floor: number;
+    utilityIds: number[];
 }

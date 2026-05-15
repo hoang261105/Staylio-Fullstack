@@ -1,5 +1,6 @@
 import { RoomStatus } from "../../enums/RoomStatus";
 import { RoomType } from "../../enums/RoomType";
+import { UtilityResponse } from "./UtilityResponse";
 
 export interface RoomResponse {
     id: number;
@@ -21,4 +22,5 @@ export interface RoomResponse {
     isActive: boolean;
     isVoucherApplicable: boolean;
     floor: number;
+    utilities: UtilityResponse[];
 }

@@ -18,6 +18,13 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
     """)
     Page<Room> searchRooms(Long hotelBranchId, String search, RoomStatus status, Pageable pageable);
 
+    @Query("""
+        SELECT r from Room r
+        WHERE (:search IS NULL OR LOWER(r.roomName) LIKE LOWER(CONCAT('%', :search, '%')))
+            AND (:status IS NULL OR r.status = :status)
+    """)
+    Page<Room> findAllRooms(String search, RoomStatus status, Pageable pageable);
+
     boolean existsByRoomNameAndHotelBranch_Id(String roomName, Long hotelBranchId);
     boolean existsByRoomNameAndHotelBranch_IdAndIdNot(String roomName, Long hotelBranchId, Long id);
 

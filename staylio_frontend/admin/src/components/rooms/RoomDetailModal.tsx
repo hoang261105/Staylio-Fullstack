@@ -2,6 +2,7 @@ import { X, MapPin, Tag, Users, Maximize, Bed, CheckCircle, XCircle, FileText, I
 import type { RoomResponse } from "../../../../common/interfaces/response/RoomResponse";
 import { RoomStatus } from "../../../../common/enums/RoomStatus";
 import { RoomType } from "../../../../common/enums/RoomType";
+import { getUtilityIcon } from "../../../../common/utils/iconUtils";
 
 interface RoomDetailModalProps {
   room: RoomResponse;
@@ -24,10 +25,10 @@ export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps)
   };
 
   const typeLabels = {
-    [RoomType.STANDARD]: "Standard",
-    [RoomType.DELUXE]: "Deluxe",
+    [RoomType.SINGLE]: "Phòng đơn",
+    [RoomType.DOUBLE]: "Phòng đôi",
     [RoomType.SUITE]: "Suite",
-    [RoomType.VIP]: "VIP",
+    [RoomType.VIP]: "Phòng VIP",
   };
 
   return (
@@ -72,23 +73,21 @@ export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps)
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="flex flex-wrap gap-2">
                     <span
-                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${
-                        statusColors[room?.status] || "bg-gray-50 text-gray-700 border-gray-200"
-                      }`}
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${statusColors[room?.status] || "bg-gray-50 text-gray-700 border-gray-200"
+                        }`}
                     >
                       {statusLabels[room?.status] || room?.status}
                     </span>
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
                       Loại: {typeLabels[room?.roomType] || room?.roomType}
                     </span>
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${
-                      room?.isActive 
-                        ? "bg-green-50 text-green-700 border-green-200" 
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${room?.isActive
+                        ? "bg-green-50 text-green-700 border-green-200"
                         : "bg-red-50 text-red-700 border-red-200"
-                    }`}>
+                      }`}>
                       {room?.isActive ? "Đang hoạt động" : "Ngừng hoạt động"}
                     </span>
                   </div>
@@ -191,6 +190,32 @@ export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps)
                 ) : (
                   <div className="text-sm text-gray-400 italic text-center py-6 bg-gray-50/50 rounded-lg border border-gray-50">
                     Phòng này chưa có mô tả chi tiết
+                  </div>
+                )}
+              </div>
+
+              {/* Utilities */}
+              <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-50">
+                  <h4 className="font-semibold text-gray-900">Tiện ích phòng</h4>
+                </div>
+                {room?.utilities && room.utilities.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {room.utilities.map((util) => {
+                      const Icon = getUtilityIcon(util.iconName);
+                      return (
+                        <div key={util.id} className="flex items-center gap-2 p-2.5 rounded-lg bg-gray-50 border border-gray-100 hover:bg-white hover:border-gray-200 transition-colors shadow-sm">
+                          <div className="bg-white p-1.5 rounded-md shadow-sm shrink-0 border border-gray-100">
+                            <Icon className="w-4 h-4 text-gray-500" />
+                          </div>
+                          <span className="text-sm font-medium text-gray-700 truncate" title={util.title}>{util.title}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-400 italic text-center py-6 bg-gray-50/50 rounded-lg border border-gray-50">
+                    Phòng này chưa có tiện ích nào
                   </div>
                 )}
               </div>

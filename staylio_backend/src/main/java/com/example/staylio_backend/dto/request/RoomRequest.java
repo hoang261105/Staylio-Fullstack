@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -61,4 +62,7 @@ public class RoomRequest {
     @NotNull(message = "Tầng không được để trống")
     @PositiveOrZero(message = "Tầng phải lớn hơn hoặc bằng 0")
     private Integer floor;
+
+    @NotEmpty(message = "Vui lòng chọn ít nhất một tiện ích")
+    private Set<Long> utilityIds;
 }

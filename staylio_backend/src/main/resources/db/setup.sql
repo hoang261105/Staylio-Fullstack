@@ -97,3 +97,15 @@ INSERT INTO rooms (
 (NOW(),'VIP Room 401',25,'VIP','Phòng VIP',2600000,6,2,520000,6,250000,'2 King Beds',70,'B401',4,'RESERVED',1,1),
 (NOW(),'VIP Room 402',25,'VIP','Phòng VIP',2600000,6,2,520000,6,250000,'2 King Beds',70,'B402',4,'RESERVED',1,1),
 (NOW(),'VIP Room 403',25,'VIP','Phòng VIP',2600000,6,2,520000,6,250000,'2 King Beds',70,'B403',4,'RESERVED',1,1);
+
+INSERT INTO utilities (title, icon_name, description, created_at) VALUES
+    ('Wifi', 'wifi', 'Wifi tốc độ cao miễn phí', now()),
+    ('TV', 'tv', 'TV màn hình phẳng với nhiều kênh giải trí', now()),
+    ('Điều hòa', 'air-conditioner', 'Hệ thống điều hòa nhiệt độ hiện đại', now()),
+    ('Hồ bơi', 'pool', 'Sử dụng hồ bơi miễn phí', now()),
+    ('Bãi đỗ xe', 'car', 'Bãi đỗ xe riêng an toàn', now()),
+    ('Mini Bar', 'wine', 'Mini bar với đồ uống và đồ ăn nhẹ', now()),
+    ('Bồn tắm', 'bath', 'Phòng tắm có bồn tắm cao cấp', now()),
+    ('Máy pha cà phê', 'coffee', 'Máy pha cà phê tiện lợi trong phòng', now()),
+    ('Ban công', 'balcony', 'Ban công riêng với view đẹp', now()),
+    ('Két an toàn', 'safe', 'Két sắt bảo mật cho tài sản cá nhân', now());

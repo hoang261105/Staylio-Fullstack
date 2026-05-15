@@ -36,6 +36,11 @@ const NAVIGATION_ITEMS = [
     path: "/admin/rooms",
     icon: Bed
   },
+  {
+    name: "Quản lý tiện ích",
+    path: "/admin/utilities",
+    icon: Building2
+  },
   { name: "Cài đặt", path: "/admin/settings", icon: Settings },
 ];
 
