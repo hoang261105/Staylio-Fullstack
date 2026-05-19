@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface UtilityService extends BaseService<UtilityRequest, UtilityResponse, Long>{
     List<UtilityResponse> getAllUtilities();
+
+    void updateActive(Long id);
 }

@@ -1,7 +1,9 @@
 import { BranchStatus } from "@common/enums/BranchStatus";
 import { QueryParams } from "@common/interfaces";
+import { ApiResponse } from "@common/interfaces/ApiResponse";
 import { HotelBranchRequest } from "@common/interfaces/request/HotelBranchRequest";
 import { HotelIdRequest } from "@common/interfaces/request/HotelIdRequest";
+import { HotelBranchResponse } from "@common/interfaces/response/HotelBranchResponse";
 import { axiosInstance } from "@common/utils/axiosInstance";
 
 // Lấy danh sách tất cả các chi nhánh khách sạn
@@ -16,9 +18,9 @@ export const getAllHotelBranches = async (params: QueryParams) => {
 }
 
 // Lấy danh sách chi nhánh của tôi
-export const getMyHotelBranches = async (hotelId: number) => {
+export const getMyHotelBranches = async (hotelId: number, status: BranchStatus) => {
     try {
-        const response = await axiosInstance.get(`/hotel-branches/me`, { params: { hotelId } });
+        const response = await axiosInstance.get(`/hotel-branches/me`, { params: { hotelId, status } });
         return response.data;
     } catch (error) {
         console.error("Lấy danh sách thất bại:", error);
@@ -38,7 +40,7 @@ export const getHotelBranchById = async (id: number) => {
 }
 
 // Thêm mới 1 chi nhánh khách sạn
-export const createHotelBranch = async (branchData: HotelBranchRequest) => {
+export const createHotelBranch = async (branchData: HotelBranchRequest): Promise<ApiResponse<HotelBranchResponse>> => {
     try {
         const response = await axiosInstance.post("/hotel-branches", branchData);
         return response.data;
@@ -49,7 +51,7 @@ export const createHotelBranch = async (branchData: HotelBranchRequest) => {
 }
 
 // Cập nhật thông tin một chi nhánh khách sạn
-export const updateHotelBranch = async (id: number, branchData: HotelBranchRequest) => {
+export const updateHotelBranch = async (id: number, branchData: HotelBranchRequest): Promise<ApiResponse<HotelBranchResponse>> => {
     try {
         const response = await axiosInstance.put(`/hotel-branches/${id}`, branchData);
         return response.data;
@@ -60,7 +62,7 @@ export const updateHotelBranch = async (id: number, branchData: HotelBranchReque
 }
 
 // Xóa 1 chi nhánh khách sạn
-export const deleteHotelBranch = async (id: number, request: HotelIdRequest) => {
+export const deleteHotelBranch = async (id: number, request: HotelIdRequest): Promise<ApiResponse<string>> => {
     try {
         const response = await axiosInstance.patch(`/hotel-branches/${id}`, request);
         return response.data;
@@ -71,7 +73,7 @@ export const deleteHotelBranch = async (id: number, request: HotelIdRequest) => 
 }
 
 // Duyệt 1 chi nhánh khách sạn
-export const approveHotelBranch = async (id: number, status: BranchStatus) => {
+export const approveHotelBranch = async (id: number, status: BranchStatus): Promise<ApiResponse<string>> => {
     try {
         const response = await axiosInstance.patch(`/hotel-branches/${id}/status`, { status });
         return response.data;

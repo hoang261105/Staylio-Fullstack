@@ -32,7 +32,6 @@ import java.util.NoSuchElementException;
 public class HotelServiceImpl implements HotelService {
     private final HotelRepo hotelRepo;
     private final ProfileRepo profileRepo;
-    private final CloudinaryService cloudinaryService;
 
     @Override
     public PaginationResponse<HotelResponse> findAll(String search, int page, int size, String sortBy, String direction) {
@@ -98,6 +97,12 @@ public class HotelServiceImpl implements HotelService {
 
         return direction.equalsIgnoreCase("desc") ?
                 Sort.by(property).descending() : Sort.by(property).ascending();
+    }
+
+    @Override
+    public List<HotelResponse> getAllHotels() {
+        List<Hotel> hotels = hotelRepo.findAllByStatus(HotelStatus.CONFIRMED);
+        return hotels.stream().map(this::convertToDTO).toList();
     }
 
     @Override

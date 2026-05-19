@@ -1,8 +1,11 @@
-import { X, MapPin, Tag, Users, Maximize, Bed, CheckCircle, XCircle, FileText, Info } from "lucide-react";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { X, MapPin, Tag, Users, Maximize, Bed, CheckCircle, XCircle, FileText, Info, Star } from "lucide-react";
 import type { RoomResponse } from "../../../../common/interfaces/response/RoomResponse";
+import type { RoomImageResponse } from "../../../../common/interfaces/response/RoomImageResponse";
 import { RoomStatus } from "../../../../common/enums/RoomStatus";
 import { RoomType } from "../../../../common/enums/RoomType";
 import { getUtilityIcon } from "../../../../common/utils/iconUtils";
+import { useState, useEffect } from "react";
 
 interface RoomDetailModalProps {
   room: RoomResponse;
@@ -10,6 +13,17 @@ interface RoomDetailModalProps {
 }
 
 export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps) {
+  const [selectedImage, setSelectedImage] = useState<RoomImageResponse | null>(null);
+
+  useEffect(() => {
+    if (room?.images && room.images.length > 0) {
+      const primary = room.images.find(img => img.isPrimary) || room.images[0];
+      setSelectedImage(primary);
+    } else {
+      setSelectedImage(null);
+    }
+  }, [room]);
+
   const statusColors = {
     [RoomStatus.AVAILABLE]: "bg-green-50 text-green-700 border-green-200",
     [RoomStatus.OCCUPIED]: "bg-blue-50 text-blue-700 border-blue-200",
@@ -60,9 +74,39 @@ export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps)
             <div className="w-full md:w-1/3 space-y-6 shrink-0">
               {/* Image */}
               <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
-                <div className="aspect-square w-full rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 mb-4 p-4">
-                  <img src="/slogan.png" alt="Room Logo" className="w-full h-full object-contain" />
+                <div className="relative aspect-[4/3] w-full rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 mb-3">
+                  <img src={selectedImage?.imageUrl || "/slogan.png"} alt="Room Logo" className={`w-full h-full ${selectedImage ? 'object-cover' : 'object-contain'}`} />
+                  {selectedImage?.isPrimary && (
+                    <div className="absolute top-2 left-2 bg-yellow-400 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                      <Star className="w-3 h-3 fill-current" />
+                      Ưu tiên
+                    </div>
+                  )}
                 </div>
+
+                {room?.images && room.images.length > 0 ? (
+                  <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-thin scrollbar-thumb-gray-200">
+                    {room.images.map((img) => (
+                      <div
+                        key={img.id}
+                        onClick={() => setSelectedImage(img)}
+                        className={`relative w-16 h-16 shrink-0 rounded-lg overflow-hidden border-2 cursor-pointer transition-all ${selectedImage?.id === img.id ? 'border-[#0066FF] opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                      >
+                        <img src={img.imageUrl} alt="thumbnail" className="w-full h-full object-cover" />
+                        {img.isPrimary && (
+                          <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent flex items-end justify-end p-1">
+                            <Star className="w-3 h-3 text-yellow-400 fill-current drop-shadow-md" />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-400 italic text-center py-4 bg-gray-50/50 rounded-lg border border-gray-50 mb-4">
+                    Phòng này chưa có ảnh nào
+                  </div>
+                )}
+
                 <div className="space-y-3">
                   <div>
                     <h3 className="text-lg font-bold text-gray-900">{room?.roomName}</h3>
@@ -85,8 +129,8 @@ export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps)
                       Loại: {typeLabels[room?.roomType] || room?.roomType}
                     </span>
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${room?.isActive
-                        ? "bg-green-50 text-green-700 border-green-200"
-                        : "bg-red-50 text-red-700 border-red-200"
+                      ? "bg-green-50 text-green-700 border-green-200"
+                      : "bg-red-50 text-red-700 border-red-200"
                       }`}>
                       {room?.isActive ? "Đang hoạt động" : "Ngừng hoạt động"}
                     </span>

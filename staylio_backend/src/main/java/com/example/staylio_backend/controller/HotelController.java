@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/hotels")
@@ -40,6 +41,21 @@ public class HotelController {
                 true,
                 "Lấy danh sách thương hiệu thành công!",
                 hotelService.findAll(search, page - 1, size, sortBy, direction),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/lists")
+    @Operation(summary = "Danh sách thương hiệu khách sạn không phân trang")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<HotelResponse>>> getAllHotelsLists() {
+        ApiResponse<List<HotelResponse>> response = new ApiResponse<>(
+                true,
+                "Lấy danh sách thương hiệu không phân trang thành công",
+                hotelService.getAllHotels(),
                 null,
                 LocalDateTime.now()
         );

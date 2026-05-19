@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
-import { Search, Filter, Plus } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import RoomListView from "../components/rooms/RoomListView";
 import RoomDetailModal from "../components/rooms/RoomDetailModal";
 import type { RoomResponse } from "../../../common/interfaces/response/RoomResponse";
@@ -89,13 +89,6 @@ export default function ManagerRooms() {
               Danh sách tất cả các phòng thuộc tất cả chi nhánh
             </p>
           </div>
-          <button
-            onClick={() => {}}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#0066FF] text-white rounded-xl hover:bg-[#0052CC] shadow-sm shadow-[#0066FF]/20 font-medium transition-all"
-          >
-            <Plus className="w-5 h-5" />
-            <span>Thêm phòng mới</span>
-          </button>
         </div>
 
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col gap-4">
@@ -144,11 +137,10 @@ export default function ManagerRooms() {
 
             <div className="relative w-full sm:w-60 shrink-0">
               <Filter
-                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
-                  selectedHotelFilter === "all"
-                    ? "text-gray-300"
-                    : "text-gray-400"
-                }`}
+                className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${selectedHotelFilter === "all"
+                  ? "text-gray-300"
+                  : "text-gray-400"
+                  }`}
               />
               <select
                 value={selectedBranchFilter}
@@ -157,11 +149,10 @@ export default function ManagerRooms() {
                   setPage(0);
                 }}
                 disabled={selectedHotelFilter === "all"}
-                className={`w-full pl-12 pr-9 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 transition-all font-medium truncate ${
-                  selectedHotelFilter === "all"
-                    ? "opacity-60 cursor-not-allowed text-gray-400"
-                    : "cursor-pointer focus:bg-white text-gray-700"
-                }`}
+                className={`w-full pl-12 pr-9 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 transition-all font-medium truncate ${selectedHotelFilter === "all"
+                  ? "opacity-60 cursor-not-allowed text-gray-400"
+                  : "cursor-pointer focus:bg-white text-gray-700"
+                  }`}
               >
                 <option value="all">
                   {selectedHotelFilter === "all"
@@ -175,11 +166,10 @@ export default function ManagerRooms() {
                 ))}
               </select>
               <div
-                className={`pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 ${
-                  selectedHotelFilter === "all"
-                    ? "text-gray-300"
-                    : "text-gray-500"
-                }`}
+                className={`pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 ${selectedHotelFilter === "all"
+                  ? "text-gray-300"
+                  : "text-gray-500"
+                  }`}
               >
                 <svg
                   className="fill-current h-4 w-4"

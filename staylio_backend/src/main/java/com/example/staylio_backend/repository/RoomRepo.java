@@ -6,7 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface RoomRepo extends JpaRepository<Room, Long> {
@@ -26,8 +29,32 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
     Page<Room> findAllRooms(String search, RoomStatus status, Pageable pageable);
 
     boolean existsByRoomNameAndHotelBranch_Id(String roomName, Long hotelBranchId);
-    boolean existsByRoomNameAndHotelBranch_IdAndIdNot(String roomName, Long hotelBranchId, Long id);
+    boolean existsByRoomNumberAndHotelBranch_Id(String roomName, Long hotelBranchId);
 
-    boolean existsByRoomNumberAndHotelBranch_Id(String roomNumber, Long hotelBranchId);
-    boolean existsByRoomNumberAndHotelBranch_IdAndIdNot(String roomNumber, Long hotelBranchId, Long id);
+    @Query("""
+        SELECT COUNT(r) > 0
+        FROM Room r
+        WHERE LOWER(TRIM(r.roomName)) = LOWER(TRIM(:roomName))
+          AND r.hotelBranch.id = :hotelBranchId
+          AND r.id <> :roomId
+    """)
+    boolean existsDuplicateRoomNameForUpdate(
+            @Param("roomName") String roomName,
+            @Param("hotelBranchId") Long hotelBranchId,
+            @Param("roomId") Long roomId
+    );
+    @Query("""
+        SELECT COUNT(r) > 0
+        FROM Room r
+        WHERE LOWER(TRIM(r.roomNumber)) = LOWER(TRIM(:roomNumber))
+          AND r.hotelBranch.id = :hotelBranchId
+          AND r.id <> :roomId
+    """)
+    boolean existsDuplicateRoomNumberForUpdate(
+            @Param("roomNumber") String roomNumber,
+            @Param("hotelBranchId") Long hotelBranchId,
+            @Param("roomId") Long roomId
+    );
+
+    List<Room> findAllByHotelBranch_Id(Long hotelBranchId);
 }

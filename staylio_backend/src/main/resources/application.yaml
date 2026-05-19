@@ -37,8 +37,12 @@ spring:
     server-url: http://localhost:8080
   data:
     redis:
-      host: localhost
+      host: ${UPSTASH_REDIS_HOST}
       port: 6379
+      username: default
+      password: ${UPSTASH_REDIS_PASSWORD}
+      ssl:
+        enabled: true
   security:
     oauth2:
       client:

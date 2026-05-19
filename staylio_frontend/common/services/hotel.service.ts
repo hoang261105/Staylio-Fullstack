@@ -1,6 +1,8 @@
 import { HotelStatus } from "@common/enums/HotelStatus";
 import { QueryParams } from "@common/interfaces"
+import { ApiResponse } from "@common/interfaces/ApiResponse";
 import { HotelRequest } from "@common/interfaces/request/HotelRequest";
+import { HotelResponse } from "@common/interfaces/response/HotelResponse";
 import { axiosInstance } from "@common/utils/axiosInstance"
 
 // Lây danh sách thương hiệu khách sạn
@@ -10,6 +12,17 @@ export const getAllHotels = async (params: QueryParams) => {
         return response.data;
     } catch (error) {
         console.error("Lấy danh sách khách sạn thất bại!");
+        throw error;
+    }
+}
+
+// Lấy danh sách thương hiệu khách sạn không phân trang
+export const getHotels = async () => {
+    try {
+        const response = await axiosInstance.get("/hotels/lists");
+        return response.data;
+    } catch (error) {
+        console.error("Lấy danh sách thương hiệu khách sạn thất bại", error);
         throw error;
     }
 }
@@ -26,7 +39,7 @@ export const getHotelById = async (id: number) => {
 }
 
 // Thêm mới thương hiệu khách sạn
-export const createHotel = async (data: HotelRequest) => {
+export const createHotel = async (data: HotelRequest): Promise<ApiResponse<HotelResponse>> => {
     try {
         const response = await axiosInstance.post("/hotels", data);
         return response.data;
@@ -37,7 +50,7 @@ export const createHotel = async (data: HotelRequest) => {
 }
 
 // Cập nhật thông tin thương hiệu khách sạn của chủ quản lý
-export const updateHotelByManager = async (id: number, data: HotelRequest) => {
+export const updateHotelByManager = async (id: number, data: HotelRequest): Promise<ApiResponse<HotelResponse>> => {
     try {
         const response = await axiosInstance.put(`/hotels/${id}`, data);
         return response.data;
@@ -61,7 +74,7 @@ export const getHotelByManager = async () => {
 }
 
 // Cập nhật trạng thái duyệt của thương hiệu khách sạn
-export const updateHotelStatus = async (id: number, status: HotelStatus) => {
+export const updateHotelStatus = async (id: number, status: HotelStatus): Promise<ApiResponse<string>> => {
     try {
         const response = await axiosInstance.patch(`/hotels/${id}/status`, { status });
         return response.data;
@@ -72,7 +85,7 @@ export const updateHotelStatus = async (id: number, status: HotelStatus) => {
 }
 
 // Cập nhật trạng thái hoạt động của thương hiệu khách sạn
-export const updateHotelActiveStatus = async (ids: number[], active: boolean) => {
+export const updateHotelActiveStatus = async (ids: number[], active: boolean): Promise<ApiResponse<string>> => {
     try {
         const response = await axiosInstance.patch(`/hotels/bulk-active`, { ids, active });
         return response.data;

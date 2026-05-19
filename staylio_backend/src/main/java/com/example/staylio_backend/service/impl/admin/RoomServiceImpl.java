@@ -7,12 +7,14 @@ import com.example.staylio_backend.common.utils.SecurityUtils;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.RoomRequest;
 import com.example.staylio_backend.dto.request.RoomStatusRequest;
+import com.example.staylio_backend.dto.response.RoomImageResponse;
 import com.example.staylio_backend.dto.response.RoomResponse;
 import com.example.staylio_backend.dto.response.UtilityResponse;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.*;
 import com.example.staylio_backend.model.enums.BranchStatus;
+import com.example.staylio_backend.model.enums.ImageStatus;
 import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.model.enums.RoomStatus;
 import com.example.staylio_backend.repository.*;
@@ -26,10 +28,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +40,7 @@ public class RoomServiceImpl implements RoomService {
     private final UtilityRepo utilityRepo;
 
     @Override
-    public PaginationResponse<RoomResponse> getAllRooms(
+    public PaginationResponse<RoomResponse> getRoomsBySearch(
             String search,
             Long hotelBranchId,
             int page,
@@ -94,6 +93,13 @@ public class RoomServiceImpl implements RoomService {
         );
 
         return new PaginationResponse<>(roomResponses, paginationDTO);
+    }
+
+    @Override
+    public List<RoomResponse> getAllRooms(Long hotelBranchId) {
+        List<Room> rooms = roomRepo.findAllByHotelBranch_Id(hotelBranchId);
+
+        return rooms.stream().map(this::convertToDTO).toList();
     }
 
     @Override
@@ -171,14 +177,29 @@ public class RoomServiceImpl implements RoomService {
                 .utilities(utilities)
                 .build();
 
+        List<RoomImage> images = new ArrayList<>();
+
+        for (int i = 0; i < request.getImageUrls().size(); i++) {
+            RoomImage image = RoomImage.builder()
+                    .room(room)
+                    .imageUrl(request.getImageUrls().get(i))
+                    .isPrimary(i == 0)
+                    .status(ImageStatus.PENDING)
+                    .build();
+
+            images.add(image);
+        }
+
+        room.setImages(images);
+
         Room savedRoom = roomRepo.save(room);
         return convertToDTO(savedRoom);
     }
 
     @Override
     public RoomResponse updateRoom(Long id, RoomRequest request, UserPrincipal userPrincipal) {
-        boolean isExistRoomName = roomRepo.existsByRoomNameAndHotelBranch_IdAndIdNot(request.getRoomName(), request.getHotelBranchId(), id);
-        boolean isExistRoomNumber = roomRepo.existsByRoomNumberAndHotelBranch_IdAndIdNot(request.getRoomNumber(), request.getHotelBranchId(), id);
+        boolean isExistRoomName = roomRepo.existsDuplicateRoomNameForUpdate(request.getRoomName(), request.getHotelBranchId(), id);
+        boolean isExistRoomNumber = roomRepo.existsDuplicateRoomNumberForUpdate(request.getRoomNumber(), request.getHotelBranchId(), id);
 
         if (isExistRoomName) {
             throw new AppException(ErrorCode.ROOM_NAME_EXISTED);
@@ -227,6 +248,26 @@ public class RoomServiceImpl implements RoomService {
         room.setIsActive(true);
         room.setIsVoucherApplicable(false);
         room.setUtilities(utilities);
+
+        if (request.getImageUrls() != null) {
+            room.getImages().clear();
+
+            List<RoomImage> images = new ArrayList<>();
+
+            for (int i = 0; i < request.getImageUrls().size(); i++) {
+
+                RoomImage image = RoomImage.builder()
+                        .room(room)
+                        .imageUrl(request.getImageUrls().get(i))
+                        .isPrimary(i == 0)
+                        .status(ImageStatus.PENDING)
+                        .build();
+
+                images.add(image);
+            }
+
+            room.getImages().addAll(images);
+        }
 
         Room updatedRoom = roomRepo.save(room);
         return convertToDTO(updatedRoom);
@@ -308,6 +349,16 @@ public class RoomServiceImpl implements RoomService {
                 ))
                 .collect(Collectors.toSet());
 
+        Set<RoomImageResponse> roomImages = room.getImages().stream()
+                .map(rm -> new RoomImageResponse(
+                        rm.getId(),
+                        rm.getRoom().getRoomName(),
+                        rm.getImageUrl(),
+                        rm.getIsPrimary(),
+                        rm.getStatus()
+                ))
+                .collect(Collectors.toSet());
+
         return new RoomResponse(
                 room.getId(),
                 room.getHotelBranch().getId(),
@@ -328,7 +379,8 @@ public class RoomServiceImpl implements RoomService {
                 room.getStatus(),
                 room.getIsActive(),
                 room.getIsVoucherApplicable(),
-                utilities
+                utilities,
+                roomImages
         );
     }
 

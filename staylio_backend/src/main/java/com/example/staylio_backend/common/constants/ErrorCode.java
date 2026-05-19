@@ -28,6 +28,10 @@ public enum ErrorCode {
     CANNOT_DELETE_BRANCH("Không thể xóa chi nhánh đã duyệt!"),
     CANNOT_CREATE_BRAND_HOTEL("Không thể tạo chi nhánh do thương hiệu chưa được duyệt!"),
     CANNOT_CREATE_ROOM("Không thể tạo phòng do chi nhánh chưa được duyệt!"),
+    INVALID_VOUCHER_DATE("Ngày hết hạn phải sau ngày hiện tại!"),
+    INVALID_DISCOUNT_VALUE("Phần trăm giảm giá phải nhỏ hơn 100%!"),
+    INVALID_IMAGE_STATUS("Trạng thái không hợp lệ!"),
+    REJECTION_REASON_REQUIRED("Vui lòng nhập lý do từ chối!"),
 
     // 3xxx: Business Logic (Duplicates, DB logic)
     USER_EXISTED("Tên người dùng đã tồn tại"),
@@ -40,6 +44,8 @@ public enum ErrorCode {
     ROOM_NAME_EXISTED("Tên phòng đã tồn tại!"),
     ROOM_NUMBER_EXISTED("Mã phòng đã tồn tại!"),
     UTILITY_TITLE_EXISTED("Tên tiện ích đã tồn tại!"),
+    VOUCHER_CODE_EXISTED("Mã voucher đã tồn tại!"),
+    ROOM_IMAGE_ALREADY_DELETED("Hình ảnh này đã được xóa rồi!"),
 
     // 4xxx: Resources
     DATA_NOT_FOUND("Không tìm thấy dữ liệu yêu cầu"),
@@ -50,7 +56,9 @@ public enum ErrorCode {
     WARD_NOT_FOUND("Không tìm thấy xã/phường!"),
     HOTEL_BRANCH_NOT_FOUND("Không tìm thấy chi nhánh!"),
     ROOM_NOT_FOUND("Không tìm thấy phòng!"),
-    UTILITY_NOT_FOUND("Không tìm thấy tiện ích!");
+    UTILITY_NOT_FOUND("Không tìm thấy tiện ích!"),
+    ROOM_IMAGE_NOT_FOUND("Không tìm thấy hình ảnh phòng!"),
+    VOUCHER_NOT_FOUND("Không tìm thấy voucher!");
 
     private final String message;
 

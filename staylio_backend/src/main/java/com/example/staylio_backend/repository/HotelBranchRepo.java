@@ -27,7 +27,7 @@ public interface HotelBranchRepo extends JpaRepository<HotelBranch, Long> {
             Pageable pageable
     );
 
-    List<HotelBranch> findAllByHotel_Id(Long hotelId);
+    List<HotelBranch> findAllByHotel_IdAndStatus(Long hotelId, BranchStatus status);
     boolean existsByIdAndHotelManagerId(Long branchId, Long managerId);
 
     boolean existsByBranchNameAndHotel_Id(String branchName, Long hotelId);

@@ -55,10 +55,10 @@ export const useCreateCustomerMutation = (request: UserRegisterRequest) => {
     mutationKey: ["create-customer", request],
     mutationFn: async () => {
       const response = await createCustomer(request);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Thêm khách hàng thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["customers"] });
     }
   })
@@ -70,10 +70,10 @@ export const useUpdateCustomerStatusMutation = () => {
     mutationKey: ["update-customer-status"],
     mutationFn: async (id: number) => {
       const response = await updateCustomerStatus(id);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật trạng thái khách hàng thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["customers"] });
     }
   });
@@ -85,10 +85,10 @@ export const useBulkUpdateCustomerStatusMutation = () => {
     mutationKey: ["bulk-update-customer-status"],
     mutationFn: async (payload: BulkUpdatePayload) => {
       const response = await bulkUpdateCustomerStatus(payload.ids, payload.status);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật trạng thái khách hàng thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["customers"] });
     }
   })

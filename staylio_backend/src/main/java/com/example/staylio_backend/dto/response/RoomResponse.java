@@ -34,4 +34,5 @@ public class RoomResponse {
     private Boolean isActive;
     private Boolean isVoucherApplicable;
     private Set<UtilityResponse> utilities;
+    private Set<RoomImageResponse> images;
 }

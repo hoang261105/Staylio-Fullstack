@@ -1,13 +1,11 @@
 package com.example.staylio_backend.controller;
 
-import com.cloudinary.Api;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.RoomRequest;
 import com.example.staylio_backend.dto.request.RoomStatusRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.RoomResponse;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
-import com.example.staylio_backend.model.enums.BranchStatus;
 import com.example.staylio_backend.model.enums.RoomStatus;
 import com.example.staylio_backend.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/rooms")
@@ -42,7 +41,24 @@ public class RoomController {
         ApiResponse<PaginationResponse<RoomResponse>> response = new ApiResponse<>(
                 true,
                 "Lấy danh sách phòng thành công!",
-                roomService.getAllRooms(search, hotelBranchId, page - 1, size, status, sortBy, direction),
+                roomService.getRoomsBySearch(search, hotelBranchId, page - 1, size, status, sortBy, direction),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{hotelBranchId}/lists")
+    @Operation(summary = "Danh sách phòng theo chi nhánh không phân trang")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ResponseEntity<ApiResponse<List<RoomResponse>>> getAllRoomsLists(
+            @PathVariable Long hotelBranchId
+    ){
+        ApiResponse<List<RoomResponse>> response = new ApiResponse<>(
+                true,
+                "Lấy danh sách phòng thành công!",
+                roomService.getAllRooms(hotelBranchId),
                 null,
                 LocalDateTime.now()
         );

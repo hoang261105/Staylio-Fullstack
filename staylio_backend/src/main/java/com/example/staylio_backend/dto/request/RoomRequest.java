@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -65,4 +66,7 @@ public class RoomRequest {
 
     @NotEmpty(message = "Vui lòng chọn ít nhất một tiện ích")
     private Set<Long> utilityIds;
+
+    @NotEmpty(message = "Vui lòng chọn ít nhất 1 hình ảnh")
+    private List<String> imageUrls;
 }

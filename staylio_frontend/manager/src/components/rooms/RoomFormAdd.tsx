@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Select from "react-select";
-import { X, Loader2 } from "lucide-react";
+import { X, Loader2, ImagePlus, Trash2, Star } from "lucide-react";
 import { InputField } from "@common/components/InputField";
 import { useHotelByManager } from "@common/hooks/useHotels";
 import { useMyHotelBranchs } from "@common/hooks/useHotelBranch";
@@ -10,6 +10,8 @@ import { useAllUtilities } from "@common/hooks/useUtilities";
 import { useApiErrors } from "@common/hooks/useApiErrors";
 import { RoomType } from "@common/enums/RoomType";
 import type { RoomRequest } from "@common/interfaces/request/RoomRequest";
+import { uploadToCloudinary } from "@common/utils/cloudinary";
+import { BranchStatus } from "@common/enums/BranchStatus";
 
 type SelectOption = { value: number; label: string };
 
@@ -58,6 +60,7 @@ const initForm: RoomRequest = {
   roomNumber: "",
   floor: 1,
   utilityIds: [],
+  imageUrls: [],
 };
 
 export default function RoomFormAdd({
@@ -70,15 +73,21 @@ export default function RoomFormAdd({
   const { data: hotel } = useHotelByManager();
   const { data: branches, isLoading: loadingBranches } = useMyHotelBranchs(
     hotel?.id ?? 0,
+    BranchStatus.CONFIRMED
   );
   const { data: utilities, isLoading: loadingUtilities } = useAllUtilities();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState<RoomRequest>(initForm);
   const [selectedBranch, setSelectedBranch] = useState<SelectOption | null>(
     null,
   );
 
-  const { mutateAsync: addRoom, isPending } = useCreateRoomMutation(formData);
+  type ImageState = { id: string; url: string; preview: string; isUploading: boolean; isError?: boolean };
+  const [images, setImages] = useState<ImageState[]>([]);
+
+  const { mutateAsync: addRoom, isPending } = useCreateRoomMutation();
   const { fieldErrors, handleApiErrors, clearFieldError, clearAllErrors } =
     useApiErrors();
 
@@ -129,6 +138,41 @@ export default function RoomFormAdd({
     clearFieldError("utilityIds");
   };
 
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const newImages: ImageState[] = Array.from(files).map((file) => ({
+      id: Math.random().toString(36).substring(7),
+      url: "",
+      preview: URL.createObjectURL(file),
+      isUploading: true,
+    }));
+
+    setImages((prev) => [...prev, ...newImages]);
+
+    Array.from(files).forEach(async (file, index) => {
+      const imgId = newImages[index].id;
+      try {
+        const url = await uploadToCloudinary(file);
+        setImages((prev) =>
+          prev.map((img) => (img.id === imgId ? { ...img, url, isUploading: false } : img))
+        );
+      } catch (error) {
+        console.error("Lỗi upload ảnh:", error);
+        setImages((prev) =>
+          prev.map((img) => (img.id === imgId ? { ...img, isUploading: false, isError: true } : img))
+        );
+      }
+    });
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleRemoveImage = (idToRemove: string) => {
+    setImages((prev) => prev.filter((img) => img.id !== idToRemove));
+  };
+
   const handleClose = () => {
     clearAllErrors();
     onClose();
@@ -138,9 +182,14 @@ export default function RoomFormAdd({
     e.preventDefault();
     clearAllErrors();
     try {
-      await addRoom();
+      const imageUrls = images.map(img => img.url).filter(url => url !== "");
+      const payload: RoomRequest = { ...formData, imageUrls };
+      
+      await addRoom(payload);
+
       setFormData(initForm);
       setSelectedBranch(null);
+      setImages([]);
       onClose();
     } catch (error: any) {
       const serverResponse = error?.response?.data?.errors;
@@ -363,6 +412,48 @@ export default function RoomFormAdd({
           </div>
 
           <div className="mb-4">
+            <label className="block text-sm mb-2">Hình ảnh phòng</label>
+            <input ref={fileInputRef} type="file" multiple accept="image/*" onChange={handleImageChange} className="hidden" id="room-image-upload" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {images.map((img, index) => (
+                <div key={img.id} className="relative aspect-square rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center group">
+                  <img src={img.preview} alt="preview" className="w-full h-full object-cover" />
+
+                  {index === 0 && (
+                    <div className="absolute top-2 left-2 bg-yellow-400 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                      <Star className="w-3 h-3 fill-current" />
+                      Ưu tiên
+                    </div>
+                  )}
+
+                  {img.isUploading && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <Loader2 className="w-6 h-6 text-white animate-spin" />
+                    </div>
+                  )}
+                  {img.isError && (
+                    <div className="absolute inset-0 bg-red-500/20 flex items-center justify-center">
+                      <span className="text-xs text-red-600 bg-white px-2 py-1 rounded shadow">Lỗi tải lên</span>
+                    </div>
+                  )}
+                  <button type="button" onClick={() => handleRemoveImage(img.id)}
+                    className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+              <label htmlFor="room-image-upload"
+                className="flex flex-col items-center justify-center gap-2 aspect-square border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#0066FF] hover:bg-blue-50/30 transition-colors">
+                <ImagePlus className="w-8 h-8 text-gray-400" />
+                <span className="text-sm text-gray-500">Thêm ảnh</span>
+              </label>
+            </div>
+            {fieldErrors.imageUrls && (
+              <p className="text-xs text-red-500 mt-1">{fieldErrors.imageUrls}</p>
+            )}
+          </div>
+
+          <div className="mb-4">
             <label className="block text-sm mb-2">Mô tả chi tiết</label>
             <textarea
               name="description"
@@ -389,11 +480,11 @@ export default function RoomFormAdd({
             </button>
             <button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || images.some(img => img.isUploading)}
               className="flex items-center gap-2 px-6 py-2.5 bg-[#0066FF] text-white font-medium rounded-lg hover:bg-[#0052CC] shadow-sm shadow-blue-500/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-              {isPending ? "Đang tạo..." : "Thêm phòng mới"}
+              {(isPending || images.some(img => img.isUploading)) && <Loader2 className="w-4 h-4 animate-spin" />}
+              {isPending ? "Đang tạo..." : images.some(img => img.isUploading) ? "Đang tải ảnh..." : "Thêm phòng mới"}
             </button>
           </div>
         </form>
