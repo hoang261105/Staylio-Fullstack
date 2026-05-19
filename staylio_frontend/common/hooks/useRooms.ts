@@ -1,7 +1,8 @@
 import { RoomStatus } from "@common/enums/RoomStatus";
 import { QueryParams } from "@common/interfaces";
 import { RoomRequest } from "@common/interfaces/request/RoomRequest";
-import { createRoom, getRoomById, getRooms, updateRoom, updateRoomActive, updateRoomStatus, updateRoomVoucherApplicable } from "@common/services/room.service";
+import { RoomResponse } from "@common/interfaces/response/RoomResponse";
+import { createRoom, getAllRooms, getRoomById, getRooms, updateRoom, updateRoomActive, updateRoomStatus, updateRoomVoucherApplicable } from "@common/services/room.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -27,6 +28,17 @@ export const useRooms = (params: QueryParams) => {
   });
 };
 
+export const useAllRooms = (hotelBranchId: number) => {
+  return useQuery<RoomResponse[]>({
+    queryKey: ["listRooms", hotelBranchId],
+    queryFn: async () => {
+      const response = await getAllRooms(hotelBranchId);
+      return response.data;
+    },
+    enabled: !!hotelBranchId
+  });
+}
+
 export const useRoomById = (roomId: number) => {
   return useQuery({
     queryKey: ["room", roomId],
@@ -37,31 +49,31 @@ export const useRoomById = (roomId: number) => {
   })
 }
 
-export const useCreateRoomMutation = (roomData: RoomRequest) => {
+export const useCreateRoomMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["createRoom"],
-    mutationFn: async () => {
+    mutationFn: async (roomData: RoomRequest) => {
       const response = await createRoom(roomData);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Thêm mới phòng thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
     }
   })
 }
 
-export const useUpdateRoomMutation = (roomId: number, roomData: RoomRequest) => {
+export const useUpdateRoomMutation = (roomId: number) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["updateRoom", roomId],
-    mutationFn: async () => {
+    mutationFn: async (roomData: RoomRequest) => {
       const response = await updateRoom(roomId, roomData);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật phòng thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
       queryClient.invalidateQueries({ queryKey: ["room", roomId] });
     }
@@ -74,10 +86,10 @@ export const useUpdateRoomActiveMutation = (roomId: number) => {
     mutationKey: ["updateRoomActive", roomId],
     mutationFn: async () => {
       const response = await updateRoomActive(roomId);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật trạng thái hoạt động phòng thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
       queryClient.invalidateQueries({ queryKey: ["room", roomId] });
     }
@@ -90,10 +102,10 @@ export const useUpdateRoomVoucherMutation = (roomId: number) => {
     mutationKey: ["updateRoomVoucher", roomId],
     mutationFn: async () => {
       const response = await updateRoomVoucherApplicable(roomId);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật trạng thái áp dụng voucher cho phòng thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
       queryClient.invalidateQueries({ queryKey: ["room", roomId] });
     }
@@ -106,10 +118,10 @@ export const useUpdateRoomStatusMutation = (roomId: number) => {
     mutationKey: ["updateRoomStatus", roomId],
     mutationFn: async (status: RoomStatus) => {
       const response = await updateRoomStatus(roomId, status);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật trạng thái phòng thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
       queryClient.invalidateQueries({ queryKey: ["room", roomId] });
     }

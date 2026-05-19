@@ -25,6 +25,8 @@ public interface UtilityRepo extends JpaRepository<Utility, Long> {
 
     List<Utility> findAllByIdInAndIsDeletedFalse(Set<Long> ids);
 
+    List<Utility> findAllByIsDeletedFalse();
+
     boolean existsByTitleIgnoreCase(String title);
     boolean existsByTitleIgnoreCaseAndIdNot(String title, Long id);
 }

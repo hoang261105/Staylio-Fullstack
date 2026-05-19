@@ -3,7 +3,7 @@ import { HotelStatus } from "@common/enums/HotelStatus";
 import { PaginationResponse, QueryParams } from "@common/interfaces";
 import { HotelResponse } from "@common/interfaces/response/HotelResponse";
 import { HotelRequest } from "@common/interfaces/request/HotelRequest";
-import { createHotel, getAllHotels, getHotelById, getHotelByManager, updateHotelActiveStatus, updateHotelByManager, updateHotelStatus } from "@common/services/hotel.service";
+import { createHotel, getAllHotels, getHotelById, getHotelByManager, getHotels, updateHotelActiveStatus, updateHotelByManager, updateHotelStatus } from "@common/services/hotel.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -26,6 +26,16 @@ export const useHotels = (params: QueryParams) => {
     },
   });
 };
+
+export const useAllHotels = () => {
+  return useQuery<HotelResponse[]>({
+    queryKey: ["listHotels"],
+    queryFn: async () => {
+      const response = await getHotels();
+      return response.data;
+    }
+  });
+}
 
 export const useHotelById = (id: number) => {
   return useQuery<HotelResponse>({
@@ -54,10 +64,10 @@ export const useHotelStatusMutation = () => {
     mutationKey: ["update-hotel-status"],
     mutationFn: async ({ id, status }: { id: number; status: HotelStatus }) => {
       const response = await updateHotelStatus(id, status);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật trạng thái khách sạn thành công!");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["hotels"] });
     }
   })
@@ -69,10 +79,10 @@ export const useHotelActiveStatusMutation = () => {
     mutationKey: ["update-hotel-active-status"],
     mutationFn: async ({ ids, active }: { ids: number[]; active: boolean }) => {
       const response = await updateHotelActiveStatus(ids, active);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật trạng thái hoạt động khách sạn thành công!");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["hotels"] });
     }
   })
@@ -83,10 +93,10 @@ export const useCreateHotelMutation = () => {
   return useMutation({
     mutationFn: async (data: HotelRequest) => {
       const response = await createHotel(data);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Tạo mới thương hiệu khách sạn thành công!");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["hotelByManager"] });
     },
     onError: (error: any) => {
@@ -103,10 +113,10 @@ export const useUpdateHotelMutation = (id: number) => {
     mutationKey: ["update-hotel", id],
     mutationFn: async (data: HotelRequest) => {
       const response = await updateHotelByManager(id, data);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật thông tin khách sạn thành công!");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["hotelByManager"] });
     },
     onError: (error: any) => {

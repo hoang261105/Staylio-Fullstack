@@ -7,8 +7,12 @@ import com.example.staylio_backend.dto.response.RoomResponse;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.enums.RoomStatus;
 
+import java.util.List;
+
 public interface RoomService {
-    PaginationResponse<RoomResponse> getAllRooms(String search, Long hotelBranchId, int page, int size, RoomStatus status, String sortBy, String direction);
+    PaginationResponse<RoomResponse> getRoomsBySearch(String search, Long hotelBranchId, int page, int size, RoomStatus status, String sortBy, String direction);
+
+    List<RoomResponse> getAllRooms(Long hotelBranchId);
 
     RoomResponse getRoomById(Long id, UserPrincipal userPrincipal);
 

@@ -88,9 +88,14 @@ export default function RoomListView({
                 <tr key={room.id} className="hover:bg-gray-50/50 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-linear-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center shrink-0 overflow-hidden border border-gray-100 p-2">
-                        <img src="/slogan.png" alt="Room Logo" className="w-full h-full object-contain" />
-                      </div>
+                      {(() => {
+                        const primaryImg = room.images?.find(img => img.isPrimary)?.imageUrl || room.images?.[0]?.imageUrl;
+                        return (
+                          <div className={`w-12 h-12 bg-linear-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center shrink-0 overflow-hidden border border-gray-100 ${!primaryImg ? 'p-2' : ''}`}>
+                            <img src={primaryImg || "/slogan.png"} alt="Room Image" className={`w-full h-full ${primaryImg ? 'object-cover' : 'object-contain'}`} />
+                          </div>
+                        );
+                      })()}
                       <div>
                         <div className="font-semibold text-gray-900">{room.roomName}</div>
                         <div className="text-xs text-gray-500 mt-0.5 font-medium">Số phòng: {room.roomNumber}</div>
@@ -151,9 +156,8 @@ export default function RoomListView({
                     <div className="flex flex-col gap-2 items-start">
                       <button
                         onClick={() => onUpdateStatus(room)}
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border transition-colors hover:opacity-80 cursor-pointer ${
-                          statusColors[room.status] || "bg-gray-50 text-gray-700 border-gray-200"
-                        }`}
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border transition-colors hover:opacity-80 cursor-pointer ${statusColors[room.status] || "bg-gray-50 text-gray-700 border-gray-200"
+                          }`}
                         title="Cập nhật trạng thái phòng"
                       >
                         {statusLabels[room.status] || room.status}
@@ -169,22 +173,20 @@ export default function RoomListView({
                     <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
                         onClick={() => onToggleVoucher(room)}
-                        className={`p-1.5 rounded-lg transition-colors ${
-                          room.isVoucherApplicable
-                            ? "text-orange-500 hover:bg-orange-50"
-                            : "text-gray-400 hover:text-blue-500 hover:bg-blue-50"
-                        }`}
+                        className={`p-1.5 rounded-lg transition-colors ${room.isVoucherApplicable
+                          ? "text-orange-500 hover:bg-orange-50"
+                          : "text-gray-400 hover:text-blue-500 hover:bg-blue-50"
+                          }`}
                         title={room.isVoucherApplicable ? "Hủy áp dụng Voucher" : "Cho phép áp dụng Voucher"}
                       >
                         <Tag className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => onToggleActive(room)}
-                        className={`p-1.5 rounded-lg transition-colors ${
-                          room.isActive
-                            ? "text-red-500 hover:bg-red-50"
-                            : "text-green-500 hover:bg-green-50"
-                        }`}
+                        className={`p-1.5 rounded-lg transition-colors ${room.isActive
+                          ? "text-red-500 hover:bg-red-50"
+                          : "text-green-500 hover:bg-green-50"
+                          }`}
                         title={room.isActive ? "Ngừng hoạt động" : "Kích hoạt"}
                       >
                         <Power className="w-4 h-4" />

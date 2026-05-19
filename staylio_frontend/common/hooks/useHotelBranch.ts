@@ -37,13 +37,14 @@ export const useHotelBranchs = (params: QueryParams) => {
   });
 };
 
-export const useMyHotelBranchs = (hotelId: number) => {
+export const useMyHotelBranchs = (hotelId: number, status: BranchStatus) => {
   return useQuery<HotelBranchResponse[]>({
     queryKey: ["myHotelBranchs", hotelId],
     queryFn: async () => {
-      const response = await getMyHotelBranches(hotelId);
+      const response = await getMyHotelBranches(hotelId, status);
       return response.data;
-    }
+    },
+    enabled: hotelId > 0,
   })
 }
 
@@ -63,10 +64,10 @@ export const useAddHotelBranch = (request: HotelBranchRequest) => {
     mutationKey: ["hotelBranchAdd", request],
     mutationFn: async () => {
       const response = await createHotelBranch(request);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Thêm chi nhánh thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["hotelBranchs"] });
     },
   });
@@ -81,10 +82,10 @@ export const useUpdateHotelBranch = (
     mutationKey: ["hotelBranchUpdate", id, request],
     mutationFn: async () => {
       const response = await updateHotelBranch(id, request);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật chi nhánh thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["hotelBranchs"] });
     },
   });
@@ -96,10 +97,10 @@ export const useDeleteHotelBranch = (request: HotelIdRequest) => {
     mutationKey: ["hotelBranchDelete", request],
     mutationFn: async (id: number) => {
       const response = await deleteHotelBranch(id, request);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Xóa chi nhánh thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["hotelBranchs"] });
     }
   });
@@ -111,10 +112,10 @@ export const useApproveHotelBranch = () => {
     mutationKey: ["hotelBranchApprove"],
     mutationFn: async ({ id, status }: { id: number, status: BranchStatus }) => {
       const response = await approveHotelBranch(id, status);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật trạng thái chi nhánh thành công");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["hotelBranchs"] });
     }
   });

@@ -15,6 +15,7 @@ import RoomFormUpdate from "../components/rooms/RoomFormUpdate";
 import RoomToggleActiveModal from "../components/rooms/RoomToggleActiveModal";
 import RoomToggleVoucherModal from "../components/rooms/RoomToggleVoucherModal";
 import RoomUpdateStatusModal from "../components/rooms/RoomUpdateStatusModal";
+import { BranchStatus } from "@common/enums/BranchStatus";
 
 const SORT_OPTIONS = [
   { value: "id", label: "Mặc định" },
@@ -42,7 +43,7 @@ export default function ManagerRooms() {
   const [roomToUpdateStatus, setRoomToUpdateStatus] = useState<RoomResponse | null>(null);
   const [isUpdateStatusModalOpen, setIsUpdateStatusModalOpen] = useState(false);
   const { data: hotel } = useHotelByManager();
-  const { data: hotelBranches } = useMyHotelBranchs(hotel?.id || 0);
+  const { data: hotelBranches } = useMyHotelBranchs(hotel?.id || 0, BranchStatus.CONFIRMED);
   const { data: room } = useRoomById(selectedRoom?.id || 0);
   const { mutateAsync: toggleActive, isPending: isToggling } = useUpdateRoomActiveMutation(roomToToggle?.id ?? 0);
   const { mutateAsync: toggleVoucher, isPending: isTogglingVoucher } = useUpdateRoomVoucherMutation(roomToToggleVoucher?.id ?? 0);
@@ -60,9 +61,10 @@ export default function ManagerRooms() {
     search: debouncedSearch || undefined,
     status:
       selectedFilter === "all" ? undefined : (selectedFilter as RoomStatus),
-    hotelBranchId: !selectedBranchFilter
-      ? undefined
-      : Number(selectedBranchFilter),
+    hotelBranchId:
+      !selectedBranchFilter || selectedBranchFilter === "all"
+        ? undefined
+        : Number(selectedBranchFilter),
     page,
     size: 5,
     sortBy: sortBy === "id" ? undefined : sortBy,
@@ -185,6 +187,7 @@ export default function ManagerRooms() {
                 }}
                 className="w-full pl-12 pr-8 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700 truncate"
               >
+                <option value="all">Tất cả chi nhánh</option>
                 {hotelBranches?.map((filter) => (
                   <option key={filter.id} value={filter.id}>
                     {filter.hotelBranchName}

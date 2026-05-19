@@ -12,6 +12,7 @@ import {
   Search,
   MapPin,
   Bed,
+  Image,
 } from "lucide-react";
 import { useProfile } from "../../../common/hooks/useProfile";
 import { useQueryClient } from "@tanstack/react-query";
@@ -35,6 +36,11 @@ const NAVIGATION_ITEMS = [
     name: "Quản lý phòng",
     path: "/admin/rooms",
     icon: Bed
+  },
+  {
+    name: "Kiểm duyệt hình ảnh",
+    path: "/admin/room-images",
+    icon: Image,
   },
   {
     name: "Quản lý tiện ích",

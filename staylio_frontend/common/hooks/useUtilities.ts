@@ -1,7 +1,7 @@
 import { PaginationResponse, QueryParams } from "@common/interfaces";
 import { UtilityRequest } from "@common/interfaces/request/UtitlityRequest";
 import { UtilityResponse } from "@common/interfaces/response/UtilityResponse";
-import { createUtility, getAllUtilities, getUtilities, getUtilityById, updateUtility } from "@common/services/utility.service";
+import { createUtility, getAllUtilities, getUtilities, getUtilityById, updateUtility, updateUtilityActive } from "@common/services/utility.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -51,10 +51,10 @@ export const useCreateUtilityMutation = (data: UtilityRequest) => {
     mutationKey: ["createUtility"],
     mutationFn: async () => {
       const response = await createUtility(data);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Tạo mới tiện ích thành công!");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["utilities"] });
     }
   });
@@ -66,11 +66,27 @@ export const useUpdateUtilityMutation = (id: number) => {
     mutationKey: ["updateUtility"],
     mutationFn: async (data: UtilityRequest) => {
       const response = await updateUtility(id, data);
-      return response.data;
+      return response;
     },
-    onSuccess: () => {
-      toast.success("Cập nhật thông tin tiện ích thành công!");
+    onSuccess: (response) => {
+      toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["utilities"] });
+    }
+  });
+}
+
+export const useUpdateActiveMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["updateActive"],
+    mutationFn: async (id: number) => {
+      const response = await updateUtilityActive(id);
+      return response;
+    },
+    onSuccess: (response) => {
+      toast.success(response.message);
+      queryClient.invalidateQueries({ queryKey: ["utilities"] })
     }
   });
 }

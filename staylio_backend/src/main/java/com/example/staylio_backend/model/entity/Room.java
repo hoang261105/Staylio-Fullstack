@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -90,4 +92,7 @@ public class Room extends BaseObject {
             inverseJoinColumns = @JoinColumn(name = "utility_id")
     )
     private Set<Utility> utilities;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoomImage> images = new ArrayList<>();
 }

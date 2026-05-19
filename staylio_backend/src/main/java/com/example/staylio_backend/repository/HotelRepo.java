@@ -28,6 +28,7 @@ public interface HotelRepo extends JpaRepository<Hotel, Long> {
     boolean existsByNameAndIdNot(String name, Long id);
 
     List<Hotel> findAllByIdIn(List<Long> ids);
+    List<Hotel> findAllByStatus(HotelStatus status);
 
     @Modifying
     @Transactional

@@ -214,17 +214,22 @@ public class HotelBranchServiceImpl implements HotelBranchService {
     }
 
     @Override
-    public List<HotelBranchResponse> getAllBranchesByHotelId(Long hotelId, UserPrincipal principal) {
-        List<HotelBranch> branches = branchRepo.findAllByHotel_Id(hotelId);
+    public List<HotelBranchResponse> getAllBranchesByHotelId(Long hotelId, BranchStatus status, UserPrincipal principal) {
+        Hotel hotel = hotelRepo.findById(hotelId)
+                .orElseThrow(() -> new NoSuchElementException(
+                        ErrorCode.HOTEL_BRAND_NOT_FOUND.getMessage()
+                ));
 
-        Profile profile = profileRepo.findById(principal.getId())
-                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy profile!"));
+        if (principal.hasRole(RoleName.ROLE_MANAGER)) {
+            Profile profile = profileRepo.findById(principal.getId())
+                    .orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
-        Hotel hotel = hotelRepo.findById(hotelId).orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRAND_NOT_FOUND.getMessage()));
-
-        if (!hotel.getManager().getId().equals(profile.getId())) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
+            if (!hotel.getManager().getId().equals(profile.getId())) {
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
         }
+
+        List<HotelBranch> branches = branchRepo.findAllByHotel_IdAndStatus(hotelId, status);
         return branches.stream().map(this::convertToDTO).toList();
     }
 

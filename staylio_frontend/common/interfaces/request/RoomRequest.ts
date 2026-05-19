@@ -16,4 +16,5 @@ export interface RoomRequest {
     roomNumber: string;
     floor: number;
     utilityIds: number[];
+    imageUrls: string[];
 }

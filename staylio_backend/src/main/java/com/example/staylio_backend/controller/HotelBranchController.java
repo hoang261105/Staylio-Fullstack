@@ -51,15 +51,16 @@ public class HotelBranchController {
 
         @GetMapping("/me")
         @Operation(summary = "Danh sách tất cả chi nhánh của tôi")
-        @PreAuthorize("hasRole('MANAGER')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
         public ResponseEntity<ApiResponse<List<HotelBranchResponse>>> getMyHotelBranches(
                 @RequestParam Long hotelId,
+                @RequestParam BranchStatus status,
                 @AuthenticationPrincipal UserPrincipal userPrincipal
         ){
             ApiResponse<List<HotelBranchResponse>> response = new ApiResponse<>(
                     true,
                     "Lấy tất cả chi nhánh của tôi thành công!",
-                    hotelBranchService.getAllBranchesByHotelId(hotelId, userPrincipal),
+                    hotelBranchService.getAllBranchesByHotelId(hotelId, status, userPrincipal),
                     null,
                     LocalDateTime.now()
             );

@@ -10,6 +10,8 @@ import {
   Bell,
   Search,
   Bed,
+  Ticket,
+  Image,
 } from "lucide-react";
 import { useProfile } from "@common/hooks/useProfile";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,6 +26,8 @@ const NAVIGATION_ITEMS = [
   { name: "Tổng quan", path: "/manager/dashboard", icon: LayoutDashboard },
   { name: "Chi nhánh của tôi", path: "/manager/branches", icon: Building2 },
   { name: "Quản lí phòng", path: "/manager/rooms", icon: Bed },
+  { name: "Quản lí voucher", path: "/manager/vouchers", icon: Ticket },
+  { name: "Quản lí hình ảnh", path: "/manager/room-images", icon: Image },
   { name: "Cài đặt", path: "/settings", icon: Settings },
 ];
 

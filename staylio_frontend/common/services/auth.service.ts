@@ -1,9 +1,11 @@
 import type { ProfileRequest, ChangePasswordRequest, NewPasswordRequest } from "@common/interfaces";
+import { ApiResponse } from "@common/interfaces/ApiResponse";
 import { UserLoginForm } from "@common/interfaces/request/UserLoginForm";
 import { UserRegisterRequest } from "@common/interfaces/request/UserRegisterRequest";
+import { UserResponse } from "@common/interfaces/response/UserResponse";
 import { axiosInstance } from "@common/utils/axiosInstance";
 
-export const register = async (userRegister: UserRegisterRequest) => {
+export const register = async (userRegister: UserRegisterRequest): Promise<ApiResponse<UserResponse>> => {
   try {
     const response = await axiosInstance.post("/auth/register", userRegister);
     return response.data;
@@ -13,7 +15,7 @@ export const register = async (userRegister: UserRegisterRequest) => {
   }
 };
 
-export const verifyEmail = async (token: string) => {
+export const verifyEmail = async (token: string): Promise<ApiResponse<string>> => {
   try {
     const response = await axiosInstance.get(`/auth/verify-registration`, {
       params: { token },
@@ -35,7 +37,7 @@ export const login = async (loginData: UserLoginForm) => {
   }
 };
 
-export const forgotPassword = async (email: string) => {
+export const forgotPassword = async (email: string): Promise<ApiResponse<string>> => {
   try {
     const response = await axiosInstance.get("/auth/forgot-password", {
       params: { email },
@@ -47,7 +49,7 @@ export const forgotPassword = async (email: string) => {
   }
 }
 
-export const resetPassword = async (token: string, newPasswordRequest: NewPasswordRequest) => {
+export const resetPassword = async (token: string, newPasswordRequest: NewPasswordRequest): Promise<ApiResponse<string>> => {
   try {
     const response = await axiosInstance.patch("/auth/reset-password", newPasswordRequest, {
       params: { token },
@@ -59,7 +61,7 @@ export const resetPassword = async (token: string, newPasswordRequest: NewPasswo
   }
 }
 
-export const logout = async (refreshToken: string) => {
+export const logout = async (refreshToken: string): Promise<ApiResponse<string>> => {
   try {
     const response = await axiosInstance.post("/auth/logout", { refreshToken });
     return response.data;

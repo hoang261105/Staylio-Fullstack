@@ -1,5 +1,7 @@
 import { QueryParams } from "@common/interfaces";
+import { ApiResponse } from "@common/interfaces/ApiResponse";
 import { UtilityRequest } from "@common/interfaces/request/UtitlityRequest";
+import { UtilityResponse } from "@common/interfaces/response/UtilityResponse";
 import { axiosInstance } from "@common/utils/axiosInstance";
 
 // API lấy danh sách các tiện ích
@@ -36,7 +38,7 @@ export const getUtilityById = async (id: number) => {
 }
 
 // API tạo mới 1 tiện ích
-export const createUtility = async (utility: UtilityRequest) => {
+export const createUtility = async (utility: UtilityRequest): Promise<ApiResponse<UtilityResponse>> => {
     try {
         const response = await axiosInstance.post("/utilities", utility);
         return response.data;
@@ -47,12 +49,23 @@ export const createUtility = async (utility: UtilityRequest) => {
 }
 
 // API cập nhật 1 tiện ích
-export const updateUtility = async (id: number, utility: UtilityRequest) => {
+export const updateUtility = async (id: number, utility: UtilityRequest): Promise<ApiResponse<UtilityResponse>> => {
     try {
         const response = await axiosInstance.put(`/utilities/${id}`, utility);
         return response.data;
     } catch (error) {
         console.error("Cập nhật thông tin tiện ích thất bại!", error);
+        throw error;
+    }
+}
+
+// API cập nhật trạng thái 1 tiện ích
+export const updateUtilityActive = async (id: number): Promise<ApiResponse<string>> => {
+    try {
+        const response = await axiosInstance.patch(`/utilities/${id}/active`);
+        return response.data;
+    } catch (error) {
+        console.error("Cập nhật thất bại", error);
         throw error;
     }
 }

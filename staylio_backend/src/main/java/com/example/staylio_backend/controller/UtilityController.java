@@ -109,4 +109,22 @@ public class UtilityController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PatchMapping("/{id}/active")
+    @Operation(summary = "Cập nhật trạng thái")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<String>> updateActive(
+            @PathVariable Long id
+    ){
+        utilityService.updateActive(id);
+        ApiResponse<String> response = new ApiResponse<>(
+            true,
+            "Cập nhật trạng thái thành công!",
+            null,
+            null,
+            LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

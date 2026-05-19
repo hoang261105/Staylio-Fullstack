@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Select from "react-select";
-import { X, Loader2 } from "lucide-react";
+import { X, Loader2, ImagePlus, Trash2, Star } from "lucide-react";
 import { InputField } from "@common/components/InputField";
 import { useHotelByManager } from "@common/hooks/useHotels";
 import { useMyHotelBranchs } from "@common/hooks/useHotelBranch";
@@ -12,6 +12,8 @@ import { useApiErrors } from "@common/hooks/useApiErrors";
 import { RoomType } from "@common/enums/RoomType";
 import type { RoomRequest } from "@common/interfaces/request/RoomRequest";
 import type { RoomResponse } from "@common/interfaces/response/RoomResponse";
+import { uploadToCloudinary } from "@common/utils/cloudinary";
+import { BranchStatus } from "@common/enums/BranchStatus";
 
 type SelectOption = { value: number; label: string };
 
@@ -25,12 +27,20 @@ const rsStyles = {
     opacity: s.isDisabled ? 0.5 : 1,
     "&:hover": { borderColor: "#0066FF" },
   }),
-  placeholder: (base: object) => ({ ...base, color: "#9CA3AF", fontSize: "0.875rem" }),
+  placeholder: (base: object) => ({
+    ...base,
+    color: "#9CA3AF",
+    fontSize: "0.875rem",
+  }),
   singleValue: (base: object) => ({ ...base, fontSize: "0.875rem" }),
   option: (base: object, s: { isSelected: boolean; isFocused: boolean }) => ({
     ...base,
     fontSize: "0.875rem",
-    backgroundColor: s.isSelected ? "#0066FF" : s.isFocused ? "#EFF6FF" : "white",
+    backgroundColor: s.isSelected
+      ? "#0066FF"
+      : s.isFocused
+        ? "#EFF6FF"
+        : "white",
     color: s.isSelected ? "white" : "#111827",
   }),
   menuPortal: (base: object) => ({ ...base, zIndex: 9999 }),
@@ -52,6 +62,7 @@ const initForm: RoomRequest = {
   roomNumber: "",
   floor: 1,
   utilityIds: [],
+  imageUrls: [],
 };
 
 interface RoomFormUpdateProps {
@@ -60,16 +71,38 @@ interface RoomFormUpdateProps {
   room: RoomResponse | null;
 }
 
-export default function RoomFormUpdate({ onClose, isOpen, room }: RoomFormUpdateProps) {
+export default function RoomFormUpdate({
+  onClose,
+  isOpen,
+  room,
+}: RoomFormUpdateProps) {
   const { data: hotel } = useHotelByManager();
-  const { data: branches, isLoading: loadingBranches } = useMyHotelBranchs(hotel?.id ?? 0);
+  const { data: branches, isLoading: loadingBranches } = useMyHotelBranchs(
+    hotel?.id ?? 0,
+    BranchStatus.CONFIRMED
+  );
   const { data: utilities, isLoading: loadingUtilities } = useAllUtilities();
 
   const [formData, setFormData] = useState<RoomRequest>(initForm);
-  const [selectedBranch, setSelectedBranch] = useState<SelectOption | null>(null);
+  const [selectedBranch, setSelectedBranch] = useState<SelectOption | null>(
+    null,
+  );
 
-  const { mutateAsync: updateRoom, isPending } = useUpdateRoomMutation(room?.id ?? 0, formData);
-  const { fieldErrors, handleApiErrors, clearFieldError, clearAllErrors } = useApiErrors();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  type ImageState = {
+    id: string;
+    url: string;
+    preview: string;
+    isUploading: boolean;
+    isError?: boolean;
+  };
+  const [images, setImages] = useState<ImageState[]>([]);
+
+  const { mutateAsync: updateRoom, isPending } = useUpdateRoomMutation(
+    room?.id ?? 0,
+  );
+  const { fieldErrors, handleApiErrors, clearFieldError, clearAllErrors } =
+    useApiErrors();
 
   const branchOptions: SelectOption[] =
     branches?.map((b) => ({ value: b.id, label: b.hotelBranchName })) ?? [];
@@ -95,27 +128,63 @@ export default function RoomFormUpdate({ onClose, isOpen, room }: RoomFormUpdate
         roomNumber: room.roomNumber,
         floor: room.floor,
         utilityIds: room.utilities?.map((u: any) => u.id) || [],
+        imageUrls: room.images?.map((img: any) => img.imageUrl) || [],
       });
+      setImages(
+        room.images?.map((img: any) => ({
+          id: img.id.toString(),
+          url: img.imageUrl,
+          preview: img.imageUrl,
+          isUploading: false,
+        })) || [],
+      );
 
       if (branches && branches.length > 0) {
         const branch = branches.find((b) => b.id === room.hotelBranchId);
         if (branch) {
-          setSelectedBranch({ value: branch.id, label: branch.hotelBranchName });
+          setSelectedBranch({
+            value: branch.id,
+            label: branch.hotelBranchName,
+          });
         } else {
-          setSelectedBranch({ value: room.hotelBranchId, label: room.hotelBranchName });
+          setSelectedBranch({
+            value: room.hotelBranchId,
+            label: room.hotelBranchName,
+          });
         }
       } else {
-        setSelectedBranch({ value: room.hotelBranchId, label: room.hotelBranchName });
+        setSelectedBranch({
+          value: room.hotelBranchId,
+          label: room.hotelBranchName,
+        });
       }
     }
   }, [isOpen, room, branches]);
 
   if (!isOpen) return null;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
-    if (["price", "maxAdults", "maxChildren", "capacity", "adultPrice", "childPrice", "area", "floor"].includes(name)) {
-      setFormData((prev) => ({ ...prev, [name]: value === "" ? "" : Number(value) }));
+    if (
+      [
+        "price",
+        "maxAdults",
+        "maxChildren",
+        "capacity",
+        "adultPrice",
+        "childPrice",
+        "area",
+        "floor",
+      ].includes(name)
+    ) {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value === "" ? "" : Number(value),
+      }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -129,20 +198,72 @@ export default function RoomFormUpdate({ onClose, isOpen, room }: RoomFormUpdate
   };
 
   const handleUtilitiesChange = (options: readonly SelectOption[]) => {
-    setFormData((prev) => ({ ...prev, utilityIds: options.map((o) => o.value) }));
+    setFormData((prev) => ({
+      ...prev,
+      utilityIds: options.map((o) => o.value),
+    }));
     clearFieldError("utilityIds");
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const newImages: ImageState[] = Array.from(files).map((file) => ({
+      id: Math.random().toString(36).substring(7),
+      url: "",
+      preview: URL.createObjectURL(file),
+      isUploading: true,
+    }));
+
+    setImages((prev) => [...prev, ...newImages]);
+
+    Array.from(files).forEach(async (file, index) => {
+      const imgId = newImages[index].id;
+      try {
+        const url = await uploadToCloudinary(file);
+        setImages((prev) =>
+          prev.map((img) =>
+            img.id === imgId ? { ...img, url, isUploading: false } : img,
+          ),
+        );
+      } catch (error) {
+        console.error("Lỗi upload ảnh:", error);
+        setImages((prev) =>
+          prev.map((img) =>
+            img.id === imgId
+              ? { ...img, isUploading: false, isError: true }
+              : img,
+          ),
+        );
+      }
+    });
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleRemoveImage = (idToRemove: string) => {
+    setImages((prev) => prev.filter((img) => img.id !== idToRemove));
   };
 
   const handleClose = () => {
     clearAllErrors();
+    setImages([]);
     onClose();
-  }
+  };
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     clearAllErrors();
     try {
-      await updateRoom();
+      const imageUrls = images
+        .map((img) => img.url)
+        .filter((url) => url !== "");
+      const payload: RoomRequest = { ...formData, imageUrls };
+
+      await updateRoom(payload);
+
+      setImages([]);
       onClose();
     } catch (error: any) {
       const serverResponse = error?.response?.data?.errors;
@@ -157,28 +278,50 @@ export default function RoomFormUpdate({ onClose, isOpen, room }: RoomFormUpdate
     >
       <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50/50 shrink-0">
-          <h2 className="text-xl font-semibold text-gray-900">Cập nhật phòng</h2>
-          <button type="button" onClick={handleClose} className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-colors">
+          <h2 className="text-xl font-semibold text-gray-900">
+            Cập nhật phòng
+          </h2>
+          <button
+            type="button"
+            onClick={handleClose}
+            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-colors"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="overflow-y-auto flex-1 p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
-            <InputField label="Tên phòng" name="roomName" value={formData.roomName}
-              onChange={handleChange} error={fieldErrors.roomName} placeholder="VD: Phòng Superior Giường Đôi" required />
+            <InputField
+              label="Tên phòng"
+              name="roomName"
+              value={formData.roomName}
+              onChange={handleChange}
+              error={fieldErrors.roomName}
+              placeholder="VD: Phòng Superior Giường Đôi"
+              required
+            />
 
-            <InputField label="Số phòng" name="roomNumber" value={formData.roomNumber}
-              onChange={handleChange} error={fieldErrors.roomNumber} placeholder="VD: 101" required />
+            <InputField
+              label="Số phòng"
+              name="roomNumber"
+              value={formData.roomNumber}
+              onChange={handleChange}
+              error={fieldErrors.roomNumber}
+              placeholder="VD: 101"
+              required
+            />
 
             <div className="mb-4">
-              <label className="block text-sm mb-2">Loại phòng <span className="text-red-500">*</span></label>
+              <label className="block text-sm mb-2">
+                Loại phòng <span className="text-red-500">*</span>
+              </label>
               <div className="relative">
                 <select
                   name="roomType"
                   value={formData.roomType}
                   onChange={handleChange}
-                  className={`w-full box-border px-4 py-3 border ${fieldErrors.roomType ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors bg-white appearance-none`}
+                  className={`w-full box-border px-4 py-3 border ${fieldErrors.roomType ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors bg-white appearance-none`}
                   required
                 >
                   <option value={RoomType.SINGLE}>Tiêu chuẩn (Standard)</option>
@@ -187,61 +330,150 @@ export default function RoomFormUpdate({ onClose, isOpen, room }: RoomFormUpdate
                   <option value={RoomType.VIP}>Phòng VIP</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                   </svg>
                 </div>
               </div>
-              {fieldErrors.roomType && <p className="text-xs text-red-500 mt-1">{fieldErrors.roomType}</p>}
+              {fieldErrors.roomType && (
+                <p className="text-xs text-red-500 mt-1">
+                  {fieldErrors.roomType}
+                </p>
+              )}
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm mb-2">Chi nhánh <span className="text-red-500">*</span></label>
+              <label className="block text-sm mb-2">
+                Chi nhánh <span className="text-red-500">*</span>
+              </label>
               <Select<SelectOption>
-                options={branchOptions} value={selectedBranch} onChange={handleBranchChange}
-                isLoading={loadingBranches} placeholder="Chọn chi nhánh..."
-                noOptionsMessage={() => "Không tìm thấy"} loadingMessage={() => "Đang tải..."}
-                styles={rsStyles} menuPortalTarget={document.body} required
+                options={branchOptions}
+                value={selectedBranch}
+                onChange={handleBranchChange}
+                isLoading={loadingBranches}
+                placeholder="Chọn chi nhánh..."
+                noOptionsMessage={() => "Không tìm thấy"}
+                loadingMessage={() => "Đang tải..."}
+                styles={rsStyles}
+                menuPortalTarget={document.body}
+                required
               />
-              {fieldErrors.hotelBranchId && <p className="text-xs text-red-500 mt-1">{fieldErrors.hotelBranchId}</p>}
+              {fieldErrors.hotelBranchId && (
+                <p className="text-xs text-red-500 mt-1">
+                  {fieldErrors.hotelBranchId}
+                </p>
+              )}
             </div>
 
-            <InputField label="Giá mỗi đêm (VNĐ)" name="price" type="number"
-              value={formData.price.toString()} error={fieldErrors.price} placeholder="VD: 500000" min={0}
-              onChange={handleChange} required />
+            <InputField
+              label="Giá mỗi đêm (VNĐ)"
+              name="price"
+              type="number"
+              value={formData.price.toString()}
+              error={fieldErrors.price}
+              placeholder="VD: 500000"
+              min={0}
+              onChange={handleChange}
+              required
+            />
 
-            <InputField label="Sức chứa tiêu chuẩn" name="capacity" type="number"
-              value={formData.capacity.toString()} error={fieldErrors.capacity} placeholder="VD: 2" min={1}
-              onChange={handleChange} required />
+            <InputField
+              label="Sức chứa tiêu chuẩn"
+              name="capacity"
+              type="number"
+              value={formData.capacity.toString()}
+              error={fieldErrors.capacity}
+              placeholder="VD: 2"
+              min={1}
+              onChange={handleChange}
+              required
+            />
 
-            <InputField label="Số người lớn tối đa" name="maxAdults" type="number"
-              value={formData.maxAdults.toString()} error={fieldErrors.maxAdults} placeholder="VD: 2" min={1}
-              onChange={handleChange} required />
+            <InputField
+              label="Số người lớn tối đa"
+              name="maxAdults"
+              type="number"
+              value={formData.maxAdults.toString()}
+              error={fieldErrors.maxAdults}
+              placeholder="VD: 2"
+              min={1}
+              onChange={handleChange}
+              required
+            />
 
-            <InputField label="Số trẻ em tối đa" name="maxChildren" type="number"
-              value={formData.maxChildren.toString()} error={fieldErrors.maxChildren} placeholder="VD: 1" min={0}
-              onChange={handleChange} required />
+            <InputField
+              label="Số trẻ em tối đa"
+              name="maxChildren"
+              type="number"
+              value={formData.maxChildren.toString()}
+              error={fieldErrors.maxChildren}
+              placeholder="VD: 1"
+              min={0}
+              onChange={handleChange}
+              required
+            />
 
-            <InputField label="Phụ phí người lớn (VNĐ)" name="adultPrice" type="number"
-              value={formData.adultPrice.toString()} error={fieldErrors.adultPrice} placeholder="VD: 100000" min={0}
-              onChange={handleChange} />
+            <InputField
+              label="Phụ phí người lớn (VNĐ)"
+              name="adultPrice"
+              type="number"
+              value={formData.adultPrice.toString()}
+              error={fieldErrors.adultPrice}
+              placeholder="VD: 100000"
+              min={0}
+              onChange={handleChange}
+            />
 
-            <InputField label="Phụ phí trẻ em (VNĐ)" name="childPrice" type="number"
-              value={formData.childPrice.toString()} error={fieldErrors.childPrice} placeholder="VD: 50000" min={0}
-              onChange={handleChange} />
+            <InputField
+              label="Phụ phí trẻ em (VNĐ)"
+              name="childPrice"
+              type="number"
+              value={formData.childPrice.toString()}
+              error={fieldErrors.childPrice}
+              placeholder="VD: 50000"
+              min={0}
+              onChange={handleChange}
+            />
 
-            <InputField label="Diện tích (m²)" name="area" type="number"
-              value={formData.area.toString()} error={fieldErrors.area} placeholder="VD: 30" min={1}
-              onChange={handleChange} required />
+            <InputField
+              label="Diện tích (m²)"
+              name="area"
+              type="number"
+              value={formData.area.toString()}
+              error={fieldErrors.area}
+              placeholder="VD: 30"
+              min={1}
+              onChange={handleChange}
+              required
+            />
 
-            <InputField label="Tầng" name="floor" type="number"
-              value={formData.floor.toString()} error={fieldErrors.floor} placeholder="VD: 1" min={1}
-              onChange={handleChange} required />
+            <InputField
+              label="Tầng"
+              name="floor"
+              type="number"
+              value={formData.floor.toString()}
+              error={fieldErrors.floor}
+              placeholder="VD: 1"
+              min={1}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="mb-4">
-            <InputField label="Thông tin giường" name="bedInfo" value={formData.bedInfo}
-              onChange={handleChange} error={fieldErrors.bedInfo} placeholder="VD: 1 giường đôi lớn" required />
+            <InputField
+              label="Thông tin giường"
+              name="bedInfo"
+              value={formData.bedInfo}
+              onChange={handleChange}
+              error={fieldErrors.bedInfo}
+              placeholder="VD: 1 giường đôi lớn"
+              required
+            />
           </div>
 
           <div className="mb-4">
@@ -249,7 +481,9 @@ export default function RoomFormUpdate({ onClose, isOpen, room }: RoomFormUpdate
             <Select<SelectOption, true>
               isMulti
               options={utilityOptions}
-              value={utilityOptions.filter((opt) => formData.utilityIds?.includes(opt.value))}
+              value={utilityOptions.filter((opt) =>
+                formData.utilityIds?.includes(opt.value),
+              )}
               onChange={handleUtilitiesChange}
               isLoading={loadingUtilities}
               placeholder="Chọn tiện ích..."
@@ -266,22 +500,116 @@ export default function RoomFormUpdate({ onClose, isOpen, room }: RoomFormUpdate
           </div>
 
           <div className="mb-4">
+            <label className="block text-sm mb-2">Thêm hình ảnh phòng</label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+              id="room-update-image-upload"
+            />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {images.map((img, index) => (
+                <div
+                  key={img.id}
+                  className="relative aspect-square rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center group"
+                >
+                  <img
+                    src={img.preview}
+                    alt="preview"
+                    className="w-full h-full object-cover"
+                  />
+
+                  {index === 0 &&
+                    (!room?.images || room.images.length === 0) && (
+                      <div className="absolute top-2 left-2 bg-yellow-400 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                        <Star className="w-3 h-3 fill-current" />
+                        Ưu tiên
+                      </div>
+                    )}
+
+                  {img.isUploading && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <Loader2 className="w-6 h-6 text-white animate-spin" />
+                    </div>
+                  )}
+                  {img.isError && (
+                    <div className="absolute inset-0 bg-red-500/20 flex items-center justify-center">
+                      <span className="text-xs text-red-600 bg-white px-2 py-1 rounded shadow">
+                        Lỗi tải lên
+                      </span>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(img.id)}
+                    className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+              <label
+                htmlFor="room-update-image-upload"
+                className="flex flex-col items-center justify-center gap-2 aspect-square border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#0066FF] hover:bg-blue-50/30 transition-colors"
+              >
+                <ImagePlus className="w-8 h-8 text-gray-400" />
+                <span className="text-sm text-gray-500">Thêm ảnh mới</span>
+              </label>
+            </div>
+            {room?.images && room.images.length > 0 && (
+              <p className="text-xs text-gray-500 mt-2 italic">
+                * Phòng đã có {room.images.length} ảnh. Bạn có thể thêm nhiều
+                ảnh mới ở đây.
+              </p>
+            )}
+            {fieldErrors.imageUrls && (
+              <p className="text-xs text-red-500 mt-1">
+                {fieldErrors.imageUrls}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-4">
             <label className="block text-sm mb-2">Mô tả chi tiết</label>
-            <textarea name="description" value={formData.description} onChange={handleChange}
-              placeholder="Mô tả các tiện nghi, hướng nhìn của phòng..." rows={4}
-              className={`w-full box-border px-4 py-3 border ${fieldErrors.description ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors resize-none text-sm`} />
-            {fieldErrors.description && <p className="text-xs text-red-500 mt-1">{fieldErrors.description}</p>}
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Mô tả các tiện nghi, hướng nhìn của phòng..."
+              rows={4}
+              className={`w-full box-border px-4 py-3 border ${fieldErrors.description ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors resize-none text-sm`}
+            />
+            {fieldErrors.description && (
+              <p className="text-xs text-red-500 mt-1">
+                {fieldErrors.description}
+              </p>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-            <button type="button" onClick={handleClose}
-              className="px-6 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+            <button
+              type="button"
+              onClick={handleClose}
+              className="px-6 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+            >
               Hủy
             </button>
-            <button type="submit" disabled={isPending}
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#0066FF] text-white font-medium rounded-lg hover:bg-[#0052CC] shadow-sm shadow-blue-500/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
-              {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-              {isPending ? "Đang cập nhật..." : "Lưu thay đổi"}
+            <button
+              type="submit"
+              disabled={isPending || images.some((img) => img.isUploading)}
+              className="flex items-center gap-2 px-6 py-2.5 bg-[#0066FF] text-white font-medium rounded-lg hover:bg-[#0052CC] shadow-sm shadow-blue-500/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {(isPending || images.some((img) => img.isUploading)) && (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              )}
+              {isPending
+                ? "Đang cập nhật..."
+                : images.some((img) => img.isUploading)
+                  ? "Đang tải ảnh..."
+                  : "Lưu thay đổi"}
             </button>
           </div>
         </form>

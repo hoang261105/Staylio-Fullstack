@@ -121,6 +121,14 @@ public class UtilityServiceImpl implements UtilityService {
 
     @Override
     public List<UtilityResponse> getAllUtilities() {
-        return utilityRepo.findAll().stream().map(this::convertToResponse).toList();
+        return utilityRepo.findAllByIsDeletedFalse().stream().map(this::convertToResponse).toList();
+    }
+
+    @Override
+    public void updateActive(Long id) {
+        Utility utility = utilityRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.UTILITY_NOT_FOUND.getMessage()));
+
+        utility.setIsDeleted(!utility.getIsDeleted());
+        utilityRepo.save(utility);
     }
 }

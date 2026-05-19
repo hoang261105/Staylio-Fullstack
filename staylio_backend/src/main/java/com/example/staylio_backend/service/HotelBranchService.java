@@ -23,6 +23,6 @@ public interface HotelBranchService {
 
     void deleteStatus(Long id, HotelIdRequest request, UserPrincipal principal);
 
-    List<HotelBranchResponse> getAllBranchesByHotelId (Long hotelId, UserPrincipal principal);
+    List<HotelBranchResponse> getAllBranchesByHotelId (Long hotelId, BranchStatus status, UserPrincipal principal);
 }
 

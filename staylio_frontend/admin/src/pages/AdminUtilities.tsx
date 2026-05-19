@@ -4,6 +4,7 @@ import UtilityListView from "../components/utilities/UtilityListView";
 import UtilityDetailModal from "../components/utilities/UtilityDetailModal";
 import UtilityFormAdd from "../components/utilities/UtilityFormAdd";
 import UtilityFormEdit from "../components/utilities/UtilityFormEdit";
+import ConfirmUtilityStatusModal from "../components/utilities/ConfirmUtilityStatusModal";
 import type { UtilityResponse } from "../../../common/interfaces/response/UtilityResponse";
 import { useDebounce } from "@common/hooks/useDebounce";
 import { useUtilities } from "@common/hooks/useUtilities";
@@ -20,6 +21,7 @@ export default function AdminUtilities() {
     useState<UtilityResponse | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingUtility, setEditingUtility] = useState<UtilityResponse | null>(null);
+  const [togglingUtility, setTogglingUtility] = useState<UtilityResponse | null>(null);
   const [page, setPage] = useState(0);
   const [sortBy, setSortBy] = useState("id");
   const [direction, setDirection] = useState<"asc" | "desc">("asc");
@@ -43,7 +45,7 @@ export default function AdminUtilities() {
   };
 
   const handleToggleActive = (utility: UtilityResponse) => {
-    console.log("Toggle active", utility);
+    setTogglingUtility(utility);
   };
 
   return (
@@ -154,6 +156,13 @@ export default function AdminUtilities() {
         utility={editingUtility}
         onClose={() => setEditingUtility(null)}
       />
+
+      {togglingUtility && (
+        <ConfirmUtilityStatusModal
+          utility={togglingUtility}
+          onClose={() => setTogglingUtility(null)}
+        />
+      )}
     </AdminLayout>
   );
 }

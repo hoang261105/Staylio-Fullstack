@@ -9,6 +9,8 @@ import com.example.staylio_backend.model.enums.HotelStatus;
 import java.util.List;
 
 public interface HotelService extends BaseService<HotelRequest, HotelResponse, Long> {
+    List<HotelResponse> getAllHotels();
+
     void updateStatus(Long id, HotelStatus status);
 
     void updateBulkActive(List<Long> ids, Boolean active);
