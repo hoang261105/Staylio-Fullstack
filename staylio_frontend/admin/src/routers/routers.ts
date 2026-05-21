@@ -9,6 +9,8 @@ import NotFound from "../../../common/components/NotFound";
 import AdminUtilities from "../pages/AdminUtilities";
 import AdminRoomImages from "../pages/AdminRoomImages";
 import AdminRoomImageDetail from "../components/room-images/AdminRoomImageDetail";
+import AdminVouchers from "../pages/AdminVouchers";
+import AdminBookings from "../pages/AdminBookings";
 
 export const routers = createBrowserRouter([
     {
@@ -46,6 +48,14 @@ export const routers = createBrowserRouter([
     {
         path: "/admin/utilities",
         Component: AdminUtilities
+    },
+    {
+        path: "/admin/vouchers",
+        Component: AdminVouchers
+    },
+    {
+        path: "/admin/bookings",
+        Component: AdminBookings
     },
     {
         path: "*",

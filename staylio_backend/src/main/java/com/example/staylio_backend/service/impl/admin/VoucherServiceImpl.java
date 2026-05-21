@@ -4,6 +4,7 @@ import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.common.exception.AppException;
 import com.example.staylio_backend.common.utils.SecurityUtils;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
+import com.example.staylio_backend.dto.request.ApprovalStatusRequest;
 import com.example.staylio_backend.dto.request.VoucherRequest;
 import com.example.staylio_backend.dto.request.VoucherStatusRequest;
 import com.example.staylio_backend.dto.response.VoucherResponse;
@@ -11,6 +12,7 @@ import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.HotelBranch;
 import com.example.staylio_backend.model.entity.Voucher;
+import com.example.staylio_backend.model.enums.ApprovalStatus;
 import com.example.staylio_backend.model.enums.DiscountType;
 import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.model.enums.VoucherStatus;
@@ -50,12 +52,12 @@ public class VoucherServiceImpl implements VoucherService {
                 );
 
                 if (!owned){
-                    throw new AccessDeniedException("Bạn không có quyền xem phòng của chi nhánh này");
+                    throw new AccessDeniedException("Bạn không có quyền xem voucher của chi nhánh này");
                 }
 
                 vouchersPage = voucherRepo.searchVouchersByHotelBranchIdAndStatus(hotelBranchId, status, search, pageable);
             } else {
-                vouchersPage = voucherRepo.findAllVouchers(status, search, pageable);
+                vouchersPage = voucherRepo.findAllVouchersByManager(principal.getId(), status, search, pageable);
             }
         } else {
             if (hotelBranchId != null) {
@@ -139,6 +141,7 @@ public class VoucherServiceImpl implements VoucherService {
                 .startDate(request.getStartDate())
                 .expiryDate(request.getExpiryDate())
                 .status(VoucherStatus.ACTIVE)
+                .approvalStatus(ApprovalStatus.PENDING)
                 .build();
 
         Voucher savedVoucher = voucherRepo.save(voucher);
@@ -200,11 +203,33 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucher = voucherRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.VOUCHER_NOT_FOUND.getMessage()));
 
         HotelBranch branch = voucher.getHotelBranch();
-        if (!branch.getHotel().getManager().getId().equals(userPrincipal.getId())){
-            throw new AppException(ErrorCode.UNAUTHORIZED);
+        if (userPrincipal.getRoleName() == RoleName.ROLE_MANAGER){
+            if (!branch.getHotel().getManager().getId().equals(userPrincipal.getId())){
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
         }
 
         voucher.setStatus(request.getStatus());
+        voucherRepo.save(voucher);
+    }
+
+    @Override
+    public void updateApprovalStatus(Long id, ApprovalStatusRequest request) {
+        Voucher voucher = voucherRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.VOUCHER_NOT_FOUND.getMessage()));
+        UserPrincipal principal = SecurityUtils.getCurrentUser();
+
+        if (principal.hasRole(RoleName.ROLE_MANAGER)) {
+            if (request.getApprovalStatus() != ApprovalStatus.DELETED) {
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
+            if (!voucher.getHotelBranch().getHotel().getManager().getId().equals(principal.getId())) {
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
+        } else if (!principal.hasRole(RoleName.ROLE_ADMIN)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        voucher.setApprovalStatus(request.getApprovalStatus());
         voucherRepo.save(voucher);
     }
 
@@ -225,7 +250,8 @@ public class VoucherServiceImpl implements VoucherService {
                 voucher.getUsageLimitPerUser(),
                 voucher.getStartDate(),
                 voucher.getExpiryDate(),
-                voucher.getStatus()
+                voucher.getStatus(),
+                voucher.getApprovalStatus()
         );
     }
 

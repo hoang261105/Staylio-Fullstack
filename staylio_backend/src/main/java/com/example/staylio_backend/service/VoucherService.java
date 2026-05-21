@@ -1,6 +1,7 @@
 package com.example.staylio_backend.service;
 
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
+import com.example.staylio_backend.dto.request.ApprovalStatusRequest;
 import com.example.staylio_backend.dto.request.VoucherRequest;
 import com.example.staylio_backend.dto.request.VoucherStatusRequest;
 import com.example.staylio_backend.dto.response.VoucherResponse;
@@ -18,4 +19,6 @@ public interface VoucherService {
     VoucherResponse updateVoucher(Long id, VoucherRequest request, UserPrincipal userPrincipal);
 
     void updateStatus(Long id, VoucherStatusRequest request, UserPrincipal userPrincipal);
+
+    void updateApprovalStatus(Long id, ApprovalStatusRequest request);
 }

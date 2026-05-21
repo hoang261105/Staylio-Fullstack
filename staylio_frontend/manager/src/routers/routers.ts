@@ -6,6 +6,7 @@ import NotFound from "../../../common/components/NotFound";
 import ManagerRooms from "../pages/ManagerRooms";
 import ManagerVoucher from "../pages/ManagerVoucher";
 import ManagerRoomImages from "../pages/ManagerRoomImages";
+import ManagerBookings from "../pages/ManagerBookings";
 
 export const routers = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ export const routers = createBrowserRouter([
   {
     path: "/manager/vouchers",
     Component: ManagerVoucher
+  },
+  {
+    path: "/manager/bookings",
+    Component: ManagerBookings
   },
   {
     path: "*",

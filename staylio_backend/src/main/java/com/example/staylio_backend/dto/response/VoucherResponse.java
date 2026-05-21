@@ -1,5 +1,6 @@
 package com.example.staylio_backend.dto.response;
 
+import com.example.staylio_backend.model.enums.ApprovalStatus;
 import com.example.staylio_backend.model.enums.DiscountType;
 import com.example.staylio_backend.model.enums.VoucherStatus;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,5 @@ public class VoucherResponse {
     private LocalDateTime startDate;
     private LocalDateTime expiryDate;
     private VoucherStatus status;
+    private ApprovalStatus approvalStatus;
 }

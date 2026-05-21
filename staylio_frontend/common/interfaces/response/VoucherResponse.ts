@@ -1,3 +1,4 @@
+import { ApprovalStatus } from "@common/enums/ApprovalStatus";
 import { DiscountType } from "@common/enums/DiscountType";
 import { VoucherStatus } from "@common/enums/VoucherStatus";
 
@@ -17,5 +18,6 @@ export interface VoucherResponse {
     usageLimitPerUser: number,
     startDate: string,
     expiryDate: string,
-    status: VoucherStatus
+    status: VoucherStatus,
+    approvalStatus: ApprovalStatus
 }

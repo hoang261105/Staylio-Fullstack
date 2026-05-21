@@ -1,4 +1,5 @@
 import { VoucherStatus } from "@common/enums/VoucherStatus";
+import { ApprovalStatus } from "@common/enums/ApprovalStatus";
 import { QueryParams } from "@common/interfaces";
 import { ApiResponse } from "@common/interfaces/ApiResponse";
 import { VoucherRequest } from "@common/interfaces/request/VoucherRequest";
@@ -59,6 +60,20 @@ export const updateStatusVoucher = async (id: number, status: VoucherStatus): Pr
         return response.data;
     } catch (error) {
         console.error("Cập nhật trạng thái voucher thất bại", error);
+        throw error;
+    }
+}
+
+// API cập nhật trạng thái duyệt của voucher
+export const updateApprovalStatusVoucher = async (id: number, approvalStatus: ApprovalStatus): Promise<ApiResponse<string>> => {
+    try {
+        const response = await axiosInstance.patch(
+            `/vouchers/${id}/approval-status`,
+            { approvalStatus }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Cập nhật trạng thái duyệt voucher thất bại", error);
         throw error;
     }
 }

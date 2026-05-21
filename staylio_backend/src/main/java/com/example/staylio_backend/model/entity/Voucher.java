@@ -1,6 +1,7 @@
 package com.example.staylio_backend.model.entity;
 
 import com.example.staylio_backend.common.base.BaseObject;
+import com.example.staylio_backend.model.enums.ApprovalStatus;
 import com.example.staylio_backend.model.enums.DiscountType;
 import com.example.staylio_backend.model.enums.VoucherStatus;
 import jakarta.persistence.*;
@@ -62,4 +63,10 @@ public class Voucher extends BaseObject {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private VoucherStatus status;
+
+    @Column(name = "approval_status")
+    @Enumerated(EnumType.STRING)
+    private ApprovalStatus approvalStatus;
+
+
 }

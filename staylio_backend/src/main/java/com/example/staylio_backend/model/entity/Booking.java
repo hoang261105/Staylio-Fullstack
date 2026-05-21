@@ -73,6 +73,16 @@ public class Booking extends BaseObject {
     @Column(name = "checked_out_at")
     private LocalDateTime checkedOutAt;
 
+    @Column(name = "expected_check_out_at")
+    private LocalDateTime expectedCheckOutAt;
+
+    @Column(name = "cancellation_reason", columnDefinition = "TEXT")
+    private String cancellationReason;
+
+    @ManyToOne
+    @JoinColumn(name = "cancelled_by")
+    private Profile cancelledBy;
+
     @OneToMany(mappedBy = "booking")
     private Set<Payment> payments;
 }

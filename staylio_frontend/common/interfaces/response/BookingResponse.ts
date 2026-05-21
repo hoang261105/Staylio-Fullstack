@@ -1,0 +1,41 @@
+import { BookingStatus } from "@common/enums/BookingStatus";
+import { PaymentMethod } from "@common/enums/PaymentMethod";
+import { PaymentStatus } from "@common/enums/PaymentStatus";
+
+export interface BookingResponse {
+    id: number;
+    bookingCode: string;
+    status: BookingStatus;
+    note: string;
+    userId: number;
+    customerName: string;
+    customerEmail: string;
+    customerPhone: string;
+    roomId: number;
+    roomName: string;
+    roomNumber: string;
+    roomImage: string;
+    hotelBranchId: number;
+    hotelBranchName: string;
+    hotelName: string;
+    checkInDate: string;
+    checkOutDate: string;
+    totalNights: number;
+    adults: number;
+    children: number;
+    originalPrice: number;
+    discountAmount: number;
+    finalPrice: number;
+    voucherId: number;
+    voucherCode: string;
+    voucherTitle: string;
+    paymentStatus: PaymentStatus;
+    paymentMethod: PaymentMethod;
+    transactionId: string;
+    paidAt: string;
+    confirmedAt: string;
+    cancelledAt: string;
+    checkedInAt: string;
+    checkedOutAt: string;
+    createdAt: string;
+}
