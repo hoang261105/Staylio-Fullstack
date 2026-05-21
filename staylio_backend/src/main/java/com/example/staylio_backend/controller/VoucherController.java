@@ -1,6 +1,8 @@
 package com.example.staylio_backend.controller;
 
+import com.cloudinary.Api;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
+import com.example.staylio_backend.dto.request.ApprovalStatusRequest;
 import com.example.staylio_backend.dto.request.VoucherRequest;
 import com.example.staylio_backend.dto.request.VoucherStatusRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
@@ -106,7 +108,7 @@ public class VoucherController {
 
     @PatchMapping("/{id}/status")
     @Operation(summary = "Cập nhật trạng thái của voucher")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     public ResponseEntity<ApiResponse<String>> updateStatus(
             @PathVariable Long id,
             @RequestBody VoucherStatusRequest request,
@@ -116,6 +118,25 @@ public class VoucherController {
         ApiResponse<String> response = new ApiResponse<>(
                 true,
                 "Cập nhật trạng thái thành công!",
+                null,
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/approval-status")
+    @Operation(summary = "Cập nhật trạng thái duyệt của voucher")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ResponseEntity<ApiResponse<String>> updateApprovalStatus(
+            @PathVariable Long id,
+            @RequestBody ApprovalStatusRequest request
+    ){
+        voucherService.updateApprovalStatus(id, request);
+        ApiResponse<String> response = new ApiResponse<>(
+                true,
+                "Cập nhật trạng thái voucher thành công!",
                 null,
                 null,
                 LocalDateTime.now()

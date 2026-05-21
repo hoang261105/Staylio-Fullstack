@@ -13,6 +13,7 @@ import VoucherDetailModal from "../components/vouchers/VoucherDetailModal";
 import VoucherFormAdd from "../components/vouchers/VoucherFormAdd";
 import VoucherFormUpdate from "../components/vouchers/VoucherFormUpdate";
 import VoucherToggleStatusModal from "../components/vouchers/VoucherToggleStatusModal";
+import VoucherDeleteModal from "../components/vouchers/VoucherDeleteModal";
 import { BranchStatus } from "@common/enums/BranchStatus";
 
 const SORT_OPTIONS = [
@@ -31,18 +32,6 @@ export default function ManagerVoucher() {
     const { data: hotel } = useHotelByManager();
     const { data: hotelBranches } = useMyHotelBranchs(hotel?.id || 0, BranchStatus.CONFIRMED);
 
-    const hasAutoSelectedBranch = useRef(false);
-
-    useEffect(() => {
-        if (
-            !hasAutoSelectedBranch.current &&
-            hotelBranches &&
-            hotelBranches.length > 0
-        ) {
-            hasAutoSelectedBranch.current = true;
-            setSelectedBranchFilter(hotelBranches[0].id.toString());
-        }
-    }, [hotelBranches]);
     const [sortBy, setSortBy] = useState("id");
     const [direction, setDirection] = useState<"asc" | "desc">("asc");
 
@@ -51,6 +40,8 @@ export default function ManagerVoucher() {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [voucherToToggle, setVoucherToToggle] =
+        useState<VoucherResponse | null>(null);
+    const [voucherToDelete, setVoucherToDelete] =
         useState<VoucherResponse | null>(null);
     const [voucherToEdit, setVoucherToEdit] =
         useState<VoucherResponse | null>(null);
@@ -88,6 +79,10 @@ export default function ManagerVoucher() {
 
     const handleToggleActive = (voucher: VoucherResponse) => {
         setVoucherToToggle(voucher);
+    };
+
+    const handleDelete = (voucher: VoucherResponse) => {
+        setVoucherToDelete(voucher);
     };
 
     return (
@@ -232,6 +227,7 @@ export default function ManagerVoucher() {
                     onView={handleView}
                     onEdit={handleEdit}
                     onToggleActive={handleToggleActive}
+                    onDelete={handleDelete}
                 />
             </div>
 
@@ -257,6 +253,13 @@ export default function ManagerVoucher() {
                 <VoucherToggleStatusModal
                     voucher={voucherToToggle}
                     onClose={() => setVoucherToToggle(null)}
+                />
+            )}
+
+            {voucherToDelete && (
+                <VoucherDeleteModal
+                    voucher={voucherToDelete}
+                    onClose={() => setVoucherToDelete(null)}
                 />
             )}
         </ManagerLayout>

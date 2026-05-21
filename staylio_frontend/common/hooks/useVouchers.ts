@@ -7,7 +7,9 @@ import {
   getVoucherById,
   updateStatusVoucher,
   updateVoucher,
+  updateApprovalStatusVoucher,
 } from "@common/services/voucher.service";
+import { ApprovalStatus } from "@common/enums/ApprovalStatus";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -40,6 +42,7 @@ export const useVoucherById = (id: number) => {
       const response = await getVoucherById(id);
       return response.data;
     },
+    enabled: id > 0,
   });
 };
 
@@ -92,3 +95,19 @@ export const useUpdateStatusVoucherMutation = (id: number) => {
     }
   });
 }
+
+export const useUpdateApprovalStatusVoucherMutation = (id: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["updateApprovalStatusVoucher", id],
+    mutationFn: async (approvalStatus: ApprovalStatus) => {
+      const response = await updateApprovalStatusVoucher(id, approvalStatus);
+      return response;
+    },
+    onSuccess: (response) => {
+      toast.success(response.message);
+      queryClient.invalidateQueries({ queryKey: ["vouchers"] });
+    },
+  });
+};

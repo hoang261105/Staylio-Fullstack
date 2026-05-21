@@ -275,3 +275,591 @@ VALUES
      '2026-12-31 23:59:59',
      'DISABLED',
      NOW());
+
+INSERT INTO user_voucher
+(
+    user_id,
+    voucher_id,
+    used_count,
+    status,
+    assigned_at,
+    used_at,
+    created_at
+)
+VALUES
+
+-- USER 1
+(1, 1, 0, 'UNUSED', NOW(), NULL, NOW()),
+(1, 2, 1, 'USED', NOW(), NOW(), NOW()),
+(1, 3, 0, 'UNUSED', NOW(), NULL, NOW()),
+
+-- USER 13
+(13, 4, 0, 'UNUSED', NOW(), NULL, NOW()),
+(13, 5, 1, 'USED', NOW(), NOW(), NOW()),
+(13, 6, 0, 'EXPIRED', NOW(), NULL, NOW()),
+(13, 7, 0, 'UNUSED', NOW(), NULL, NOW()),
+
+-- USER 14
+(14, 8, 1, 'USED', NOW(), NOW(), NOW()),
+(14, 9, 0, 'UNUSED', NOW(), NULL, NOW()),
+(14, 10, 0, 'EXPIRED', NOW(), NULL, NOW());
+
+
+INSERT INTO bookings
+(
+    user_id,
+    room_id,
+    check_in_date,
+    check_out_date,
+    adults,
+    children,
+    original_price,
+    discount_amount,
+    final_price,
+    user_voucher_id,
+    booking_code,
+    status,
+    note,
+    confirmed_at,
+    cancelled_at,
+    checked_in_at,
+    checked_out_at,
+    created_at
+)
+VALUES
+
+-- USER 1
+(
+    1,
+    1,
+    '2026-06-01',
+    '2026-06-03',
+    2,
+    1,
+    2000000,
+    500000,
+    1500000,
+    1,
+    'BK20260001',
+    'CONFIRMED',
+    'Khách yêu cầu phòng tầng cao',
+    NOW(),
+    NULL,
+    NULL,
+    NULL,
+    NOW()
+),
+
+(
+    1,
+    2,
+    '2026-06-10',
+    '2026-06-12',
+    2,
+    0,
+    3000000,
+    600000,
+    2400000,
+    2,
+    'BK20260002',
+    'CHECKED_IN',
+    NULL,
+    NOW(),
+    NULL,
+    NOW(),
+    NULL,
+    NOW()
+),
+
+(
+    1,
+    3,
+    '2026-07-01',
+    '2026-07-05',
+    3,
+    1,
+    5000000,
+    700000,
+    4300000,
+    3,
+    'BK20260003',
+    'PENDING_PAYMENT',
+    'Thanh toán sau',
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NOW()
+),
+
+-- USER 13
+(
+    13,
+    4,
+    '2026-06-15',
+    '2026-06-18',
+    2,
+    2,
+    4500000,
+    450000,
+    4050000,
+    4,
+    'BK20260004',
+    'CONFIRMED',
+    NULL,
+    NOW(),
+    NULL,
+    NULL,
+    NULL,
+    NOW()
+),
+
+(
+    13,
+    5,
+    '2026-06-20',
+    '2026-06-25',
+    4,
+    2,
+    8000000,
+    700000,
+    7300000,
+    5,
+    'BK20260005',
+    'CHECKED_OUT',
+    'Đã hoàn thành kỳ nghỉ',
+    NOW(),
+    NULL,
+    DATE_SUB(NOW(), INTERVAL 3 DAY),
+    NOW(),
+    NOW()
+),
+
+(
+    13,
+    6,
+    '2026-07-10',
+    '2026-07-12',
+    1,
+    0,
+    1800000,
+    200000,
+    1600000,
+    6,
+    'BK20260006',
+    'CANCELLED',
+    'Khách hủy do thay đổi lịch trình',
+    NULL,
+    NOW(),
+    NULL,
+    NULL,
+    NOW()
+),
+
+(
+    13,
+    7,
+    '2026-08-01',
+    '2026-08-03',
+    2,
+    1,
+    3500000,
+    350000,
+    3150000,
+    7,
+    'BK20260007',
+    'CONFIRMED',
+    NULL,
+    NOW(),
+    NULL,
+    NULL,
+    NULL,
+    NOW()
+),
+
+-- USER 14
+(
+    14,
+    8,
+    '2026-06-05',
+    '2026-06-08',
+    2,
+    0,
+    4200000,
+    700000,
+    3500000,
+    8,
+    'BK20260008',
+    'CHECKED_IN',
+    NULL,
+    NOW(),
+    NULL,
+    NOW(),
+    NULL,
+    NOW()
+),
+
+(
+    14,
+    9,
+    '2026-09-01',
+    '2026-09-04',
+    2,
+    2,
+    6000000,
+    600000,
+    5400000,
+    9,
+    'BK20260009',
+    'PENDING_PAYMENT',
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NOW()
+),
+
+(
+    14,
+    10,
+    '2026-10-10',
+    '2026-10-15',
+    3,
+    1,
+    9500000,
+    700000,
+    8800000,
+    10,
+    'BK20260010',
+    'CONFIRMED',
+    'Khách yêu cầu giường đôi',
+    NOW(),
+    NULL,
+    NULL,
+    NULL,
+    NOW()
+);
+
+INSERT INTO payments
+(
+    booking_id,
+    payment_method,
+    transaction_id,
+    gateway_order_id,
+    amount,
+    status,
+    payment_url,
+    raw_response,
+    paid_at,
+    created_at
+)
+VALUES
+
+-- BOOKING 1
+(
+    1,
+    'VNPAY',
+    'TXN000001',
+    'VNPAY_ORDER_0001',
+    1500000,
+    'PAID',
+    'https://sandbox.vnpayment.vn/payment/1',
+    '{"gateway":"VNPAY","message":"Payment success"}',
+    NOW(),
+    NOW()
+),
+
+-- BOOKING 2
+(
+    2,
+    'MOMO',
+    'TXN000002',
+    'MOMO_ORDER_0002',
+    2400000,
+    'PAID',
+    'https://test-payment.momo.vn/2',
+    '{"gateway":"MOMO","message":"Payment success"}',
+    NOW(),
+    NOW()
+),
+
+-- BOOKING 3
+(
+    3,
+    'BANK_TRANSFER',
+    'TXN000003',
+    'BANK_ORDER_0003',
+    4300000,
+    'PENDING',
+    NULL,
+    '{"gateway":"BANK_TRANSFER","message":"Waiting for payment"}',
+    NULL,
+    NOW()
+),
+
+-- BOOKING 4
+(
+    4,
+    'VNPAY',
+    'TXN000004',
+    'VNPAY_ORDER_0004',
+    4050000,
+    'PAID',
+    'https://sandbox.vnpayment.vn/payment/4',
+    '{"gateway":"VNPAY","message":"Payment success"}',
+    NOW(),
+    NOW()
+),
+
+-- BOOKING 5
+(
+    5,
+    'CASH',
+    'TXN000005',
+    'CASH_ORDER_0005',
+    7300000,
+    'PAID',
+    NULL,
+    '{"gateway":"CASH","message":"Paid at hotel"}',
+    NOW(),
+    NOW()
+),
+
+-- BOOKING 6
+(
+    6,
+    'MOMO',
+    'TXN000006',
+    'MOMO_ORDER_0006',
+    1600000,
+    'FAILED',
+    'https://test-payment.momo.vn/6',
+    '{"gateway":"MOMO","message":"Payment failed"}',
+    NULL,
+    NOW()
+),
+
+-- BOOKING 7
+(
+    7,
+    'VNPAY',
+    'TXN000007',
+    'VNPAY_ORDER_0007',
+    3150000,
+    'PAID',
+    'https://sandbox.vnpayment.vn/payment/7',
+    '{"gateway":"VNPAY","message":"Payment success"}',
+    NOW(),
+    NOW()
+),
+
+-- BOOKING 8
+(
+    8,
+    'MOMO',
+    'TXN000008',
+    'MOMO_ORDER_0008',
+    3500000,
+    'PAID',
+    'https://test-payment.momo.vn/8',
+    '{"gateway":"MOMO","message":"Payment success"}',
+    NOW(),
+    NOW()
+),
+
+-- BOOKING 9
+(
+    9,
+    'BANK_TRANSFER',
+    'TXN000009',
+    'BANK_ORDER_0009',
+    5400000,
+    'PENDING',
+    NULL,
+    '{"gateway":"BANK_TRANSFER","message":"Waiting for confirmation"}',
+    NULL,
+    NOW()
+),
+
+-- BOOKING 10
+(
+    10,
+    'CASH',
+    'TXN000010',
+    'CASH_ORDER_0010',
+    8800000,
+    'PAID',
+    NULL,
+    '{"gateway":"CASH","message":"Paid successfully"}',
+    NOW(),
+    NOW()
+);
+
+INSERT INTO reviews
+(
+    booking_id,
+    room_id,
+    user_id,
+    rating,
+    comment,
+    reply_comment,
+    reply_at,
+    status,
+    is_deleted,
+    created_at,
+    updated_at
+)
+VALUES
+
+-- REVIEW 1
+(
+    1,
+    1,
+    1,
+    5,
+    'Phòng sạch sẽ, nhân viên rất thân thiện và hỗ trợ nhiệt tình.',
+    'Cảm ơn bạn đã trải nghiệm dịch vụ tại khách sạn của chúng tôi!',
+    NOW(),
+    'VISIBLE',
+    false,
+    NOW(),
+    NOW()
+),
+
+-- REVIEW 2
+(
+    2,
+    2,
+    13,
+    4,
+    'Không gian đẹp, vị trí thuận tiện nhưng wifi hơi yếu.',
+    'Chúng tôi sẽ kiểm tra lại hệ thống wifi. Cảm ơn góp ý của bạn!',
+    NOW(),
+    'VISIBLE',
+    false,
+    NOW(),
+    NOW()
+),
+
+-- REVIEW 3
+(
+    3,
+    3,
+    14,
+    3,
+    'Phòng ổn nhưng điều hòa hoạt động chưa tốt.',
+    NULL,
+    NULL,
+    'PENDING',
+    false,
+    NOW(),
+    NOW()
+),
+
+-- REVIEW 4
+(
+    4,
+    4,
+    1,
+    5,
+    'Dịch vụ tuyệt vời, sẽ quay lại lần sau.',
+    'Rất mong được đón tiếp bạn lần tiếp theo!',
+    NOW(),
+    'VISIBLE',
+    false,
+    NOW(),
+    NOW()
+),
+
+-- REVIEW 5
+(
+    5,
+    5,
+    13,
+    2,
+    'Phòng hơi nhỏ so với hình ảnh quảng cáo.',
+    'Chúng tôi xin lỗi vì trải nghiệm chưa tốt của bạn.',
+    NOW(),
+    'VISIBLE',
+    false,
+    NOW(),
+    NOW()
+),
+
+-- REVIEW 6
+(
+    6,
+    6,
+    14,
+    1,
+    'Nhân viên phục vụ chưa chuyên nghiệp.',
+    NULL,
+    NULL,
+    'PENDING',
+    false,
+    NOW(),
+    NOW()
+),
+
+-- REVIEW 7
+(
+    7,
+    7,
+    1,
+    4,
+    'Bữa sáng ngon, phòng sạch sẽ.',
+    'Cảm ơn bạn đã đánh giá tích cực!',
+    NOW(),
+    'VISIBLE',
+    false,
+    NOW(),
+    NOW()
+),
+
+-- REVIEW 8
+(
+    8,
+    8,
+    13,
+    5,
+    'Khách sạn rất đẹp và sang trọng.',
+    'Cảm ơn bạn rất nhiều!',
+    NOW(),
+    'VISIBLE',
+    false,
+    NOW(),
+    NOW()
+),
+
+-- REVIEW 9
+(
+    9,
+    9,
+    14,
+    3,
+    'Dịch vụ tạm ổn, cần cải thiện thêm về vệ sinh.',
+    NULL,
+    NULL,
+    'HIDDEN',
+    false,
+    NOW(),
+    NOW()
+),
+
+-- REVIEW 10
+(
+    10,
+    10,
+    1,
+    5,
+    'Một trải nghiệm nghỉ dưỡng tuyệt vời.',
+    'Rất vui khi bạn hài lòng với dịch vụ!',
+    NOW(),
+    'VISIBLE',
+    false,
+    NOW(),
+    NOW()
+);
+
+SHOW CREATE TABLE reviews;

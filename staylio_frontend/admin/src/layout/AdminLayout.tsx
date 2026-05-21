@@ -13,6 +13,8 @@ import {
   MapPin,
   Bed,
   Image,
+  Tag,
+  Calendar,
 } from "lucide-react";
 import { useProfile } from "../../../common/hooks/useProfile";
 import { useQueryClient } from "@tanstack/react-query";
@@ -46,6 +48,16 @@ const NAVIGATION_ITEMS = [
     name: "Quản lý tiện ích",
     path: "/admin/utilities",
     icon: Building2
+  },
+  {
+    name: "Quản lý Voucher",
+    path: "/admin/vouchers",
+    icon: Tag
+  },
+  {
+    name: "Quản lý Đơn đặt phòng",
+    path: "/admin/bookings",
+    icon: Calendar
   },
   { name: "Cài đặt", path: "/admin/settings", icon: Settings },
 ];

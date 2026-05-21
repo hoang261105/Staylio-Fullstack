@@ -18,6 +18,8 @@ public enum ErrorCode {
     CANNOT_LOCK_ADMIN("Không thể khóa tài khoản admin!"),
     ACCOUNT_LOCKED("Tài khoản đã bị khóa. Vui lòng liên hệ thêm để được hỗ trợ!"),
     IS_NOT_MANAGER("Vui lòng chọn 1 tài khoản manager!"),
+    BOOKING_NOT_PAID("Đơn đặt phòng chủa thanh toán!"),
+    INVALID_BOOKING_STATUS("Trạng thái đơn đặt phòng không hợp lệ!"),
 
     // 2xxx: Validation (Regex, NotBlank, etc.)
     INVALID_KEY("Khóa thông báo không hợp lệ"),
@@ -32,6 +34,7 @@ public enum ErrorCode {
     INVALID_DISCOUNT_VALUE("Phần trăm giảm giá phải nhỏ hơn 100%!"),
     INVALID_IMAGE_STATUS("Trạng thái không hợp lệ!"),
     REJECTION_REASON_REQUIRED("Vui lòng nhập lý do từ chối!"),
+    CANCELLATION_REASON_REQUIRED("Vui lòng nhập lí do hủy!"),
 
     // 3xxx: Business Logic (Duplicates, DB logic)
     USER_EXISTED("Tên người dùng đã tồn tại"),
@@ -58,7 +61,10 @@ public enum ErrorCode {
     ROOM_NOT_FOUND("Không tìm thấy phòng!"),
     UTILITY_NOT_FOUND("Không tìm thấy tiện ích!"),
     ROOM_IMAGE_NOT_FOUND("Không tìm thấy hình ảnh phòng!"),
-    VOUCHER_NOT_FOUND("Không tìm thấy voucher!");
+    VOUCHER_NOT_FOUND("Không tìm thấy voucher!"),
+    USER_VOUCHER_NOT_FOUND("Không tìm thấy voucher của người dùng!"),
+    BOOKING_NOT_FOUND("Không tìm thấy đơn đặt phòng!"),
+    PAYMENT_NOT_FOUND("Không tìm thấy phương thức thanh toán!");
 
     private final String message;
 

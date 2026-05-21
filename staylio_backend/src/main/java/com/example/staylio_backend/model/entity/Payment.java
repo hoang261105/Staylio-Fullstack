@@ -22,22 +22,27 @@ public class Payment extends BaseObject {
     private Booking booking;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 
+    @Column(name = "transaction_id")
     private String transactionId;
 
+    @Column(name = "gateway_order_id")
     private String gatewayOrderId;
 
+    @Column(name = "amount")
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "payment_url", columnDefinition = "TEXT")
     private String paymentUrl;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "raw_response", columnDefinition = "TEXT")
     private String rawResponse;
 
+    @Column(name = "paid_at")
     private LocalDateTime paidAt;
 }
