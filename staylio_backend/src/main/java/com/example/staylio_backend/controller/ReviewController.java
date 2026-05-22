@@ -1,24 +1,26 @@
 package com.example.staylio_backend.controller;
 
-import com.cloudinary.Api;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
+import com.example.staylio_backend.dto.request.ReplyCommentRequest;
 import com.example.staylio_backend.dto.request.ReviewFilterRequest;
+import com.example.staylio_backend.dto.request.ReviewStatusRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
+import com.example.staylio_backend.dto.response.ReviewerResponse;
 import com.example.staylio_backend.dto.response.ReviewResponse;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reviews")
@@ -37,6 +39,79 @@ public class ReviewController {
                 true,
                 "Lấy danh sách đánh giá thành công!",
                 reviewService.getReviews(request, principal),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/reviewers")
+    @Operation(summary = "Danh sách khách hàng đã đánh giá")
+    public ResponseEntity<ApiResponse<List<ReviewerResponse>>> getAllReviewers(
+            @AuthenticationPrincipal UserPrincipal principal
+    ){
+        ApiResponse<List<ReviewerResponse>> response = new ApiResponse<>(
+                true,
+                "Lấy danh sách khách hàng thành công!",
+                reviewService.getAllReviewers(principal),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Lấy chi tiết 1 đánh giá")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ResponseEntity<ApiResponse<ReviewResponse>> getReviewById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal principal
+    ){
+        ApiResponse<ReviewResponse> response = new ApiResponse<>(
+                true,
+                "Lấy chi tiết đánh giá thành công!",
+                reviewService.getReviewerById(id, principal),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/reply-comment")
+    @Operation(summary = "Phản hồi đánh giá khách hàng")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<ApiResponse<String>> updateReplyComment(
+            @PathVariable Long id,
+            @Valid @RequestBody ReplyCommentRequest request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ){
+        reviewService.updateReplyComment(id, request, principal);
+        ApiResponse<String> response = new ApiResponse<>(
+                true,
+                "Phản hồi khách hàng thành công!",
+                null,
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/status")
+    @Operation(summary = "Cập nhật trạng thái đánh giá")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<String>> updateStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody ReviewStatusRequest request
+    ){
+        reviewService.updateStatus(id, request);
+        ApiResponse<String> response = new ApiResponse<>(
+                true,
+                "Cập nhật trạng thái thành công!",
+                null,
                 null,
                 LocalDateTime.now()
         );

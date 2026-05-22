@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { X, User, Phone, Mail, Calendar, Building, CreditCard, Tag, FileText, Info, Hash, Clock, Building2, BedDouble } from "lucide-react";
 import { useBookingById, useUpdateStatusBookingMutation } from "@common/hooks/useBookings";
-import dayjs from "dayjs";
 import { BookingStatus } from "@common/enums/BookingStatus";
 import { InputField } from "@common/components/InputField";
 
@@ -17,6 +16,7 @@ import {
   paymentStatusLabels,
   paymentMethodLabels,
 } from "@common/utils/booking.util";
+import { formatDateTime, formatDate } from "@common/utils/date.util";
 
 export default function ManagerBookingDetailModal({ bookingId, onClose }: ManagerBookingDetailModalProps) {
   const { data: booking, isLoading, isError } = useBookingById(bookingId);
@@ -52,16 +52,6 @@ export default function ManagerBookingDetailModal({ bookingId, onClose }: Manage
         setCancelError("");
       }
     });
-  };
-
-  const formatDateTime = (dateString?: string) => {
-    if (!dateString) return "---";
-    return dayjs(dateString).format("DD/MM/YYYY HH:mm");
-  };
-
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "---";
-    return dayjs(dateString).format("DD/MM/YYYY");
   };
 
   return (

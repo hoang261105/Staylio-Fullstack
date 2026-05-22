@@ -19,7 +19,7 @@ public class ReviewResponse {
     private String comment;
     private LocalDateTime createdAt;
 
-    private Long userId;
+    private Long reviewerId;
     private String fullName;
     private String avatarUrl;
 

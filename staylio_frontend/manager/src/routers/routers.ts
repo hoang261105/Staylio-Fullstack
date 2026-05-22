@@ -7,6 +7,7 @@ import ManagerRooms from "../pages/ManagerRooms";
 import ManagerVoucher from "../pages/ManagerVoucher";
 import ManagerRoomImages from "../pages/ManagerRoomImages";
 import ManagerBookings from "../pages/ManagerBookings";
+import ManagerReviews from "../pages/ManagerReviews";
 
 export const routers = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const routers = createBrowserRouter([
   {
     path: "/manager/bookings",
     Component: ManagerBookings
+  },
+  {
+    path: "/manager/reviews",
+    Component: ManagerReviews
   },
   {
     path: "*",
