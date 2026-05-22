@@ -5,13 +5,13 @@ export interface ReviewResponse {
     rating: number;
     comment: string;
     createdAt: string;
-    userId: number;
+    reviewId: number;
     fullName: string;
     avatarUrl: string;
     bookingId: number;
     bookingCode: string;
     roomId: number;
-    roomName: number;
+    roomName: string;
     roomImage: string;
     roomNumber: string;
     hotelBranchId: number;

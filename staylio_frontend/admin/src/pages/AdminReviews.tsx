@@ -2,46 +2,37 @@
 import { useState, useEffect } from "react";
 import { Search, Filter } from "lucide-react";
 import AdminLayout from "../layout/AdminLayout";
-import AdminBookingListView from "../components/bookings/AdminBookingListView";
-import AdminBookingDetailModal from "../components/bookings/AdminBookingDetailModal";
-import { BookingStatus } from "../../../common/enums/BookingStatus";
-import { PaymentStatus } from "../../../common/enums/PaymentStatus";
-import { PaymentMethod } from "../../../common/enums/PaymentMethod";
-import { BranchStatus } from "../../../common/enums/BranchStatus";
-import { useDebounce } from "../../../common/hooks/useDebounce";
-import { useBookings } from "../../../common/hooks/useBookings";
-import { useAllHotels } from "../../../common/hooks/useHotels";
-import { useMyHotelBranchs } from "../../../common/hooks/useHotelBranch";
-import { useAllRooms } from "../../../common/hooks/useRooms";
+import AdminReviewListView from "../components/reviews/AdminReviewListView";
+import AdminReviewDetailModal from "../components/reviews/AdminReviewDetailModal";
+import { ReviewStatus } from "@common/enums/ReviewStatus";
+import { BranchStatus } from "@common/enums/BranchStatus";
+import { useDebounce } from "@common/hooks/useDebounce";
+import { useReviews, useReviewers } from "@common/hooks/useReviews";
+import { useAllHotels } from "@common/hooks/useHotels";
+import { useMyHotelBranchs } from "@common/hooks/useHotelBranch";
+import { useAllRooms } from "@common/hooks/useRooms";
+import type { ReviewResponse } from "@common/interfaces/response/ReviewResponse";
 
 const SORT_OPTIONS = [
   { value: "createdAt", label: "Ngày tạo" },
-  { value: "checkInDate", label: "Ngày Check-In" },
-  { value: "bookingCode", label: "Mã Booking" },
-  { value: "finalPrice", label: "Giá cuối" },
-  { value: "customerName", label: "Tên khách hàng" },
+  { value: "rating", label: "Đánh giá" },
+  { value: "replyAt", label: "Ngày phản hồi" },
   { value: "roomName", label: "Tên phòng" },
-  { value: "roomNumber", label: "Số phòng" },
-  { value: "hotelBranchName", label: "Tên chi nhánh" },
+  { value: "customerName", label: "Tên khách hàng" },
 ];
 
-export default function AdminBookings() {
+export default function AdminReviews() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
-  const [selectedPaymentStatus, setSelectedPaymentStatus] =
-    useState<string>("all");
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("all");
-
   const [selectedHotel, setSelectedHotel] = useState<string>("all");
   const [selectedBranch, setSelectedBranch] = useState<string>("all");
   const [selectedRoom, setSelectedRoom] = useState<string>("all");
+  const [selectedUser, setSelectedUser] = useState<string>("all");
 
-  const [bookingIdToView, setBookingIdToView] = useState<number | null>(null);
+  const [reviewToView, setReviewToView] = useState<ReviewResponse | null>(null);
 
-  const [checkInFrom, setCheckInFrom] = useState<string>("");
-  const [checkInTo, setCheckInTo] = useState<string>("");
-  const [checkOutFrom, setCheckOutFrom] = useState<string>("");
-  const [checkOutTo, setCheckOutTo] = useState<string>("");
+  const [createdFrom, setCreatedFrom] = useState<string>("");
+  const [createdTo, setCreatedTo] = useState<string>("");
 
   const [page, setPage] = useState(0);
   const [sortBy, setSortBy] = useState("createdAt");
@@ -61,6 +52,9 @@ export default function AdminBookings() {
     selectedBranch !== "all" ? Number(selectedBranch) : 0;
   const { data: rooms } = useAllRooms(selectedBranchId);
 
+  // Fetch reviewers for the select dropdown
+  const { data: reviewers } = useReviewers();
+
   useEffect(() => {
     setSelectedBranch("all");
     setSelectedRoom("all");
@@ -72,36 +66,25 @@ export default function AdminBookings() {
     setPage(0);
   }, [selectedBranch]);
 
-  const { data: bookingsData, isLoading } = useBookings({
+  const { data: reviewsData, isLoading } = useReviews({
     search: debouncedSearch || undefined,
     status:
-      selectedStatus === "all" ? undefined : (selectedStatus as BookingStatus),
-    paymentStatus:
-      selectedPaymentStatus === "all"
-        ? undefined
-        : (selectedPaymentStatus as PaymentStatus),
-    paymentMethod:
-      selectedPaymentMethod === "all"
-        ? undefined
-        : (selectedPaymentMethod as PaymentMethod),
-    hotelId:
-      selectedHotel === "all" ? undefined : Number(selectedHotel),
-    hotelBranchId:
-      selectedBranch === "all" ? undefined : Number(selectedBranch),
+      selectedStatus === "all" ? undefined : (selectedStatus as ReviewStatus),
+    hotelId: selectedHotel === "all" ? undefined : Number(selectedHotel),
+    hotelBranchId: selectedBranch === "all" ? undefined : Number(selectedBranch),
     roomId: selectedRoom === "all" ? undefined : Number(selectedRoom),
-    checkInFrom: checkInFrom || undefined,
-    checkInTo: checkInTo || undefined,
-    checkOutFrom: checkOutFrom || undefined,
-    checkOutTo: checkOutTo || undefined,
+    userId: selectedUser === "all" ? undefined : Number(selectedUser),
+    checkInFrom: createdFrom || undefined,
+    checkInTo: createdTo || undefined,
     page,
     size: 5,
     sortBy,
     direction,
   });
 
-  const bookings = bookingsData?.items || [];
-  const totalElements = bookingsData?.pagination?.totalItems || 0;
-  const totalPages = bookingsData?.pagination?.totalPages || 0;
+  const reviews = reviewsData?.items || [];
+  const totalElements = reviewsData?.pagination?.totalItems || 0;
+  const totalPages = reviewsData?.pagination?.totalPages || 0;
 
   return (
     <AdminLayout>
@@ -109,21 +92,22 @@ export default function AdminBookings() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Quản lý Đơn đặt phòng
+              Quản lý Đánh giá
             </h1>
             <p className="text-gray-500">
-              Danh sách và thông tin tất cả đơn đặt phòng trong hệ thống
+              Danh sách và thông tin tất cả đánh giá từ khách hàng trên toàn hệ thống
             </p>
           </div>
         </div>
 
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col gap-4">
+          {/* Top row: Search & Date Filters */}
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="w-full lg:w-1/3 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Tìm kiếm mã đơn, tên khách..."
+                placeholder="Tìm kiếm đánh giá, tên khách..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -136,44 +120,55 @@ export default function AdminBookings() {
             <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col sm:flex-row items-center gap-2">
                 <span className="text-sm font-medium text-gray-600 w-full sm:w-auto shrink-0">
-                  Check-In:
+                  Từ ngày:
                 </span>
                 <input
                   type="date"
-                  value={checkInFrom}
-                  onChange={(e) => setCheckInFrom(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 rounded-xl border-transparent focus:border-[#0066FF] text-sm"
-                />
-                <span className="text-gray-400">-</span>
-                <input
-                  type="date"
-                  value={checkInTo}
-                  onChange={(e) => setCheckInTo(e.target.value)}
+                  value={createdFrom}
+                  onChange={(e) => {
+                    setCreatedFrom(e.target.value);
+                    setPage(0);
+                  }}
                   className="w-full px-3 py-2 bg-gray-50 rounded-xl border-transparent focus:border-[#0066FF] text-sm"
                 />
               </div>
               <div className="flex flex-col sm:flex-row items-center gap-2">
                 <span className="text-sm font-medium text-gray-600 w-full sm:w-auto shrink-0">
-                  Check-Out:
+                  Đến ngày:
                 </span>
                 <input
                   type="date"
-                  value={checkOutFrom}
-                  onChange={(e) => setCheckOutFrom(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 rounded-xl border-transparent focus:border-[#0066FF] text-sm"
-                />
-                <span className="text-gray-400">-</span>
-                <input
-                  type="date"
-                  value={checkOutTo}
-                  onChange={(e) => setCheckOutTo(e.target.value)}
+                  value={createdTo}
+                  onChange={(e) => {
+                    setCreatedTo(e.target.value);
+                    setPage(0);
+                  }}
                   className="w-full px-3 py-2 bg-gray-50 rounded-xl border-transparent focus:border-[#0066FF] text-sm"
                 />
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+          {/* Filters Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="relative">
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <select
+                value={selectedStatus}
+                onChange={(e) => {
+                  setSelectedStatus(e.target.value);
+                  setPage(0);
+                }}
+                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
+              >
+                <option value="all">Tất cả trạng thái</option>
+                {Object.values(ReviewStatus).map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <div className="relative">
               <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -249,60 +244,21 @@ export default function AdminBookings() {
             <div className="relative">
               <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <select
-                value={selectedStatus}
+                value={selectedUser}
                 onChange={(e) => {
-                  setSelectedStatus(e.target.value);
+                  setSelectedUser(e.target.value);
                   setPage(0);
                 }}
                 className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
               >
-                <option value="all">Trạng thái Đặt phòng</option>
-                {Object.values(BookingStatus).map((status) => (
-                  <option key={status} value={status}>
-                    {status}
+                <option value="all">Tất cả khách hàng</option>
+                {reviewers?.map((reviewer) => (
+                  <option key={reviewer.id} value={reviewer.id}>
+                    {reviewer.fullName}
                   </option>
                 ))}
               </select>
             </div>
-
-            <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <select
-                value={selectedPaymentStatus}
-                onChange={(e) => {
-                  setSelectedPaymentStatus(e.target.value);
-                  setPage(0);
-                }}
-                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
-              >
-                <option value="all">TT Thanh toán</option>
-                {Object.values(PaymentStatus).map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <select
-                value={selectedPaymentMethod}
-                onChange={(e) => {
-                  setSelectedPaymentMethod(e.target.value);
-                  setPage(0);
-                }}
-                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
-              >
-                <option value="all">Phương thức TT</option>
-                {Object.values(PaymentMethod).map((method) => (
-                  <option key={method} value={method}>
-                    {method}
-                  </option>
-                ))}
-              </select>
-            </div>
-
           </div>
 
           <div className="flex gap-2 w-full lg:w-auto lg:ml-auto shrink-0 justify-end mt-2">
@@ -334,23 +290,21 @@ export default function AdminBookings() {
           </div>
         </div>
 
-        <AdminBookingListView
-          bookings={bookings}
+        <AdminReviewListView
+          reviews={reviews}
           isLoading={isLoading}
           totalElements={totalElements}
           totalPages={totalPages}
           currentPage={page}
           onPageChange={setPage}
-          onView={(booking) => setBookingIdToView(booking.id)}
-          onUpdatePayment={(booking) => console.log("Update Payment", booking)}
-          onUpdateStatus={(booking) => console.log("Update Status", booking)}
+          onView={(review) => setReviewToView(review)}
         />
       </div>
 
-      {bookingIdToView && (
-        <AdminBookingDetailModal
-          bookingId={bookingIdToView}
-          onClose={() => setBookingIdToView(null)}
+      {reviewToView && (
+        <AdminReviewDetailModal
+          reviewId={reviewToView.id}
+          onClose={() => setReviewToView(null)}
         />
       )}
     </AdminLayout>

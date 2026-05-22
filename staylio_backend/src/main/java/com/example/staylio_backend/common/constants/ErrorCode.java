@@ -64,7 +64,8 @@ public enum ErrorCode {
     VOUCHER_NOT_FOUND("Không tìm thấy voucher!"),
     USER_VOUCHER_NOT_FOUND("Không tìm thấy voucher của người dùng!"),
     BOOKING_NOT_FOUND("Không tìm thấy đơn đặt phòng!"),
-    PAYMENT_NOT_FOUND("Không tìm thấy phương thức thanh toán!");
+    PAYMENT_NOT_FOUND("Không tìm thấy phương thức thanh toán!"),
+    REVIEW_NOT_FOUND("Không tìm thấy đánh giá!");
 
     private final String message;
 

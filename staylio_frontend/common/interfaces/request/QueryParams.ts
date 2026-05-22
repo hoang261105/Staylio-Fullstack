@@ -1,6 +1,7 @@
 import { BookingStatus } from "@common/enums/BookingStatus";
 import { PaymentMethod } from "@common/enums/PaymentMethod";
 import { PaymentStatus } from "@common/enums/PaymentStatus";
+import { ReviewStatus } from "@common/enums/ReviewStatus";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface SearchQueryParams {
@@ -30,7 +31,9 @@ export interface BookingQueryParams extends QueryParams {
   checkOutTo?: string;
 }
 
-export interface ReviewQueryParams extends QueryParams {
+
+export interface ReviewQueryParams extends Omit<BookingQueryParams, "status"> {
+  status?: ReviewStatus;
   rating?: number;
   createdFrom?: string;
   createdTo?: string;

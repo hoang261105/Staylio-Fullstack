@@ -3,12 +3,16 @@ package com.example.staylio_backend.service.impl.admin;
 import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.common.exception.AppException;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
+import com.example.staylio_backend.dto.request.ReplyCommentRequest;
 import com.example.staylio_backend.dto.request.ReviewFilterRequest;
+import com.example.staylio_backend.dto.request.ReviewStatusRequest;
+import com.example.staylio_backend.dto.response.ReviewerResponse;
 import com.example.staylio_backend.dto.response.ReviewResponse;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.*;
 import com.example.staylio_backend.model.enums.RoleName;
+import com.example.staylio_backend.repository.ProfileRepo;
 import com.example.staylio_backend.repository.ReviewRepo;
 import com.example.staylio_backend.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +22,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepo reviewRepo;
+    private final ProfileRepo profileRepo;
 
     @Override
     public PaginationResponse<ReviewResponse> getReviews(ReviewFilterRequest request, UserPrincipal principal) {
@@ -76,6 +83,69 @@ public class ReviewServiceImpl implements ReviewService {
         );
 
         return new PaginationResponse<>(content, paginationDTO);
+    }
+
+    @Override
+    public List<ReviewerResponse> getAllReviewers(UserPrincipal principal) {
+        List<Profile> reviewers;
+
+        if (principal.hasRole(RoleName.ROLE_ADMIN)) {
+            reviewers = profileRepo.findAllReviewers();
+        } else if (principal.hasRole(RoleName.ROLE_MANAGER)) {
+            Profile profile = profileRepo.findById(principal.getId())
+                    .orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND.getMessage()));
+
+            reviewers = profileRepo.findReviewersByManagerId(profile.getId());
+        } else {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        return reviewers.stream()
+                .map(p -> new ReviewerResponse(
+                        p.getId(),
+                        p.getFullName()
+                ))
+                .toList();
+    }
+
+    @Override
+    public ReviewResponse getReviewerById(Long id, UserPrincipal principal) {
+        Review review = reviewRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.REVIEW_NOT_FOUND.getMessage()));
+
+        HotelBranch hotelBranch = review.getBooking().getRoom().getHotelBranch();
+
+        if (principal.hasRole(RoleName.ROLE_MANAGER)){
+            if (!hotelBranch.getHotel().getManager().getId().equals(principal.getId())){
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
+        }
+        return convertToResponse(review);
+    }
+
+    @Override
+    public void updateReplyComment(Long id, ReplyCommentRequest request, UserPrincipal principal) {
+        Review review = reviewRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.REVIEW_NOT_FOUND.getMessage()));
+
+        HotelBranch hotelBranch = review.getBooking().getRoom().getHotelBranch();
+
+        if (principal.hasRole(RoleName.ROLE_MANAGER)){
+            if (!hotelBranch.getHotel().getManager().getId().equals(principal.getId())){
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
+        }
+
+        review.setReplyComment(request.getReplyComment());
+        review.setReplyAt(LocalDateTime.now());
+
+        reviewRepo.save(review);
+    }
+
+    @Override
+    public void updateStatus(Long id, ReviewStatusRequest request) {
+        Review review = reviewRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.REVIEW_NOT_FOUND.getMessage()));
+
+        review.setStatus(request.getStatus());
+        reviewRepo.save(review);
     }
 
     private Sort getSort(String sortBy, String direction) {
@@ -147,9 +217,9 @@ public class ReviewServiceImpl implements ReviewService {
 
                 // ROOM
                 room.getId(),
-                room.getRoomName(),
-                room.getRoomNumber(),
                 roomImage,
+                room.getRoomNumber(),
+                room.getRoomName(),
 
                 // HOTEL
                 hotelBranch.getId(),
