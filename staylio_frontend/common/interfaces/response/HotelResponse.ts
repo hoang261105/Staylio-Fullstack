@@ -8,4 +8,5 @@ export interface HotelResponse {
     hostHotelName: string;
     status: HotelStatus;
     active: boolean;
+    branchCount?: number;
 }

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface ReviewRepo extends JpaRepository<Review, Long> {
@@ -118,4 +119,26 @@ public interface ReviewRepo extends JpaRepository<Review, Long> {
             @Param("hasReply") Boolean hasReply,
             Pageable pageable
     );
+
+    @Query("""
+        SELECT COUNT(r)
+        FROM Review r
+        JOIN r.room room
+        JOIN room.hotelBranch branch
+        WHERE branch.id = :branchId
+          AND r.status = 'VISIBLE'
+          AND r.isDeleted = false
+    """)
+    Long countReviewsByBranchId(@Param("branchId") Long branchId);
+
+    @Query("""
+        SELECT COALESCE(AVG(r.rating), 0)
+        FROM Review r
+        JOIN r.room room
+        JOIN room.hotelBranch branch
+        WHERE branch.id = :branchId
+          AND r.status = 'VISIBLE'
+          AND r.isDeleted = false
+    """)
+    Double averageRatingByBranchId(@Param("branchId") Long branchId);
 }

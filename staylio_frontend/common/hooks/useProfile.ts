@@ -10,6 +10,8 @@ export const useProfile = () => {
       const response = await getProfileMe();
       return response.data;
     },
+    retry: false,
+    enabled: !!localStorage.getItem("user") || !!localStorage.getItem("roleName"),
   });
 }
 

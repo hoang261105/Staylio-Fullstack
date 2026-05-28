@@ -4,6 +4,7 @@ import { VoucherRequest } from "@common/interfaces/request/VoucherRequest";
 import {
   createVoucher,
   getAllVouchers,
+  getUserVouchers,
   getVoucherById,
   updateStatusVoucher,
   updateVoucher,
@@ -12,6 +13,8 @@ import {
 import { ApprovalStatus } from "@common/enums/ApprovalStatus";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { VoucherQueryParams } from "@common/interfaces/request/QueryParams";
+import { getApplicableVouchers } from "@common/services/uservoucher.service";
 
 export const useVouchers = (params: QueryParams) => {
   return useQuery({
@@ -27,6 +30,25 @@ export const useVouchers = (params: QueryParams) => {
     ],
     queryFn: async () => {
       const response = await getAllVouchers({
+        ...params,
+        page: params.page + 1,
+      });
+      return response.data;
+    },
+  });
+};
+
+export const useUserVouchers = (params: QueryParams) => {
+  return useQuery({
+    queryKey: [
+      "userVouchers",
+      params.search,
+      params.status,
+      params.page,
+      params.size,
+    ],
+    queryFn: async () => {
+      const response = await getUserVouchers({
         ...params,
         page: params.page + 1,
       });
@@ -111,3 +133,17 @@ export const useUpdateApprovalStatusVoucherMutation = (id: number) => {
     },
   });
 };
+
+export const useVoucherApplicable = (params: VoucherQueryParams) => {
+  return useQuery({
+    queryKey: ["voucherApplicable", 
+      params.roomId,
+      params.checkInDate,
+      params.checkOutDate
+    ],
+    queryFn: async () => {
+      const response = await getApplicableVouchers(params);
+      return response.data;
+    }
+  });
+}

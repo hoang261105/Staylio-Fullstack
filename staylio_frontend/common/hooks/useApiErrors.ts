@@ -38,6 +38,13 @@ export const useApiErrors = () => {
     });
   };
 
+  const setFieldError = (field: string, message: string) => {
+    setFieldErrors((prev) => ({
+      ...prev,
+      [field]: message
+    }));
+  };
+
   const clearAllErrors = () => {
     setFieldErrors({});
     setFormError("");
@@ -49,5 +56,6 @@ export const useApiErrors = () => {
     handleApiErrors,
     clearFieldError,
     clearAllErrors,
+    setFieldError,
   };
 };

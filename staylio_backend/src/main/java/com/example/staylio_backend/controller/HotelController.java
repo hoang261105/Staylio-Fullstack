@@ -29,7 +29,6 @@ public class HotelController {
 
     @GetMapping
     @Operation(summary = "Danh sách thương hiệu khách sạn")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<PaginationResponse<HotelResponse>>> getAllHotels(
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "1") int page,
@@ -50,7 +49,6 @@ public class HotelController {
 
     @GetMapping("/lists")
     @Operation(summary = "Danh sách thương hiệu khách sạn không phân trang")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<HotelResponse>>> getAllHotelsLists() {
         ApiResponse<List<HotelResponse>> response = new ApiResponse<>(
                 true,
@@ -65,7 +63,6 @@ public class HotelController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Lấy chi tiết 1 thương hiệu khách sạn")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<HotelResponse>> getHotelById(
             @PathVariable Long id
     ) {

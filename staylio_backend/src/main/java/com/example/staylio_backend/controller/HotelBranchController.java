@@ -29,7 +29,6 @@ public class HotelBranchController {
 
         @GetMapping
         @Operation(summary = "Danh sách chi nhánh khách sạn")
-        @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
         public ResponseEntity<ApiResponse<PaginationResponse<HotelBranchResponse>>> getHotelBranches(
                         @RequestParam(required = false) Long hotelId,
                         @RequestParam(required = false) String search,
@@ -51,7 +50,6 @@ public class HotelBranchController {
 
         @GetMapping("/me")
         @Operation(summary = "Danh sách tất cả chi nhánh của tôi")
-        @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
         public ResponseEntity<ApiResponse<List<HotelBranchResponse>>> getMyHotelBranches(
                 @RequestParam Long hotelId,
                 @RequestParam BranchStatus status,
@@ -70,7 +68,6 @@ public class HotelBranchController {
 
         @GetMapping("/{id}")
         @Operation(summary = "Lấy chi tiết 1 chi nhánh khách sạn")
-        @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
         public ResponseEntity<ApiResponse<HotelBranchResponse>> getHotelBranchById(@PathVariable Long id,
                         @AuthenticationPrincipal UserPrincipal userPrincipal) {
                 ApiResponse<HotelBranchResponse> response = new ApiResponse<>(
@@ -137,8 +134,10 @@ public class HotelBranchController {
         @PatchMapping("/{id}/status")
         @Operation(summary = "Cập nhật/Duyệt chi nhánh khách sạn")
         @PreAuthorize("hasRole('ADMIN')")
-        public ResponseEntity<ApiResponse<String>> updateStatus(@PathVariable Long id,
-                        @RequestBody BranchStatusRequest request) {
+        public ResponseEntity<ApiResponse<String>> updateStatus(
+                @PathVariable Long id,
+                @RequestBody BranchStatusRequest request
+        ) {
                 hotelBranchService.updateStatus(id, request);
                 ApiResponse<String> response = new ApiResponse<>(
                                 true,

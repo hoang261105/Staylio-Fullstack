@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Search, Filter } from "lucide-react";
 import AdminLayout from "../layout/AdminLayout";
 import AdminReviewListView from "../components/reviews/AdminReviewListView";
@@ -37,6 +38,17 @@ export default function AdminReviews() {
   const [page, setPage] = useState(0);
   const [sortBy, setSortBy] = useState("createdAt");
   const [direction, setDirection] = useState<"asc" | "desc">("desc");
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state && location.state.reviewId) {
+      setReviewToView({ id: location.state.reviewId } as ReviewResponse);
+      // Clear the state so it doesn't reopen on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
 
   const debouncedSearch = useDebounce(searchQuery, 500);
 

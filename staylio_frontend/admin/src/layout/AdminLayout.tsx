@@ -8,7 +8,6 @@ import {
   LogOut,
   Menu,
   X,
-  Bell,
   Search,
   MapPin,
   Bed,
@@ -24,6 +23,7 @@ import { useProfile } from "../../../common/hooks/useProfile";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import ConfirmLogoutModal from "../../../common/components/ConfirmLogoutModal";
+import NotificationPopover from "../../../common/components/NotificationPopover";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -32,7 +32,7 @@ interface AdminLayoutProps {
 const NAVIGATION_ITEMS = [
   { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Quản lý khách hàng", path: "/admin/customers", icon: Users },
-  { name: "Quản lý khách sạn", path: "/admin/hotels", icon: Building2 },
+  { name: "Quản lý thương hiệu khách sạn", path: "/admin/hotels", icon: Building2 },
   { name: "Quản lý chi nhánh", path: "/admin/hotel-branches", icon: MapPin },
   { name: "Quản lý phòng", path: "/admin/rooms", icon: Bed },
   { name: "Kiểm duyệt hình ảnh", path: "/admin/room-images", icon: Image },
@@ -57,7 +57,7 @@ function SidebarItem({ name, icon: Icon, active, isCollapsed, onClick }: Sidebar
     <div className="relative group">
       <button
         onClick={onClick}
-        className={`w-full flex items-center h-[44px] rounded-xl transition-all duration-200 ${isCollapsed ? "justify-center px-0" : "px-3 gap-3.5"
+        className={`w-full flex items-center h-11 rounded-xl transition-all duration-200 ${isCollapsed ? "justify-center px-0" : "px-3 gap-3.5"
           } ${active
             ? "bg-[#0066FF] text-white shadow-md shadow-[#0066FF]/20"
             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 group-hover:shadow-sm"
@@ -69,7 +69,7 @@ function SidebarItem({ name, icon: Icon, active, isCollapsed, onClick }: Sidebar
             }`}
         />
         {!isCollapsed && (
-          <span className="font-medium text-[14px] leading-tight truncate whitespace-nowrap tracking-wide">
+          <span title={name} className="font-medium text-[14px] leading-tight truncate whitespace-nowrap tracking-wide">
             {name}
           </span>
         )}
@@ -133,7 +133,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-gray-900 flex">
-      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 lg:hidden transition-opacity"
@@ -141,12 +140,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 z-50 h-full bg-white border-r border-gray-100 shadow-sm flex flex-col transition-all duration-300 ease-in-out lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
           } ${sidebarWidth}`}
       >
-        {/* Logo area */}
         <div className="h-16 flex items-center justify-between px-4 lg:px-6 border-b border-gray-100 shrink-0">
           <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ${isCollapsed ? "w-8 opacity-0" : "w-32 opacity-100"}`}>
             {!isCollapsed && (
@@ -157,7 +154,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               />
             )}
           </div>
-          {/* Mobile close */}
           <button
             onClick={() => setSidebarOpen(false)}
             className="lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-500 transition-colors"
@@ -165,7 +161,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             <X className="w-5 h-5" />
           </button>
 
-          {/* Desktop collapse toggle */}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="hidden lg:flex items-center justify-center p-1.5 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-gray-600 transition-colors"
@@ -174,7 +169,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </button>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 py-6 px-3 space-y-1.5 overflow-y-auto custom-scrollbar">
           {NAVIGATION_ITEMS.map((item) => (
             <SidebarItem
@@ -217,7 +211,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="relative group">
             <button
               onClick={() => setShowLogoutModal(true)}
-              className={`w-full flex items-center justify-center h-[44px] rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors font-medium text-[14px] border border-transparent hover:border-red-100 ${isCollapsed ? "px-0" : "gap-2 px-4"
+              className={`w-full flex items-center justify-center h-11 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors font-medium text-[14px] border border-transparent hover:border-red-100 ${isCollapsed ? "px-0" : "gap-2 px-4"
                 }`}
             >
               <LogOut className={`shrink-0 ${isCollapsed ? "w-5 h-5" : "w-4 h-4"}`} />
@@ -234,7 +228,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${isCollapsed ? "lg:ml-[80px]" : "lg:ml-[280px]"}`}>
+      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${isCollapsed ? "lg:ml-20" : "lg:ml-70"}`}>
         {/* Header */}
         <header className="h-16 bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-30 shrink-0 shadow-sm">
           <div className="h-full px-4 lg:px-8 flex items-center justify-between gap-4">
@@ -262,10 +256,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="relative p-2 hover:bg-gray-50 text-gray-600 rounded-full transition-colors border border-gray-100 bg-white">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-              </button>
+              <NotificationPopover />
             </div>
           </div>
         </header>

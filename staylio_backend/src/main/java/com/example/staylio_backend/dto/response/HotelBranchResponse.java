@@ -17,9 +17,12 @@ public class HotelBranchResponse {
     private String imageUrl;
     private String wardName;
     private String provinceName;
+    private Long hotelId;
     private String hotelName;
     private String description;
     private String phone;
     private Integer capacity;
     private BranchStatus status;
+    private Long countReview;
+    private Double averageRating;
 }

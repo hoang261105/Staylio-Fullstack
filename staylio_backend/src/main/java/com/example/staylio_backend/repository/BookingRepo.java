@@ -1,5 +1,6 @@
 package com.example.staylio_backend.repository;
 
+import com.example.staylio_backend.dto.response.DateRangeResponse;
 import com.example.staylio_backend.model.entity.Booking;
 import com.example.staylio_backend.model.enums.BookingStatus;
 import com.example.staylio_backend.model.enums.PaymentMethod;
@@ -102,5 +103,51 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
     List<Booking> findByStatusAndExpectedCheckOutAtIsNotNullAndExpectedCheckOutAtLessThanEqual(
             BookingStatus status,
             LocalDateTime expectedCheckOutAt
+    );
+
+    @Query("""
+        SELECT COUNT(b) > 0
+        FROM Booking b
+        WHERE b.room.id = :roomId
+          AND b.status NOT IN (
+              'CANCELLED', 'REFUNDED'
+          )
+          AND b.checkInDate < :checkOutDate
+          AND b.checkOutDate > :checkInDate
+    """)
+    boolean existsOverlappingBooking(
+            @Param("roomId") Long roomId,
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate
+    );
+
+    @Query("""
+        SELECT new com.example.staylio_backend.dto.response.DateRangeResponse(b.checkInDate, b.checkOutDate)
+        FROM Booking b
+        WHERE b.room.id = :roomId
+          AND b.status NOT IN ('CANCELLED', 'REFUNDED')
+          AND b.checkOutDate >= CURRENT_DATE
+    """)
+    List<DateRangeResponse> findBookedDatesByRoomId(@Param("roomId") Long roomId);
+
+    @Query("""
+        SELECT b
+        FROM Booking b
+        JOIN b.room r
+        JOIN r.hotelBranch hb
+        WHERE b.user.id = :userId
+          AND (
+                :search IS NULL
+                OR LOWER(b.bookingCode) LIKE LOWER(CONCAT('%', :search, '%'))
+                OR LOWER(r.roomName) LIKE LOWER(CONCAT('%', :search, '%'))
+                OR LOWER(hb.branchName) LIKE LOWER(CONCAT('%', :search, '%'))
+          )
+          AND (:status IS NULL OR b.status = :status)
+    """)
+    Page<Booking> searchBookingsByUser(
+            Long userId,
+            String search,
+            BookingStatus status,
+            Pageable pageable
     );
 }

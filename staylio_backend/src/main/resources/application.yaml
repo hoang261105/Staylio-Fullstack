@@ -55,6 +55,11 @@ spring:
               - email
               - profile
 
+gemini:
+  api-key: ${GEMINI_API_KEY}
+  model: gemini-2.5-flash-lite
+  base-url: https://generativelanguage.googleapis.com/v1beta/models
+
 cloudinary:
   cloud_name: dtc7mun2h
   api_key: ${CLOUDINARY_API_KEY}

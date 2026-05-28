@@ -4,17 +4,23 @@ import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.common.exception.AppException;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.HotelRequest;
+import com.example.staylio_backend.dto.request.NotificationRequest;
 import com.example.staylio_backend.dto.response.HotelResponse;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.Hotel;
+import com.example.staylio_backend.model.entity.HotelBranch;
 import com.example.staylio_backend.model.entity.Profile;
+import com.example.staylio_backend.model.enums.BranchStatus;
 import com.example.staylio_backend.model.enums.HotelStatus;
+import com.example.staylio_backend.model.enums.NotificationType;
 import com.example.staylio_backend.model.enums.RoleName;
+import com.example.staylio_backend.repository.HotelBranchRepo;
 import com.example.staylio_backend.repository.HotelRepo;
 import com.example.staylio_backend.repository.ProfileRepo;
 import com.example.staylio_backend.service.CloudinaryService;
 import com.example.staylio_backend.service.HotelService;
+import com.example.staylio_backend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -32,6 +38,8 @@ import java.util.NoSuchElementException;
 public class HotelServiceImpl implements HotelService {
     private final HotelRepo hotelRepo;
     private final ProfileRepo profileRepo;
+    private final NotificationService notificationService;
+    private final HotelBranchRepo branchRepo;
 
     @Override
     public PaginationResponse<HotelResponse> findAll(String search, int page, int size, String sortBy, String direction) {
@@ -77,6 +85,10 @@ public class HotelServiceImpl implements HotelService {
     }
 
     public HotelResponse convertToDTO(Hotel hotel) {
+        List<HotelBranch> branches = branchRepo.findAllByHotel_IdAndStatus(hotel.getId(), BranchStatus.CONFIRMED);
+
+        Integer totalBranches = branches.size();
+
         return HotelResponse.builder()
                 .id(hotel.getId())
                 .name(hotel.getName())
@@ -85,6 +97,7 @@ public class HotelServiceImpl implements HotelService {
                 .imageUrl(hotel.getImageUrl())
                 .hostHotelName(hotel.getManager().getFullName())
                 .isActive(hotel.isActive())
+                .branchCount(totalBranches)
                 .build();
     }
 
@@ -155,6 +168,17 @@ public class HotelServiceImpl implements HotelService {
                 .build();
 
         Hotel savedHotel = hotelRepo.save(hotel);
+
+        notificationService.create(
+                NotificationRequest.builder()
+                        .senderId(profile.getId())
+                        .receiverId(2L)
+                        .title("Thương hiệu khách sạn chờ duyệt")
+                        .content("Thương hiệu " + savedHotel.getName() + " đang chờ admin duyệt.")
+                        .type(NotificationType.HOTEL_BRAND_CREATED)
+                        .referenceId(savedHotel.getId())
+                        .build()
+        );
         try {
             return convertToDTO(savedHotel);
         } catch (DataIntegrityViolationException e) {

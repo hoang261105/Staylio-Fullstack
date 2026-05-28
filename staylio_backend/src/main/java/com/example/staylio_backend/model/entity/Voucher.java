@@ -3,12 +3,14 @@ package com.example.staylio_backend.model.entity;
 import com.example.staylio_backend.common.base.BaseObject;
 import com.example.staylio_backend.model.enums.ApprovalStatus;
 import com.example.staylio_backend.model.enums.DiscountType;
+import com.example.staylio_backend.model.enums.VoucherScope;
 import com.example.staylio_backend.model.enums.VoucherStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -68,5 +70,15 @@ public class Voucher extends BaseObject {
     @Enumerated(EnumType.STRING)
     private ApprovalStatus approvalStatus;
 
+    @Column(name = "scope", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private VoucherScope scope;
 
+    @ManyToMany
+    @JoinTable(
+            name = "voucher_rooms",
+            joinColumns = @JoinColumn(name = "voucher_id"),
+            inverseJoinColumns = @JoinColumn(name = "room_id")
+    )
+    private Set<Room> rooms;
 }

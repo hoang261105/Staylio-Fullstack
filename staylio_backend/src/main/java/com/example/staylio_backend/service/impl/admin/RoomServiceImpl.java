@@ -7,8 +7,10 @@ import com.example.staylio_backend.common.utils.SecurityUtils;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.RoomRequest;
 import com.example.staylio_backend.dto.request.RoomStatusRequest;
+import com.example.staylio_backend.dto.request.SearchRoomRequest;
 import com.example.staylio_backend.dto.response.RoomImageResponse;
 import com.example.staylio_backend.dto.response.RoomResponse;
+import com.example.staylio_backend.dto.response.RoomSearchResponse;
 import com.example.staylio_backend.dto.response.UtilityResponse;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
@@ -38,6 +40,7 @@ public class RoomServiceImpl implements RoomService {
     private final HotelBranchRepo branchRepo;
     private final ProfileRepo profileRepo;
     private final UtilityRepo utilityRepo;
+    private final ReviewRepo reviewRepo;
 
     @Override
     public PaginationResponse<RoomResponse> getRoomsBySearch(
@@ -54,11 +57,14 @@ public class RoomServiceImpl implements RoomService {
 
         Page<Room> roomsPage;
 
-        if (principal.hasRole(RoleName.ROLE_MANAGER)) {
+        if (principal != null && principal.hasRole(RoleName.ROLE_MANAGER)) {
+            Profile profile = profileRepo.findById(principal.getId())
+                    .orElseThrow(() -> new NoSuchElementException("Không tìm thấy profile!"));
+
             if (hotelBranchId != null) {
                 boolean owned = branchRepo.existsByIdAndHotelManagerId(
                         hotelBranchId,
-                        principal.getId()
+                        profile.getId()
                 );
 
                 if (!owned) {
@@ -67,7 +73,8 @@ public class RoomServiceImpl implements RoomService {
 
                 roomsPage = roomRepo.searchRooms(hotelBranchId, search, status, pageable);
             } else {
-                roomsPage = roomRepo.findAllRooms(
+                roomsPage = roomRepo.findAllRoomsByManager(
+                        profile.getId(),
                         search,
                         status,
                         pageable
@@ -75,9 +82,18 @@ public class RoomServiceImpl implements RoomService {
             }
         } else {
             if (hotelBranchId != null) {
-                roomsPage = roomRepo.searchRooms(hotelBranchId, search, status, pageable);
+                roomsPage = roomRepo.searchRooms(
+                        hotelBranchId,
+                        search,
+                        status,
+                        pageable
+                );
             } else {
-                roomsPage = roomRepo.findAllRooms(search, status, pageable);
+                roomsPage = roomRepo.findAllRooms(
+                        search,
+                        status,
+                        pageable
+                );
             }
         }
 
@@ -111,14 +127,8 @@ public class RoomServiceImpl implements RoomService {
 
         Hotel hotel = branch.getHotel();
 
-        boolean isAdmin = userPrincipal.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
-
-        boolean isManager = userPrincipal.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_MANAGER"));
-
-        if (!isAdmin) {
-            if (!isManager || !hotel.getManager().getId().equals(userPrincipal.getId())) {
+        if (userPrincipal != null && userPrincipal.hasRole(RoleName.ROLE_MANAGER)){
+            if (!hotel.getManager().getId().equals(userPrincipal.getId())) {
                 throw new AppException(ErrorCode.UNAUTHORIZED);
             }
         }
@@ -321,7 +331,7 @@ public class RoomServiceImpl implements RoomService {
                 .orElseThrow(() -> new NoSuchElementException(ErrorCode.ROOM_NOT_FOUND.getMessage()));
 
         Profile profile = profileRepo.findById(userPrincipal.getId())
-                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy profile!"));
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         Long managerProfileId = room.getHotelBranch()
                 .getHotel()
@@ -334,6 +344,44 @@ public class RoomServiceImpl implements RoomService {
 
         room.setIsVoucherApplicable(!room.getIsVoucherApplicable());
         roomRepo.save(room);
+    }
+
+    @Override
+    public PaginationResponse<RoomSearchResponse> searchRooms(SearchRoomRequest request) {
+        int pageIndex = Math.max(request.getPage() - 1, 0);
+
+        Pageable pageable = PageRequest.of(
+                pageIndex,
+                request.getSize(),
+                getSort(request.getSortBy(), request.getDirection())
+        );
+
+        Page<Room> roomsPage = roomRepo.searchAvailableRooms(
+                request.getKeyword(),
+                request.getCheckInDate(),
+                request.getCheckOutDate(),
+                request.getStatus(),
+                request.getAdults(),
+                request.getChildren(),
+                request.getCapacity(),
+                request.getMinPrice(),
+                request.getMaxPrice(),
+                request.getMinRating(),
+                pageable
+        );
+
+        List<RoomSearchResponse> rooms = roomsPage.getContent().stream()
+                .map(this::convertToSearchResponse)
+                .toList();
+
+        PaginationDTO paginationDTO = new PaginationDTO(
+                roomsPage.getNumber() + 1,
+                roomsPage.getSize(),
+                roomsPage.getTotalPages(),
+                roomsPage.getTotalElements()
+        );
+
+        return new PaginationResponse<>(rooms, paginationDTO);
     }
 
     public RoomResponse convertToDTO(Room room) {
@@ -359,6 +407,9 @@ public class RoomServiceImpl implements RoomService {
                 ))
                 .collect(Collectors.toSet());
 
+        Long countReview = roomRepo.countReviewsByRoomId(room.getId());
+        Double averageRating = roomRepo.averageRatingByRoomId(room.getId());
+
         return new RoomResponse(
                 room.getId(),
                 room.getHotelBranch().getId(),
@@ -380,8 +431,61 @@ public class RoomServiceImpl implements RoomService {
                 room.getIsActive(),
                 room.getIsVoucherApplicable(),
                 utilities,
-                roomImages
+                roomImages,
+                countReview,
+                roundRating(averageRating)
         );
+    }
+
+    private RoomSearchResponse convertToSearchResponse(Room room) {
+
+        Long reviewCount =
+                reviewRepo.countReviewsByBranchId(room.getId());
+
+        Double averageRating =
+                reviewRepo.averageRatingByBranchId(room.getId());
+
+        return RoomSearchResponse.builder()
+                .roomId(room.getId())
+                .roomName(room.getRoomName())
+                .roomType(room.getRoomType())
+
+                .images(
+                        room.getImages()
+                                .stream()
+                                .map(RoomImage::getImageUrl)
+                                .toList()
+                )
+
+                .hotelId(room.getHotelBranch().getHotel().getId())
+                .hotelName(room.getHotelBranch().getHotel().getName())
+
+                .hotelBranchId(room.getHotelBranch().getId())
+                .hotelBranchName(room.getHotelBranch().getBranchName())
+
+                .address(
+                        room.getHotelBranch().getAddress()
+                )
+
+                .provinceName(
+                        room.getHotelBranch()
+                                .getWard()
+                                .getProvince()
+                                .getProvince()
+                )
+
+                .capacity(room.getCapacity())
+                .maxAdults(room.getMaxAdults())
+                .maxChildren(room.getMaxChildren())
+
+                .price(room.getPrice())
+
+                .averageRating(
+                        roundRating(averageRating)
+                )
+                .reviewCount(reviewCount)
+                .status(room.getStatus())
+                .build();
     }
 
     private Sort getSort(String sortBy, String direction) {
@@ -412,4 +516,13 @@ public class RoomServiceImpl implements RoomService {
                                 .multiply(BigDecimal.valueOf(request.getMaxChildren()))
                 );
     }
+
+    private Double roundRating(Double rating) {
+        if (rating == null) {
+            return 0.0;
+        }
+
+        return Math.round(rating * 10.0) / 10.0;
+    }
+
 }

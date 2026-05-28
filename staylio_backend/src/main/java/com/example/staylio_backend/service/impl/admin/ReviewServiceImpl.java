@@ -40,20 +40,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         Page<Review> reviewPage;
 
-        if (principal.hasRole(RoleName.ROLE_ADMIN)){
-            reviewPage = reviewRepo.searchReviews(
-                    request.getSearch(),
-                    request.getRating(),
-                    request.getStatus(),
-                    request.getHotelBranchId(),
-                    request.getRoomId(),
-                    request.getUserId(),
-                    request.getCreatedFrom(),
-                    request.getCreatedTo(),
-                    request.getHasReply(),
-                    pageable
-            );
-        } else if (principal.hasRole(RoleName.ROLE_MANAGER)){
+        if (principal != null && principal.hasRole(RoleName.ROLE_MANAGER)){
             reviewPage = reviewRepo.searchReviewsByManager(
                     principal.getId(),
                     request.getSearch(),
@@ -68,7 +55,18 @@ public class ReviewServiceImpl implements ReviewService {
                     pageable
             );
         } else {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
+            reviewPage = reviewRepo.searchReviews(
+                    request.getSearch(),
+                    request.getRating(),
+                    request.getStatus(),
+                    request.getHotelBranchId(),
+                    request.getRoomId(),
+                    request.getUserId(),
+                    request.getCreatedFrom(),
+                    request.getCreatedTo(),
+                    request.getHasReply(),
+                    pageable
+            );
         }
 
         List<ReviewResponse> content = reviewPage.getContent().stream()
@@ -89,7 +87,7 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewerResponse> getAllReviewers(UserPrincipal principal) {
         List<Profile> reviewers;
 
-        if (principal.hasRole(RoleName.ROLE_ADMIN)) {
+        if (principal.hasRole(RoleName.ROLE_ADMIN) || principal.hasRole(RoleName.ROLE_CUSTOMER)) {
             reviewers = profileRepo.findAllReviewers();
         } else if (principal.hasRole(RoleName.ROLE_MANAGER)) {
             Profile profile = profileRepo.findById(principal.getId())

@@ -34,11 +34,18 @@ export const useLoginForm = (onSubmitSuccess: (path: string) => void) => {
       document.cookie = `accessToken=${userData?.accessToken}; path=/; max-age=3600; domain=${domain}; secure; samesite=strict`;
       document.cookie = `refreshToken=${userData?.refreshToken}; path=/; max-age=7200; domain=${domain}; secure; samesite=strict`;
 
+      const role = authorities?.[0]?.authority;
+      if (role) {
+        localStorage.setItem("roleName", role);
+      }
+
       await queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Đăng nhập thành công!");
       clearAllErrors();
 
-      onSubmitSuccess(redirectPath);
+      setTimeout(() => {
+        window.location.href = redirectPath;
+      }, 500);
     },
     (error: any) => {
       const serverErrors = error?.response?.data?.errors;

@@ -1,8 +1,10 @@
 import { RoomStatus } from "@common/enums/RoomStatus";
-import { QueryParams } from "@common/interfaces";
+import { PaginationResponse, QueryParams } from "@common/interfaces";
 import { RoomRequest } from "@common/interfaces/request/RoomRequest";
+import { SearchRoomRequest } from "@common/interfaces/request/SearchRoomRequest";
 import { RoomResponse } from "@common/interfaces/response/RoomResponse";
-import { createRoom, getAllRooms, getRoomById, getRooms, updateRoom, updateRoomActive, updateRoomStatus, updateRoomVoucherApplicable } from "@common/services/room.service";
+import { RoomSearchResponse } from "@common/interfaces/response/RoomSearchResponse";
+import { createRoom, getAllRooms, getRoomById, getRooms, searchAllRooms, updateRoom, updateRoomActive, updateRoomStatus, updateRoomVoucherApplicable } from "@common/services/room.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -27,6 +29,31 @@ export const useRooms = (params: QueryParams) => {
     },
   });
 };
+
+export const useSearchRooms = (params: SearchRoomRequest) => {
+  return useQuery<PaginationResponse<RoomSearchResponse>>({
+    queryKey: ["searchRooms", 
+      params.keyword,
+      params.checkInDate,
+      params.checkOutDate,
+      params.status,
+      params.adults,
+      params.children,
+      params.capacity,
+      params.page,
+      params.size,
+      params.minPrice,
+      params.maxPrice,
+      params.minRating,
+      params.sortBy,
+      params.direction
+    ],
+    queryFn: async () => {
+      const response = await searchAllRooms(params);
+      return response.data;
+    }
+  });
+}
 
 export const useAllRooms = (hotelBranchId: number) => {
   return useQuery<RoomResponse[]>({

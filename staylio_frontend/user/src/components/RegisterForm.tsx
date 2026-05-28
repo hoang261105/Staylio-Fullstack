@@ -41,18 +41,17 @@ export const RegisterForm = ({
 
   return (
     <>
-      <div className="lg:hidden mb-8">
-        <img src="/slogan.png" alt="Staylio" />
+      <div className="lg:hidden mb-8 flex justify-center">
+        <img src="/slogan.png" alt="Staylio" className="h-10 w-auto" />
       </div>
 
-      <div className="mb-8">
-        <h2 className="text-3xl mb-2">Tạo tài khoản</h2>
-
-        <p className="text-muted-foreground">
+      <div className="mb-10 text-center lg:text-left">
+        <h2 className="text-3xl font-bold mb-3 text-gray-900">Tạo tài khoản</h2>
+        <p className="text-gray-500">
           Đã có tài khoản?{" "}
           <a
             onClick={() => navigate("/login")}
-            className="text-[#0066FF] hover:underline cursor-pointer font-medium"
+            className="text-blue-600 hover:text-blue-700 hover:underline cursor-pointer font-semibold transition-colors"
           >
             Đăng nhập ngay
           </a>
@@ -60,28 +59,22 @@ export const RegisterForm = ({
       </div>
 
       {/* Social Register */}
-
-      <div className="space-y-3 mb-6">
-        <button
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-accent transition-colors"
-        >
-          <FaGoogle className="w-5 h-5" />
-
+      <div className="space-y-4 mb-8">
+        <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm font-medium text-gray-700 active:scale-[0.98]">
+          <FaGoogle className="w-5 h-5 text-red-500" />
           <span>Tiếp tục với Google</span>
         </button>
       </div>
 
-      <div className="flex items-center mb-6">
-        <div className="flex-1 h-px bg-gray-300"></div>
-
-        <span className="px-4 text-sm text-gray-500 whitespace-nowrap">
+      <div className="flex items-center mb-8">
+        <div className="flex-1 h-px bg-gray-200"></div>
+        <span className="px-4 text-sm text-gray-400 font-medium whitespace-nowrap">
           Hoặc đăng ký với email
         </span>
-
-        <div className="flex-1 h-px bg-gray-300"></div>
+        <div className="flex-1 h-px bg-gray-200"></div>
       </div>
 
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-5">
         {/* Tên đăng nhập */}
         <InputField
           label="Tên đăng nhập"
@@ -108,10 +101,10 @@ export const RegisterForm = ({
           }
         />
 
-        {/* Giới tính & Ngày sinh (Có thể bọc trong div flex để tiết kiệm diện tích) */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* Giới tính & Ngày sinh */}
+        <div className="grid grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Giới tính <span className="text-red-500">*</span>
             </label>
             <select
@@ -119,14 +112,16 @@ export const RegisterForm = ({
               onChange={(e) =>
                 setFormData({ ...formData, gender: e.target.value })
               }
-              className={`w-full px-4 py-3 border ${errors.gender ? "border-red-500" : "border-gray-300"} rounded-lg`}
+              className={`w-full px-4 py-3 border bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-colors ${
+                errors.gender ? "border-red-500" : "border-gray-200"
+              } rounded-xl shadow-sm text-gray-900`}
             >
               <option value="MALE">Nam</option>
               <option value="FEMALE">Nữ</option>
               <option value="OTHER">Khác</option>
             </select>
             {errors.gender && (
-              <p className="text-xs text-red-500 mt-1">{errors.gender}</p>
+              <p className="text-xs text-red-500 mt-1.5 font-medium">{errors.gender}</p>
             )}
           </div>
           <InputField
@@ -153,7 +148,8 @@ export const RegisterForm = ({
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
 
-        {/* Mật khẩu - Có logic Toggle ẩn/hiện riêng */}
+        {/* Mật khẩu */}
+        <div>
           <InputField
             label="Mật khẩu"
             type="password"
@@ -169,26 +165,31 @@ export const RegisterForm = ({
 
           {/* Password Strength Meter */}
           {formData.password && (
-            <div className="mt-2">
-              <div className="flex gap-1 mb-1">
+            <div className="mt-2.5">
+              <div className="flex gap-1.5 mb-1.5">
                 {[1, 2, 3].map((level) => (
                   <div
                     key={level}
-                    className={`h-1 flex-1 rounded-full ${level <= passwordStrength.strength ? passwordStrength.color : "bg-gray-200"}`}
+                    className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
+                      level <= passwordStrength.strength
+                        ? passwordStrength.color
+                        : "bg-gray-200"
+                    }`}
                   />
                 ))}
               </div>
-              <p className="text-xs text-gray-500">
-                Độ mạnh: {passwordStrength.label}
+              <p className="text-xs text-gray-500 font-medium">
+                Độ mạnh: <span className={passwordStrength.color.replace('bg-', 'text-')}>{passwordStrength.label}</span>
               </p>
             </div>
           )}
+        </div>
 
         {/* Nút Submit */}
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3 bg-[#0066FF] text-white rounded-lg hover:bg-[#0052CC] font-medium transition-all disabled:opacity-50"
+          className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed font-semibold text-lg shadow-lg shadow-blue-500/30 active:scale-[0.98] mt-4"
         >
           {isLoading ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
         </button>

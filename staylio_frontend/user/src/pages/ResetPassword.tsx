@@ -66,72 +66,75 @@ export default function ResetPassword() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen flex">
+      <div className="min-h-screen flex bg-slate-50 font-sans">
         {/* Left Side - Image */}
-        <div className="hidden lg:flex lg:w-1/2 bg-linear-to-br from-[#0066FF] to-[#00C896] relative overflow-hidden">
+        <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden group bg-slate-900">
           <div className="absolute inset-0">
             <img
               src="https://images.unsplash.com/photo-1772127822607-2343696cf82e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
               alt="Travel"
-              className="w-full h-full object-cover opacity-30"
+              className="w-full h-full object-cover opacity-50 scale-100 group-hover:scale-105 transition-transform duration-[10000ms] ease-out"
             />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-900/60 to-emerald-900/80 backdrop-blur-[2px]"></div>
           </div>
 
-          <div className="relative z-10 flex flex-col justify-between p-12 text-white">
-            <div className="bg-white px-4 py-3 rounded-xl inline-block w-fit">
-              <Logo onClick={() => navigate("/")} size="lg" />
+          <div className="relative z-10 flex flex-col justify-between p-16 text-white h-full w-full">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl w-48 p-4 inline-flex items-center justify-center mb-6 shadow-xl border border-white/20">
+              <img src="/slogan.png" alt="Staylio" className="brightness-0 invert" />
             </div>
 
-            <div className="max-w-md">
-              <h1 className="text-4xl lg:text-5xl mb-6 leading-tight">
-                Hoàn tất!
+            <div className="max-w-md mt-auto mb-20">
+              <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight drop-shadow-md">
+                Hoàn <span className="text-emerald-300">tất!</span>
               </h1>
-              <p className="text-lg text-white/90">
+              <p className="text-lg text-white/90 mb-10 font-medium leading-relaxed drop-shadow-sm">
                 Mật khẩu của bạn đã được đặt lại thành công.
               </p>
             </div>
 
-            <div className="text-sm text-white/60">
+            <div className="text-sm text-white/50 font-medium">
               © 2026 STAYLIO. All rights reserved.
             </div>
           </div>
         </div>
 
         {/* Right Side - Success Message */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-background">
-          <div className="w-full max-w-md text-center">
-            <div className="lg:hidden mb-8">
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 relative overflow-hidden">
+          <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
+          <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
+
+          <div className="w-full max-w-[440px] bg-white p-8 sm:p-10 rounded-3xl shadow-2xl shadow-gray-200/50 border border-gray-100 relative z-10 text-center">
+            <div className="lg:hidden mb-8 flex justify-center">
               <Logo onClick={() => navigate("/")} size="md" />
             </div>
 
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-10 h-10 text-green-600" />
+            <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+              <CheckCircle className="w-12 h-12 text-emerald-600" />
             </div>
 
-            <h2 className="text-3xl mb-3">Đặt lại mật khẩu thành công!</h2>
-            <p className="text-muted-foreground mb-8">
+            <h2 className="text-3xl font-bold mb-3 text-gray-900">Thành công!</h2>
+            <p className="text-gray-500 mb-8 leading-relaxed">
               Bạn có thể đăng nhập bằng mật khẩu mới ngay bây giờ.
             </p>
 
             <button
               onClick={() => navigate("/login")}
-              className="w-full py-3 bg-[#0066FF] text-white rounded-lg hover:bg-[#0052CC] transition-colors mb-4"
+              className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all font-semibold text-lg shadow-lg shadow-blue-500/30 active:scale-[0.98] mb-4"
             >
               Đăng nhập ngay
             </button>
 
             <button
               onClick={() => navigate("/")}
-              className="w-full py-3 border-2 border-border rounded-lg hover:bg-accent transition-colors"
+              className="w-full py-4 border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all font-semibold text-lg text-gray-700 active:scale-[0.98]"
             >
               Về trang chủ
             </button>
 
-            <div className="mt-8 bg-accent/50 rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">
-                💡 <span className="font-medium text-foreground">Mẹo:</span> Hãy
-                lưu mật khẩu mới của bạn ở nơi an toàn hoặc sử dụng trình quản
-                lý mật khẩu.
+            <div className="mt-8 bg-blue-50/50 rounded-2xl p-5 border border-blue-100/50 text-left">
+              <p className="text-sm text-gray-600 leading-relaxed">
+                <span className="font-bold text-gray-900 mb-1 block">💡 Mẹo bảo mật</span>
+                Hãy lưu mật khẩu mới của bạn ở nơi an toàn hoặc sử dụng trình quản lý mật khẩu.
               </p>
             </div>
           </div>
@@ -141,18 +144,21 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-slate-50 font-sans">
       <ResetPassSideBar />
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-background">
-        <div className="w-full max-w-md">
-          <div className="lg:hidden mb-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 relative overflow-hidden">
+        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
+        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
+
+        <div className="w-full max-w-[440px] bg-white p-8 sm:p-10 rounded-3xl shadow-2xl shadow-gray-200/50 border border-gray-100 relative z-10">
+          <div className="lg:hidden mb-8 flex justify-center">
             <Logo onClick={() => navigate("/")} size="md" />
           </div>
 
           <div className="mb-8">
-            <h2 className="text-3xl mb-2">Đặt lại mật khẩu</h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-3xl font-bold mb-3 text-gray-900">Đặt lại mật khẩu</h2>
+            <p className="text-gray-500">
               Tạo mật khẩu mới cho tài khoản của bạn
             </p>
           </div>
@@ -173,23 +179,23 @@ export default function ResetPassword() {
               />
 
               {formData.newPassword && (
-                <div className="mt-2">
-                  <div className="flex gap-1 mb-1">
+                <div className="mt-2.5">
+                  <div className="flex gap-1.5 mb-1.5">
                     {[1, 2, 3].map((level) => (
                       <div
                         key={level}
-                        className={`h-1 flex-1 rounded-full ${
+                        className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
                           level <= passwordStrength.strength
                             ? passwordStrength.color
-                            : "bg-muted"
+                            : "bg-gray-200"
                         }`}
                       />
                     ))}
                   </div>
 
                   {passwordStrength.label && (
-                    <p className="text-xs text-muted-foreground">
-                      Độ mạnh: {passwordStrength.label}
+                    <p className="text-xs text-gray-500 font-medium">
+                      Độ mạnh: <span className={passwordStrength.color.replace('bg-', 'text-')}>{passwordStrength.label}</span>
                     </p>
                   )}
                 </div>
@@ -212,50 +218,50 @@ export default function ResetPassword() {
               placeholder="••••••••"
             />
 
-            <div className="bg-accent/50 rounded-lg p-4">
-              <h3 className="text-sm font-medium mb-2">
+            <div className="bg-blue-50/50 rounded-2xl p-5 border border-blue-100/50">
+              <h3 className="text-sm font-bold text-gray-900 mb-3">
                 Mật khẩu phải đáp ứng:
               </h3>
 
-              <ul className="text-xs text-muted-foreground space-y-1">
-                <li className="flex items-center gap-2">
+              <ul className="text-sm text-gray-600 space-y-2 font-medium">
+                <li className="flex items-center gap-3">
                   <div
-                    className={`w-1.5 h-1.5 rounded-full ${
+                    className={`w-2 h-2 rounded-full transition-colors ${
                       formData.newPassword.length >= 8
-                        ? "bg-green-500"
+                        ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
                         : "bg-gray-300"
                     }`}
                   />
                   Ít nhất 8 ký tự
                 </li>
 
-                <li className="flex items-center gap-2">
+                <li className="flex items-center gap-3">
                   <div
-                    className={`w-1.5 h-1.5 rounded-full ${
+                    className={`w-2 h-2 rounded-full transition-colors ${
                       /[A-Z]/.test(formData.newPassword)
-                        ? "bg-green-500"
+                        ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
                         : "bg-gray-300"
                     }`}
                   />
                   Có chữ in hoa
                 </li>
 
-                <li className="flex items-center gap-2">
+                <li className="flex items-center gap-3">
                   <div
-                    className={`w-1.5 h-1.5 rounded-full ${
+                    className={`w-2 h-2 rounded-full transition-colors ${
                       /[a-z]/.test(formData.newPassword)
-                        ? "bg-green-500"
+                        ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
                         : "bg-gray-300"
                     }`}
                   />
                   Có chữ thường
                 </li>
 
-                <li className="flex items-center gap-2">
+                <li className="flex items-center gap-3">
                   <div
-                    className={`w-1.5 h-1.5 rounded-full ${
+                    className={`w-2 h-2 rounded-full transition-colors ${
                       /[0-9]/.test(formData.newPassword)
-                        ? "bg-green-500"
+                        ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
                         : "bg-gray-300"
                     }`}
                   />
@@ -267,18 +273,18 @@ export default function ResetPassword() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full py-3 bg-[#0066FF] text-white rounded-lg hover:bg-[#0052CC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed font-semibold text-lg shadow-lg shadow-blue-500/30 active:scale-[0.98]"
             >
               {isPending ? "Đang đặt lại..." : "Đặt lại mật khẩu"}
             </button>
           </form>
 
           <div className="mt-8 text-center">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-gray-500">
               Nhớ mật khẩu rồi?{" "}
               <a
                 onClick={() => navigate("/login")}
-                className="text-[#0066FF] hover:underline cursor-pointer font-medium"
+                className="text-blue-600 hover:text-blue-700 hover:underline cursor-pointer font-semibold transition-colors"
               >
                 Đăng nhập ngay
               </a>
