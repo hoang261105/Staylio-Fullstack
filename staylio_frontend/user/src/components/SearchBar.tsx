@@ -1,10 +1,28 @@
 import { MapPin, Calendar, Users, Search } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface SearchBarProps {
   compact?: boolean;
 }
 
 export function SearchBar({ compact = false }: SearchBarProps) {
+  const navigate = useNavigate();
+  const [keyword, setKeyword] = useState("");
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [adults, setAdults] = useState<number | "">("");
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (keyword) params.append("keyword", keyword);
+    if (checkInDate) params.append("checkInDate", checkInDate);
+    if (checkOutDate) params.append("checkOutDate", checkOutDate);
+    if (adults) params.append("adults", adults.toString());
+
+    navigate(`/search?${params.toString()}`);
+  };
+
   return (
     <div className={`w-full max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl border border-gray-100 ${compact ? 'p-2' : 'p-4 md:p-6'}`}>
       <div className={`grid ${compact ? 'grid-cols-4' : 'grid-cols-1 md:grid-cols-4'} gap-3`}>
@@ -17,6 +35,8 @@ export function SearchBar({ compact = false }: SearchBarProps) {
             <input
               type="text"
               placeholder="Bạn muốn đi đâu?"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
               className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 placeholder:text-gray-400"
             />
           </div>
@@ -32,6 +52,8 @@ export function SearchBar({ compact = false }: SearchBarProps) {
               onFocus={(e) => (e.target.type = "date")}
               onBlur={(e) => (e.target.type = "text")}
               placeholder="Thêm ngày"
+              value={checkInDate}
+              onChange={(e) => setCheckInDate(e.target.value)}
               className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 cursor-pointer"
             />
           </div>
@@ -47,6 +69,8 @@ export function SearchBar({ compact = false }: SearchBarProps) {
               onFocus={(e) => (e.target.type = "date")}
               onBlur={(e) => (e.target.type = "text")}
               placeholder="Thêm ngày"
+              value={checkOutDate}
+              onChange={(e) => setCheckOutDate(e.target.value)}
               className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 cursor-pointer"
             />
           </div>
@@ -59,14 +83,18 @@ export function SearchBar({ compact = false }: SearchBarProps) {
             <div className="flex flex-col w-full">
               <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Khách</span>
               <input
-                type="text"
+                type="number"
+                min="1"
                 placeholder="2 người"
+                value={adults}
+                onChange={(e) => setAdults(e.target.value ? Number(e.target.value) : "")}
                 className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 cursor-pointer"
               />
             </div>
           </div>
           
           <button
+            onClick={handleSearch}
             className={`bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center shrink-0 
               ${compact ? 'w-12 h-12' : 'px-6 py-4 lg:px-8'}`}
           >

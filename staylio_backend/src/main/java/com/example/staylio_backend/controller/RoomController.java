@@ -3,14 +3,17 @@ package com.example.staylio_backend.controller;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.RoomRequest;
 import com.example.staylio_backend.dto.request.RoomStatusRequest;
+import com.example.staylio_backend.dto.request.SearchRoomRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.RoomResponse;
+import com.example.staylio_backend.dto.response.RoomSearchResponse;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.enums.RoomStatus;
 import com.example.staylio_backend.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +31,6 @@ public class RoomController {
 
     @GetMapping
     @Operation(summary = "Lấy danh sách phòng của chi nhánh")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<PaginationResponse<RoomResponse>>> getAllRooms(
             @RequestParam(required = false) Long hotelBranchId,
             @RequestParam(required = false) String search,
@@ -51,7 +53,6 @@ public class RoomController {
 
     @GetMapping("/{hotelBranchId}/lists")
     @Operation(summary = "Danh sách phòng theo chi nhánh không phân trang")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<List<RoomResponse>>> getAllRoomsLists(
             @PathVariable Long hotelBranchId
     ){
@@ -68,7 +69,6 @@ public class RoomController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Lấy chi tiết 1 phòng thuộc chi nhánh của quản lý")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<RoomResponse>> getRoomById(
             @PathVariable Long id,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -174,6 +174,22 @@ public class RoomController {
                 null,
                 null,
                 LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "Tìm kiếm phòng")
+    public ResponseEntity<ApiResponse<PaginationResponse<RoomSearchResponse>>> getRoomsBySearch(
+            @ParameterObject SearchRoomRequest request
+    ){
+        ApiResponse<PaginationResponse<RoomSearchResponse>> response = new ApiResponse<>(
+            true,
+            "Lấy kết quả thành công!",
+            roomService.searchRooms(request),
+            null,
+            LocalDateTime.now()
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);

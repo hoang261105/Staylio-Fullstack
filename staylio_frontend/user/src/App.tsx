@@ -6,13 +6,13 @@ import { Toaster } from "react-hot-toast";
 const queryClient = new QueryClient();
 
 export default function App() {
-    return (
-      <>
-        <Toaster position="top-center" />
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={routers} />
-        </QueryClientProvider>;
-      </>
-    );
-    
+  return (
+    <>
+      <Toaster position="top-center" />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={routers} />
+      </QueryClientProvider>
+    </>
+  );
+
 }

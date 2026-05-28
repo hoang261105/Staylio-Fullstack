@@ -101,15 +101,6 @@ export default function HotelDetailModal({
             </div>
           </div>
         </div>
-
-        <div className="p-6 border-t border-gray-200 flex gap-3 bg-gray-50 rounded-b-xl">
-          <button className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-white shadow-sm">
-            Chỉnh sửa
-          </button>
-          <button className="flex-1 px-4 py-2.5 bg-[#0066FF] text-white font-medium rounded-lg hover:bg-[#0052CC] shadow-sm">
-            Xem trên web
-          </button>
-        </div>
       </div>
     </div>
   );

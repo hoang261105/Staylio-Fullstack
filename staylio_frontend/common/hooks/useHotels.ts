@@ -44,7 +44,7 @@ export const useHotelById = (id: number) => {
       const response = await getHotelById(id);
       return response.data;
     },
-    enabled: !!id,
+    enabled: id > 0,
   })
 }
 

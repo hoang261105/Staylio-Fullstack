@@ -1,8 +1,10 @@
 import { RoomStatus } from "@common/enums/RoomStatus";
-import { QueryParams } from "@common/interfaces";
+import { PaginationResponse, QueryParams } from "@common/interfaces";
 import { ApiResponse } from "@common/interfaces/ApiResponse";
 import { RoomRequest } from "@common/interfaces/request/RoomRequest";
+import { SearchRoomRequest } from "@common/interfaces/request/SearchRoomRequest";
 import { RoomResponse } from "@common/interfaces/response/RoomResponse";
+import { RoomSearchResponse } from "@common/interfaces/response/RoomSearchResponse";
 import { axiosInstance } from "@common/utils/axiosInstance";
 
 // API lấy danh sách phòng
@@ -89,6 +91,17 @@ export const updateRoomVoucherApplicable = async (roomId: number): Promise<ApiRe
         return response.data;
     } catch (error) {
         console.error('Cập nhật trạng thái áp dụng voucher cho phòng thất bại:', error);
+        throw error;
+    }
+}
+
+// API tìm kiếm phòng
+export const searchAllRooms = async (params: SearchRoomRequest): Promise<ApiResponse<PaginationResponse<RoomSearchResponse>>> => {
+    try {
+        const response = await axiosInstance.get("/rooms/search", {params});
+        return response.data;
+    } catch (error) {
+        console.error("Tìm kiếm thất bại!", error);
         throw error;
     }
 }

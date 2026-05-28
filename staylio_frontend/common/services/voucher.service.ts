@@ -17,6 +17,17 @@ export const getAllVouchers = async (params: QueryParams) => {
     }
 }
 
+// API lấy danh sách voucher của user đang đăng nhập
+export const getUserVouchers = async (params?: QueryParams) => {
+    try {
+        const response = await axiosInstance.get("/user-vouchers/me", { params });
+        return response.data;
+    } catch (error) {
+        console.error("Lấy danh sách voucher của user thất bại!", error);
+        throw error;
+    }
+}
+
 // API lấy chi tiết 1 voucher
 export const getVoucherById = async (id: number) => {
     try {

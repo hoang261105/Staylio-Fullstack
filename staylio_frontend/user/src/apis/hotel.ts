@@ -267,3 +267,26 @@ export const popularDestinations = [
     hotels: 189,
   },
 ];
+
+export const popularBrands = [
+  {
+    name: "Marriott",
+    image: "https://images.unsplash.com/photo-1562790351-d273a961e0e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    hotels: 120,
+  },
+  {
+    name: "Hilton",
+    image: "https://images.unsplash.com/photo-1542314831-c6a4d142104d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    hotels: 85,
+  },
+  {
+    name: "InterContinental",
+    image: "https://images.unsplash.com/photo-1551882547-ff40c0d129df?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    hotels: 64,
+  },
+  {
+    name: "Hyatt",
+    image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    hotels: 42,
+  },
+];

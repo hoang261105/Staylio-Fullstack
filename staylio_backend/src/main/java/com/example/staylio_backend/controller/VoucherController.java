@@ -30,7 +30,6 @@ public class VoucherController {
 
     @GetMapping
     @Operation(summary = "Lấy danh sách voucher")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<PaginationResponse<VoucherResponse>>> getAllVouchers(
             @RequestParam(required = false) Long hotelBranchId,
             @RequestParam(required = false) String search,

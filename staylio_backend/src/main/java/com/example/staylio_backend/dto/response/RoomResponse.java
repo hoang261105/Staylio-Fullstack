@@ -35,4 +35,6 @@ public class RoomResponse {
     private Boolean isVoucherApplicable;
     private Set<UtilityResponse> utilities;
     private Set<RoomImageResponse> images;
+    private Long countReview;
+    private Double averageRating;
 }

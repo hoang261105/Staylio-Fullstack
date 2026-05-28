@@ -39,3 +39,9 @@ export interface ReviewQueryParams extends Omit<BookingQueryParams, "status"> {
   createdTo?: string;
   hasReply?: boolean;
 }
+
+export interface VoucherQueryParams {
+  roomId: number;
+  checkInDate?: string;
+  checkOutDate?: string;
+}

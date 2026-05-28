@@ -7,7 +7,6 @@ import {
   LogOut,
   Menu,
   X,
-  Bell,
   Search,
   Bed,
   Ticket,
@@ -21,7 +20,8 @@ import {
 import { useProfile } from "@common/hooks/useProfile";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import ConfirmLogoutModal from "../components/ConfirmLogoutModal";
+import ConfirmLogoutModal from "../../../common/components/ConfirmLogoutModal";
+import NotificationPopover from "../../../common/components/NotificationPopover";
 
 interface ManagerLayoutProps {
   children: React.ReactNode;
@@ -262,10 +262,7 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="relative p-2 hover:bg-gray-50 text-gray-600 rounded-full transition-colors border border-gray-100 bg-white">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-              </button>
+              <NotificationPopover />
             </div>
           </div>
         </header>

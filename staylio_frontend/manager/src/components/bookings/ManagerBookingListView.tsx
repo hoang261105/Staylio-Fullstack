@@ -120,12 +120,12 @@ export default function ManagerBookingListView({
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${bookingStatusColors[booking.status] || "bg-gray-50 text-gray-700 border-gray-200"}`}>
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${bookingStatusColors[booking.status] || "bg-gray-50 text-gray-700 border-gray-200"}`}>
                       {bookingStatusLabels[booking.status] || booking.status}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${paymentStatusColors[booking.paymentStatus] || "bg-gray-50 text-gray-700 border-gray-200"}`}>
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${paymentStatusColors[booking.paymentStatus] || "bg-gray-50 text-gray-700 border-gray-200"}`}>
                       {paymentStatusLabels[booking.paymentStatus] || booking.paymentStatus}
                     </span>
                   </td>

@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Search, Filter } from "lucide-react";
 import ManagerLayout from "../layout/ManagerLayout";
 import ManagerBookingListView from "../components/bookings/ManagerBookingListView";
@@ -35,7 +36,7 @@ export default function ManagerBookings() {
   const [selectedRoom, setSelectedRoom] = useState<string>("all");
 
   const [bookingIdToView, setBookingIdToView] = useState<number | null>(null);
-  
+
   const [checkInFrom, setCheckInFrom] = useState<string>("");
   const [checkInTo, setCheckInTo] = useState<string>("");
   const [checkOutFrom, setCheckOutFrom] = useState<string>("");
@@ -44,6 +45,17 @@ export default function ManagerBookings() {
   const [page, setPage] = useState(0);
   const [sortBy, setSortBy] = useState("createdAt");
   const [direction, setDirection] = useState<"asc" | "desc">("desc");
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state && location.state.bookingId) {
+      setBookingIdToView(location.state.bookingId);
+      // Clear the state so it doesn't reopen on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
 
   const debouncedSearch = useDebounce(searchQuery, 500);
 

@@ -16,4 +16,5 @@ public class HotelResponse {
     private HotelStatus status;
     private String hostHotelName;
     private boolean isActive;
+    private Integer branchCount;
 }

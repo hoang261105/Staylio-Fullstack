@@ -35,6 +35,88 @@ public enum ErrorCode {
     INVALID_IMAGE_STATUS("Trạng thái không hợp lệ!"),
     REJECTION_REASON_REQUIRED("Vui lòng nhập lý do từ chối!"),
     CANCELLATION_REASON_REQUIRED("Vui lòng nhập lí do hủy!"),
+    AI_QUOTA_EXCEEDED("Hết lượt dùng thử miễn phí"),
+    INVALID_NUMBER_OF_GUESTS("Số lượng người không hợp lệ!"),
+    INVALID_CHECK_IN_DATE(
+            "Ngày nhận phòng không hợp lệ!"
+    ),
+
+    INVALID_CHECK_OUT_DATE(
+            "Ngày trả phòng không hợp lệ!"
+    ),
+
+    CHECK_OUT_MUST_BE_AFTER_CHECK_IN(
+            "Ngày trả phòng phải sau ngày nhận phòng!"
+    ),
+
+    INVALID_NUMBER_OF_ADULTS(
+            "Số lượng người lớn không hợp lệ!"
+    ),
+
+    INVALID_NUMBER_OF_CHILDREN(
+            "Số lượng trẻ em không hợp lệ!"
+    ),
+
+    EXCEED_MAX_ADULTS(
+            "Số lượng người lớn vượt quá giới hạn của phòng!"
+    ),
+
+    EXCEED_MAX_CHILDREN(
+            "Số lượng trẻ em vượt quá giới hạn của phòng!"
+    ),
+
+    EXCEED_ROOM_CAPACITY(
+            "Tổng số khách vượt quá sức chứa của phòng!"
+    ),
+
+    ROOM_ALREADY_BOOKED(
+            "Phòng đã được đặt trong khoảng thời gian này!"
+    ),
+
+    ROOM_NOT_AVAILABLE(
+            "Phòng hiện không khả dụng để đặt!"
+    ),
+
+    INVALID_BOOKING_DATE(
+            "Thông tin ngày đặt phòng không hợp lệ!"
+    ),
+
+    USER_VOUCHER_INVALID(
+            "Voucher của người dùng không hợp lệ!"
+    ),
+
+    VOUCHER_NOT_ACTIVE(
+            "Voucher hiện không hoạt động!"
+    ),
+
+    VOUCHER_NOT_APPROVED(
+            "Voucher chưa được phê duyệt!"
+    ),
+
+    VOUCHER_NOT_STARTED(
+            "Voucher chưa đến thời gian sử dụng!"
+    ),
+
+    VOUCHER_EXPIRED(
+            "Voucher đã hết hạn!"
+    ),
+
+    VOUCHER_NOT_APPLICABLE_FOR_BRANCH(
+            "Voucher không áp dụng cho chi nhánh này!"
+    ),
+
+    MIN_ORDER_NOT_REACHED(
+            "Đơn đặt phòng chưa đạt giá trị tối thiểu để áp dụng voucher!"
+    ),
+
+    VOUCHER_USAGE_LIMIT_EXCEEDED(
+            "Voucher đã hết lượt sử dụng!"
+    ),
+
+    USER_VOUCHER_USAGE_LIMIT_EXCEEDED(
+            "Bạn đã sử dụng hết số lần cho phép của voucher này!"
+    ),
+    BOOKING_CANNOT_BE_CANCELLED("Đơn đặt phòng không thể hủy!"),
 
     // 3xxx: Business Logic (Duplicates, DB logic)
     USER_EXISTED("Tên người dùng đã tồn tại"),
@@ -49,6 +131,7 @@ public enum ErrorCode {
     UTILITY_TITLE_EXISTED("Tên tiện ích đã tồn tại!"),
     VOUCHER_CODE_EXISTED("Mã voucher đã tồn tại!"),
     ROOM_IMAGE_ALREADY_DELETED("Hình ảnh này đã được xóa rồi!"),
+    CHAT_SESSION_CLOSED("Đoạn chat đã được đóng!"),
 
     // 4xxx: Resources
     DATA_NOT_FOUND("Không tìm thấy dữ liệu yêu cầu"),
@@ -65,7 +148,8 @@ public enum ErrorCode {
     USER_VOUCHER_NOT_FOUND("Không tìm thấy voucher của người dùng!"),
     BOOKING_NOT_FOUND("Không tìm thấy đơn đặt phòng!"),
     PAYMENT_NOT_FOUND("Không tìm thấy phương thức thanh toán!"),
-    REVIEW_NOT_FOUND("Không tìm thấy đánh giá!");
+    REVIEW_NOT_FOUND("Không tìm thấy đánh giá!"),
+    CHAT_SESSION_NOT_FOUND("Không tìm thấy đoạn chat!");
 
     private final String message;
 

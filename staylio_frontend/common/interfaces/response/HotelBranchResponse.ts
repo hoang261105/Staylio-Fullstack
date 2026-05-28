@@ -5,6 +5,7 @@ export interface HotelBranchResponse {
     provinceId: number;
     wardId: number;
     hotelBranchName: string;
+    hotelId: number;
     hotelName: string;
     imageUrl: string | null;
     address: string;
@@ -14,4 +15,6 @@ export interface HotelBranchResponse {
     phone: string;
     description: string;
     status: BranchStatus;
+    countReview: number;
+    averageRating: number;
 }

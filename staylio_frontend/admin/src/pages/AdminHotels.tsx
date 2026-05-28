@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Download, Plus } from "lucide-react";
+import { Search, Download } from "lucide-react";
 import AdminLayout from "../layout/AdminLayout";
 import HotelStats from "../components/hotels/HotelStats";
 import HotelGridView from "../components/hotels/HotelGridView";
@@ -38,16 +38,12 @@ export default function AdminHotels() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900 mb-2">
-              Quản lý khách sạn
+              Quản lý thương hiệu khách sạn
             </h1>
             <p className="text-gray-500">
               Danh sách thương hiệu và cơ sở khách sạn
             </p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-[#0066FF] text-white rounded-lg hover:bg-[#0052CC] shadow-sm transition-colors font-medium">
-            <Plus className="w-5 h-5" />
-            <span>Thêm khách sạn</span>
-          </button>
         </div>
 
         <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">

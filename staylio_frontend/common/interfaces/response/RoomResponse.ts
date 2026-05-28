@@ -25,4 +25,6 @@ export interface RoomResponse {
     floor: number;
     utilities: UtilityResponse[];
     images: RoomImageResponse[];
+    countReview: number;
+    averageRating: number;
 }

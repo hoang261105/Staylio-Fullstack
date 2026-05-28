@@ -30,7 +30,6 @@ public class ReviewController {
 
     @GetMapping
     @Operation(summary = "Danh sách đánh giá phòng")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<PaginationResponse<ReviewResponse>>> getReviews(
             @ParameterObject ReviewFilterRequest request,
             @AuthenticationPrincipal UserPrincipal principal
@@ -64,7 +63,6 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Lấy chi tiết 1 đánh giá")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ApiResponse<ReviewResponse>> getReviewById(
             @PathVariable Long id,
             @AuthenticationPrincipal UserPrincipal principal
