@@ -11,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "role")
 public class Role extends BaseObject {
     @Enumerated(EnumType.STRING)
     @Column(name = "role_name", nullable = false)

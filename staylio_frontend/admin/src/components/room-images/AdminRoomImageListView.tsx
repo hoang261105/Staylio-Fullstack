@@ -1,10 +1,10 @@
 import { Image as ImageIcon, Building2, MapPin, Bed, CheckCircle2, Clock, XCircle, Trash2, Star, Eye, Check } from "lucide-react";
 import Pagination from "@common/components/Pagination";
 import { ImageStatus } from "@common/enums/ImageStatus";
-import type { RoomImageResponse } from "@common/interfaces/response/RoomImageResponse";
+import type { RoomImageAdminResponse } from "@common/interfaces/response/RoomImageAdminResponse";
 
 interface AdminRoomImageListViewProps {
-  roomImages: RoomImageResponse[];
+  roomImages: RoomImageAdminResponse[];
   isLoading: boolean;
   page: number;
   totalPages: number;
@@ -90,7 +90,7 @@ export default function AdminRoomImageListView({
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {roomImages.map((img: RoomImageResponse) => (
+        {roomImages.map((img: RoomImageAdminResponse) => (
           <div
             key={img.id}
             className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-300 flex flex-col"
