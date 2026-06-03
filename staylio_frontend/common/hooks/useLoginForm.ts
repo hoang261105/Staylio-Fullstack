@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserLoginForm } from "@common/interfaces/request/UserLoginForm";
 import { login } from "@common/services/auth.service";
@@ -102,7 +103,7 @@ const getRedirectPathByRole = (authorities: { authority: string }[]) => {
     case "CUSTOMER":
       return "/";
     case "MANAGER":
-      return "/manager/dashboard";
+      return "/dashboard";
     default:
       return null;
   }
