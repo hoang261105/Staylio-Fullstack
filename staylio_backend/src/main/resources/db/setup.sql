@@ -861,5 +861,3 @@ VALUES
     NOW(),
     NOW()
 );
-
-SHOW CREATE TABLE reviews;
