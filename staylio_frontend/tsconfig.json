@@ -1,7 +1,32 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./admin" },
-    { "path": "./client" }
-  ]
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "src",
+    "admin",
+    "manager",
+    "user",
+    "eslint.config.js",
+    "common"
+  ],
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@common/*": [
+        "common/*"
+      ],
+      "@admin/*": [
+        "admin/*"
+      ],
+      "@manager/*": [
+        "manager/*"
+      ],
+      "@user/*": [
+        "user/*"
+      ]
+    },
+    "types": [
+      "vite/client"
+    ],
+    "baseUrl": "."
+  }
 }

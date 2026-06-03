@@ -5,13 +5,14 @@ import com.example.staylio_backend.config.security.jwt.JwtAuthenticationFilter;
 import com.example.staylio_backend.config.security.jwt.JwtTokenProvider;
 import com.example.staylio_backend.config.security.mes.CustomAccessDeniedHandler;
 import com.example.staylio_backend.config.security.mes.CustomAuthenticationEntryPoint;
-import com.example.staylio_backend.config.security.principle.CustomAccountDetailsService;
+import com.example.staylio_backend.config.security.principle.CustomUserDetailsService;
 import com.example.staylio_backend.repository.BlacklistTokenRepo;
-import com.example.staylio_backend.utils.APIConstants;
+import com.example.staylio_backend.common.utils.APIConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -29,7 +30,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CustomAccountDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final BlacklistTokenRepo blacklistTokenRepo;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -38,17 +39,27 @@ public class SecurityConfig {
         JwtAuthFilter jwtFilter = new JwtAuthFilter(jwtTokenProvider, userDetailsService, blacklistTokenRepo, mapper);
 
         http
+                .cors(cors -> {
+                })
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(APIConstants.PUBLIC_WHITELIST).permitAll()
-                        .anyRequest().authenticated()
-                )
-
+                        .requestMatchers(HttpMethod.GET,
+                                "/hotels/**",
+                                "/hotel-branches/**",
+                                "/rooms/**",
+                                "/utilities/**",
+                                "/reviews/**",
+                                "/bookings/**",
+                                "/provinces/**")
+                        .permitAll()
+                        .requestMatchers(APIConstants.ADMIN_USER_ENDPOINTS).hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/api/v1/auth/google-success", true))
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint(mapper))
-                        .accessDeniedHandler(new CustomAccessDeniedHandler(mapper))
-                )
+                        .accessDeniedHandler(new CustomAccessDeniedHandler(mapper)))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -64,6 +75,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

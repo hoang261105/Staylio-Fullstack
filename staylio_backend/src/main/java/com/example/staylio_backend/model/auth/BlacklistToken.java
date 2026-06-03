@@ -1,6 +1,6 @@
 package com.example.staylio_backend.model.auth;
 
-import com.example.staylio_backend.model.base.BaseObject;
+import com.example.staylio_backend.common.base.BaseObject;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;

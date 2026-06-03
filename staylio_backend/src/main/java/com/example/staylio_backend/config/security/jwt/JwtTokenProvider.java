@@ -1,6 +1,6 @@
 package com.example.staylio_backend.config.security.jwt;
 
-import com.example.staylio_backend.config.security.principle.AccountPrincipal;
+import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -23,23 +23,19 @@ public class JwtTokenProvider {
     @Value("${jwt.expired.refresh}")
     private long refreshMs;
 
-    // Chuyển chuỗi Secret thành Key chuẩn để ký
     private Key key() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    // 1. Hàm tạo Access Token (Dùng expirationMs)
-    public String generateAccessToken(AccountPrincipal principal) {
+    public String generateAccessToken(UserPrincipal principal) {
         return generateToken(principal, expirationMs);
     }
 
-    // 2. Hàm tạo Refresh Token (Dùng refreshMs)
-    public String generateRefreshToken(AccountPrincipal principal) {
+    public String generateRefreshToken(UserPrincipal principal) {
         return generateToken(principal, refreshMs);
     }
 
-    // Hàm tạo Token dùng chung (Nhận vào thời gian hết hạn)
-    private String generateToken(AccountPrincipal principal, long expiryTime) {
+    private String generateToken(UserPrincipal principal, long expiryTime) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expiryTime);
 
@@ -89,5 +85,11 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .getExpiration();
+    }
+
+    public long getRemainingTime(String token) {
+        Date expiration = getExpiryDateFromToken(token);
+        long remainingTime = expiration.getTime() - System.currentTimeMillis();
+        return Math.max(0, remainingTime);
     }
 }

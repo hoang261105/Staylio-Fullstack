@@ -3,6 +3,8 @@
     "target": "ESNext",
     "module": "ESNext",
     "jsx": "react-jsx",
-    "strict": true
+    "strict": true,
+    "verbatimModuleSyntax": false,
+    "moduleResolution": "bundler"
   }
 }

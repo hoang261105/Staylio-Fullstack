@@ -25,8 +25,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: huyhoangcs2611@gmail.com
-    password: ywfa ovly irbf gzcp
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -37,17 +37,45 @@ spring:
     server-url: http://localhost:8080
   data:
     redis:
-      host: localhost
+      host: ${UPSTASH_REDIS_HOST}
       port: 6379
+      username: default
+      password: ${UPSTASH_REDIS_PASSWORD}
+      ssl:
+        enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/api/v1/auth/google-login/oauth2/code/google"
+            scope:
+              - email
+              - profile
+
+gemini:
+  api-key: ${GEMINI_API_KEY}
+  model: gemini-2.5-flash
+  base-url: https://generativelanguage.googleapis.com/v1beta/models
+
+zalopay:
+  app-id: ${ZALOPAY_APP_ID}
+  key1: ${ZALOPAY_KEY1}
+  key2: ${ZALOPAY_KEY2}
+  create-order-url: https://sb-openapi.zalopay.vn/v2/create
+  callback-url: https://thinning-primate-renegade.ngrok-free.dev/api/v1/payments/zalopay/callback
+  redirect-url: http://localhost:3000/payment/result
 
 cloudinary:
   cloud_name: dtc7mun2h
-  api_key: 367326886449662
-  api_secret: drFhZL10Jmgt1ACgD6qnFvSLRYw
+  api_key: ${CLOUDINARY_API_KEY}
+  api_secret: ${CLOUDINARY_API_SECRET}
 
 jwt:
   secret:
-    key: Ascmkkqdnmsdfrtgsyuhidj21ue120938219321ndsad
+    key: ${JWT_SECRET}
   expired:
     token: 3600000
     access: 1800000        # 1 giờ = 60 * 60 * 1000

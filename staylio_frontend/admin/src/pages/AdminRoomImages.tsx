@@ -1,0 +1,317 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useState, useEffect } from "react";
+import {
+  Search,
+  Filter,
+  Image as ImageIcon,
+  Building2,
+  MapPin,
+  Bed,
+  ChevronDown,
+} from "lucide-react";
+import AdminLayout from "../layout/AdminLayout";
+import AdminRoomImageDetail from "../components/room-images/AdminRoomImageDetail";
+import { useRoomImages } from "@common/hooks/useRoomImage";
+import { useAllHotels } from "@common/hooks/useHotels";
+import { useMyHotelBranchs } from "@common/hooks/useHotelBranch";
+import { useAllRooms } from "@common/hooks/useRooms";
+import { useDebounce } from "@common/hooks/useDebounce";
+import { ImageStatus } from "@common/enums/ImageStatus";
+import AdminRoomImageListView from "../components/room-images/AdminRoomImageListView";
+import { BranchStatus } from "@common/enums/BranchStatus";
+import type { HotelResponse } from "@common/interfaces/response/HotelResponse";
+import type { RoomResponse } from "@common/interfaces/response/RoomResponse";
+import ConfirmRoomImageStatusModal from "@common/components/ConfirmRoomImageStatusModal";
+
+const SORT_OPTIONS = [
+  { value: "createdAt", label: "Ngày tạo" },
+  { value: "roomName", label: "Tên phòng" },
+  { value: "roomNumber", label: "Mã phòng" },
+  { value: "hotelBranchName", label: "Tên chi nhánh" },
+  { value: "ownerName", label: "Tên chủ thương hiệu" },
+  { value: "isPrimary", label: "Ảnh chính" },
+];
+
+const STATUS_OPTIONS = [
+  { value: "all", label: "Tất cả trạng thái" },
+  { value: ImageStatus.PENDING, label: "Chờ duyệt (PENDING)" },
+  { value: ImageStatus.CONFIRMED, label: "Đã xác nhận (CONFIRMED)" },
+  { value: ImageStatus.REJECTED, label: "Bị từ chối (REJECTED)" },
+  { value: ImageStatus.DELETED, label: "Đã xóa (DELETED)" },
+];
+
+export default function AdminRoomImages() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedHotel, setSelectedHotel] = useState<string>("all");
+  const [selectedBranch, setSelectedBranch] = useState<string>("all");
+  const [selectedRoom, setSelectedRoom] = useState<string>("all");
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [direction, setDirection] = useState<"asc" | "desc">("desc");
+  const [page, setPage] = useState(0);
+
+  const [selectedDetailId, setSelectedDetailId] = useState<number | null>(null);
+
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [confirmImageId, setConfirmImageId] = useState<number | null>(null);
+  const [confirmImageStatus, setConfirmImageStatus] =
+    useState<ImageStatus | null>(null);
+  const [confirmRoomName, setConfirmRoomName] = useState("");
+  const [confirmRoomNumber, setConfirmRoomNumber] = useState("");
+
+  const debouncedSearch = useDebounce(searchQuery, 500);
+
+  const { data: hotels } = useAllHotels();
+
+  const hotelId = selectedHotel === "all" ? undefined : Number(selectedHotel);
+  const hotelBranchId =
+    selectedBranch === "all" ? undefined : Number(selectedBranch);
+
+  const { data: branches } = useMyHotelBranchs(
+    hotelId!,
+    BranchStatus.CONFIRMED,
+  );
+
+  const { data: rooms } = useAllRooms(hotelBranchId!);
+
+  useEffect(() => {
+    setSelectedBranch("all");
+    setSelectedRoom("all");
+    setPage(0);
+  }, [selectedHotel]);
+
+  useEffect(() => {
+    if (selectedBranch !== "all" && rooms && rooms.length > 0) {
+      setSelectedRoom(String(rooms[0].id));
+    } else {
+      setSelectedRoom("all");
+    }
+    setPage(0);
+  }, [selectedBranch, rooms]);
+
+  const { data: roomImagesData, isLoading } = useRoomImages({
+    search: debouncedSearch || undefined,
+    roomId: selectedRoom === "all" ? undefined : Number(selectedRoom),
+    status:
+      selectedStatus === "all" ? undefined : (selectedStatus as ImageStatus),
+    sortBy,
+    direction,
+    page,
+    size: 4,
+  });
+
+  const roomImages = roomImagesData?.items || [];
+  const totalElements = roomImagesData?.pagination?.totalItems || 0;
+  const totalPages = roomImagesData?.pagination?.totalPages || 0;
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+
+
+  return (
+    <AdminLayout>
+      {selectedDetailId !== null ? (
+        <AdminRoomImageDetail
+          imageId={selectedDetailId}
+          onClose={() => setSelectedDetailId(null)}
+        />
+      ) : (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+                <ImageIcon className="w-8 h-8 text-[#0066FF]" />
+                Quản lý hình ảnh phòng
+              </h1>
+              <p className="text-gray-500">
+                Xem và kiểm duyệt hình ảnh của tất cả các phòng trong hệ thống
+                Staylio
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col gap-5">
+            <div className="w-full relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm hình ảnh theo tên phòng, mã phòng..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setPage(0);
+                }}
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="relative">
+                <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
+                <select
+                  value={selectedHotel}
+                  onChange={(e) => setSelectedHotel(e.target.value)}
+                  className="w-full pl-12 pr-10 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700 truncate"
+                >
+                  <option value="all">Tất cả thương hiệu</option>
+                  {hotels?.map((h: HotelResponse) => (
+                    <option key={h.id} value={h.id}>
+                      {h.name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+              </div>
+
+              <div className="relative">
+                <MapPin
+                  className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 z-10 pointer-events-none ${selectedHotel === "all" ? "text-gray-300" : "text-gray-400"}`}
+                />
+                <select
+                  value={selectedBranch}
+                  onChange={(e) => setSelectedBranch(e.target.value)}
+                  disabled={selectedHotel === "all"}
+                  className={`w-full pl-12 pr-10 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 transition-all font-medium truncate ${selectedHotel === "all"
+                    ? "opacity-60 cursor-not-allowed text-gray-400"
+                    : "cursor-pointer focus:bg-white text-gray-700"
+                    }`}
+                >
+                  <option value="all">
+                    {selectedHotel === "all"
+                      ? "Chọn thương hiệu trước"
+                      : "Tất cả chi nhánh"}
+                  </option>
+                  {branches?.map((b) => (
+                    <option key={b.id} value={b.id}>
+                      {b.hotelBranchName}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+              </div>
+
+              <div className="relative">
+                <Bed
+                  className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 z-10 pointer-events-none ${selectedBranch === "all" ? "text-gray-300" : "text-gray-400"}`}
+                />
+                <select
+                  value={selectedRoom}
+                  onChange={(e) => {
+                    setSelectedRoom(e.target.value);
+                    setPage(0);
+                  }}
+                  disabled={selectedBranch === "all"}
+                  className={`w-full pl-12 pr-10 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 transition-all font-medium truncate ${selectedBranch === "all"
+                    ? "opacity-60 cursor-not-allowed text-gray-400"
+                    : "cursor-pointer focus:bg-white text-gray-700"
+                    }`}
+                >
+                  {selectedBranch === "all" ? (
+                    <option value="all">Chọn chi nhánh trước</option>
+                  ) : rooms?.length === 0 ? (
+                    <option value="all">Không có phòng nào</option>
+                  ) : (
+                    rooms?.map((r: RoomResponse) => (
+                      <option key={r.id} value={r.id}>
+                        {r.roomName} ({r.roomNumber})
+                      </option>
+                    ))
+                  )}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+              </div>
+
+              <div className="relative">
+                <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => {
+                    setSelectedStatus(e.target.value);
+                    setPage(0);
+                  }}
+                  className="w-full pl-12 pr-10 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700 truncate"
+                >
+                  {STATUS_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2 border-t border-gray-100">
+              <span className="text-xs text-gray-500 font-bold uppercase tracking-wider self-center mr-auto sm:mb-0 mb-2">
+                Sắp xếp danh sách
+              </span>
+              <div className="flex flex-wrap gap-2">
+                <div className="relative min-w-50 flex-1 sm:flex-none">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => {
+                      setSortBy(e.target.value);
+                      setPage(0);
+                    }}
+                    className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700 text-sm"
+                  >
+                    {SORT_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        Sắp xếp theo: {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                </div>
+
+                <button
+                  onClick={() => {
+                    setDirection(direction === "asc" ? "desc" : "asc");
+                    setPage(0);
+                  }}
+                  className="px-4 py-2.5 bg-gray-50 border border-transparent rounded-xl hover:bg-gray-100 text-gray-700 font-medium text-sm transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1.5"
+                >
+                  {direction === "asc" ? "↑ Tăng dần" : "↓ Giảm dần"}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <AdminRoomImageListView
+            roomImages={roomImages}
+            isLoading={isLoading}
+            page={page}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            onPageChange={handlePageChange}
+            onViewDetail={(id) => setSelectedDetailId(id)}
+            onApprove={(id, name, number) => {
+              setConfirmImageId(id);
+              setConfirmImageStatus(ImageStatus.CONFIRMED);
+              setConfirmRoomName(name);
+              setConfirmRoomNumber(number);
+              setConfirmModalOpen(true);
+            }}
+            onDelete={(id, name, number) => {
+              setConfirmImageId(id);
+              setConfirmImageStatus(ImageStatus.DELETED);
+              setConfirmRoomName(name);
+              setConfirmRoomNumber(number);
+              setConfirmModalOpen(true);
+            }}
+          />
+        </div>
+      )}
+      <ConfirmRoomImageStatusModal
+        isOpen={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        imageId={confirmImageId}
+        status={confirmImageStatus}
+        roomName={confirmRoomName}
+        roomNumber={confirmRoomNumber}
+      />
+    </AdminLayout>
+  );
+}
