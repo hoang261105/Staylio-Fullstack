@@ -53,7 +53,7 @@ export const useNearbyPlaces = (lat: number | null, lon: number | null) => {
         out center;
       `;
 
-      const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+      const res = await fetch(`https://overpass.kumi.systems/api/interpreter?data=${encodeURIComponent(query)}`);
 
       const data = await res.json();
 

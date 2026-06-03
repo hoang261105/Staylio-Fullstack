@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import ConfirmLogoutModal from "../../../common/components/ConfirmLogoutModal";
 import NotificationPopover from "../../../common/components/NotificationPopover";
-import { Heart, History, LogOut, User, ChevronDown } from "lucide-react";
+import { Heart, History, LogOut, User, ChevronDown, Menu, X } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useProfile } from "../../../common/hooks/useProfile";
 import { useLogoutMutation } from "../../../common/hooks/useAuthMutation";
@@ -22,7 +22,9 @@ export default function Header() {
   const { data: hotelsData } = useAllHotels();
   const { data: featuredLocations } = useFeaturedProvinces();
   const [open, setOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const { mutate: logoutMutate } = useLogoutMutation();
 
@@ -219,8 +221,53 @@ export default function Header() {
                   </button>
                 </>
               )}
+
+              {/* Hamburger Menu Icon */}
+              <button 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+                className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
             </div>
           </div>
+
+          {/* Mobile Menu Content */}
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 pt-4 border-t border-gray-100">
+              <nav className="flex flex-col gap-4">
+                <a href="/" className="font-medium hover:text-[#0066FF]">
+                  Trang chủ
+                </a>
+                
+                <div className="flex flex-col gap-2">
+                  <div className="font-medium text-gray-900">Khách sạn</div>
+                  <div className="flex flex-col gap-2 pl-4 max-h-48 overflow-y-auto">
+                    {hotelsData?.filter((h: HotelResponse) => h.status === HotelStatus.CONFIRMED).map((hotel: HotelResponse) => (
+                      <div key={hotel.id} onClick={() => { navigate(`/hotel/${hotel.id}`); setMobileMenuOpen(false); }} className="text-sm text-gray-600 hover:text-[#0066FF] cursor-pointer">
+                        {hotel.name}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <div className="font-medium text-gray-900">Điểm đến</div>
+                  <div className="flex flex-col gap-2 pl-4 max-h-48 overflow-y-auto">
+                    {featuredLocations?.map((location: FeaturedLocationResponse) => (
+                      <div key={location.provinceId} onClick={() => { navigate(`/location/${location.provinceId}`); setMobileMenuOpen(false); }} className="text-sm text-gray-600 hover:text-[#0066FF] cursor-pointer">
+                        {location.provinceName}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <a href="#" className="font-medium hover:text-[#0066FF]">
+                  Ưu đãi
+                </a>
+              </nav>
+            </div>
+          )}
         </div>
       </header>
     </>
