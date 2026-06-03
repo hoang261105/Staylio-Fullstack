@@ -6,10 +6,17 @@ type JwtPayload = {
   exp: number;
 };
 
-const getAccessToken = (): string | null => {
+export const getAccessToken = (): string | null => {
   return document.cookie
     .split("; ")
     .find((row) => row.startsWith("accessToken="))
+    ?.split("=")[1] || null;
+};
+
+export const getRefreshToken = (): string | null => {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("refreshToken="))
     ?.split("=")[1] || null;
 };
 

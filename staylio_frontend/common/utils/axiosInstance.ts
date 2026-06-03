@@ -3,11 +3,27 @@ import { RoleName } from "@common/enums/RoleName";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+import { getAccessToken, getRefreshToken } from "./jwtToken";
+
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
   timeout: 10000,
 });
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 
 let isRefreshing = false;
 let failedQueue: any[] = [];
@@ -50,10 +66,14 @@ axiosInstance.interceptors.response.use(
     isRefreshing = true;
 
     try {
+      const refreshToken = getRefreshToken();
       const res = await axiosInstance.post(
         "/auth/refresh-token",
         {},
-        { withCredentials: true }
+        { 
+          withCredentials: true,
+          headers: refreshToken ? { "Refresh-Token": refreshToken } : {}
+        }
       );
 
       if (!res || res.status !== 200) {

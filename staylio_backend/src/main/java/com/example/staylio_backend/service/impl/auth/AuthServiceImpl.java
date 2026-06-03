@@ -277,6 +277,10 @@ public class AuthServiceImpl implements AuthService {
                 }
             }
         }
+        
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            refreshToken = request.getHeader("Refresh-Token");
+        }
 
         if (refreshToken == null || refreshToken.isEmpty()) {
             throw new RuntimeException("Refresh token không tồn tại");

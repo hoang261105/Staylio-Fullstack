@@ -22,7 +22,6 @@ const DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Custom icons for nearby places
 const getIconForType = (type: string, color: string, IconComponent: React.FC<any>) => {
   const iconHtml = renderToString(<IconComponent size={14} color="white" />);
   const markerHtmlStyles = `
