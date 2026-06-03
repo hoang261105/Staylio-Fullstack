@@ -11,7 +11,7 @@ import ManagerReviews from "../pages/ManagerReviews";
 
 export const routers = createBrowserRouter([
   {
-    path: "/manager/login",
+    path: "/",
     Component: ManagerLogin,
   },
   {
