@@ -100,7 +100,7 @@ export default function NotificationPopover() {
         )}
       </button>
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="fixed left-4 right-4 top-[76px] mt-0 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
             <h3 className="font-bold text-gray-900">Thông báo</h3>
             {Number(unreadCount) > 0 && (
