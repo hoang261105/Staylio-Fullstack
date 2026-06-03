@@ -5,6 +5,22 @@ import type { NearbyPlace } from "../../../common/hooks/useNearbyPlaces";
 import { renderToString } from "react-dom/server";
 import { Utensils, Coffee, Landmark, Hospital, GraduationCap, TreePine, Plane, MapPin, ShoppingBag, Grid3X3 } from "lucide-react";
 import React from "react";
+import icon from "leaflet/dist/images/marker-icon.png";
+import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import iconRetina from "leaflet/dist/images/marker-icon-2x.png";
+
+const DefaultIcon = L.icon({
+  iconUrl: icon,
+  iconRetinaUrl: iconRetina,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 // Custom icons for nearby places
 const getIconForType = (type: string, color: string, IconComponent: React.FC<any>) => {
