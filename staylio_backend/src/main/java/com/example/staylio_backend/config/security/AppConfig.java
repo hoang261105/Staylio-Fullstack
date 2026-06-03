@@ -16,6 +16,6 @@ public class AppConfig {
     private String apiPrefix;
 
     public String getFullApiUrl() {
-        return serverUrl + apiPrefix; // Kết quả: http://localhost:8080/api/v1
+        return serverUrl + apiPrefix;
     }
 }
