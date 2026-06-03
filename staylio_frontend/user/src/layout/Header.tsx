@@ -3,16 +3,24 @@ import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import ConfirmLogoutModal from "../../../common/components/ConfirmLogoutModal";
-import { Heart, History, LogOut, User } from "lucide-react";
+import NotificationPopover from "../../../common/components/NotificationPopover";
+import { Heart, History, LogOut, User, ChevronDown } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useProfile } from "../../../common/hooks/useProfile";
 import { useLogoutMutation } from "../../../common/hooks/useAuthMutation";
+import { useAllHotels } from "../../../common/hooks/useHotels";
+import { useFeaturedProvinces } from "../../../common/hooks/useProvinces";
+import { HotelStatus } from "../../../common/enums/HotelStatus";
+import type { HotelResponse } from "../../../common/interfaces/response/HotelResponse";
+import type { FeaturedLocationResponse } from "../../../common/interfaces/response/FeaturedLocationResponse";
 
 export default function Header() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data: user } = useProfile();
+  const { data: hotelsData } = useAllHotels();
+  const { data: featuredLocations } = useFeaturedProvinces();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -78,12 +86,52 @@ export default function Header() {
               <a href="/" className="hover:text-[#0066FF]">
                 Trang chủ
               </a>
-              <a href="#" className="hover:text-[#0066FF]">
-                Khách sạn
-              </a>
-              <a href="#" className="hover:text-[#0066FF]">
-                Điểm đến
-              </a>
+
+              {/* Khách sạn Dropdown */}
+              <div className="relative group py-4">
+                <div className="flex items-center gap-1 cursor-pointer hover:text-[#0066FF]">
+                  Khách sạn
+                  <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform" />
+                </div>
+                <div className="absolute top-full left-0 mt-0 w-64 bg-white rounded-xl shadow-lg border p-2 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                  <div className="max-h-80 overflow-y-auto">
+                    {hotelsData?.filter((h: HotelResponse) => h.status === HotelStatus.CONFIRMED).map((hotel: HotelResponse) => (
+                      <div key={hotel.id} onClick={() => navigate(`/hotel/${hotel.id}`)} className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                        <img src={hotel.imageUrl} alt={hotel.name} className="w-8 h-8 rounded-md object-cover" />
+                        <span className="text-sm font-medium">{hotel.name}</span>
+                      </div>
+                    ))}
+                    {(!hotelsData || hotelsData.filter((h: HotelResponse) => h.status === HotelStatus.CONFIRMED).length === 0) && (
+                      <div className="px-3 py-2 text-sm text-gray-500">Không có dữ liệu</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Điểm đến Dropdown */}
+              <div className="relative group py-4">
+                <div className="flex items-center gap-1 cursor-pointer hover:text-[#0066FF]">
+                  Điểm đến
+                  <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform" />
+                </div>
+                <div className="absolute top-full left-0 mt-0 w-64 bg-white rounded-xl shadow-lg border p-2 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                  <div className="max-h-80 overflow-y-auto">
+                    {featuredLocations?.map((location: FeaturedLocationResponse) => (
+                      <div key={location.provinceId} onClick={() => navigate(`/location/${location.provinceId}`)} className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                        <img src={location.imageUrl || 'https://images.unsplash.com/photo-1596422846543-75c6ef08b739?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=100'} alt={location.provinceName} className="w-8 h-8 rounded-md object-cover" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{location.provinceName}</p>
+                          <p className="text-xs text-gray-500">{location.totalHotels} khách sạn</p>
+                        </div>
+                      </div>
+                    ))}
+                    {(!featuredLocations || featuredLocations.length === 0) && (
+                      <div className="px-3 py-2 text-sm text-gray-500">Không có dữ liệu</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               <a href="#" className="hover:text-[#0066FF]">
                 Ưu đãi
               </a>
@@ -91,67 +139,70 @@ export default function Header() {
 
             <div className="flex items-center gap-3">
               {user ? (
-                <div className="relative" ref={dropdownRef}>
-                  <div
-                    onClick={() => setOpen(!open)}
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
-                    <img
-                      src={user.avatarUrl}
-                      className="w-9 h-9 rounded-full object-cover"
-                    />
-                    <span className="font-medium hidden md:block">
-                      {user.fullName}
-                    </span>
-                  </div>
-
-                  {open && (
-                    <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border p-2">
-                      <div className="px-3 py-2 border-b">
-                        <p className="font-medium">{user.fullName}</p>
-                        <p className="text-sm text-gray-500">{user.email}</p>
-                      </div>
-
-                      <button
-                        onClick={() => navigate("/profile/me")}
-                        className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <User size={18} />
-                        Thông tin cá nhân
-                      </button>
-
-                      <button
-                        onClick={() => navigate("/booking-history")}
-                        className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <History size={18} />
-                        Lịch sử đặt phòng
-                      </button>
-
-                      <button
-                        onClick={() => navigate("/favorites")}
-                        className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <Heart size={18} />
-                        Yêu thích
-                      </button>
-
-                      <button
-                        onClick={() => setShowLogoutModal(true)}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-red-500 hover:bg-red-50 rounded-lg"
-                      >
-                        <LogOut size={18} />
-                        Đăng xuất
-                      </button>
-
-                      <ConfirmLogoutModal
-                        open={showLogoutModal}
-                        onClose={() => setShowLogoutModal(false)}
-                        onConfirm={handleLogout}
+                <>
+                  <NotificationPopover />
+                  <div className="relative" ref={dropdownRef}>
+                    <div
+                      onClick={() => setOpen(!open)}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <img
+                        src={user.avatarUrl}
+                        className="w-9 h-9 rounded-full object-cover"
                       />
+                      <span className="font-medium hidden md:block">
+                        {user.fullName}
+                      </span>
                     </div>
-                  )}
-                </div>
+
+                    {open && (
+                      <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border p-2">
+                        <div className="px-3 py-2 border-b">
+                          <p className="font-medium">{user.fullName}</p>
+                          <p className="text-sm text-gray-500">{user.email}</p>
+                        </div>
+
+                        <button
+                          onClick={() => navigate("/profile/me")}
+                          className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <User size={18} />
+                          Thông tin cá nhân
+                        </button>
+
+                        <button
+                          onClick={() => navigate("/booking-history")}
+                          className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <History size={18} />
+                          Lịch sử đặt phòng
+                        </button>
+
+                        <button
+                          onClick={() => navigate("/favorites")}
+                          className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <Heart size={18} />
+                          Yêu thích
+                        </button>
+
+                        <button
+                          onClick={() => setShowLogoutModal(true)}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-red-500 hover:bg-red-50 rounded-lg"
+                        >
+                          <LogOut size={18} />
+                          Đăng xuất
+                        </button>
+                      </div>
+                    )}
+
+                    <ConfirmLogoutModal
+                      open={showLogoutModal}
+                      onClose={() => setShowLogoutModal(false)}
+                      onConfirm={handleLogout}
+                    />
+                  </div>
+                </>
               ) : (
                 <>
                   <button

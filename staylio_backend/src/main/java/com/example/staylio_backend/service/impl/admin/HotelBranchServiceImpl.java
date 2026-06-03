@@ -166,6 +166,8 @@ public class HotelBranchServiceImpl implements HotelBranchService {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
+        validateCoordinates(request.getLatitude(), request.getLongitude());
+
         HotelBranch hotelBranch = HotelBranch.builder()
                 .branchName(request.getBranchName())
                 .hotel(hotel)
@@ -177,6 +179,8 @@ public class HotelBranchServiceImpl implements HotelBranchService {
                 .isActive(true)
                 .description(request.getDescription())
                 .phone(request.getPhone())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
                 .build();
 
         HotelBranch savedBranch = branchRepo.save(hotelBranch);
@@ -215,6 +219,8 @@ public class HotelBranchServiceImpl implements HotelBranchService {
             throw new AppException(ErrorCode.BRANCH_NAME_EXISTED, "branchName");
         }
 
+        validateCoordinates(request.getLatitude(), request.getLongitude());
+
         if (isExistPhone) {
             throw new AppException(ErrorCode.PHONE_EXISTED, "phone");
         }
@@ -231,6 +237,8 @@ public class HotelBranchServiceImpl implements HotelBranchService {
         branch.setPhone(request.getPhone());
         branch.setWard(ward);
         branch.setDescription(request.getDescription());
+        branch.setLatitude(request.getLatitude());
+        branch.setLongitude(request.getLongitude());
         branch.setActive(true);
 
         HotelBranch updatedBranch = branchRepo.save(branch);
@@ -280,6 +288,34 @@ public class HotelBranchServiceImpl implements HotelBranchService {
         return branches.stream().map(this::convertToDTO).toList();
     }
 
+    public PaginationResponse<HotelBranchResponse> getBranchesByProvince(
+            Long provinceId,
+            int page,
+            int size
+    ) {
+        Pageable pageable = PageRequest.of(
+                Math.max(page - 1, 0),
+                size
+        );
+
+        Page<HotelBranch> branchPage =
+                branchRepo.findBranchesByProvinceId(provinceId, pageable);
+
+        List<HotelBranchResponse> content = branchPage.getContent()
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+
+        PaginationDTO paginationDTO = new PaginationDTO(
+                branchPage.getNumber() + 1,
+                branchPage.getSize(),
+                branchPage.getTotalPages(),
+                branchPage.getTotalElements()
+        );
+
+        return new PaginationResponse<>(content, paginationDTO);
+    }
+
     public HotelBranchResponse convertToDTO(HotelBranch hotelBranch) {
         Ward ward = wardRepo.findById(hotelBranch.getWard().getId())
                 .orElseThrow(() -> new RuntimeException("Ward not found"));
@@ -303,6 +339,8 @@ public class HotelBranchServiceImpl implements HotelBranchService {
                 .phone(hotelBranch.getPhone())
                 .countReview(countReview)
                 .averageRating(roundRating(averageRating))
+                .latitude(hotelBranch.getLatitude())
+                .longitude(hotelBranch.getLongitude())
                 .build();
     }
 
@@ -324,4 +362,13 @@ public class HotelBranchServiceImpl implements HotelBranchService {
         return Math.round(rating * 10.0) / 10.0;
     }
 
+    private void validateCoordinates(Double latitude, Double longitude) {
+        if (latitude != null && (latitude < -90 || latitude > 90)) {
+            throw new AppException(ErrorCode.INVALID_LATITUDE);
+        }
+
+        if (longitude != null && (longitude < -180 || longitude > 180)) {
+            throw new AppException(ErrorCode.INVALID_LONGITUDE);
+        }
+    }
 }

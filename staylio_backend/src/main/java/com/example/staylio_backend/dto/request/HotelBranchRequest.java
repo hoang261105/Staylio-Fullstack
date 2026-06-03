@@ -34,4 +34,7 @@ public class HotelBranchRequest {
 
     @NotNull(message = "Vui lòng nhập sức chứa tối đa!")
     private Integer capacity;
+
+    private Double latitude;
+    private Double longitude;
 }

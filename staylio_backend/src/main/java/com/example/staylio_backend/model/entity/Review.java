@@ -12,7 +12,12 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "reviews")
+@Table(
+        name = "reviews",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "booking_id")
+        }
+)
 @Entity
 @Builder
 public class Review extends AuditableObject {

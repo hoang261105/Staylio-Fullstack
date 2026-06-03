@@ -5,6 +5,7 @@ export interface HotelResponse {
     name: string;
     description: string;
     imageUrl: string;
+    policy?: string;
     hostHotelName: string;
     status: HotelStatus;
     active: boolean;

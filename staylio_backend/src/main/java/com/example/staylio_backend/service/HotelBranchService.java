@@ -24,5 +24,11 @@ public interface HotelBranchService {
     void deleteStatus(Long id, HotelIdRequest request, UserPrincipal principal);
 
     List<HotelBranchResponse> getAllBranchesByHotelId (Long hotelId, BranchStatus status, UserPrincipal principal);
+
+    PaginationResponse<HotelBranchResponse> getBranchesByProvince(
+            Long provinceId,
+            int page,
+            int size
+    );
 }
 

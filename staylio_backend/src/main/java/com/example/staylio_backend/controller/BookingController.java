@@ -85,7 +85,7 @@ public class BookingController {
 
     @PostMapping("/preview")
     public ResponseEntity<ApiResponse<BookingPreviewResponse>> previewBooking(
-            @RequestBody @Valid BookingRequest request,
+            @Valid @RequestBody BookingRequest request,
             @AuthenticationPrincipal UserPrincipal principal
     ) {
         ApiResponse<BookingPreviewResponse> response = new ApiResponse<>(

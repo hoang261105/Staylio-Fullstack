@@ -3,7 +3,7 @@ import { HotelStatus } from "@common/enums/HotelStatus";
 import { PaginationResponse, QueryParams } from "@common/interfaces";
 import { HotelResponse } from "@common/interfaces/response/HotelResponse";
 import { HotelRequest } from "@common/interfaces/request/HotelRequest";
-import { createHotel, getAllHotels, getHotelById, getHotelByManager, getHotels, updateHotelActiveStatus, updateHotelByManager, updateHotelStatus } from "@common/services/hotel.service";
+import { createHotel, getAllHotels, getHotelById, getHotelByManager, getHotels, updateHotelActiveStatus, updateHotelByManager, updateHotelStatus, updateSingleHotelActiveStatus } from "@common/services/hotel.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -84,6 +84,29 @@ export const useHotelActiveStatusMutation = () => {
     onSuccess: (response) => {
       toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["hotels"] });
+    }
+  })
+}
+
+export const useSingleHotelActiveStatusMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["update-single-hotel-active-status"],
+    mutationFn: async (id: number) => {
+      const response = await updateSingleHotelActiveStatus(id);
+      return response;
+    },
+    onSuccess: (response) => {
+      toast.success(response?.message || "Cập nhật trạng thái thương hiệu thành công");
+      queryClient.invalidateQueries({ queryKey: ["hotels"] });
+      queryClient.invalidateQueries({ queryKey: ["listHotels"] });
+    },
+    onError: (error: any) => {
+      if (error?.response?.data?.errorCode === "HOTEL_HAS_ACTIVE_BOOKINGS" || error?.response?.data?.message?.includes("booking trong tương lai")) {
+          toast.error("Không thể dừng hoạt động vì thương hiệu vẫn còn booking trong tương lai. Vui lòng xử lý các booking này trước.", { duration: 5000 });
+      } else {
+          toast.error(error?.response?.data?.message || "Đã có lỗi xảy ra");
+      }
     }
   })
 }

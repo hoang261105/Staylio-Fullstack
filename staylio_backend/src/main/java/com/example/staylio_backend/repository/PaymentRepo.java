@@ -124,4 +124,6 @@ public interface PaymentRepo extends JpaRepository<Payment, Long> {
             @Param("paymentMethod") PaymentMethod paymentMethod,
             Pageable pageable
     );
+
+    Optional<Payment> findByGatewayOrderId( String gatewayOrderId);
 }

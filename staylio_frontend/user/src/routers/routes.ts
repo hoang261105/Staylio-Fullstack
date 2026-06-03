@@ -15,6 +15,8 @@ import SearchRooms from "../pages/SearchRooms";
 import RoomDetail from "../pages/RoomDetail";
 import BookingConfirmation from "../pages/BookingConfirmation";
 import BookingHistory from "../pages/BookingHistory";
+import RoomReviews from "../pages/RoomReviews";
+import LocationBranches from "../pages/LocationBranches";
 
 export const routers = createBrowserRouter([
   {
@@ -26,12 +28,20 @@ export const routers = createBrowserRouter([
     Component: SearchRooms,
   },
   {
+    path: "/location/:provinceId",
+    Component: LocationBranches,
+  },
+  {
     path: "/hotel/:hotelId/branch/:branchId",
     Component: BranchDetails,
   },
   {
     path: "/hotel/:hotelId/branch/:branchId/room/:roomId",
     Component: RoomDetail,
+  },
+  {
+    path: "/hotel/:hotelId/branch/:branchId/room/:roomId/reviews",
+    Component: RoomReviews,
   },
   {
     path: "/booking/confirmation",

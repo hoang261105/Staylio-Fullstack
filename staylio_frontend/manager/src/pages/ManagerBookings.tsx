@@ -5,6 +5,7 @@ import { Search, Filter } from "lucide-react";
 import ManagerLayout from "../layout/ManagerLayout";
 import ManagerBookingListView from "../components/bookings/ManagerBookingListView";
 import ManagerBookingDetailModal from "../components/bookings/ManagerBookingDetailModal";
+import ManagerPaymentStatusModal from "../components/bookings/ManagerPaymentStatusModal";
 import { BookingStatus } from "@common/enums/BookingStatus";
 import { PaymentStatus } from "@common/enums/PaymentStatus";
 import { PaymentMethod } from "@common/enums/PaymentMethod";
@@ -36,6 +37,7 @@ export default function ManagerBookings() {
   const [selectedRoom, setSelectedRoom] = useState<string>("all");
 
   const [bookingIdToView, setBookingIdToView] = useState<number | null>(null);
+  const [bookingToUpdatePayment, setBookingToUpdatePayment] = useState<any | null>(null);
 
   const [checkInFrom, setCheckInFrom] = useState<string>("");
   const [checkInTo, setCheckInTo] = useState<string>("");
@@ -319,7 +321,7 @@ export default function ManagerBookings() {
           currentPage={page}
           onPageChange={setPage}
           onView={(booking) => setBookingIdToView(booking.id)}
-          onUpdatePayment={(booking) => console.log("Update Payment", booking)}
+          onUpdatePayment={(booking) => setBookingToUpdatePayment(booking)}
           onUpdateStatus={(booking) => console.log("Update Status", booking)}
         />
       </div>
@@ -330,6 +332,11 @@ export default function ManagerBookings() {
           onClose={() => setBookingIdToView(null)}
         />
       )}
+
+      <ManagerPaymentStatusModal 
+        booking={bookingToUpdatePayment}
+        onClose={() => setBookingToUpdatePayment(null)}
+      />
     </ManagerLayout>
   );
 }

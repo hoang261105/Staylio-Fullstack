@@ -433,7 +433,8 @@ public class RoomServiceImpl implements RoomService {
                 utilities,
                 roomImages,
                 countReview,
-                roundRating(averageRating)
+                roundRating(averageRating),
+                room.getHotelBranch().getHotel().getPolicy()
         );
     }
 

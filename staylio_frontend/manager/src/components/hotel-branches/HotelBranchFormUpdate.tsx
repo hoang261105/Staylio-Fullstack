@@ -11,6 +11,7 @@ import { useApiErrors } from "@common/hooks/useApiErrors";
 import type { HotelBranchRequest } from "@common/interfaces/request/HotelBranchRequest";
 import type { HotelBranchResponse } from "@common/interfaces/response/HotelBranchResponse";
 import { uploadToCloudinary } from "@common/utils/cloudinary";
+import LocationPickerMap from "./LocationPickerMap";
 
 type SelectOption = { value: number; label: string };
 
@@ -54,6 +55,8 @@ export default function HotelBranchFormUpdate({
     capacity: branch.capacity,
     imageUrl: branch.imageUrl || "",
     hotelId: null,
+    latitude: branch.latitude,
+    longitude: branch.longitude,
   });
 
   const [selectedProvince, setSelectedProvince] = useState<SelectOption | null>({
@@ -233,12 +236,23 @@ export default function HotelBranchFormUpdate({
               className="w-full box-border px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors resize-none text-sm" />
           </div>
 
+          <div className="mb-6">
+            <label className="block text-sm font-medium mb-1">Vị trí trên bản đồ <span className="text-red-500">*</span></label>
+            <p className="text-xs text-gray-500 mb-3">Nhấp vào bản đồ để cập nhật vị trí ghim của chi nhánh.</p>
+            <LocationPickerMap
+              latitude={formData.latitude}
+              longitude={formData.longitude}
+              onLocationSelect={(lat, lng) => setFormData(prev => ({ ...prev, latitude: lat, longitude: lng }))}
+            />
+            {(!formData.latitude || !formData.longitude) && <p className="text-xs text-red-500 mt-1">Vui lòng chọn vị trí trên bản đồ</p>}
+          </div>
+
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
             <button type="button" onClick={onClose}
               className="px-6 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
               Hủy
             </button>
-            <button type="submit" disabled={isPending || isUploading}
+            <button type="submit" disabled={isPending || isUploading || !formData.latitude}
               className="flex items-center gap-2 px-6 py-2.5 bg-[#0066FF] text-white font-medium rounded-lg hover:bg-[#0052CC] shadow-sm shadow-blue-500/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
               {(isPending || isUploading) && <Loader2 className="w-4 h-4 animate-spin" />}
               {isPending ? "Đang lưu..." : isUploading ? "Đang tải ảnh..." : "Lưu thay đổi"}

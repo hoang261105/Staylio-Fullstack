@@ -15,12 +15,15 @@ import com.example.staylio_backend.model.enums.BranchStatus;
 import com.example.staylio_backend.model.enums.HotelStatus;
 import com.example.staylio_backend.model.enums.NotificationType;
 import com.example.staylio_backend.model.enums.RoleName;
+import com.example.staylio_backend.repository.BookingRepo;
 import com.example.staylio_backend.repository.HotelBranchRepo;
 import com.example.staylio_backend.repository.HotelRepo;
 import com.example.staylio_backend.repository.ProfileRepo;
-import com.example.staylio_backend.service.CloudinaryService;
+import com.example.staylio_backend.repository.RoomRepo;
 import com.example.staylio_backend.service.HotelService;
 import com.example.staylio_backend.service.NotificationService;
+import com.example.staylio_backend.model.enums.BookingStatus;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -29,7 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -40,9 +43,12 @@ public class HotelServiceImpl implements HotelService {
     private final ProfileRepo profileRepo;
     private final NotificationService notificationService;
     private final HotelBranchRepo branchRepo;
+    private final RoomRepo roomRepo;
+    private final BookingRepo bookingRepo;
 
     @Override
-    public PaginationResponse<HotelResponse> findAll(String search, int page, int size, String sortBy, String direction) {
+    public PaginationResponse<HotelResponse> findAll(String search, int page, int size, String sortBy,
+            String direction) {
         Pageable pageable = PageRequest.of(page, size, getSort(sortBy, direction));
 
         Page<Hotel> hotelsPage = hotelRepo.searchActiveHotels(search, pageable);
@@ -55,15 +61,15 @@ public class HotelServiceImpl implements HotelService {
                 hotelsPage.getNumber() + 1,
                 hotelsPage.getSize(),
                 hotelsPage.getTotalPages(),
-                hotelsPage.getTotalElements()
-        );
+                hotelsPage.getTotalElements());
 
         return new PaginationResponse<>(content, paginationDTO);
     }
 
     @Override
     public HotelResponse findById(Long id) {
-        Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm thấy thương hiệu khách sạn!"));
+        Hotel hotel = hotelRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRAND_NOT_FOUND.getMessage()));
         return convertToDTO(hotel);
     }
 
@@ -79,7 +85,8 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public void delete(Long id) {
-        Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
+        Hotel hotel = hotelRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRAND_NOT_FOUND.getMessage()));
         hotel.setStatus(HotelStatus.DELETED);
         hotelRepo.save(hotel);
     }
@@ -98,6 +105,7 @@ public class HotelServiceImpl implements HotelService {
                 .hostHotelName(hotel.getManager().getFullName())
                 .isActive(hotel.isActive())
                 .branchCount(totalBranches)
+                .policy(hotel.getPolicy())
                 .build();
     }
 
@@ -108,8 +116,7 @@ public class HotelServiceImpl implements HotelService {
 
         String property = sortBy.equals("fullName") ? "manager.fullName" : sortBy;
 
-        return direction.equalsIgnoreCase("desc") ?
-                Sort.by(property).descending() : Sort.by(property).ascending();
+        return direction.equalsIgnoreCase("desc") ? Sort.by(property).descending() : Sort.by(property).ascending();
     }
 
     @Override
@@ -120,18 +127,40 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public void updateStatus(Long id, HotelStatus status) {
-        Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
+        Hotel hotel = hotelRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRAND_NOT_FOUND.getMessage()));
         hotel.setStatus(status);
+
         hotelRepo.save(hotel);
     }
 
+    @Override
+    @Transactional
+    public void updateActive(Long id) {
+        Hotel hotel = hotelRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRAND_NOT_FOUND.getMessage()));
+        boolean newActive = !hotel.isActive();
 
+        if (!newActive) {
+            long activeFutureBookings = bookingRepo.countFutureActiveBookingsByHotelId(id,
+                    Arrays.asList(BookingStatus.PENDING_PAYMENT, BookingStatus.PAID, BookingStatus.CONFIRMED));
+            if (activeFutureBookings > 0) {
+                throw new AppException(ErrorCode.HOTEL_HAS_ACTIVE_BOOKINGS);
+            }
+        }
+
+        hotel.setActive(newActive);
+
+        branchRepo.updateActiveByHotelId(hotel.getId(), newActive);
+        roomRepo.updateActiveByHotelId(hotel.getId(), newActive);
+        hotelRepo.save(hotel);
+    }
 
     @Override
     public void updateBulkActive(List<Long> ids, Boolean active) {
         List<Hotel> hotelsToUpdate = hotelRepo.findAllByIdIn(ids);
 
-        if (hotelsToUpdate.isEmpty()){
+        if (hotelsToUpdate.isEmpty()) {
             throw new NoSuchElementException("Không có thương hiệu khách sạn nào đc chọn!");
         }
 
@@ -146,15 +175,16 @@ public class HotelServiceImpl implements HotelService {
             throw new AppException(ErrorCode.HOTEL_NAME_EXISTED);
         }
 
-        Profile profile = profileRepo.findById(userPrincipal.getId()).orElseThrow(() -> new NoSuchElementException("Không tim thấy quản lí thương hiệu khách sạn!"));
+        Profile profile = profileRepo.findById(userPrincipal.getId())
+                .orElseThrow(() -> new NoSuchElementException("Không tim thấy quản lí thương hiệu khách sạn!"));
 
         boolean isExistManager = hotelRepo.existsByManager_Id(profile.getId());
 
-        if (isExistManager){
+        if (isExistManager) {
             throw new AppException(ErrorCode.MANAGER_EXISTED);
         }
 
-        if (profile.getUser().getRole().getRoleName() != RoleName.ROLE_MANAGER){
+        if (profile.getUser().getRole().getRoleName() != RoleName.ROLE_MANAGER) {
             throw new AppException(ErrorCode.IS_NOT_MANAGER);
         }
 
@@ -164,6 +194,7 @@ public class HotelServiceImpl implements HotelService {
                 .status(HotelStatus.PENDING)
                 .manager(profile)
                 .imageUrl(request.getImageUrl())
+                .policy(request.getPolicy())
                 .isActive(true)
                 .build();
 
@@ -177,8 +208,7 @@ public class HotelServiceImpl implements HotelService {
                         .content("Thương hiệu " + savedHotel.getName() + " đang chờ admin duyệt.")
                         .type(NotificationType.HOTEL_BRAND_CREATED)
                         .referenceId(savedHotel.getId())
-                        .build()
-        );
+                        .build());
         try {
             return convertToDTO(savedHotel);
         } catch (DataIntegrityViolationException e) {
@@ -194,16 +224,19 @@ public class HotelServiceImpl implements HotelService {
             throw new AppException(ErrorCode.HOTEL_NAME_EXISTED);
         }
 
-        Profile profile = profileRepo.findById(userPrincipal.getId()).orElseThrow(() -> new NoSuchElementException("Không tim thấy quản lí thương hiệu khách sạn!"));
+        Profile profile = profileRepo.findById(userPrincipal.getId())
+                .orElseThrow(() -> new NoSuchElementException("Không tim thấy quản lí thương hiệu khách sạn!"));
 
-        if (profile.getUser().getRole().getRoleName() != RoleName.ROLE_MANAGER){
+        if (profile.getUser().getRole().getRoleName() != RoleName.ROLE_MANAGER) {
             throw new AppException(ErrorCode.IS_NOT_MANAGER);
         }
 
-        Hotel hotel = hotelRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Khôn tìm thấy thương hiệu khách sạn!"));
+        Hotel hotel = hotelRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRAND_NOT_FOUND.getMessage()));
         hotel.setName(request.getName());
         hotel.setDescription(request.getDescription());
         hotel.setManager(profile);
+        hotel.setPolicy(request.getPolicy());
 
         if (request.getImageUrl() != null && !request.getImageUrl().isEmpty()) {
             hotel.setImageUrl(request.getImageUrl());

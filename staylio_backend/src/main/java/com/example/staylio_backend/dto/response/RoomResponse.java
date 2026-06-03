@@ -37,4 +37,5 @@ public class RoomResponse {
     private Set<RoomImageResponse> images;
     private Long countReview;
     private Double averageRating;
+    private String policy;
 }

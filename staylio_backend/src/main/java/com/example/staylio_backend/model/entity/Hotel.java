@@ -35,4 +35,7 @@ public class Hotel extends BaseObject {
 
     @Column(name = "is_active")
     private boolean isActive;
+
+    @Column(columnDefinition = "TEXT")
+    private String policy;
 }

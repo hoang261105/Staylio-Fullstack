@@ -76,6 +76,8 @@ public class BookingResponse {
 
     private String transactionId;
 
+    private String paymentUrl;
+
     private LocalDateTime paidAt;
 
     private LocalDateTime confirmedAt;

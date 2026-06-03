@@ -150,6 +150,24 @@ public class HotelController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PatchMapping("/{id}/active")
+    @Operation(summary = "Cập nhật trạng thái hoạt động")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<String>> updateActive(
+            @PathVariable Long id
+    ){
+        hotelService.updateActive(id);
+        ApiResponse<String> response = new ApiResponse<>(
+                true,
+                "Cập nhật trạng thái hoạt động thành công!",
+                null,
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PatchMapping("/bulk-active")
     @Operation(summary = "Cập nhật trạng thái hoạt động cho nhiều thương hiệu")
     @PreAuthorize("hasRole('ADMIN')")

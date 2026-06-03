@@ -1,4 +1,4 @@
-import { Eye, CheckCircle, Power, Image as ImageIcon, Unlock, Lock } from "lucide-react";
+import { Eye, CheckCircle, Power, Image as ImageIcon, Unlock, Lock, Loader2 } from "lucide-react";
 import type { HotelResponse } from "../../../../common/interfaces/response/HotelResponse";
 import { HotelStatus } from "../../../../common/enums/HotelStatus";
 import { useState } from "react";
@@ -6,7 +6,18 @@ import {
   useHotelActiveStatusMutation,
   useHotelById,
   useHotelStatusMutation,
+  useSingleHotelActiveStatusMutation
 } from "../../../../common/hooks/useHotels";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "../../../../common/components/ui/alert-dialog";
 import HotelDetailModal from "./HotelDetailModal";
 
 interface HotelListViewProps {
@@ -29,9 +40,20 @@ export default function HotelListView({ hotels }: HotelListViewProps) {
     currentStatus: null,
   });
 
+  const [activeConfirmModal, setActiveConfirmModal] = useState<{
+    open: boolean;
+    hotelId: number | null;
+    currentActive: boolean | null;
+  }>({
+    open: false,
+    hotelId: null,
+    currentActive: null,
+  });
+
   const { data: hotel } = useHotelById(selectedId);
   const { mutate: updateHotelStatus } = useHotelStatusMutation();
   const { mutate: updateHotelActiveStatus } = useHotelActiveStatusMutation();
+  const { mutate: toggleSingleActiveStatus, isPending: isTogglingActive } = useSingleHotelActiveStatusMutation();
 
   const handleViewDetail = (id: number) => {
     setSelectedId(id);
@@ -68,6 +90,24 @@ export default function HotelListView({ hotels }: HotelListViewProps) {
       hotelId: id,
       currentStatus,
     });
+  };
+
+  const handleToggleSingleActiveClick = (id: number, currentActive: boolean) => {
+    setActiveConfirmModal({
+      open: true,
+      hotelId: id,
+      currentActive,
+    });
+  };
+
+  const handleConfirmToggleActive = () => {
+    if (activeConfirmModal.hotelId !== null) {
+      toggleSingleActiveStatus(activeConfirmModal.hotelId, {
+        onSettled: () => {
+          setActiveConfirmModal({ open: false, hotelId: null, currentActive: null });
+        }
+      });
+    }
   };
 
   const handleConfirm = () => {
@@ -245,8 +285,9 @@ export default function HotelListView({ hotels }: HotelListViewProps) {
                           </button>
                         )}
                       <button
+                        onClick={() => handleToggleSingleActiveClick(hotel.id, hotel.active)}
                         className="p-2 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
-                        title="Đổi trạng thái hoạt động"
+                        title={hotel.active ? "Dừng hoạt động" : "Kích hoạt lại"}
                       >
                         <Power className="w-4 h-4" />
                       </button>
@@ -257,7 +298,7 @@ export default function HotelListView({ hotels }: HotelListViewProps) {
             </tbody>
           </table>
 
-          {showDetailModal && (
+          {showDetailModal && hotel && (
             <HotelDetailModal
               hotel={hotel}
               onClose={() => setShowDetailModal(false)}
@@ -266,49 +307,69 @@ export default function HotelListView({ hotels }: HotelListViewProps) {
         </div>
       </div>
 
-      {confirmModal.open && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Xác nhận
-            </h3>
-
-            <p className="text-sm text-gray-600 mb-6">
+      <AlertDialog 
+        open={confirmModal.open} 
+        onOpenChange={(open) => !open && setConfirmModal({ open: false, hotelId: null, currentStatus: null })}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận</AlertDialogTitle>
+            <AlertDialogDescription>
               Bạn có chắc chắn duyệt / từ chối khách sạn này không? Hành động
               này không thể hoàn tác.
-            </p>
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() =>
-                  setConfirmModal({
-                    open: false,
-                    hotelId: null,
-                    currentStatus: null,
-                  })
-                }
-                className="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50"
-              >
-                Hủy
-              </button>
-
-              <button
-                onClick={handleReject}
-                className="bg-red-600 hover:bg-red-700 px-4 py-2 text-sm text-white rounded-lg "
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <div className="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+              <AlertDialogAction 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleReject();
+                }}
+                className="bg-red-600 hover:bg-red-700 w-full sm:w-auto"
               >
                 Từ chối
-              </button>
-
-              <button
-                onClick={handleConfirm}
-                className="bg-green-600 hover:bg-green-700 px-4 py-2 text-sm text-white rounded-lg "
+              </AlertDialogAction>
+              <AlertDialogAction 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleConfirm();
+                }}
+                className="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
               >
                 Xác nhận
-              </button>
+              </AlertDialogAction>
             </div>
-          </div>
-        </div>
-      )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={activeConfirmModal.open} onOpenChange={(open) => !open && setActiveConfirmModal({ open: false, hotelId: null, currentActive: null })}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận</AlertDialogTitle>
+            <AlertDialogDescription>
+              {activeConfirmModal.currentActive
+                ? "Khi dừng hoạt động thương hiệu này, toàn bộ chi nhánh và phòng thuộc thương hiệu cũng sẽ bị ẩn khỏi hệ thống tìm kiếm. Các booking cũ vẫn được giữ nguyên."
+                : "Kích hoạt lại thương hiệu này sẽ hiển thị lại các chi nhánh và phòng thuộc thương hiệu."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isTogglingActive}>Hủy</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleConfirmToggleActive();
+              }}
+              disabled={isTogglingActive}
+            >
+              {isTogglingActive && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {activeConfirmModal.currentActive ? "Xác nhận dừng hoạt động" : "Xác nhận kích hoạt lại"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

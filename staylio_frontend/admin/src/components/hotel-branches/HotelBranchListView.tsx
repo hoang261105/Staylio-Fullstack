@@ -4,6 +4,7 @@ import Pagination from "../../../../common/components/Pagination";
 import type { HotelBranchResponse } from "../../../../common/interfaces/response/HotelBranchResponse";
 import { BranchStatus } from "../../../../common/enums/BranchStatus";
 import { useApproveHotelBranch } from "../../../../common/hooks/useHotelBranch";
+import HotelBranchApproveModal from "./HotelBranchApproveModal";
 
 interface HotelBranchListViewProps {
   branches: HotelBranchResponse[];
@@ -175,38 +176,11 @@ export default function HotelBranchListView({
         )}
       </div>
 
-      {/* Confirm Modal */}
-      {confirmModal.open && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-center justify-center z-50 animate-in fade-in duration-200">
-          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md animate-in zoom-in-95 duration-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Xét duyệt chi nhánh</h3>
-            <p className="text-sm text-gray-600 mb-6">
-              Bạn vui lòng chọn hành động phê duyệt cho chi nhánh này. Hành động từ chối hoặc duyệt đều không thể hoàn tác.
-            </p>
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setConfirmModal({ open: false, branchId: null })}
-                className="px-4 py-2 text-sm font-medium border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={() => handleConfirmAction(BranchStatus.REJECTED)}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 shadow-sm shadow-red-500/20 transition-colors"
-              >
-                Từ chối
-              </button>
-              <button
-                onClick={() => handleConfirmAction(BranchStatus.CONFIRMED)}
-                className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 shadow-sm shadow-green-500/20 transition-colors"
-              >
-                Duyệt chi nhánh
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <HotelBranchApproveModal
+        open={confirmModal.open}
+        onClose={() => setConfirmModal({ open: false, branchId: null })}
+        onConfirm={handleConfirmAction}
+      />
     </>
   );
 }

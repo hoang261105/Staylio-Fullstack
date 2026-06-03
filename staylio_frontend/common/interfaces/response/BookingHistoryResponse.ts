@@ -14,5 +14,7 @@ export interface BookingHistoryResponse {
     children: number;
     finalPrice: number;
     status: BookingStatus;
-    createdAt: string
+    createdAt: string;
+    paymentMethod?: string;
+    paymentUrl?: string;
 }

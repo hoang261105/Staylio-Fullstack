@@ -1,4 +1,6 @@
+import { ApiResponse } from "@common/interfaces/ApiResponse";
 import { SearchQueryParams } from "@common/interfaces/request/QueryParams";
+import { FeaturedLocationResponse } from "@common/interfaces/response/FeaturedLocationResponse";
 import { axiosInstance } from "@common/utils/axiosInstance";
 
 // Api lấy danh sách các tỉnh thành
@@ -19,6 +21,17 @@ export const getWardsByProvinceId = async (provinceId: number, params: SearchQue
         return response.data;
     } catch (error) {
         console.error("Lấy danh sách xã/phường thất bại", error);
+        throw error;
+    }
+}
+
+// API lấy danh sách các tỉnh thành nhiều khách sạn nhất
+export const getFeaturedLocations = async (): Promise<ApiResponse<FeaturedLocationResponse[]>> => {
+    try {
+        const response = await axiosInstance.get("/provinces/featured");
+        return response.data;
+    } catch (error) {
+        console.error("Lấy danh sách địa điểm nổi bật thất bại!", error);
         throw error;
     }
 }

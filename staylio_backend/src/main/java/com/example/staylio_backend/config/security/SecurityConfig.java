@@ -51,7 +51,8 @@ public class SecurityConfig {
                                 "/rooms/**",
                                 "/utilities/**",
                                 "/reviews/**",
-                                "/bookings/**")
+                                "/bookings/**",
+                                "/provinces/**")
                         .permitAll()
                         .requestMatchers(APIConstants.ADMIN_USER_ENDPOINTS).hasRole("ADMIN")
                         .anyRequest().authenticated())

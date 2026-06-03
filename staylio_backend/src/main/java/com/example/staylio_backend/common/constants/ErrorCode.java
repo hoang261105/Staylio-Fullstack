@@ -25,6 +25,8 @@ public enum ErrorCode {
     INVALID_KEY("Khóa thông báo không hợp lệ"),
     INVALID_PASSWORD_OR_EMAIL("Email hoặc mật khẩu không chính xác"),
     ILLEGAL_STATUS_TRANSITION("Dữ liệu đã được phê duyệt và không thể thay đổi hoặc xóa."),
+    INVALID_LATITUDE("Vĩ độ không hợp lệ!"),
+    INVALID_LONGITUDE("Kinh độ không hợp lệ!"),
     CANNOT_MODIFY_TERMINAL_STATE("Không thể chỉnh sửa trạng thái cuối!"),
     PASSWORD_NOT_MATCH("Mật khẩu không khớp!"),
     CANNOT_DELETE_BRANCH("Không thể xóa chi nhánh đã duyệt!"),
@@ -37,6 +39,9 @@ public enum ErrorCode {
     CANCELLATION_REASON_REQUIRED("Vui lòng nhập lí do hủy!"),
     AI_QUOTA_EXCEEDED("Hết lượt dùng thử miễn phí"),
     INVALID_NUMBER_OF_GUESTS("Số lượng người không hợp lệ!"),
+    CANNOT_REVIEW_BEFORE_CHECKOUT(
+            "Bạn chỉ có thể đánh giá sau khi đã trả phòng!"
+    ),
     INVALID_CHECK_IN_DATE(
             "Ngày nhận phòng không hợp lệ!"
     ),
@@ -117,6 +122,60 @@ public enum ErrorCode {
             "Bạn đã sử dụng hết số lần cho phép của voucher này!"
     ),
     BOOKING_CANNOT_BE_CANCELLED("Đơn đặt phòng không thể hủy!"),
+    INVALID_PAYMENT_STATUS(
+            "Trạng thái thanh toán không hợp lệ!"
+    ),
+
+    PAYMENT_ALREADY_PAID(
+            "Giao dịch đã được thanh toán!"
+    ),
+
+    PAYMENT_ALREADY_CANCELLED(
+            "Giao dịch đã bị hủy!"
+    ),
+
+    PAYMENT_ALREADY_REFUNDED(
+            "Giao dịch đã được hoàn tiền!"
+    ),
+
+    CANNOT_UPDATE_PAID_PAYMENT_TO_PENDING(
+            "Không thể chuyển giao dịch đã thanh toán về trạng thái chờ thanh toán!"
+    ),
+
+    CANNOT_CANCEL_PAID_PAYMENT(
+            "Không thể hủy giao dịch đã thanh toán!"
+    ),
+
+    CANNOT_REFUND_UNPAID_PAYMENT(
+            "Chỉ có thể hoàn tiền giao dịch đã thanh toán!"
+    ),
+
+    BOOKING_PAYMENT_STATUS_NOT_MATCH(
+            "Trạng thái đặt phòng không phù hợp với trạng thái thanh toán!"
+    ),
+
+    BOOKING_ALREADY_CANCELLED(
+            "Đơn đặt phòng đã bị hủy!"
+    ),
+
+    BOOKING_ALREADY_REFUNDED(
+            "Đơn đặt phòng đã được hoàn tiền!"
+    ),
+
+    BOOKING_ALREADY_CHECKED_IN(
+            "Khách đã nhận phòng, không thể cập nhật thanh toán!"
+    ),
+
+    BOOKING_ALREADY_CHECKED_OUT(
+            "Khách đã trả phòng, không thể cập nhật thanh toán!"
+    ),
+    ZALOPAY_CREATE_ORDER_FAILED(
+            "Không thể tạo giao dịch ZaloPay!"
+    ),
+
+    ZALOPAY_INVALID_CALLBACK_SIGNATURE(
+            "Chữ ký callback ZaloPay không hợp lệ!"
+    ),
 
     // 3xxx: Business Logic (Duplicates, DB logic)
     USER_EXISTED("Tên người dùng đã tồn tại"),
@@ -125,6 +184,7 @@ public enum ErrorCode {
     PHONE_EXISTED("Số điện thoại đã tồn tại"),
     HOTEL_NAME_EXISTED("Tên thương hiệu đã tồn tại!"),
     MANAGER_EXISTED("Quản lí đã có thương hiệu khách sạn!"),
+    HOTEL_HAS_ACTIVE_BOOKINGS("Không thể dừng hoạt động thương hiệu vì vẫn còn booking trong tương lai."),
     BRANCH_NAME_EXISTED("Tên chi nhánh đã tồn tại trong thương hiệu!"),
     ROOM_NAME_EXISTED("Tên phòng đã tồn tại!"),
     ROOM_NUMBER_EXISTED("Mã phòng đã tồn tại!"),
@@ -132,6 +192,9 @@ public enum ErrorCode {
     VOUCHER_CODE_EXISTED("Mã voucher đã tồn tại!"),
     ROOM_IMAGE_ALREADY_DELETED("Hình ảnh này đã được xóa rồi!"),
     CHAT_SESSION_CLOSED("Đoạn chat đã được đóng!"),
+    BOOKING_ALREADY_REVIEWED(
+            "Bạn đã đánh giá đơn đặt phòng này rồi!"
+    ),
 
     // 4xxx: Resources
     DATA_NOT_FOUND("Không tìm thấy dữ liệu yêu cầu"),
