@@ -28,13 +28,13 @@ interface ManagerLayoutProps {
 }
 
 const NAVIGATION_ITEMS = [
-  { name: "Tổng quan", path: "/manager/dashboard", icon: LayoutDashboard },
-  { name: "Chi nhánh của tôi", path: "/manager/branches", icon: Building2 },
-  { name: "Quản lí phòng", path: "/manager/rooms", icon: Bed },
-  { name: "Quản lí đơn đặt phòng", path: "/manager/bookings", icon: CalendarCheck },
-  { name: "Quản lí đánh giá", path: "/manager/reviews", icon: Star },
-  { name: "Quản lí voucher", path: "/manager/vouchers", icon: Ticket },
-  { name: "Quản lí hình ảnh", path: "/manager/room-images", icon: Image },
+  { name: "Tổng quan", path: "/dashboard", icon: LayoutDashboard },
+  { name: "Chi nhánh của tôi", path: "/branches", icon: Building2 },
+  { name: "Quản lí phòng", path: "/rooms", icon: Bed },
+  { name: "Quản lí đơn đặt phòng", path: "/bookings", icon: CalendarCheck },
+  { name: "Quản lí đánh giá", path: "/reviews", icon: Star },
+  { name: "Quản lí voucher", path: "/vouchers", icon: Ticket },
+  { name: "Quản lí hình ảnh", path: "/room-images", icon: Image },
   { name: "Cài đặt", path: "/settings", icon: Settings },
 ];
 
@@ -52,7 +52,7 @@ function SidebarItem({ name, icon: Icon, active, isCollapsed, onClick }: Sidebar
     <div className="relative group">
       <button
         onClick={onClick}
-        className={`w-full flex items-center h-[44px] rounded-xl transition-all duration-200 ${isCollapsed ? "justify-center px-0" : "px-3 gap-3.5"
+        className={`w-full flex items-center h-11 rounded-xl transition-all duration-200 ${isCollapsed ? "justify-center px-0" : "px-3 gap-3.5"
           } ${active
             ? "bg-[#0066FF] text-white shadow-md shadow-[#0066FF]/20"
             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 group-hover:shadow-sm"
@@ -217,7 +217,7 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
           <div className="relative group">
             <button
               onClick={() => setShowLogoutModal(true)}
-              className={`w-full flex items-center justify-center h-[44px] rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors font-medium text-[14px] border border-transparent hover:border-red-100 ${isCollapsed ? "px-0" : "gap-2 px-4"
+              className={`w-full flex items-center justify-center h-11 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors font-medium text-[14px] border border-transparent hover:border-red-100 ${isCollapsed ? "px-0" : "gap-2 px-4"
                 }`}
             >
               <LogOut className={`shrink-0 ${isCollapsed ? "w-5 h-5" : "w-4 h-4"}`} />
@@ -234,7 +234,7 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${isCollapsed ? "lg:ml-[80px]" : "lg:ml-[280px]"}`}>
+      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${isCollapsed ? "lg:ml-20" : "lg:ml-70"}`}>
         {/* Header */}
         <header className="h-16 bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-30 shrink-0 shadow-sm">
           <div className="h-full px-4 lg:px-8 flex items-center justify-between gap-4">

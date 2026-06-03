@@ -15,7 +15,7 @@ export default function NotFound() {
 
       if (role === "ROLE_ADMIN") return "/admin/dashboard";
       if (role === "ROLE_CUSTOMER") return "/";
-      if (role === "ROLE_MANAGER") return "/manager/dashboard";
+      if (role === "ROLE_MANAGER") return "/dashboard";
 
       return "/";
     } catch {
