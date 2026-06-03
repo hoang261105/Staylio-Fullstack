@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(
                         "https://staylio-fullstack.vercel.app",
-                        "http://localhost:3002",
+                        "https://staylio-manager.vercel.app",
                         "http://localhost:3001"
                 )
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
