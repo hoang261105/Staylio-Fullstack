@@ -6,6 +6,7 @@ import { NotificationType } from "../enums/NotificationType";
 import { useMarkNotificationReadMutation } from "../hooks/useNotifications";
 import { useNavigate } from "react-router-dom";
 import { NotificationResponse } from "../interfaces/response/NotificationResponse";
+import { getReviewById } from "../services/review.service";
 
 export default function NotificationPopover() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +26,7 @@ export default function NotificationPopover() {
     if (!notification.isRead) {
       markAsReadMutation.mutate(notification.id);
     }
-    
+
     setIsOpen(false);
 
     if (!notification.referenceId) return;
@@ -40,6 +41,16 @@ export default function NotificationPopover() {
     } else if (type.startsWith("REVIEW_")) {
       if (role === "ROLE_MANAGER") navigate("/manager/reviews", { state: { reviewId: notification.referenceId } });
       if (role === "ROLE_ADMIN") navigate("/admin/reviews", { state: { reviewId: notification.referenceId } });
+      if (role === "ROLE_CUSTOMER") {
+        getReviewById(notification.referenceId).then(res => {
+          const review = res.data;
+          if (review) {
+            navigate(`/hotel/${review.hotelId}/branch/${review.hotelBranchId}/room/${review.roomId}/reviews`);
+          }
+        }).catch(err => {
+          console.error("Lỗi khi lấy thông tin đánh giá:", err);
+        });
+      }
     } else if (type.startsWith("VOUCHER_")) {
       if (role === "ROLE_MANAGER") navigate("/manager/vouchers", { state: { voucherId: notification.referenceId } });
       if (role === "ROLE_ADMIN") navigate("/admin/vouchers", { state: { voucherId: notification.referenceId } });

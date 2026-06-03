@@ -4,10 +4,7 @@ import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.common.exception.AppException;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.*;
-import com.example.staylio_backend.dto.response.BookingHistoryResponse;
-import com.example.staylio_backend.dto.response.BookingPreviewResponse;
-import com.example.staylio_backend.dto.response.BookingResponse;
-import com.example.staylio_backend.dto.response.DateRangeResponse;
+import com.example.staylio_backend.dto.response.*;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.*;
@@ -15,6 +12,7 @@ import com.example.staylio_backend.model.enums.*;
 import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.BookingService;
 import com.example.staylio_backend.service.NotificationService;
+import com.example.staylio_backend.service.ZaloPayService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +28,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +40,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepo userRepo;
     private final PaymentRepo paymentRepo;
     private final NotificationService notificationService;
+    private final ZaloPayService zaloPayService;
 
     @Override
     public PaginationResponse<BookingResponse> getAllBookings(
@@ -145,8 +145,7 @@ public class BookingServiceImpl implements BookingService {
                     payment,
                     request.getStatus(),
                     request.getCancellationReason(),
-                    principal
-            );
+                    principal);
 
             Profile managerProfile = booking.getRoom().getHotelBranch().getHotel().getManager();
             if (managerProfile != null) {
@@ -154,7 +153,8 @@ public class BookingServiceImpl implements BookingService {
                         .senderId(principal.getId())
                         .receiverId(managerProfile.getId())
                         .title("Có đơn hủy đặt phòng")
-                        .content("Khách hàng " + principal.getFullName() + " vừa hủy đặt phòng " + booking.getRoom().getRoomName() + " (Mã: " + booking.getBookingCode() + ")")
+                        .content("Khách hàng " + principal.getFullName() + " vừa hủy đặt phòng "
+                                + booking.getRoom().getRoomName() + " (Mã: " + booking.getBookingCode() + ")")
                         .type(NotificationType.BOOKING_CANCELLED)
                         .referenceId(id)
                         .build();
@@ -165,7 +165,6 @@ public class BookingServiceImpl implements BookingService {
         }
 
         throw new AppException(ErrorCode.UNAUTHORIZED);
-
 
     }
 
@@ -296,7 +295,17 @@ public class BookingServiceImpl implements BookingService {
                 .status(PaymentStatus.PENDING)
                 .build();
 
-        paymentRepo.save(payment);
+        Payment savedPayment = paymentRepo.save(payment);
+
+        if (request.getPaymentMethod() == PaymentMethod.ZALOPAY) {
+            ZaloPayCreateOrderResponse zaloPayResponse = zaloPayService.createOrder(savedBooking, savedPayment);
+
+            savedPayment.setGatewayOrderId(zaloPayResponse.getAppTransId());
+            savedPayment.setPaymentUrl(zaloPayResponse.getPaymentUrl());
+            savedPayment.setRawResponse(zaloPayResponse.getRawResponse());
+
+            paymentRepo.save(savedPayment);
+        }
 
         Profile managerProfile = room.getHotelBranch().getHotel().getManager();
         if (managerProfile != null) {
@@ -304,13 +313,16 @@ public class BookingServiceImpl implements BookingService {
                     .senderId(user.getProfile().getId())
                     .receiverId(managerProfile.getId())
                     .title("Có đơn đặt phòng mới")
-                    .content("Khách hàng " + user.getProfile().getFullName() + " vừa đặt phòng " + room.getRoomName() + " (Mã: " + savedBooking.getBookingCode() + ")")
+                    .content("Khách hàng " + user.getProfile().getFullName() + " vừa đặt phòng " + room.getRoomName()
+                            + " (Mã: " + savedBooking.getBookingCode() + ")")
                     .type(NotificationType.BOOKING_CREATED)
                     .referenceId(savedBooking.getId())
                     .build();
 
             notificationService.create(notificationRequest);
         }
+
+        savedBooking.setPayments(Set.of(savedPayment));
 
         return convertToResponse(savedBooking);
     }
@@ -321,38 +333,33 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public PaginationResponse<BookingHistoryResponse> getMyBookings(BookingHistoryRequest request, UserPrincipal principal) {
+    public PaginationResponse<BookingHistoryResponse> getMyBookings(BookingHistoryRequest request,
+            UserPrincipal principal) {
         Pageable pageable = PageRequest.of(
                 Math.max(request.getPage() - 1, 0),
                 request.getSize(),
-                getSort(request.getSortBy(), request.getDirection())
-        );
+                getSort(request.getSortBy(), request.getDirection()));
 
-        Page<Booking> bookingPage =
-                bookingRepo.searchBookingsByUser(
-                        principal.getId(),
-                        request.getSearch(),
-                        request.getStatus(),
-                        pageable
-                );
+        Page<Booking> bookingPage = bookingRepo.searchBookingsByUser(
+                principal.getId(),
+                request.getSearch(),
+                request.getStatus(),
+                pageable);
 
-        List<BookingHistoryResponse> responses =
-                bookingPage.getContent()
-                        .stream()
-                        .map(this::convertToHistoryResponse)
-                        .toList();
+        List<BookingHistoryResponse> responses = bookingPage.getContent()
+                .stream()
+                .map(this::convertToHistoryResponse)
+                .toList();
 
         PaginationDTO paginationDTO = new PaginationDTO(
                 bookingPage.getNumber() + 1,
                 bookingPage.getSize(),
                 bookingPage.getTotalPages(),
-                bookingPage.getTotalElements()
-        );
+                bookingPage.getTotalElements());
 
         return new PaginationResponse<>(
                 responses,
-                paginationDTO
-        );
+                paginationDTO);
     }
 
     private Sort getSort(String sortBy, String direction) {
@@ -386,7 +393,7 @@ public class BookingServiceImpl implements BookingService {
         Payment latestPayment = booking.getPayments() != null
                 ? booking.getPayments()
                         .stream()
-                        .findFirst()
+                        .max(Comparator.comparing(Payment::getCreatedAt))
                         .orElse(null)
                 : null;
 
@@ -444,6 +451,7 @@ public class BookingServiceImpl implements BookingService {
                 latestPayment != null ? latestPayment.getStatus() : null,
                 latestPayment != null ? latestPayment.getPaymentMethod() : null,
                 latestPayment != null ? latestPayment.getTransactionId() : null,
+                latestPayment != null ? latestPayment.getPaymentUrl() : null,
                 latestPayment != null ? latestPayment.getPaidAt() : null,
 
                 booking.getConfirmedAt(),
@@ -572,8 +580,7 @@ public class BookingServiceImpl implements BookingService {
             Payment payment,
             BookingStatus newStatus,
             String cancellationReason,
-            UserPrincipal principal
-    ) {
+            UserPrincipal principal) {
 
         if (!booking.getUser().getId().equals(principal.getId())) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
@@ -739,8 +746,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private BookingHistoryResponse convertToHistoryResponse(
-            Booking booking
-    ) {
+            Booking booking) {
         Room room = booking.getRoom();
 
         String roomImage = room.getImages()
@@ -751,6 +757,13 @@ public class BookingServiceImpl implements BookingService {
                 .findFirst()
                 .orElse(null);
 
+        Payment latestPayment = booking.getPayments() != null
+                ? booking.getPayments()
+                        .stream()
+                        .max(Comparator.comparing(Payment::getCreatedAt))
+                        .orElse(null)
+                : null;
+
         return BookingHistoryResponse.builder()
                 .bookingId(booking.getId())
                 .bookingCode(booking.getBookingCode())
@@ -760,12 +773,10 @@ public class BookingServiceImpl implements BookingService {
                 .hotelName(
                         room.getHotelBranch()
                                 .getHotel()
-                                .getName()
-                )
+                                .getName())
                 .hotelBranchName(
                         room.getHotelBranch()
-                                .getBranchName()
-                )
+                                .getBranchName())
                 .checkInDate(booking.getCheckInDate())
                 .checkOutDate(booking.getCheckOutDate())
                 .adults(booking.getAdults())
@@ -773,6 +784,8 @@ public class BookingServiceImpl implements BookingService {
                 .finalPrice(booking.getFinalPrice())
                 .status(booking.getStatus())
                 .createdAt(booking.getCreatedAt())
+                .paymentMethod(latestPayment != null && latestPayment.getPaymentMethod() != null ? latestPayment.getPaymentMethod().name() : null)
+                .paymentUrl(latestPayment != null ? latestPayment.getPaymentUrl() : null)
                 .build();
     }
 }

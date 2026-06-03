@@ -1,9 +1,10 @@
 import { ReviewStatus } from "@common/enums/ReviewStatus";
 import { PaginationResponse } from "@common/interfaces";
 import { ReviewQueryParams } from "@common/interfaces/request/QueryParams";
+import { ReviewRequest } from "@common/interfaces/request/ReviewRequest";
 import { ReviewerResponse } from "@common/interfaces/response/ReviewerResponse";
 import { ReviewResponse } from "@common/interfaces/response/ReviewResponse";
-import { getAllReviewers, getReviewById, getReviews, updateReplyComment, updateStatusReview } from "@common/services/review.service";
+import { createReview, getAllReviewers, getReviewById, getReviews, updateReplyComment, updateStatusReview } from "@common/services/review.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -52,6 +53,23 @@ export const useReviewById = (id: number) => {
             return response.data;
         },
         enabled: id > 0
+    });
+}
+
+export const useCreateReviewMutation = (request: ReviewRequest) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationKey: ["createReview"],
+        mutationFn: async () => {
+            const response = await createReview(request);
+            return response;
+        },
+        onSuccess: (response) => {
+            toast.success(response.message);
+            queryClient.invalidateQueries({ queryKey: ["reviewers"] });
+            queryClient.invalidateQueries({ queryKey: ["reviews"] });
+        }
     });
 }
 

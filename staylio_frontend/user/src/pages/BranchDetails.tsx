@@ -7,7 +7,10 @@ import { useRooms } from "../../../common/hooks/useRooms";
 import { useHotelBranchById } from "../../../common/hooks/useHotelBranch";
 import { RoomStatus } from "../../../common/enums/RoomStatus";
 import RoomCard from "../components/RoomCard";
+import BranchMap from "../components/BranchMap";
+import NearbyPlacesList from "../components/NearbyPlacesList";
 import { useDebounce } from "../../../common/hooks/useDebounce";
+import { useNearbyPlaces } from "../../../common/hooks/useNearbyPlaces";
 
 export default function BranchDetails() {
   const { branchId } = useParams();
@@ -35,6 +38,11 @@ export default function BranchDetails() {
     sortBy,
     direction
   });
+
+  const { data: nearbyPlaces, isLoading: isLoadingNearby } = useNearbyPlaces(
+    branchInfo?.latitude || null,
+    branchInfo?.longitude || null
+  );
 
   const filteredRooms = useMemo(() => {
     if (!roomsData?.items) return [];
@@ -242,6 +250,25 @@ export default function BranchDetails() {
 
         </div>
       </div>
+
+      {/* Vị trí chi nhánh section */}
+      {branchInfo?.latitude && branchInfo?.longitude && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 w-full">
+          <hr className="border-gray-200 mb-10" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Xung quanh {branchInfo.hotelBranchName} có gì?
+          </h2>
+          <p className="text-gray-900 mb-10 text-lg">{branchInfo.address}, {branchInfo.wardName}, {branchInfo.provinceName}</p>
+          <BranchMap
+            latitude={branchInfo.latitude}
+            longitude={branchInfo.longitude}
+            branchName={branchInfo.hotelBranchName}
+            address={branchInfo.address}
+            nearbyPlaces={nearbyPlaces}
+          />
+          <NearbyPlacesList places={nearbyPlaces || []} isLoading={isLoadingNearby} />
+        </div>
+      )}
 
       <Footer />
     </div>

@@ -1,5 +1,5 @@
 import { BranchStatus } from "@common/enums/BranchStatus";
-import { QueryParams } from "@common/interfaces";
+import { PaginationResponse, QueryParams } from "@common/interfaces";
 import { ApiResponse } from "@common/interfaces/ApiResponse";
 import { HotelBranchRequest } from "@common/interfaces/request/HotelBranchRequest";
 import { HotelIdRequest } from "@common/interfaces/request/HotelIdRequest";
@@ -79,6 +79,17 @@ export const approveHotelBranch = async (id: number, status: BranchStatus): Prom
         return response.data;
     } catch (error) {
         console.error("Cập nhật trạng thái thất bại:", error);
+        throw error;
+    }
+}
+
+// API lấy danh sách các chi nhánh khách sạn ở tỉnh thành cụ thể
+export const getHotelBranchesByProvince = async (provinceId: number, params?: { page?: number, size?: number }): Promise<ApiResponse<PaginationResponse<HotelBranchResponse>>> => {
+    try {        
+        const response = await axiosInstance.get(`/hotel-branches/province/${provinceId}`, { params });
+        return response.data;
+    } catch (error) {
+        console.error("Lấy danh sách thất bại:", error);
         throw error;
     }
 }

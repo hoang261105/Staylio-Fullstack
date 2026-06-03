@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect } from "react";
-import { X, Building2, AlignLeft, Image as ImageIcon, Loader2, Camera } from "lucide-react";
+import { X, Building2, AlignLeft, Image as ImageIcon, Loader2, Camera, FileText } from "lucide-react";
 import { useUpdateHotelMutation } from "@common/hooks/useHotels";
 import type { HotelRequest } from "@common/interfaces/request/HotelRequest";
 import type { HotelResponse } from "@common/interfaces/response/HotelResponse";
@@ -22,6 +22,7 @@ const EditHotelModal: React.FC<EditHotelModalProps> = ({
     name: hotel.name,
     description: hotel.description,
     imageUrl: hotel.imageUrl,
+    policy: hotel.policy || "",
   });
   const [isUploading, setIsUploading] = useState(false);
 
@@ -31,6 +32,7 @@ const EditHotelModal: React.FC<EditHotelModalProps> = ({
         name: hotel.name,
         description: hotel.description,
         imageUrl: hotel.imageUrl,
+        policy: hotel.policy || "",
       });
     }
   }, [hotel, isOpen]);
@@ -68,6 +70,55 @@ const EditHotelModal: React.FC<EditHotelModalProps> = ({
         onClose();
       },
     });
+  };
+
+  const handlePolicyKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const textarea = e.currentTarget;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+
+      const value = textarea.value;
+      const before = value.substring(0, start);
+      const after = value.substring(end);
+
+      const currentLineStart = before.lastIndexOf("\n") + 1;
+      const currentLine = before.substring(currentLineStart);
+
+      const match = currentLine.match(/^(\s*)([-*•])\s(.*)$/);
+
+      if (match) {
+        const [, indent, bullet, text] = match;
+
+        if (text.trim() === "") {
+          const newBefore = before.substring(0, currentLineStart);
+          setFormData((prev) => ({ ...prev, policy: newBefore + after }));
+          setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd = newBefore.length;
+          }, 0);
+        } else {
+          const insertion = `\n${indent}${bullet} `;
+          const newBefore = before + insertion;
+          setFormData((prev) => ({ ...prev, policy: newBefore + after }));
+          setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd = newBefore.length;
+          }, 0);
+        }
+      } else {
+        const newBefore = before + "\n- ";
+        setFormData((prev) => ({ ...prev, policy: newBefore + after }));
+        setTimeout(() => {
+          textarea.selectionStart = textarea.selectionEnd = newBefore.length;
+        }, 0);
+      }
+    }
+  };
+
+  const handlePolicyFocus = () => {
+    if (!formData.policy) {
+      setFormData((prev) => ({ ...prev, policy: "- " }));
+    }
   };
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -134,6 +185,26 @@ const EditHotelModal: React.FC<EditHotelModalProps> = ({
                 }
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#0066FF]/20 focus:border-[#0066FF] outline-none transition-all placeholder:text-gray-400 resize-none"
                 placeholder="Giới thiệu về khách sạn của bạn..."
+                disabled={isPending}
+              />
+            </div>
+
+            {/* Policy Input */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-gray-400" />
+                Chính sách thương hiệu
+              </label>
+              <textarea
+                rows={4}
+                value={formData.policy}
+                onChange={(e) =>
+                  setFormData({ ...formData, policy: e.target.value })
+                }
+                onKeyDown={handlePolicyKeyDown}
+                onFocus={handlePolicyFocus}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#0066FF]/20 focus:border-[#0066FF] outline-none transition-all placeholder:text-gray-400 resize-none"
+                placeholder="Nhập chính sách của thương hiệu (nếu có)..."
                 disabled={isPending}
               />
             </div>

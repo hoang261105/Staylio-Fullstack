@@ -149,12 +149,23 @@ export default function BookingHistoryListView({
 
               <div className="flex justify-end gap-3">
                 {booking.status === BookingStatus.PENDING_PAYMENT && (
-                  <button
-                    onClick={() => onCancel(booking.bookingId)}
-                    className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100"
-                  >
-                    Hủy đơn
-                  </button>
+                  <>
+                    {booking.paymentUrl && (
+                      <button
+                        onClick={() => window.location.href = booking.paymentUrl!}
+                        className="px-4 py-2 text-sm font-medium text-white bg-[#0066FF] hover:bg-blue-700 rounded-lg transition-colors shadow-sm"
+                      >
+                        Thanh toán ngay
+                      </button>
+                    )}
+                    <button
+                      onClick={() => onCancel(booking.bookingId)}
+                      className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100"
+                    >
+                      Hủy đơn
+                    </button>
+
+                  </>
                 )}
               </div>
             </div>

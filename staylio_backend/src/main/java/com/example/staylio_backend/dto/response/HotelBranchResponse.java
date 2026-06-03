@@ -25,4 +25,6 @@ public class HotelBranchResponse {
     private BranchStatus status;
     private Long countReview;
     private Double averageRating;
+    private Double latitude;
+    private Double longitude;
 }

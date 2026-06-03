@@ -3,6 +3,7 @@ package com.example.staylio_backend.controller;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.ReplyCommentRequest;
 import com.example.staylio_backend.dto.request.ReviewFilterRequest;
+import com.example.staylio_backend.dto.request.ReviewRequest;
 import com.example.staylio_backend.dto.request.ReviewStatusRequest;
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.ReviewerResponse;
@@ -76,6 +77,24 @@ public class ReviewController {
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping
+    @Operation(summary = "Tạo 1 đánh giá sau khi đã trả phòng")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ApiResponse<ReviewResponse>> createReview(
+            @Valid @RequestBody ReviewRequest request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ){
+        ApiResponse<ReviewResponse> response = new ApiResponse<>(
+                true,
+                "Tạo đánh giá thành công!",
+                reviewService.createReview(request, principal),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}/reply-comment")

@@ -3,17 +3,20 @@ package com.example.staylio_backend.service.impl.admin;
 import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.common.exception.AppException;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
-import com.example.staylio_backend.dto.request.ReplyCommentRequest;
-import com.example.staylio_backend.dto.request.ReviewFilterRequest;
-import com.example.staylio_backend.dto.request.ReviewStatusRequest;
+import com.example.staylio_backend.dto.request.*;
 import com.example.staylio_backend.dto.response.ReviewerResponse;
 import com.example.staylio_backend.dto.response.ReviewResponse;
 import com.example.staylio_backend.dto.response.page.PaginationDTO;
 import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.*;
+import com.example.staylio_backend.model.enums.BookingStatus;
+import com.example.staylio_backend.model.enums.NotificationType;
+import com.example.staylio_backend.model.enums.ReviewStatus;
 import com.example.staylio_backend.model.enums.RoleName;
+import com.example.staylio_backend.repository.BookingRepo;
 import com.example.staylio_backend.repository.ProfileRepo;
 import com.example.staylio_backend.repository.ReviewRepo;
+import com.example.staylio_backend.service.NotificationService;
 import com.example.staylio_backend.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +34,8 @@ import java.util.NoSuchElementException;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepo reviewRepo;
     private final ProfileRepo profileRepo;
+    private final BookingRepo bookingRepo;
+    private final NotificationService notificationService;
 
     @Override
     public PaginationResponse<ReviewResponse> getReviews(ReviewFilterRequest request, UserPrincipal principal) {
@@ -121,13 +126,81 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void updateReplyComment(Long id, ReplyCommentRequest request, UserPrincipal principal) {
-        Review review = reviewRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.REVIEW_NOT_FOUND.getMessage()));
+    public ReviewResponse createReview(ReviewRequest request, UserPrincipal principal) {
+        Booking booking = bookingRepo.findById(request.getBookingId())
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.BOOKING_NOT_FOUND.getMessage()));
 
-        HotelBranch hotelBranch = review.getBooking().getRoom().getHotelBranch();
+        HotelBranch hotelBranch = booking.getRoom().getHotelBranch();
 
-        if (principal.hasRole(RoleName.ROLE_MANAGER)){
-            if (!hotelBranch.getHotel().getManager().getId().equals(principal.getId())){
+        Profile profile = profileRepo.findById(principal.getId()).orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND.getMessage()));
+
+        if (!booking.getUser().getId().equals(principal.getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        if (booking.getStatus() != BookingStatus.CHECKED_OUT) {
+            throw new AppException(ErrorCode.CANNOT_REVIEW_BEFORE_CHECKOUT);
+        }
+
+        if (reviewRepo.existsByBooking_IdAndIsDeletedFalse(booking.getId())) {
+            throw new AppException(ErrorCode.BOOKING_ALREADY_REVIEWED);
+        }
+
+        Review review = Review.builder()
+                .booking(booking)
+                .room(booking.getRoom())
+                .profile(profile)
+                .rating(request.getRating())
+                .comment(request.getComment())
+                .status(ReviewStatus.VISIBLE)
+                .isDeleted(false)
+                .build();
+
+        Review savedReview = reviewRepo.save(review);
+
+        notificationService.create(
+                NotificationRequest.builder()
+                        .senderId(profile.getId())
+                        .receiverId(hotelBranch.getHotel().getManager().getId())
+                        .type(NotificationType.REVIEW_CREATED)
+                        .referenceId(savedReview.getId())
+                        .title("Có đánh giá mới ở phòng " + booking.getRoom().getRoomName())
+                        .content(
+                                profile.getFullName()
+                                        + " đã đánh giá "
+                                        + request.getRating()
+                                        + " sao cho phòng "
+                                        + booking.getRoom().getRoomName()
+                                        + " tại chi nhánh "
+                                        + hotelBranch.getBranchName()
+                        )
+                        .build()
+        );
+
+        return convertToResponse(savedReview);
+    }
+
+    @Override
+    public void updateReplyComment(
+            Long id,
+            ReplyCommentRequest request,
+            UserPrincipal principal
+    ) {
+        Review review = reviewRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(
+                        ErrorCode.REVIEW_NOT_FOUND.getMessage()
+                ));
+
+        Booking booking = review.getBooking();
+        HotelBranch hotelBranch = booking.getRoom().getHotelBranch();
+
+        Profile manager = profileRepo.findById(principal.getId())
+                .orElseThrow(() -> new NoSuchElementException(
+                        ErrorCode.USER_NOT_FOUND.getMessage()
+                ));
+
+        if (principal.hasRole(RoleName.ROLE_MANAGER)) {
+            if (!hotelBranch.getHotel().getManager().getId().equals(manager.getId())) {
                 throw new AppException(ErrorCode.UNAUTHORIZED);
             }
         }
@@ -135,7 +208,23 @@ public class ReviewServiceImpl implements ReviewService {
         review.setReplyComment(request.getReplyComment());
         review.setReplyAt(LocalDateTime.now());
 
-        reviewRepo.save(review);
+        Review savedReview = reviewRepo.save(review);
+
+        notificationService.create(
+                NotificationRequest.builder()
+                        .senderId(manager.getId())
+                        .receiverId(review.getProfile().getId())
+                        .type(NotificationType.REVIEW_REPLIED)
+                        .referenceId(savedReview.getId())
+                        .title("Đánh giá của bạn đã được phản hồi")
+                        .content(
+                                "Quản lý khách sạn đã phản hồi đánh giá của bạn về phòng "
+                                        + booking.getRoom().getRoomName()
+                                        + " tại chi nhánh "
+                                        + hotelBranch.getBranchName()
+                        )
+                        .build()
+        );
     }
 
     @Override
@@ -222,6 +311,7 @@ public class ReviewServiceImpl implements ReviewService {
                 // HOTEL
                 hotelBranch.getId(),
                 hotelBranch.getBranchName(),
+                hotelBranch.getHotel().getId(),
                 hotelBranch.getHotel().getName(),
 
                 // REPLY

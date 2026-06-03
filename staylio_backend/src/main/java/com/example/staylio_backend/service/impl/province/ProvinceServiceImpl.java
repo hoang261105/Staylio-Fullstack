@@ -3,6 +3,7 @@ package com.example.staylio_backend.service.impl.province;
 import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.dto.request.ProvinceRequest;
 import com.example.staylio_backend.dto.request.WardRequest;
+import com.example.staylio_backend.dto.response.FeaturedLocationResponse;
 import com.example.staylio_backend.dto.response.ProvinceResponse;
 import com.example.staylio_backend.dto.response.WardResponse;
 import com.example.staylio_backend.model.entity.Province;
@@ -13,6 +14,7 @@ import com.example.staylio_backend.service.ProvinceService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -98,6 +100,11 @@ public class ProvinceServiceImpl implements ProvinceService {
                 wardRepo.findByProvinceIdAndNameContainingIgnoreCase(provinceId, keyword);
 
         return wards.stream().map(this::convertWardToResponse).toList();
+    }
+
+    @Override
+    public List<FeaturedLocationResponse> getFeaturedLocations() {
+        return provinceRepo.findFeaturedLocations(PageRequest.of(0, 8));
     }
 
     public ProvinceResponse convertToResponse(Province province) {

@@ -13,6 +13,8 @@ public interface HotelService extends BaseService<HotelRequest, HotelResponse, L
 
     void updateStatus(Long id, HotelStatus status);
 
+    void updateActive(Long id);
+
     void updateBulkActive(List<Long> ids, Boolean active);
 
     HotelResponse addHotel(HotelRequest hotelRequest, UserPrincipal userPrincipal);

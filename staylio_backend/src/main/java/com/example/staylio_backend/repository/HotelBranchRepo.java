@@ -5,6 +5,7 @@ import com.example.staylio_backend.model.enums.BranchStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -38,4 +39,30 @@ public interface HotelBranchRepo extends JpaRepository<HotelBranch, Long> {
             Long id
     );
     boolean existsByPhoneAndIdNot(String phone, Long id);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+        @Query("""
+        UPDATE HotelBranch hb
+        SET hb.isActive = :active
+        WHERE hb.hotel.id = :hotelId
+    """)
+    int updateActiveByHotelId(
+            @Param("hotelId") Long hotelId,
+            @Param("active") Boolean active
+    );
+
+    @Query("""
+        SELECT hb
+        FROM HotelBranch hb
+        JOIN hb.ward w
+        JOIN w.province p
+        WHERE p.id = :provinceId
+          AND hb.isActive = true
+          AND hb.status = com.example.staylio_backend.model.enums.BranchStatus.CONFIRMED
+        ORDER BY hb.createdAt DESC
+    """)
+    Page<HotelBranch> findBranchesByProvinceId(
+            @Param("provinceId") Long provinceId,
+            Pageable pageable
+    );
 }

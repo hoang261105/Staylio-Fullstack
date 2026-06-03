@@ -2,6 +2,7 @@
 import { Shield, Star, Users, Globe2, Headset, CreditCard, ArrowRight, Mail } from "lucide-react";
 import { HeroCarousel } from "../components/HeroCarousel";
 import { HotelBranchCard } from "../components/HotelBranchCard";
+import { FeaturedLocations } from "../components/FeaturedLocations";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import ChatBotWidget from "../components/ChatBotWidget";
@@ -69,6 +70,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <FeaturedLocations />
 
       {/* Popular Brands */}
       <section className="py-24">

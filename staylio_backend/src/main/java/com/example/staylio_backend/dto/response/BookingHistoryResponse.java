@@ -40,4 +40,8 @@ public class BookingHistoryResponse {
     private BookingStatus status;
 
     private LocalDateTime createdAt;
+    
+    private String paymentMethod;
+    
+    private String paymentUrl;
 }

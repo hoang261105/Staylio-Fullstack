@@ -1,5 +1,5 @@
 import { SearchQueryParams } from "@common/interfaces/request/QueryParams";
-import { getAllProvinces, getWardsByProvinceId } from "@common/services/province.service";
+import { getAllProvinces, getFeaturedLocations, getWardsByProvinceId } from "@common/services/province.service";
 import { useQuery } from "@tanstack/react-query"
 
 export const useProvinces = (params: SearchQueryParams) => {
@@ -20,4 +20,13 @@ export const useWardsByProvinceId = (provinceId: number, params: SearchQueryPara
             return response.data;
         }
     })
+}
+export const useFeaturedProvinces = () => {
+    return useQuery({
+        queryKey: ["featuredProvinces"],
+        queryFn: async () => {
+            const response = await getFeaturedLocations();
+            return response.data;
+        }
+    });
 }

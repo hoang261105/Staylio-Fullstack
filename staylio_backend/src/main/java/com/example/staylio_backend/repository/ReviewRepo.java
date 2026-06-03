@@ -141,4 +141,6 @@ public interface ReviewRepo extends JpaRepository<Review, Long> {
           AND r.isDeleted = false
     """)
     Double averageRatingByBranchId(@Param("branchId") Long branchId);
+
+    boolean existsByBooking_IdAndIsDeletedFalse(Long bookingId);
 }

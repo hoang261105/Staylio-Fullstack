@@ -84,7 +84,7 @@ export const updateHotelStatus = async (id: number, status: HotelStatus): Promis
     }
 }
 
-// Cập nhật trạng thái hoạt động của thương hiệu khách sạn
+// Cập nhật trạng thái hoạt động của thương hiệu khách sạn (bulk)
 export const updateHotelActiveStatus = async (ids: number[], active: boolean): Promise<ApiResponse<string>> => {
     try {
         const response = await axiosInstance.patch(`/hotels/bulk-active`, { ids, active });
@@ -94,3 +94,14 @@ export const updateHotelActiveStatus = async (ids: number[], active: boolean): P
         throw error;
     }
 }
+
+// Bật/tắt hoạt động của một thương hiệu khách sạn
+export const updateSingleHotelActiveStatus = async (id: number): Promise<ApiResponse<string>> => {
+    try {
+        const response = await axiosInstance.patch(`/hotels/${id}/active`);
+        return response.data;
+    } catch (error) {
+        console.error("Bật/tắt trạng thái hoạt động khách sạn thất bại!", error);
+        throw error;
+    }
+}

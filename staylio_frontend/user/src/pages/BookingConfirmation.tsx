@@ -79,14 +79,11 @@ export default function BookingConfirmation() {
             paymentMethod
         }, {
             onSuccess: (response) => {
-                // If the response contains a payment URL, redirect to it
-                // We might need to check if the response data has paymentUrl
                 const data = response.data as any;
                 if (data?.paymentUrl) {
                     window.location.href = data.paymentUrl;
                 } else {
-                    // Navigate to booking success or history page
-                    navigate("/bookings", { replace: true });
+                    navigate("/booking-history", { replace: true });
                 }
             },
             onError: (error: any) => {
@@ -101,7 +98,7 @@ export default function BookingConfirmation() {
 
             <div className="bg-blue-600 pt-28 pb-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <button 
+                    <button
                         onClick={() => navigate(-1)}
                         className="flex items-center text-blue-100 hover:text-white mb-4 transition-colors font-medium text-sm gap-1"
                     >

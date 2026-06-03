@@ -8,4 +8,6 @@ export interface HotelBranchRequest {
     wardId: number | null;
     imageUrl: string;
     capacity: number | null;
+    latitude: number | null;
+    longitude: number | null;
 }

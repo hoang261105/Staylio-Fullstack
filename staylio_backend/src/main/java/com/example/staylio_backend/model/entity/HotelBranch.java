@@ -46,4 +46,10 @@ public class HotelBranch extends AuditableObject {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private BranchStatus status;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
 }

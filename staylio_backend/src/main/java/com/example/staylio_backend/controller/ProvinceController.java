@@ -1,6 +1,7 @@
 package com.example.staylio_backend.controller;
 
 import com.example.staylio_backend.dto.response.ApiResponse;
+import com.example.staylio_backend.dto.response.FeaturedLocationResponse;
 import com.example.staylio_backend.dto.response.ProvinceResponse;
 import com.example.staylio_backend.dto.response.WardResponse;
 import com.example.staylio_backend.service.ProvinceService;
@@ -61,6 +62,20 @@ public class ProvinceController {
                 true,
                 "Lấy danh sách xã/phường thành công!",
                 provinceService.getWardsByProvinceId(id, keyword),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/featured")
+    @Operation(summary = "Lấy danh sách các tỉnh thành nổi bật")
+    public ResponseEntity<ApiResponse<List<FeaturedLocationResponse>>> getFeaturedLocations() {
+        ApiResponse<List<FeaturedLocationResponse>> apiResponse = new ApiResponse<>(
+                true,
+                "Lấy danh sách địa điểm nổi bật thành công!",
+                provinceService.getFeaturedLocations(),
                 null,
                 LocalDateTime.now()
         );

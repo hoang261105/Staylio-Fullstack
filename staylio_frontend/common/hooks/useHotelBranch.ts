@@ -9,6 +9,7 @@ import {
   deleteHotelBranch,
   getAllHotelBranches,
   getHotelBranchById,
+  getHotelBranchesByProvince,
   getMyHotelBranches,
   updateHotelBranch,
 } from "@common/services/hotel_branch.service";
@@ -118,5 +119,16 @@ export const useApproveHotelBranch = () => {
       toast.success(response.message);
       queryClient.invalidateQueries({ queryKey: ["hotelBranchs"] });
     }
+  });
+}
+
+export const useHotelBranchesByProvince = (provinceId: number, params: { page?: number, size?: number } = { page: 1, size: 10 }) => {
+  return useQuery<PaginationResponse<HotelBranchResponse>>({
+    queryKey: ["hotelBranchesByProvince", provinceId, params.page, params.size],
+    queryFn: async () => {
+      const response = await getHotelBranchesByProvince(provinceId, params);
+      return response.data;
+    },
+    enabled: provinceId > 0,
   });
 }

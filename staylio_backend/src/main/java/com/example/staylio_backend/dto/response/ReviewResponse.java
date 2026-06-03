@@ -34,6 +34,7 @@ public class ReviewResponse {
     // HOTEL
     private Long hotelBranchId;
     private String hotelBranchName;
+    private Long hotelId;
     private String hotelName;
 
     // REPLY

@@ -16,6 +16,7 @@ export interface ReviewResponse {
     roomNumber: string;
     hotelBranchId: number;
     hotelBranchName: string;
+    hotelId: number;
     hotelName: string;
     replyComment: string;
     replyAt: string;

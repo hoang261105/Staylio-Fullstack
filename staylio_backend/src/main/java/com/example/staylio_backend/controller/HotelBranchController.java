@@ -51,19 +51,17 @@ public class HotelBranchController {
         @GetMapping("/me")
         @Operation(summary = "Danh sách tất cả chi nhánh của tôi")
         public ResponseEntity<ApiResponse<List<HotelBranchResponse>>> getMyHotelBranches(
-                @RequestParam Long hotelId,
-                @RequestParam BranchStatus status,
-                @AuthenticationPrincipal UserPrincipal userPrincipal
-        ){
-            ApiResponse<List<HotelBranchResponse>> response = new ApiResponse<>(
-                    true,
-                    "Lấy tất cả chi nhánh của tôi thành công!",
-                    hotelBranchService.getAllBranchesByHotelId(hotelId, status, userPrincipal),
-                    null,
-                    LocalDateTime.now()
-            );
+                        @RequestParam Long hotelId,
+                        @RequestParam BranchStatus status,
+                        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+                ApiResponse<List<HotelBranchResponse>> response = new ApiResponse<>(
+                                true,
+                                "Lấy tất cả chi nhánh của tôi thành công!",
+                                hotelBranchService.getAllBranchesByHotelId(hotelId, status, userPrincipal),
+                                null,
+                                LocalDateTime.now());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         @GetMapping("/{id}")
@@ -135,9 +133,8 @@ public class HotelBranchController {
         @Operation(summary = "Cập nhật/Duyệt chi nhánh khách sạn")
         @PreAuthorize("hasRole('ADMIN')")
         public ResponseEntity<ApiResponse<String>> updateStatus(
-                @PathVariable Long id,
-                @RequestBody BranchStatusRequest request
-        ) {
+                        @PathVariable Long id,
+                        @RequestBody BranchStatusRequest request) {
                 hotelBranchService.updateStatus(id, request);
                 ApiResponse<String> response = new ApiResponse<>(
                                 true,
@@ -145,6 +142,24 @@ public class HotelBranchController {
                                 null,
                                 null,
                                 LocalDateTime.now());
+
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        @GetMapping("/province/{provinceId}")
+        @Operation(summary = "Lấy danh sách các chi nhánh khách sạn theo tỉnh thành")
+        public ResponseEntity<ApiResponse<PaginationResponse<HotelBranchResponse>>> getBranchesByProvince(
+                @PathVariable Long provinceId,
+                @RequestParam(defaultValue = "1") int page,
+                @RequestParam(defaultValue = "10") int size
+        ) {
+                ApiResponse<PaginationResponse<HotelBranchResponse>> response = new ApiResponse<>(
+                        true,
+                        "Lấy danh sách chi nhánh theo tỉnh thành thành công!",
+                        hotelBranchService.getBranchesByProvince(provinceId, page, size),
+                        null,
+                        LocalDateTime.now()
+                );
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }

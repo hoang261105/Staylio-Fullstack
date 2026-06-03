@@ -17,4 +17,5 @@ public class HotelResponse {
     private String hostHotelName;
     private boolean isActive;
     private Integer branchCount;
+    private String policy;
 }

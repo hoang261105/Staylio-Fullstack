@@ -1,10 +1,12 @@
 import { PaginationResponse } from "@common/interfaces";
 import { BookingRequest } from "@common/interfaces/request/BookingRequest";
 import { BookingStatusRequest } from "@common/interfaces/request/BookingStatusRequest";
+import { PaymentStatusRequest } from "@common/interfaces/request/PaymentStatusRequest";
 import { BookingQueryParams, QueryParams } from "@common/interfaces/request/QueryParams";
 import { BookingHistoryResponse } from "@common/interfaces/response/BookingHistoryResponse";
 import { BookingResponse } from "@common/interfaces/response/BookingResponse";
 import { createBooking, getAllBookings, getBookedDates, getBookingById, getHistoryBookings, previewBooking, updateStatus } from "@common/services/booking.service";
+import { updatePaymentStatus } from "@common/services/payment.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -114,6 +116,26 @@ export const useHistoryBookings = (params: QueryParams) => {
                 page: params.page + 1
             });
             return response.data;
+        }
+    });
+}
+
+export const useUpdatePaymentStatusMutation = (id: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationKey: ["updatePaymentStatus", id],
+        mutationFn: async (data: PaymentStatusRequest) => {
+            const response = await updatePaymentStatus(id, data);
+            return response;
+        },
+        onSuccess: (response) => {
+            toast.success(response.message);
+            queryClient.invalidateQueries({ queryKey: ["bookings"] })
+            queryClient.invalidateQueries({ queryKey: ["booking", id] })
+        },
+        onError: (response) => {
+            toast.error(response.message)
         }
     });
 }

@@ -16,4 +16,9 @@ public class HotelRequest {
     private String description;
 
     private String imageUrl;
+
+    private String policy;
+
+    private Double latitude;
+    private Double longitude;
 }
