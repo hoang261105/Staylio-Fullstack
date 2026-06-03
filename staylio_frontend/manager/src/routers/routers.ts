@@ -15,31 +15,31 @@ export const routers = createBrowserRouter([
     Component: ManagerLogin,
   },
   {
-    path: "/manager/dashboard",
+    path: "/dashboard",
     Component: ManagerDashboard,
   },
   {
-    path: "/manager/branches",
+    path: "/branches",
     Component: ManagerHotelBranches,
   },
   {
-    path: "/manager/rooms",
+    path: "/rooms",
     Component: ManagerRooms
   },
   {
-    path: "/manager/room-images",
+    path: "/room-images",
     Component: ManagerRoomImages
   },
   {
-    path: "/manager/vouchers",
+    path: "/vouchers",
     Component: ManagerVoucher
   },
   {
-    path: "/manager/bookings",
+    path: "/bookings",
     Component: ManagerBookings
   },
   {
-    path: "/manager/reviews",
+    path: "/reviews",
     Component: ManagerReviews
   },
   {
