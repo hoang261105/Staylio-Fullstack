@@ -12,8 +12,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "https://staylio-fullstack.vercel.app",
                         "https://staylio-manager.vercel.app",
-                        "http://localhost:3001"
-                )
+                        "https://staylio-admin.vercel.app",
+                        "http://localhost:3000",
+                        "http://localhost:3001",
+                        "http://localhost:3002",
+                        "http://localhost:5173")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

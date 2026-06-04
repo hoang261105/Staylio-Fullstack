@@ -1,10 +1,8 @@
 package com.example.staylio_backend.service.impl.auth;
 
-import com.example.staylio_backend.config.security.AppConfig;
 import com.example.staylio_backend.config.security.jwt.JwtTokenProvider;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.NewPasswordRequest;
-import com.example.staylio_backend.dto.request.RefreshTokenRequest;
 import com.example.staylio_backend.dto.request.UserLoginRequest;
 import com.example.staylio_backend.dto.request.UserRegisterRequest;
 import com.example.staylio_backend.dto.response.JWTResponse;
@@ -115,7 +113,9 @@ public class AuthServiceImpl implements AuthService {
             String content = "<h3>Dear " + savedUser.getUserName() + ",</h3>" +
                     "<p>Thank you for registering an account at Staylio.</p>" +
                     "<p>Please click the button below to activate your account.:</p>" +
-                    "<a href='" + verifyLink + "' style='background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>KÍCH HOẠT TÀI KHOẢN</a>" +
+                    "<a href='" + verifyLink
+                    + "' style='background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>KÍCH HOẠT TÀI KHOẢN</a>"
+                    +
                     "<p>This link will expire in 1 hours.</p>";
 
             emailService.sendHtmlMail(savedUser.getEmail(), "Xác thực tài khoản của bạn", content);
@@ -130,11 +130,9 @@ public class AuthServiceImpl implements AuthService {
     public JWTResponse login(UserLoginRequest userLoginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        userLoginRequest.getEmail(),
-                        userLoginRequest.getPassword()
-                )
-            );
+                    new UsernamePasswordAuthenticationToken(
+                            userLoginRequest.getEmail(),
+                            userLoginRequest.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -180,14 +178,14 @@ public class AuthServiceImpl implements AuthService {
                     "<a href='" + resetLink + "'>RESET PASSWORD</a>";
 
             emailService.sendHtmlMail(email, "Password reset request", content);
-        } catch (MessagingException e){
+        } catch (MessagingException e) {
             throw new AppException(ErrorCode.CANNOT_SEND_EMAIL);
         }
     }
 
     @Override
     public void resetPassword(String token, NewPasswordRequest newPasswordRequest) {
-        VerificationToken verificationToken =verificationService.validateToken(token, VerificationType.RESET_PASSWORD);
+        VerificationToken verificationToken = verificationService.validateToken(token, VerificationType.RESET_PASSWORD);
 
         if (!newPasswordRequest.getNewPassword().equals(newPasswordRequest.getConfirmNewPassword())) {
             throw new AppException(ErrorCode.PASSWORD_NOT_MATCH);
@@ -208,11 +206,10 @@ public class AuthServiceImpl implements AuthService {
 
         if (remainingTime > 0) {
             redisTemplate.opsForValue().set(
-                accessToken,
-                "blacklisted",
-                remainingTime,
-                TimeUnit.MILLISECONDS
-            );
+                    accessToken,
+                    "blacklisted",
+                    remainingTime,
+                    TimeUnit.MILLISECONDS);
         }
 
         BlacklistToken blToken = new BlacklistToken();
@@ -224,7 +221,8 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public TokenResponse authenticateGoogleUser(String idTokenString) throws Exception {
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory()) .setAudience(Collections.singletonList(googleClientId)) .build();
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+                .setAudience(Collections.singletonList(googleClientId)).build();
 
         GoogleIdToken idToken = verifier.verify(idTokenString);
 
@@ -248,8 +246,7 @@ public class AuthServiceImpl implements AuthService {
             newUser.setIsEmailVerified(true);
             newUser.setIsFirstLogin(true);
             newUser.setRole(
-                    roleRepo.findByRoleName(RoleName.ROLE_CUSTOMER)
-            );
+                    roleRepo.findByRoleName(RoleName.ROLE_CUSTOMER));
 
             User savedUser = accountRepo.save(newUser);
 
@@ -277,7 +274,7 @@ public class AuthServiceImpl implements AuthService {
                 }
             }
         }
-        
+
         if (refreshToken == null || refreshToken.isEmpty()) {
             refreshToken = request.getHeader("Refresh-Token");
         }
@@ -307,14 +304,13 @@ public class AuthServiceImpl implements AuthService {
                 .secure(true) // DEV
                 .path("/")
                 .maxAge(Duration.ofMinutes(15))
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
 
         return newAccessToken;
     }
-
 
     public TokenResponse generateTokenResponse(User user) {
         User findUser = accountRepo.findByEmail(user.getEmail())

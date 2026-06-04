@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -41,11 +42,9 @@ public class AuthController {
     public ResponseEntity<ApiResponse<String>> verifyRegistration(@RequestParam("token") String token) {
         verificationService.verifyEmail(token);
         return ResponseEntity.ok(
-            ApiResponse.success(
-                null,
-                    "Xác thực đăng kí thành công!"
-            )
-        );
+                ApiResponse.success(
+                        null,
+                        "Xác thực đăng kí thành công!"));
     }
 
     private void setCookies(HttpServletResponse response, String accessToken, String refreshToken) {
@@ -54,19 +53,19 @@ public class AuthController {
                 .secure(true)
                 .path("/")
                 .maxAge(Duration.ofMinutes(15))
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
-                
+
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
                 .maxAge(Duration.ofDays(7))
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
-        response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, accessCookie.toString());
-        response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
     }
 
     private void clearCookies(HttpServletResponse response) {
@@ -75,31 +74,32 @@ public class AuthController {
                 .secure(true)
                 .path("/")
                 .maxAge(0)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
-                
+
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
                 .maxAge(0)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
-        response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, accessCookie.toString());
-        response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
     }
 
     @PostMapping("/login")
     @Operation(summary = "Đăng nhập tài khoản")
-    public ResponseEntity<ApiResponse<JWTResponse>> login(@Valid @RequestBody UserLoginRequest userLoginRequest, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<JWTResponse>> login(@Valid @RequestBody UserLoginRequest userLoginRequest,
+            HttpServletResponse response) {
         JWTResponse loginResponse = authService.login(userLoginRequest);
-        
+
         setCookies(response, loginResponse.getAccessToken(), loginResponse.getRefreshToken());
-        
+
         loginResponse.setAccessToken(null);
         loginResponse.setRefreshToken(null);
-        
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(loginResponse, "Đăng nhập thành công!"));
     }
@@ -109,9 +109,8 @@ public class AuthController {
     public ResponseEntity<ApiResponse<String>> forgotPassword(@RequestParam String email) {
         authService.forgotPassword(email);
         return ResponseEntity.ok(ApiResponse.success(
-            null,
-            "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn!"
-        ));
+                null,
+                "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn!"));
     }
 
     @GetMapping("/reset-password")
@@ -125,19 +124,17 @@ public class AuthController {
     @Operation(summary = "Đặt lại mật khẩu")
     public ResponseEntity<ApiResponse<String>> resetPassword(
             @RequestParam("token") String token,
-            @Valid @RequestBody NewPasswordRequest newPasswordRequest
-    ) {
+            @Valid @RequestBody NewPasswordRequest newPasswordRequest) {
         authService.resetPassword(token, newPasswordRequest);
         return ResponseEntity.ok(ApiResponse.success(
                 null,
-                "Mật khẩu đã được thay đổi thành công!"
-        ));
+                "Mật khẩu đã được thay đổi thành công!"));
     }
 
     @PostMapping("/refresh-token")
     @Operation(summary = "Cấp mới refresh-token")
     public ResponseEntity<?> refreshToken(HttpServletRequest request,
-                                          HttpServletResponse response) {
+            HttpServletResponse response) {
 
         authService.refreshToken(request, response);
         return ResponseEntity.ok("Refresh thành công!");
@@ -148,7 +145,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<String>> logout(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = null;
         String refreshToken = null;
-        
+
         if (request.getCookies() != null) {
             for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
                 if ("accessToken".equals(cookie.getName())) {
@@ -158,33 +155,31 @@ public class AuthController {
                 }
             }
         }
-        
+
         if (accessToken != null && refreshToken != null) {
             authService.logout(accessToken, refreshToken);
             clearCookies(response);
             return ResponseEntity.ok(ApiResponse.success(
-                null,
-                 "Đăng xuất thành công!"
-            ));
+                    null,
+                    "Đăng xuất thành công!"));
         }
         return ResponseEntity.badRequest().body(ApiResponse.fail(
                 "Token không hợp lệ hoặc đã đăng xuất!",
-                List.of()
-        ));
+                List.of()));
     }
 
     @PostMapping("/google-login")
-    public ResponseEntity<ApiResponse<TokenResponse>> googleLogin(@RequestBody GoogleLoginRequest request, HttpServletResponse response) throws Exception {
+    public ResponseEntity<ApiResponse<TokenResponse>> googleLogin(@RequestBody GoogleLoginRequest request,
+            HttpServletResponse response) throws Exception {
         TokenResponse token = authService.authenticateGoogleUser(request.getIdToken());
-        
+
         setCookies(response, token.getAccessToken(), token.getRefreshToken());
-        
+
         token.setAccessToken(null);
         token.setRefreshToken(null);
-        
+
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(
                 token,
-                "Đăng nhập băng google thành công!"
-        ));
+                "Đăng nhập băng google thành công!"));
     }
 }
