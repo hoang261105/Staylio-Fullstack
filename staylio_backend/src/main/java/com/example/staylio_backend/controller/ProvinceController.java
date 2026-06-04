@@ -4,6 +4,7 @@ import com.example.staylio_backend.dto.response.ApiResponse;
 import com.example.staylio_backend.dto.response.FeaturedLocationResponse;
 import com.example.staylio_backend.dto.response.ProvinceResponse;
 import com.example.staylio_backend.dto.response.WardResponse;
+import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.service.ProvinceService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,23 @@ public class ProvinceController {
                 true,
                 "Lấy danh sách địa điểm nổi bật thành công!",
                 provinceService.getFeaturedLocations(),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/locations/paged")
+    @Operation(summary = "Lấy danh sách các tỉnh thành nổi bật có phân trang")
+    public ResponseEntity<ApiResponse<PaginationResponse<FeaturedLocationResponse>>> getFeaturedLocationsPaged(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "12") int limit
+    ) {
+        ApiResponse<PaginationResponse<FeaturedLocationResponse>> apiResponse = new ApiResponse<>(
+                true,
+                "Lấy danh sách địa điểm nổi bật thành công!",
+                provinceService.getFeaturedLocationsPaged(page, limit),
                 null,
                 LocalDateTime.now()
         );

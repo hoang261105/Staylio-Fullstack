@@ -48,7 +48,7 @@ export default function LocationBranches() {
           {!isLoading && totalPages > 1 && (
             <div className="mt-12 flex justify-center">
               <Pagination
-                page={currentPage - 1} // Pagination component uses 0-indexed page internally?
+                page={currentPage - 1}
                 totalPages={totalPages}
                 onChange={(newPage) => setCurrentPage(newPage + 1)}
               />

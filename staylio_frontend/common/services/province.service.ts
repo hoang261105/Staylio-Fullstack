@@ -35,3 +35,16 @@ export const getFeaturedLocations = async (): Promise<ApiResponse<FeaturedLocati
         throw error;
     }
 }
+
+// API lấy danh sách các tỉnh thành có phân trang
+export const getFeaturedLocationsPaged = async (page: number, limit: number) => {
+    try {
+        const response = await axiosInstance.get("/provinces/locations/paged", {
+            params: { page, limit }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Lấy danh sách địa điểm nổi bật phân trang thất bại!", error);
+        throw error;
+    }
+}

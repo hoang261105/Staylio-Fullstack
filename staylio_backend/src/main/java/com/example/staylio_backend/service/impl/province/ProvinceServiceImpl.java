@@ -6,6 +6,8 @@ import com.example.staylio_backend.dto.request.WardRequest;
 import com.example.staylio_backend.dto.response.FeaturedLocationResponse;
 import com.example.staylio_backend.dto.response.ProvinceResponse;
 import com.example.staylio_backend.dto.response.WardResponse;
+import com.example.staylio_backend.dto.response.page.PaginationDTO;
+import com.example.staylio_backend.dto.response.page.PaginationResponse;
 import com.example.staylio_backend.model.entity.Province;
 import com.example.staylio_backend.model.entity.Ward;
 import com.example.staylio_backend.repository.ProvinceRepo;
@@ -14,6 +16,7 @@ import com.example.staylio_backend.service.ProvinceService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -104,7 +107,24 @@ public class ProvinceServiceImpl implements ProvinceService {
 
     @Override
     public List<FeaturedLocationResponse> getFeaturedLocations() {
-        return provinceRepo.findFeaturedLocations(PageRequest.of(0, 8));
+        return provinceRepo.findFeaturedLocations(PageRequest.of(0, 8)).getContent();
+    }
+
+    @Override
+    public PaginationResponse<FeaturedLocationResponse> getFeaturedLocationsPaged(int page, int limit) {
+        Page<FeaturedLocationResponse> pageData = provinceRepo.findFeaturedLocations(PageRequest.of(page - 1, limit));
+
+        PaginationDTO paginationDTO = PaginationDTO.builder()
+                .currentPage(page)
+                .pageSize(limit)
+                .totalPages(pageData.getTotalPages())
+                .totalItems(pageData.getTotalElements())
+                .build();
+
+        return PaginationResponse.<FeaturedLocationResponse>builder()
+                .items(pageData.getContent())
+                .pagination(paginationDTO)
+                .build();
     }
 
     public ProvinceResponse convertToResponse(Province province) {

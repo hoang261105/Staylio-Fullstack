@@ -106,7 +106,7 @@ export default function Header() {
                         <img src={location.imageUrl || 'https://images.unsplash.com/photo-1596422846543-75c6ef08b739?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=100'} alt={location.provinceName} className="w-8 h-8 rounded-md object-cover" />
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-gray-200">{location.provinceName}</p>
-                          <p className="text-xs text-gray-500">{location.totalHotels} khách sạn</p>
+                          <p className="text-xs text-gray-500">{location.totalBranches} khách sạn</p>
                         </div>
                       </div>
                     ))}
