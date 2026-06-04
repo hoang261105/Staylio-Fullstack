@@ -45,7 +45,11 @@ export const useLoginForm = (onSubmitSuccess: (path: string) => void) => {
       clearAllErrors();
 
       setTimeout(() => {
-        window.location.href = redirectPath;
+        if (onSubmitSuccess) {
+          onSubmitSuccess(redirectPath);
+        } else {
+          window.location.href = redirectPath;
+        }
       }, 500);
     },
     (error: any) => {
