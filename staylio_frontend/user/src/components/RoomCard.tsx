@@ -82,7 +82,7 @@ export default function RoomCard({ room, branchInfo }: RoomCardProps) {
           )}
         </div>
 
-        <div className="mt-auto pt-4 border-t dark:border-gray-700 border-gray-100 dark:border-gray-700 flex items-end justify-between">
+        <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex items-end justify-between">
           <div>
             <p className="text-[10px] text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider mb-0.5">Giá mỗi đêm</p>
             <div className="flex items-baseline gap-1">

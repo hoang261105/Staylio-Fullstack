@@ -64,7 +64,7 @@ export const StayInfoCard = ({
                 </div>
             </div>
 
-            <div className="mt-6 pt-6 border-t dark:border-gray-700 border-gray-100 dark:border-gray-700">
+            <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
                 <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
                     Ghi chú cho khách sạn (Tùy chọn)
                 </label>

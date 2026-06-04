@@ -58,9 +58,9 @@ export default function NotFound() {
 
           <button
             onClick={() => navigate(getHomePathByRole())}
-            className="inline-flex items-center justify-center px-6 py-3 border border-gray-600 rounded-xl text-base font-medium "
+            className="inline-flex items-center justify-center px-6 py-3 border-2 border-slate-300 text-base font-medium rounded-xl text-slate-700 bg-white hover:bg-slate-100 hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-200 group shadow-sm"
           >
-            <Home className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" /> 
+            <Home className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
             Trang chủ
           </button>
         </div>

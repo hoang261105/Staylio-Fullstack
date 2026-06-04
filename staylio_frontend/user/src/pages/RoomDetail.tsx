@@ -194,7 +194,7 @@ export default function RoomDetail() {
         </div>
 
         {similarRooms.length > 0 && (
-          <div className="mt-16 pt-12 border-t dark:border-gray-700 border-gray-200 dark:border-gray-600">
+          <div className="mt-16 pt-12 border-t border-gray-200 dark:border-gray-600">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
               Các phòng khác tại chi nhánh này
             </h2>

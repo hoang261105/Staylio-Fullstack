@@ -168,7 +168,7 @@ export default function ChatBotWidget() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-4 bg-white dark:bg-gray-800 border-t dark:border-gray-700 border-gray-100 dark:border-gray-700">
+        <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
           <form
             onSubmit={handleSend}
             className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 p-1.5 rounded-2xl border border-gray-200 dark:border-gray-600 focus-within:border-b dark:border-gray-700lue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all"

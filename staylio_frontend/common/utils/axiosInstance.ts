@@ -70,7 +70,7 @@ axiosInstance.interceptors.response.use(
       const res = await axiosInstance.post(
         "/auth/refresh-token",
         {},
-        { 
+        {
           withCredentials: true,
           headers: refreshToken ? { "Refresh-Token": refreshToken } : {}
         }
@@ -106,17 +106,9 @@ const redirectByRole = () => {
   toast.error("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.");
 
   setTimeout(() => {
-    const role = localStorage.getItem("roleName");
-    
     localStorage.removeItem("roleName");
     localStorage.removeItem("user");
 
-    if (role === RoleName.ROLE_ADMIN) {
-      window.location.href = "/admin/login";
-    } else if (role === RoleName.ROLE_MANAGER) {
-      window.location.href = "/login";
-    } else {
-      window.location.href = "/";
-    }
+    window.location.href = "/"
   }, 2000);
 };

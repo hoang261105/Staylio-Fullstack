@@ -8,12 +8,12 @@ export const FeaturedLocations = () => {
   if (!featuredLocations || featuredLocations.length === 0) return null;
 
   return (
-    <section className="py-24 bg-white dark:bg-gray-800 dark:bg-gray-900 transition-colors duration-200">
+    <section className="py-24 bg-white dark:bg-gray-900 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">Địa điểm nổi bật</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">Địa điểm nổi bật</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               Khám phá những điểm đến được du khách yêu thích nhất
             </p>
           </div>
@@ -39,11 +39,11 @@ export const FeaturedLocations = () => {
                   <MapPin className="w-5 h-5 text-blue-400" />
                   {location.provinceName}
                 </h3>
-                <div className="flex flex-wrap items-center gap-2 text-white/90">
-                  <span className="bg-white dark:bg-gray-800/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="bg-white dark:bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-900 dark:text-white">
                     {location.totalHotels} khách sạn
                   </span>
-                  <span className="bg-white dark:bg-gray-800/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
+                  <span className="bg-white dark:bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-900 dark:text-white">
                     {location.totalBranches} chi nhánh
                   </span>
                 </div>

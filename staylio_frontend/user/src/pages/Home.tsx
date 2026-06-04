@@ -41,7 +41,7 @@ export default function Home() {
 
       <HeroCarousel />
 
-      <section className="relative z-20 -mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative z-20 -mt-6 md:-mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white dark:bg-gray-800/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 dark:border-gray-800 p-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-200/60 dark:divide-gray-800">
             <div className="flex flex-col items-center justify-center text-center px-4">

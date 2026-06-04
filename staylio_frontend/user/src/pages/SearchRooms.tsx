@@ -82,7 +82,7 @@ export default function SearchRooms() {
 
         <div className="w-full md:w-72 shrink-0">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sticky top-28">
-            <div className="flex items-center gap-2 mb-6 pb-4 border-b dark:border-gray-700 border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
               <Filter className="w-5 h-5 text-gray-700 dark:text-gray-200" />
               <h2 className="text-lg font-bold text-gray-900 dark:text-white">Bộ lọc chi tiết</h2>
             </div>

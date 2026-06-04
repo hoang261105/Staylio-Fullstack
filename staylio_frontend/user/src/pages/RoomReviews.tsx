@@ -110,7 +110,7 @@ export default function RoomReviews() {
                 </p>
 
                 {review.replyComment && (
-                  <div className="mt-6 bg-blue-50/70 rounded-xl p-5 border border-b dark:border-gray-700lue-100 relative before:content-[''] before:absolute before:-top-2 before:left-8 before:w-4 before:h-4 before:bg-blue-50/70 before:border-l before:border-t dark:border-gray-700 before:border-b dark:border-gray-700lue-100 before:rotate-45">
+                  <div className="mt-6 bg-blue-50/70 rounded-xl p-5 border border-b dark:border-gray-700lue-100 relative before:content-[''] before:absolute before:-top-2 before:left-8 before:w-4 before:h-4 before:bg-blue-50/70 before:border-l before:border-t before:border-b dark:border-gray-700lue-100 before:rotate-45">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
                         S

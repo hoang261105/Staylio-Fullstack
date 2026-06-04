@@ -72,7 +72,7 @@ export function HotelCard({ hotel }: HotelCardProps) {
         </div>
 
         {/* Price & Action - Đẩy xuống cuối card */}
-        <div className="mt-auto pt-4 border-t dark:border-gray-700 border-gray-100 dark:border-gray-700 flex items-center justify-between">
+        <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
           <div>
             <p className="text-[11px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wider">Giá từ</p>
             <div className="flex items-baseline gap-0.5">

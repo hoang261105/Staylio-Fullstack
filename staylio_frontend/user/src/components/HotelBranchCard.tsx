@@ -62,7 +62,7 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
           </span>
         </div>
 
-        <div className="mt-auto pt-4 border-t dark:border-gray-700 border-gray-100 dark:border-gray-700 flex items-center justify-between">
+        <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500 mb-1">
               <Users className="w-3.5 h-3.5" />

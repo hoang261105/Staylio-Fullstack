@@ -12,7 +12,7 @@ export default function BranchCard({ branch }: BranchCardProps) {
   return (
     <div
       onClick={() => navigate(`/hotel/${branch.hotelId}/branch/${branch.id}`)}
-      className="group bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden cursor-pointer hover:shadow-xl hover:border-t dark:border-gray-700ransparent hover:-translate-y-1 transition-all duration-300 flex flex-col"
+      className="group bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden cursor-pointer hover:shadow-xl hover:border-transparent hover:-translate-y-1 transition-all duration-300 flex flex-col"
     >
       <div className="relative h-48 sm:h-56 overflow-hidden">
         <img
@@ -52,7 +52,7 @@ export default function BranchCard({ branch }: BranchCardProps) {
           </p>
         </div>
 
-        <div className="mt-auto pt-4 flex items-center justify-between border-t dark:border-gray-700 border-gray-50">
+        <div className="mt-auto pt-4 flex items-center justify-between border-t border-gray-50">
           <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-green-500"></span>
             Sức chứa: {branch.capacity} người

@@ -114,7 +114,7 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
 
   return (
     <div className="sticky top-28 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl shadow-xl p-6">
-      <div className="flex items-end gap-1 mb-6 pb-6 border-b dark:border-gray-700 border-gray-100 dark:border-gray-700">
+      <div className="flex items-end gap-1 mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
         <span className="text-3xl font-bold text-blue-600">
           {new Intl.NumberFormat("vi-VN", {
             style: "currency",

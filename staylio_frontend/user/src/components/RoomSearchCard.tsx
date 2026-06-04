@@ -62,7 +62,7 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
           </div>
         </div>
 
-        <div className="mt-auto pt-4 border-t dark:border-gray-700 border-gray-100 dark:border-gray-700 flex flex-wrap items-end justify-between gap-4">
+        <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider mb-1">Giá từ</p>
             <div className="flex items-baseline gap-1">

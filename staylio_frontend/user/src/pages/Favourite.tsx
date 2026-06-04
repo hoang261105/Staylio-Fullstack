@@ -73,7 +73,7 @@ export default function Favorites() {
                 </div>
 
                 {/* FOOTER */}
-                <div className="flex justify-between items-end border-t dark:border-gray-700 border-gray-100 dark:border-gray-700 pt-4">
+                <div className="flex justify-between items-end border-t border-gray-100 dark:border-gray-700 pt-4">
                   
                   {/* PRICE */}
                   <div>
