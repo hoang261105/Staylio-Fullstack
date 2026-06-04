@@ -114,7 +114,7 @@ const redirectByRole = () => {
     if (role === RoleName.ROLE_ADMIN) {
       window.location.href = "/admin/login";
     } else if (role === RoleName.ROLE_MANAGER) {
-      window.location.href = "/manager/login";
+      window.location.href = "/login";
     } else {
       window.location.href = "/";
     }

@@ -36,10 +36,10 @@ export default function NotificationPopover() {
 
     if (type.startsWith("BOOKING_")) {
       if (role === "ROLE_CUSTOMER") navigate("/booking-history", { state: { bookingId: notification.referenceId } });
-      if (role === "ROLE_MANAGER") navigate("/manager/bookings", { state: { bookingId: notification.referenceId } });
+      if (role === "ROLE_MANAGER") navigate("/bookings", { state: { bookingId: notification.referenceId } });
       if (role === "ROLE_ADMIN") navigate("/admin/bookings", { state: { bookingId: notification.referenceId } });
     } else if (type.startsWith("REVIEW_")) {
-      if (role === "ROLE_MANAGER") navigate("/manager/reviews", { state: { reviewId: notification.referenceId } });
+      if (role === "ROLE_MANAGER") navigate("/reviews", { state: { reviewId: notification.referenceId } });
       if (role === "ROLE_ADMIN") navigate("/admin/reviews", { state: { reviewId: notification.referenceId } });
       if (role === "ROLE_CUSTOMER") {
         getReviewById(notification.referenceId).then(res => {
@@ -52,14 +52,14 @@ export default function NotificationPopover() {
         });
       }
     } else if (type.startsWith("VOUCHER_")) {
-      if (role === "ROLE_MANAGER") navigate("/manager/vouchers", { state: { voucherId: notification.referenceId } });
+      if (role === "ROLE_MANAGER") navigate("/vouchers", { state: { voucherId: notification.referenceId } });
       if (role === "ROLE_ADMIN") navigate("/admin/vouchers", { state: { voucherId: notification.referenceId } });
     } else if (type.startsWith("ROOM_IMAGE_")) {
-      if (role === "ROLE_MANAGER") navigate("/manager/room-images", { state: { imageId: notification.referenceId } });
+      if (role === "ROLE_MANAGER") navigate("/room-images", { state: { imageId: notification.referenceId } });
       if (role === "ROLE_ADMIN") navigate("/admin/room-images", { state: { imageId: notification.referenceId } });
     } else if (type.startsWith("HOTEL_BRANCH_") || type.startsWith("HOTEL_BRAND_")) {
       if (role === "ROLE_ADMIN") navigate("/admin/hotel-branches", { state: { branchId: notification.referenceId } });
-      if (role === "ROLE_MANAGER") navigate("/manager/branches", { state: { branchId: notification.referenceId } });
+      if (role === "ROLE_MANAGER") navigate("/branches", { state: { branchId: notification.referenceId } });
     }
   };
 
