@@ -55,7 +55,7 @@ export default function RoomGallery({ primaryImage, otherImages, allImageUrls }:
         </div>
         <button
           onClick={() => setSelectedImageIndex(0)}
-          className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md text-gray-900 font-semibold px-4 py-2 rounded-lg shadow-lg hover:bg-white transition-colors text-sm z-10"
+          className="absolute bottom-4 right-4 bg-white dark:bg-gray-800/90 backdrop-blur-md text-gray-900 dark:text-white font-semibold px-4 py-2 rounded-lg shadow-lg hover:bg-white dark:bg-gray-800 transition-colors text-sm z-10"
         >
           Xem tất cả ảnh
         </button>

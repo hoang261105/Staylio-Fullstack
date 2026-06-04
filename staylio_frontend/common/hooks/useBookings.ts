@@ -103,7 +103,7 @@ export const useBookedDates = (roomId: number) => {
             const response = await getBookedDates(roomId);
             return response.data;
         },
-        enabled: roomId > 0
+        enabled: !!roomId && !isNaN(roomId)
     });
 }
 

@@ -18,9 +18,9 @@ import { useChangePasswordMutation } from "../../../common/hooks/useChangePasswo
 
 const inputClassName = `
 w-full pl-11 pr-12 py-3.5
-border border-gray-200
+border border-gray-200 dark:border-gray-600
 rounded-2xl
-bg-white shadow-sm
+bg-white dark:bg-gray-800 shadow-sm
 focus:outline-none
 focus:ring-4
 focus:ring-blue-100
@@ -119,7 +119,7 @@ export default function ChangePassword() {
         <div className="mb-10">
           <button
             onClick={handleCancel}
-            className="flex items-center gap-2 text-gray-500 hover:text-[#0066FF] mb-4 transition-colors group"
+            className="flex items-center gap-2 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-[#0066FF] mb-4 transition-colors group"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
 
@@ -128,28 +128,28 @@ export default function ChangePassword() {
             </span>
           </button>
 
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Bảo mật tài khoản
           </h1>
 
-          <p className="text-gray-500 mt-2">
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-2">
             Thay đổi mật khẩu để tăng cường bảo mật cho tài khoản của bạn.
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 md:p-10">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm p-8 md:p-10">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center">
                 <ShieldCheck className="w-6 h-6 text-[#0066FF]" />
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                   Đổi mật khẩu
                 </h2>
 
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                   Mật khẩu mạnh giúp tài khoản an toàn hơn.
                 </p>
               </div>
@@ -212,10 +212,10 @@ export default function ChangePassword() {
                 onClick={handleCancel}
                 className="
                   flex-1 py-3.5
-                  border border-gray-200
+                  border border-gray-200 dark:border-gray-600
                   rounded-2xl
                   font-semibold
-                  hover:bg-gray-50
+                  hover:bg-gray-50 dark:bg-gray-700
                   transition-all duration-200
                   flex items-center justify-center gap-2
                 "
@@ -274,13 +274,13 @@ function PasswordInput({
 }: PasswordInputProps) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-gray-700 mb-2">
+      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
         {label}
       </label>
 
       <div className="relative">
         <Lock
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
           size={18}
         />
 
@@ -296,7 +296,7 @@ function PasswordInput({
         <button
           type="button"
           onClick={onToggle}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300 transition-colors"
         >
           {visible ? (
             <EyeOff size={20} />

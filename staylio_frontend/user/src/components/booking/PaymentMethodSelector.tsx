@@ -42,8 +42,8 @@ const PAYMENT_OPTIONS = [
 
 export const PaymentMethodSelector = ({ selectedMethod, onChange, error }: PaymentMethodSelectorProps) => {
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                 <CreditCard className="w-6 h-6 text-blue-600" />
                 Phương thức thanh toán
             </h2>
@@ -53,8 +53,8 @@ export const PaymentMethodSelector = ({ selectedMethod, onChange, error }: Payme
                     <label
                         key={option.id}
                         className={`flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedMethod === option.id
-                                ? "border-blue-600 bg-blue-50/50"
-                                : "border-gray-100 hover:border-gray-200"
+                                ? "border-b dark:border-gray-700lue-600 bg-blue-50/50"
+                                : "border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:border-gray-600"
                             }`}
                     >
                         <div className="pt-0.5">
@@ -71,8 +71,8 @@ export const PaymentMethodSelector = ({ selectedMethod, onChange, error }: Payme
                             {option.icon}
                         </div>
                         <div className="flex-1">
-                            <div className="font-bold text-gray-900">{option.name}</div>
-                            <div className="text-xs text-gray-500 mt-1">{option.description}</div>
+                            <div className="font-bold text-gray-900 dark:text-white">{option.name}</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">{option.description}</div>
                         </div>
                     </label>
                 ))}

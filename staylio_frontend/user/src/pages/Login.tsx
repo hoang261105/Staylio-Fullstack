@@ -19,7 +19,7 @@ export default function Login() {
     navigate("/");
   });
   return (
-    <div className="min-h-screen flex bg-slate-50 font-sans">
+    <div className="min-h-screen flex bg-slate-50 dark:bg-gray-900 font-sans">
       <LoginSideBar />
 
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 relative overflow-hidden">
@@ -27,7 +27,7 @@ export default function Login() {
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
 
-        <div className="w-full max-w-[440px] bg-white p-8 sm:p-10 rounded-3xl shadow-2xl shadow-gray-200/50 border border-gray-100 relative z-10">
+        <div className="w-full max-w-[440px] bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl shadow-gray-200/50 border border-gray-100 dark:border-gray-700 relative z-10">
           <LoginForm 
             formData={formData} 
             setFormData={setFormData}

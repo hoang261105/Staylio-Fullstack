@@ -24,13 +24,13 @@ export default function BookingHistoryListView({
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="animate-pulse bg-white p-6 rounded-2xl border border-gray-100 flex gap-6"
+            className="animate-pulse bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 flex gap-6"
           >
-            <div className="w-32 h-32 bg-gray-200 rounded-xl shrink-0"></div>
+            <div className="w-32 h-32 bg-gray-200 dark:bg-gray-600 rounded-xl shrink-0"></div>
             <div className="flex-1 space-y-4">
-              <div className="h-6 bg-gray-200 rounded w-1/3"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded w-1/3"></div>
+              <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/4"></div>
+              <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/2"></div>
             </div>
           </div>
         ))}
@@ -40,14 +40,14 @@ export default function BookingHistoryListView({
 
   if (bookings.length === 0) {
     return (
-      <div className="bg-white p-12 rounded-2xl border border-gray-100 text-center">
-        <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Calendar className="w-8 h-8 text-gray-400" />
+      <div className="bg-white dark:bg-gray-800 p-12 rounded-2xl border border-gray-100 dark:border-gray-700 text-center">
+        <div className="w-16 h-16 bg-gray-50 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Calendar className="w-8 h-8 text-gray-400 dark:text-gray-500" />
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
           Không tìm thấy đơn đặt phòng
         </h3>
-        <p className="text-gray-500">
+        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
           Chưa có lịch sử đặt phòng nào phù hợp với tìm kiếm của bạn.
         </p>
       </div>
@@ -61,12 +61,12 @@ export default function BookingHistoryListView({
         const statusLabel = bookingStatusLabels[statusKey] || booking.status;
         const statusColorClass =
           bookingStatusColors[statusKey] ||
-          "bg-gray-50 text-gray-700 border-gray-200";
+          "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-600";
 
         return (
           <div
             key={booking.bookingId}
-            className="bg-white p-4 md:p-6 rounded-2xl border border-gray-100 hover:shadow-md transition-shadow flex flex-col md:flex-row gap-6"
+            className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col md:flex-row gap-6"
           >
             <div className="w-full md:w-40 h-48 md:h-32 shrink-0">
               <img
@@ -85,59 +85,59 @@ export default function BookingHistoryListView({
                     >
                       {statusLabel}
                     </span>
-                    <span className="text-xs text-gray-500 flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-full border border-gray-100">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 flex items-center gap-1 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-full border border-gray-100 dark:border-gray-700">
                       <Hash className="w-3 h-3" />
                       {booking.bookingCode}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
                     Đặt lúc:{" "}
                     {dayjs(booking.createdAt).format("HH:mm - DD/MM/YYYY")}
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-gray-900 mb-1">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                   {booking.roomName}
                 </h3>
-                <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300 mb-3">
                   <div className="flex items-center gap-1.5">
-                    <Building2 className="w-4 h-4 text-gray-400" />
+                    <Building2 className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                     <span>{booking.hotelName}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 border-l pl-4 border-gray-200">
-                    <MapPin className="w-4 h-4 text-gray-400" />
+                  <div className="flex items-center gap-1.5 border-l pl-4 border-gray-200 dark:border-gray-600">
+                    <MapPin className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                     <span>{booking.hotelBranchName}</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-3 bg-gray-50 rounded-xl mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl mb-4">
                   <div>
-                    <div className="text-[10px] uppercase font-bold text-gray-500 mb-0.5">
+                    <div className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-0.5">
                       Nhận phòng
                     </div>
-                    <div className="font-semibold text-gray-900">
+                    <div className="font-semibold text-gray-900 dark:text-white">
                       {dayjs(booking.checkInDate).format("DD/MM/YYYY")}
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase font-bold text-gray-500 mb-0.5">
+                    <div className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-0.5">
                       Trả phòng
                     </div>
-                    <div className="font-semibold text-gray-900">
+                    <div className="font-semibold text-gray-900 dark:text-white">
                       {dayjs(booking.checkOutDate).format("DD/MM/YYYY")}
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase font-bold text-gray-500 mb-0.5">
+                    <div className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-0.5">
                       Khách
                     </div>
-                    <div className="flex items-center gap-1.5 font-semibold text-gray-900">
+                    <div className="flex items-center gap-1.5 font-semibold text-gray-900 dark:text-white">
                       <Users className="w-3.5 h-3.5" />
                       {booking.adults} NL, {booking.children} TE
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase font-bold text-gray-500 mb-0.5">
+                    <div className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-0.5">
                       Tổng tiền
                     </div>
                     <div className="font-bold text-[#0066FF]">

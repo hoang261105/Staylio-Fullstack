@@ -15,7 +15,7 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
     : "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=800&auto=format&fit=crop";
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 grid grid-cols-1 md:grid-cols-12 group">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 group">
       <div className="relative w-full h-56 md:h-full overflow-hidden md:col-span-5">
         <img
           src={primaryImage}
@@ -30,7 +30,7 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
       <div className="p-5 flex flex-col md:col-span-7 justify-between">
         <div className="flex justify-between items-start mb-2 gap-4">
           <div>
-            <h3 className="font-bold text-gray-900 text-xl line-clamp-1 group-hover:text-blue-600 transition-colors">
+            <h3 className="font-bold text-gray-900 dark:text-white text-xl line-clamp-1 group-hover:text-blue-600 transition-colors">
               {room.roomName}
             </h3>
             <div className="flex items-center gap-1.5 text-blue-700 font-semibold text-sm mt-1 mb-2 bg-blue-50 w-fit px-2.5 py-1 rounded-lg">
@@ -44,32 +44,32 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
               <span className="text-sm font-bold">{room.averageRating?.toFixed(1) || "0.0"}</span>
             </div>
-            <span className="text-xs text-gray-500 font-medium mt-1">
+            <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium mt-1">
               ({room.countReview || 0} đánh giá)
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 text-gray-500 mb-4">
+        <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">
           <MapPin className="w-4 h-4 shrink-0" />
           <span className="text-sm font-medium line-clamp-1">{room.address}, {room.provinceName}</span>
         </div>
 
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex items-center gap-1.5 text-gray-600">
+          <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
             <Users className="w-4 h-4 text-emerald-500" />
             <span className="text-sm font-medium">Sức chứa: {room.capacity} (Max: {room.maxAdults}L, {room.maxChildren}TE)</span>
           </div>
         </div>
 
-        <div className="mt-auto pt-4 border-t border-gray-100 flex flex-wrap items-end justify-between gap-4">
+        <div className="mt-auto pt-4 border-t dark:border-gray-700 border-gray-100 dark:border-gray-700 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Giá từ</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider mb-1">Giá từ</p>
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-bold text-blue-600">
                 {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(room.price)}
               </span>
-              <span className="text-sm text-gray-500 font-medium">/đêm</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium">/đêm</span>
             </div>
           </div>
 

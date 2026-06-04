@@ -124,9 +124,9 @@ export default function BranchMap({
             <Marker key={place.id} position={[place.lat, place.lon]} icon={icon}>
               <Popup>
                 <div>
-                  <strong className="text-gray-900">{place.name}</strong>
+                  <strong className="text-gray-900 dark:text-white">{place.name}</strong>
                   <br />
-                  <span className="text-xs text-gray-500 capitalize">{getTypeName(place.type)}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 capitalize">{getTypeName(place.type)}</span>
                   <br />
                   <span className="text-xs font-semibold text-blue-600">Cách đây {place.distance < 1000 ? `${place.distance}m` : `${(place.distance / 1000).toFixed(1)}km`}</span>
                 </div>

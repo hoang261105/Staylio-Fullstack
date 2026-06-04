@@ -73,6 +73,7 @@ export const useRoomById = (roomId: number) => {
       const response = await getRoomById(roomId);
       return response.data;
     },
+    enabled: !!roomId && !isNaN(roomId),
   })
 }
 

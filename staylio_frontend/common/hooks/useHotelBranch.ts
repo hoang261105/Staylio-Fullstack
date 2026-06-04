@@ -56,6 +56,7 @@ export const useHotelBranchById = (id: number) => {
       const response = await getHotelBranchById(id);
       return response.data;
     },
+    enabled: !!id && !isNaN(id),
   });
 };
 

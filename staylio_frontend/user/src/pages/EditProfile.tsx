@@ -101,14 +101,14 @@ export function EditProfile() {
         <div className="mb-8">
           <button
             onClick={handleCancel}
-            className="flex items-center gap-2 text-gray-500 hover:text-black mb-4"
+            className="flex items-center gap-2 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-black mb-4"
           >
             <ArrowLeft size={18} />
             Quay lại hồ sơ
           </button>
 
           <h1 className="text-3xl font-bold">Chỉnh sửa hồ sơ</h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
             Cập nhật thông tin cá nhân của bạn
           </p>
         </div>
@@ -141,11 +141,11 @@ export function EditProfile() {
               <div>
                 <button
                   type="button"
-                  className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:bg-gray-700"
                 >
                   Tải ảnh lên
                 </button>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
                   JPG, PNG. Tối đa 5MB
                 </p>
               </div>
@@ -203,11 +203,11 @@ export function EditProfile() {
             </div>
           </Section>
 
-          <div className="flex gap-4 sticky bottom-4 bg-white/80 backdrop-blur p-4 rounded-xl shadow border border-gray-200">
+          <div className="flex gap-4 sticky bottom-4 bg-white dark:bg-gray-800/80 backdrop-blur p-4 rounded-xl shadow border border-gray-200 dark:border-gray-600">
             <button
               type="button"
               onClick={handleCancel}
-              className="flex-1 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-center gap-2"
+              className="flex-1 py-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:bg-gray-700 flex items-center justify-center gap-2"
             >
               <X size={18} /> Hủy
             </button>
@@ -229,7 +229,7 @@ export function EditProfile() {
 
 function Section({ title, children }: any) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
       <h2 className="text-lg font-semibold mb-5">{title}</h2>
       {children}
     </div>
@@ -251,7 +251,7 @@ function Input({
       <div className="relative mt-2">
         {Icon && (
           <Icon
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
             size={18}
           />
         )}
@@ -259,7 +259,7 @@ function Input({
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full px-4 py-3 ${Icon ? "pl-10" : ""} border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#0066FF]/30 outline-none ${error ? "border-red-500" : ""}`}
+          className={`w-full px-4 py-3 ${Icon ? "pl-10" : ""} border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0066FF]/30 outline-none ${error ? "border-red-500" : ""}`}
         />
       </div>
       {error && <p className="text-sm text-red-500 mt-1">{error}</p>}

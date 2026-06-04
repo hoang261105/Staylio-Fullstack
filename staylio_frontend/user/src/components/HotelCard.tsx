@@ -10,7 +10,7 @@ export function HotelCard({ hotel }: HotelCardProps) {
 
   return (
     <div
-      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group border border-gray-100 flex flex-col h-full"
+      className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group border border-gray-100 dark:border-gray-700 flex flex-col h-full"
     >
       <div className="relative h-52 w-full overflow-hidden">
         <img
@@ -23,18 +23,18 @@ export function HotelCard({ hotel }: HotelCardProps) {
             Đề xuất
           </div>
         )}
-        <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+        <div className="absolute bottom-3 right-3 bg-white dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
           <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-          <span className="text-xs font-bold text-gray-800">{hotel.rating}</span>
+          <span className="text-xs font-bold text-gray-800 dark:text-gray-100">{hotel.rating}</span>
         </div>
       </div>
 
       <div className="p-4 flex flex-col grow">
         <div className="mb-2">
-          <h3 className="font-bold text-gray-800 text-lg line-clamp-1 group-hover:text-blue-600 transition-colors">
+          <h3 className="font-bold text-gray-800 dark:text-gray-100 text-lg line-clamp-1 group-hover:text-blue-600 transition-colors">
             {hotel.name}
           </h3>
-          <div className="flex items-center gap-1 text-gray-500 mt-1">
+          <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
             <MapPin className="w-3.5 h-3.5" />
             <span className="text-xs">{hotel.location}</span>
           </div>
@@ -49,7 +49,7 @@ export function HotelCard({ hotel }: HotelCardProps) {
               />
             ))}
           </div>
-          <span className="text-xs text-gray-400 font-medium">
+          <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">
             ({hotel.reviews?.toLocaleString()} đánh giá)
           </span>
         </div>
@@ -59,27 +59,27 @@ export function HotelCard({ hotel }: HotelCardProps) {
           {hotel.amenities?.slice(0, 3).map((amenity, idx) => (
             <span
               key={idx}
-              className="text-[11px] font-medium bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md"
+              className="text-[11px] font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-md"
             >
               {amenity}
             </span>
           ))}
           {hotel.amenities?.length > 3 && (
-            <span className="text-[11px] text-gray-400 pt-0.5">
+            <span className="text-[11px] text-gray-400 dark:text-gray-500 pt-0.5">
               +{hotel.amenities.length - 3}
             </span>
           )}
         </div>
 
         {/* Price & Action - Đẩy xuống cuối card */}
-        <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+        <div className="mt-auto pt-4 border-t dark:border-gray-700 border-gray-100 dark:border-gray-700 flex items-center justify-between">
           <div>
-            <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider">Giá từ</p>
+            <p className="text-[11px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wider">Giá từ</p>
             <div className="flex items-baseline gap-0.5">
               <span className="text-xl font-bold text-blue-600">
                 ${hotel.price}
               </span>
-              <span className="text-xs text-gray-500">/đêm</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">/đêm</span>
             </div>
           </div>
           

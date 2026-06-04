@@ -93,7 +93,7 @@ export default function BookingConfirmation() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
+        <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
             <Header />
 
             <div className="bg-blue-600 pt-28 pb-10">

@@ -49,10 +49,10 @@ export default function RoomDetail() {
 
   if (isLoadingRoom) {
     return (
-      <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
+      <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
         <Header />
         <div className="flex-1 flex items-center justify-center pt-28">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-b dark:border-gray-700lue-600"></div>
         </div>
         <Footer />
       </div>
@@ -61,11 +61,11 @@ export default function RoomDetail() {
 
   if (!room) {
     return (
-      <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
+      <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
         <Header />
         <div className="flex-1 flex flex-col items-center justify-center pt-28 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Không tìm thấy phòng</h2>
-          <p className="text-gray-500 mb-4">Phòng bạn yêu cầu không tồn tại hoặc đã bị xóa.</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Không tìm thấy phòng</h2>
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">Phòng bạn yêu cầu không tồn tại hoặc đã bị xóa.</p>
           <button
             onClick={() => navigate(-1)}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
@@ -98,11 +98,11 @@ export default function RoomDetail() {
     : [primaryImage];
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
       <Header />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 w-full">
-        <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+        <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-6">
           <Link to="/" className="hover:text-blue-600 transition-colors">
             Trang chủ
           </Link>
@@ -114,7 +114,7 @@ export default function RoomDetail() {
             {branch?.branchName || "Chi nhánh"}
           </Link>
           <ChevronRight className="w-4 h-4" />
-          <span className="text-gray-900 font-medium">{room.roomName}</span>
+          <span className="text-gray-900 dark:text-white font-medium">{room.roomName}</span>
         </nav>
 
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
@@ -133,13 +133,13 @@ export default function RoomDetail() {
                 </span>
               </div>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 leading-tight">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">
               {room.roomName}
             </h1>
-            <div className="flex items-start gap-2 text-gray-600">
-              <MapPin className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 text-gray-600 dark:text-gray-300">
+              <MapPin className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0 mt-0.5" />
               <span className="text-sm">
-                <strong className="text-gray-800">
+                <strong className="text-gray-800 dark:text-gray-100">
                   {branch?.hotelName} - {branch?.hotelBranchName}
                 </strong>{" "}
                 <br />
@@ -163,7 +163,7 @@ export default function RoomDetail() {
             {branch?.latitude && branch?.longitude && (
               <>
                 <section>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Vị trí chi nhánh</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Vị trí chi nhánh</h2>
                   <BranchMap
                     latitude={branch.latitude}
                     longitude={branch.longitude}
@@ -173,7 +173,7 @@ export default function RoomDetail() {
                   />
                   <NearbyPlacesList places={nearbyPlaces || []} isLoading={isLoadingNearby} />
                 </section>
-                <hr className="border-gray-200" />
+                <hr className="border-gray-200 dark:border-gray-600" />
               </>
             )}
 
@@ -194,8 +194,8 @@ export default function RoomDetail() {
         </div>
 
         {similarRooms.length > 0 && (
-          <div className="mt-16 pt-12 border-t border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <div className="mt-16 pt-12 border-t dark:border-gray-700 border-gray-200 dark:border-gray-600">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
               Các phòng khác tại chi nhánh này
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

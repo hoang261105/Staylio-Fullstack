@@ -76,8 +76,8 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
-      <h3 className="text-xl font-bold text-gray-900 mb-4">
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600 mb-8">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
         Đánh giá trải nghiệm của bạn
       </h3>
       <form onSubmit={handleSubmit}>
@@ -87,7 +87,7 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
           </div>
         )}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
             Đánh giá sao <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-2">

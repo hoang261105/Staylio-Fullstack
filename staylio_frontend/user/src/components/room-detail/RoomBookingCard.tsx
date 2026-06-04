@@ -113,21 +113,21 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
   };
 
   return (
-    <div className="sticky top-28 bg-white border border-gray-200 rounded-2xl shadow-xl p-6">
-      <div className="flex items-end gap-1 mb-6 pb-6 border-b border-gray-100">
+    <div className="sticky top-28 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl shadow-xl p-6">
+      <div className="flex items-end gap-1 mb-6 pb-6 border-b dark:border-gray-700 border-gray-100 dark:border-gray-700">
         <span className="text-3xl font-bold text-blue-600">
           {new Intl.NumberFormat("vi-VN", {
             style: "currency",
             currency: "VND",
           }).format(room.price)}
         </span>
-        <span className="text-gray-500 font-medium">/ đêm</span>
+        <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium">/ đêm</span>
       </div>
 
       <div className="flex flex-col gap-4 mb-6">
-        <div className="grid grid-cols-2 gap-2 border border-gray-300 rounded-xl overflow-hidden p-1 bg-gray-50/50">
-          <div className="p-2 text-left border-r border-gray-200">
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 block">
+        <div className="grid grid-cols-2 gap-2 border border-gray-300 rounded-xl overflow-hidden p-1 bg-gray-50 dark:bg-gray-700/50">
+          <div className="p-2 text-left border-r border-gray-200 dark:border-gray-600">
+            <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1 block">
               Nhận phòng
             </label>
             <DatePicker
@@ -137,11 +137,11 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
               excludeDateIntervals={excludeCheckInIntervals}
               dateFormat="dd/MM/yyyy"
               placeholderText="Chọn ngày"
-              className="text-sm font-semibold text-gray-900 bg-transparent outline-none w-full cursor-pointer placeholder:font-normal placeholder:text-gray-400"
+              className="text-sm font-semibold text-gray-900 dark:text-white bg-transparent outline-none w-full cursor-pointer placeholder:font-normal placeholder:text-gray-400 dark:text-gray-500"
             />
           </div>
           <div className="p-2 text-left">
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 block">
+            <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1 block">
               Trả phòng
             </label>
             <DatePicker
@@ -152,7 +152,7 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
               excludeDateIntervals={excludeCheckOutIntervals}
               dateFormat="dd/MM/yyyy"
               placeholderText="Chọn ngày"
-              className="text-sm font-semibold text-gray-900 bg-transparent outline-none w-full cursor-pointer placeholder:font-normal placeholder:text-gray-400"
+              className="text-sm font-semibold text-gray-900 dark:text-white bg-transparent outline-none w-full cursor-pointer placeholder:font-normal placeholder:text-gray-400 dark:text-gray-500"
             />
           </div>
         </div>
@@ -188,7 +188,7 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
           >
             Đặt phòng ngay
           </button>
-          <p className="text-center text-xs text-gray-400 mt-4">
+          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-4">
             Bạn chưa bị trừ tiền lúc này
           </p>
         </>

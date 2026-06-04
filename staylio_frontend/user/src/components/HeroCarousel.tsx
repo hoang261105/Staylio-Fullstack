@@ -90,7 +90,7 @@ export function HeroCarousel() {
             key={index}
             onClick={() => setCurrentIndex(index)}
             className={`transition-all duration-500 rounded-full ${
-              index === currentIndex ? "w-10 h-2.5 bg-blue-500 shadow-lg shadow-blue-500/50" : "w-2.5 h-2.5 bg-white/50 hover:bg-white/80"
+              index === currentIndex ? "w-10 h-2.5 bg-blue-500 shadow-lg shadow-blue-500/50" : "w-2.5 h-2.5 bg-white dark:bg-gray-800/50 hover:bg-white dark:bg-gray-800/80"
             }`}
           />
         ))}

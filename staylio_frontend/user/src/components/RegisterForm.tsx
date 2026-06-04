@@ -46,8 +46,8 @@ export const RegisterForm = ({
       </div>
 
       <div className="mb-10 text-center lg:text-left">
-        <h2 className="text-3xl font-bold mb-3 text-gray-900">Tạo tài khoản</h2>
-        <p className="text-gray-500">
+        <h2 className="text-3xl font-bold mb-3 text-gray-900 dark:text-white">Tạo tài khoản</h2>
+        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
           Đã có tài khoản?{" "}
           <a
             onClick={() => navigate("/login")}
@@ -60,18 +60,18 @@ export const RegisterForm = ({
 
       {/* Social Register */}
       <div className="space-y-4 mb-8">
-        <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm font-medium text-gray-700 active:scale-[0.98]">
+        <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-xl hover:bg-gray-50 dark:bg-gray-700 hover:border-gray-400 transition-all shadow-sm font-medium text-gray-700 dark:text-gray-200 active:scale-[0.98]">
           <FaGoogle className="w-5 h-5 text-red-500" />
           <span>Tiếp tục với Google</span>
         </button>
       </div>
 
       <div className="flex items-center mb-8">
-        <div className="flex-1 h-px bg-gray-200"></div>
-        <span className="px-4 text-sm text-gray-400 font-medium whitespace-nowrap">
+        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
+        <span className="px-4 text-sm text-gray-400 dark:text-gray-500 font-medium whitespace-nowrap">
           Hoặc đăng ký với email
         </span>
-        <div className="flex-1 h-px bg-gray-200"></div>
+        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-5">
@@ -104,7 +104,7 @@ export const RegisterForm = ({
         {/* Giới tính & Ngày sinh */}
         <div className="grid grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1.5">
               Giới tính <span className="text-red-500">*</span>
             </label>
             <select
@@ -112,9 +112,9 @@ export const RegisterForm = ({
               onChange={(e) =>
                 setFormData({ ...formData, gender: e.target.value })
               }
-              className={`w-full px-4 py-3 border bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-colors ${
-                errors.gender ? "border-red-500" : "border-gray-200"
-              } rounded-xl shadow-sm text-gray-900`}
+              className={`w-full px-4 py-3 border bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-b dark:border-gray-700lue-500 transition-colors ${
+                errors.gender ? "border-red-500" : "border-gray-200 dark:border-gray-600"
+              } rounded-xl shadow-sm text-gray-900 dark:text-white`}
             >
               <option value="MALE">Nam</option>
               <option value="FEMALE">Nữ</option>
@@ -173,12 +173,12 @@ export const RegisterForm = ({
                     className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
                       level <= passwordStrength.strength
                         ? passwordStrength.color
-                        : "bg-gray-200"
+                        : "bg-gray-200 dark:bg-gray-600"
                     }`}
                   />
                 ))}
               </div>
-              <p className="text-xs text-gray-500 font-medium">
+              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium">
                 Độ mạnh: <span className={passwordStrength.color.replace('bg-', 'text-')}>{passwordStrength.label}</span>
               </p>
             </div>

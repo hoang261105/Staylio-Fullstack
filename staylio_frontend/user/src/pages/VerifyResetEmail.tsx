@@ -11,7 +11,7 @@ export default function VerifyResetEmail({ email, setIsSubmitted }: VerifyResetE
   const navigate = useNavigate();
   
   return (
-    <div className="min-h-screen flex bg-slate-50 font-sans">
+    <div className="min-h-screen flex bg-slate-50 dark:bg-gray-900 font-sans">
       {/* Left Side - Image */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden group bg-slate-900">
         <div className="absolute inset-0">
@@ -24,7 +24,7 @@ export default function VerifyResetEmail({ email, setIsSubmitted }: VerifyResetE
         </div>
 
         <div className="relative z-10 flex flex-col justify-between p-16 text-white h-full w-full">
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl w-48 p-4 inline-flex items-center justify-center mb-6 shadow-xl border border-white/20">
+          <div className="bg-white dark:bg-gray-800/10 backdrop-blur-md rounded-2xl w-48 p-4 inline-flex items-center justify-center mb-6 shadow-xl border border-white/20">
             <img src="/slogan.png" alt="Staylio" className="brightness-0 invert" />
           </div>
 
@@ -48,7 +48,7 @@ export default function VerifyResetEmail({ email, setIsSubmitted }: VerifyResetE
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
 
-        <div className="w-full max-w-[440px] bg-white p-8 sm:p-10 rounded-3xl shadow-2xl shadow-gray-200/50 border border-gray-100 relative z-10 text-center">
+        <div className="w-full max-w-[440px] bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-3xl shadow-2xl shadow-gray-200/50 border border-gray-100 dark:border-gray-700 relative z-10 text-center">
           <div className="lg:hidden mb-8 flex justify-center">
             <Logo onClick={() => navigate("/")} size="md" />
           </div>
@@ -57,15 +57,15 @@ export default function VerifyResetEmail({ email, setIsSubmitted }: VerifyResetE
             <CheckCircle className="w-12 h-12 text-emerald-600" />
           </div>
 
-          <h2 className="text-3xl font-bold mb-3 text-gray-900">Email đã được gửi!</h2>
-          <p className="text-gray-500 mb-2 leading-relaxed">
+          <h2 className="text-3xl font-bold mb-3 text-gray-900 dark:text-white">Email đã được gửi!</h2>
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-2 leading-relaxed">
             Chúng tôi đã gửi link khôi phục mật khẩu đến
           </p>
           <p className="font-bold text-blue-600 text-lg mb-8">{email}</p>
 
-          <div className="bg-blue-50/50 rounded-2xl p-6 mb-8 text-left border border-blue-100/50">
-            <h3 className="font-bold text-gray-900 mb-4">Bước tiếp theo:</h3>
-            <ol className="space-y-3 text-sm text-gray-600 font-medium">
+          <div className="bg-blue-50/50 rounded-2xl p-6 mb-8 text-left border border-b dark:border-gray-700lue-100/50">
+            <h3 className="font-bold text-gray-900 dark:text-white mb-4">Bước tiếp theo:</h3>
+            <ol className="space-y-3 text-sm text-gray-600 dark:text-gray-300 font-medium">
               <li className="flex gap-3 items-center">
                 <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">1</span>
                 <span>Kiểm tra hộp thư đến (hoặc spam)</span>
@@ -90,13 +90,13 @@ export default function VerifyResetEmail({ email, setIsSubmitted }: VerifyResetE
             </button>
             <button
               onClick={() => setIsSubmitted(false)}
-              className="w-full py-4 border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all font-semibold text-lg text-gray-700 active:scale-[0.98]"
+              className="w-full py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:bg-gray-700 hover:border-gray-300 transition-all font-semibold text-lg text-gray-700 dark:text-gray-200 active:scale-[0.98]"
             >
               Gửi lại email
             </button>
           </div>
 
-          <p className="mt-8 text-sm text-gray-500">
+          <p className="mt-8 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
             Không nhận được email?{" "}
             <a href="#" className="text-blue-600 hover:text-blue-700 hover:underline font-semibold transition-colors">
               Liên hệ hỗ trợ

@@ -24,19 +24,19 @@ export const StayInfoCard = ({
     const nights = checkOut.diff(checkIn, "day");
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Thông tin lưu trú</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Thông tin lưu trú</h2>
             
             <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="p-4 rounded-xl border border-gray-200 bg-gray-50/50 relative">
-                    <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Nhận phòng</div>
-                    <div className="font-bold text-gray-900">{checkIn.format("DD/MM/YYYY")}</div>
-                    <div className="text-xs text-gray-500 mt-1">Từ 14:00</div>
+                <div className="p-4 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 relative">
+                    <div className="text-xs font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Nhận phòng</div>
+                    <div className="font-bold text-gray-900 dark:text-white">{checkIn.format("DD/MM/YYYY")}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">Từ 14:00</div>
                 </div>
-                <div className="p-4 rounded-xl border border-gray-200 bg-gray-50/50 relative">
-                    <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Trả phòng</div>
-                    <div className="font-bold text-gray-900">{checkOut.format("DD/MM/YYYY")}</div>
-                    <div className="text-xs text-gray-500 mt-1">Trước 12:00</div>
+                <div className="p-4 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 relative">
+                    <div className="text-xs font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Trả phòng</div>
+                    <div className="font-bold text-gray-900 dark:text-white">{checkOut.format("DD/MM/YYYY")}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">Trước 12:00</div>
                 </div>
             </div>
 
@@ -46,8 +46,8 @@ export const StayInfoCard = ({
                         <Calendar className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
-                        <div className="font-semibold text-gray-900">Tổng thời gian lưu trú</div>
-                        <div className="text-sm text-gray-500">{nights} đêm</div>
+                        <div className="font-semibold text-gray-900 dark:text-white">Tổng thời gian lưu trú</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">{nights} đêm</div>
                     </div>
                 </div>
 
@@ -56,23 +56,23 @@ export const StayInfoCard = ({
                         <Users className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
-                        <div className="font-semibold text-gray-900">Khách</div>
-                        <div className="text-sm text-gray-500">
+                        <div className="font-semibold text-gray-900 dark:text-white">Khách</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
                             {adults} người lớn {children > 0 && `, ${children} trẻ em`}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="mt-6 pt-6 border-t border-gray-100">
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
+            <div className="mt-6 pt-6 border-t dark:border-gray-700 border-gray-100 dark:border-gray-700">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
                     Ghi chú cho khách sạn (Tùy chọn)
                 </label>
                 <textarea
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     placeholder="Bạn có yêu cầu gì đặc biệt không?"
-                    className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3 text-sm font-medium outline-none transition-all resize-none h-24"
+                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all resize-none h-24"
                 />
             </div>
         </div>

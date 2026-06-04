@@ -24,29 +24,29 @@ export function SearchBar({ compact = false }: SearchBarProps) {
   };
 
   return (
-    <div className={`w-full max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl border border-gray-100 ${compact ? 'p-2' : 'p-4 md:p-6'}`}>
+    <div className={`w-full max-w-7xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 ${compact ? 'p-2' : 'p-4 md:p-6'}`}>
       <div className={`grid ${compact ? 'grid-cols-4' : 'grid-cols-1 md:grid-cols-4'} gap-3`}>
         
         {/* Mục: Địa điểm */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all cursor-text group border border-transparent focus-within:border-blue-400 focus-within:bg-white">
+        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:bg-gray-700 rounded-xl transition-all cursor-text group border border-t dark:border-gray-700ransparent focus-within:border-b dark:border-gray-700lue-400 focus-within:bg-white dark:bg-gray-800">
           <MapPin className="w-5 h-5 text-blue-600 shrink-0 group-hover:scale-110 transition-transform" />
           <div className="flex flex-col w-full overflow-hidden">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Địa điểm</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Địa điểm</span>
             <input
               type="text"
               placeholder="Bạn muốn đi đâu?"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
-              className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 placeholder:text-gray-400"
+              className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 dark:text-gray-200 placeholder:text-gray-400 dark:text-gray-500"
             />
           </div>
         </div>
 
         {/* Mục: Nhận phòng */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all cursor-pointer group border border-transparent focus-within:border-blue-400 focus-within:bg-white">
+        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:bg-gray-700 rounded-xl transition-all cursor-pointer group border border-t dark:border-gray-700ransparent focus-within:border-b dark:border-gray-700lue-400 focus-within:bg-white dark:bg-gray-800">
           <Calendar className="w-5 h-5 text-blue-600 shrink-0 group-hover:scale-110 transition-transform" />
           <div className="flex flex-col w-full">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Nhận phòng</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Nhận phòng</span>
             <input
               type="text"
               onFocus={(e) => (e.target.type = "date")}
@@ -54,16 +54,16 @@ export function SearchBar({ compact = false }: SearchBarProps) {
               placeholder="Thêm ngày"
               value={checkInDate}
               onChange={(e) => setCheckInDate(e.target.value)}
-              className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 cursor-pointer"
+              className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 dark:text-gray-200 cursor-pointer"
             />
           </div>
         </div>
 
         {/* Mục: Trả phòng */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all cursor-pointer group border border-transparent focus-within:border-blue-400 focus-within:bg-white">
+        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:bg-gray-700 rounded-xl transition-all cursor-pointer group border border-t dark:border-gray-700ransparent focus-within:border-b dark:border-gray-700lue-400 focus-within:bg-white dark:bg-gray-800">
           <Calendar className="w-5 h-5 text-blue-600 shrink-0 group-hover:scale-110 transition-transform" />
           <div className="flex flex-col w-full">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Trả phòng</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Trả phòng</span>
             <input
               type="text"
               onFocus={(e) => (e.target.type = "date")}
@@ -71,24 +71,24 @@ export function SearchBar({ compact = false }: SearchBarProps) {
               placeholder="Thêm ngày"
               value={checkOutDate}
               onChange={(e) => setCheckOutDate(e.target.value)}
-              className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 cursor-pointer"
+              className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 dark:text-gray-200 cursor-pointer"
             />
           </div>
         </div>
 
         {/* Mục: Số khách & Nút tìm kiếm */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all cursor-pointer group border border-transparent focus-within:border-blue-400 focus-within:bg-white flex-1">
+          <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:bg-gray-700 rounded-xl transition-all cursor-pointer group border border-t dark:border-gray-700ransparent focus-within:border-b dark:border-gray-700lue-400 focus-within:bg-white dark:bg-gray-800 flex-1">
             <Users className="w-5 h-5 text-blue-600 shrink-0 group-hover:scale-110 transition-transform" />
             <div className="flex flex-col w-full">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Khách</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Khách</span>
               <input
                 type="number"
                 min="1"
                 placeholder="2 người"
                 value={adults}
                 onChange={(e) => setAdults(e.target.value ? Number(e.target.value) : "")}
-                className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 cursor-pointer"
+                className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 dark:text-gray-200 cursor-pointer"
               />
             </div>
           </div>

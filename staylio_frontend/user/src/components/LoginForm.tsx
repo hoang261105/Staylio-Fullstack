@@ -21,8 +21,8 @@ export default function LoginForm({
       </div>
 
       <div className="mb-10 text-center lg:text-left">
-        <h2 className="text-3xl font-bold mb-3 text-gray-900">Đăng nhập</h2>
-        <p className="text-gray-500">
+        <h2 className="text-3xl font-bold mb-3 text-gray-900 dark:text-white">Đăng nhập</h2>
+        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
           Chưa có tài khoản?{" "}
           <a
             onClick={() => navigate("/register")}
@@ -34,18 +34,18 @@ export default function LoginForm({
       </div>
 
       <div className="space-y-4 mb-8">
-        <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm font-medium text-gray-700 active:scale-[0.98]">
+        <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-xl hover:bg-gray-50 dark:bg-gray-700 hover:border-gray-400 transition-all shadow-sm font-medium text-gray-700 dark:text-gray-200 active:scale-[0.98]">
           <FaGoogle className="w-5 h-5 text-red-500" />
           <span>Tiếp tục với Google</span>
         </button>
       </div>
 
       <div className="flex items-center mb-8">
-        <div className="flex-1 h-px bg-gray-200"></div>
-        <span className="px-4 text-sm text-gray-400 font-medium whitespace-nowrap">
+        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
+        <span className="px-4 text-sm text-gray-400 dark:text-gray-500 font-medium whitespace-nowrap">
           Hoặc đăng nhập với email
         </span>
-        <div className="flex-1 h-px bg-gray-200"></div>
+        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-5">
@@ -93,7 +93,7 @@ export default function LoginForm({
             onChange={(e) => setRememberMe(e.target.checked)}
             className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
           />
-          <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-600 cursor-pointer select-none">
+          <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer select-none">
             Ghi nhớ đăng nhập
           </label>
         </div>
@@ -107,7 +107,7 @@ export default function LoginForm({
         </button>
       </form>
 
-      <p className="mt-10 text-center text-sm text-gray-500 leading-relaxed">
+      <p className="mt-10 text-center text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 leading-relaxed">
         Bằng cách đăng nhập, bạn đồng ý với{" "}
         <a href="#" className="text-blue-600 hover:underline font-medium">
           Điều khoản dịch vụ

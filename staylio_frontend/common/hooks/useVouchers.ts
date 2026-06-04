@@ -144,6 +144,7 @@ export const useVoucherApplicable = (params: VoucherQueryParams) => {
     queryFn: async () => {
       const response = await getApplicableVouchers(params);
       return response.data;
-    }
+    },
+    enabled: !!params.roomId && !isNaN(params.roomId)
   });
 }

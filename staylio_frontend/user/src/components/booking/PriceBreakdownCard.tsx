@@ -10,7 +10,7 @@ interface PriceBreakdownCardProps {
 
 export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting, onSubmit }: PriceBreakdownCardProps) => {
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-28">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden sticky top-28">
             <div className="bg-blue-600 p-6 text-white flex items-center gap-2">
                 <Receipt className="w-6 h-6" />
                 <h2 className="text-xl font-bold">Chi tiết thanh toán</h2>
@@ -19,26 +19,26 @@ export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting
             <div className="p-6">
                 {isLoadingPreview ? (
                     <div className="space-y-4 animate-pulse">
-                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                        <div className="h-4 bg-gray-200 rounded w-full"></div>
-                        <div className="h-px bg-gray-200 my-4"></div>
-                        <div className="h-6 bg-gray-200 rounded w-full"></div>
+                        <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-3/4"></div>
+                        <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/2"></div>
+                        <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-full"></div>
+                        <div className="h-px bg-gray-200 dark:bg-gray-600 my-4"></div>
+                        <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded w-full"></div>
                     </div>
                 ) : previewData ? (
-                    <div className="space-y-4 text-sm font-medium text-gray-700">
+                    <div className="space-y-4 text-sm font-medium text-gray-700 dark:text-gray-200">
                         <div className="flex justify-between items-center">
                             <span>Giá mỗi đêm</span>
-                            <span className="font-bold text-gray-900">{new Intl.NumberFormat('vi-VN').format(previewData.pricePerNight)}đ</span>
+                            <span className="font-bold text-gray-900 dark:text-white">{new Intl.NumberFormat('vi-VN').format(previewData.pricePerNight)}đ</span>
                         </div>
                         <div className="flex justify-between items-center">
                             <span>Số đêm</span>
-                            <span className="font-bold text-gray-900">{previewData.nights}</span>
+                            <span className="font-bold text-gray-900 dark:text-white">{previewData.nights}</span>
                         </div>
-                        <div className="h-px bg-gray-100 my-2"></div>
+                        <div className="h-px bg-gray-100 dark:bg-gray-700 my-2"></div>
                         <div className="flex justify-between items-center">
                             <span>Tạm tính</span>
-                            <span className="font-bold text-gray-900">{new Intl.NumberFormat('vi-VN').format(previewData.originalPrice)}đ</span>
+                            <span className="font-bold text-gray-900 dark:text-white">{new Intl.NumberFormat('vi-VN').format(previewData.originalPrice)}đ</span>
                         </div>
 
                         {previewData.discountAmount > 0 && (
@@ -48,16 +48,16 @@ export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting
                             </div>
                         )}
 
-                        <div className="h-px bg-gray-100 my-4"></div>
+                        <div className="h-px bg-gray-100 dark:bg-gray-700 my-4"></div>
 
                         <div className="flex justify-between items-center">
-                            <span className="text-base font-bold text-gray-900">Tổng thanh toán</span>
+                            <span className="text-base font-bold text-gray-900 dark:text-white">Tổng thanh toán</span>
                             <span className="text-2xl font-bold text-blue-600">{new Intl.NumberFormat('vi-VN').format(previewData.finalPrice)}đ</span>
                         </div>
-                        <div className="text-right text-xs text-gray-500 font-normal">Đã bao gồm thuế và phí</div>
+                        <div className="text-right text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-normal">Đã bao gồm thuế và phí</div>
                     </div>
                 ) : (
-                    <div className="text-sm text-gray-500 text-center py-4">Vui lòng điền đầy đủ thông tin để xem giá</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center py-4">Vui lòng điền đầy đủ thông tin để xem giá</div>
                 )}
 
                 <button
