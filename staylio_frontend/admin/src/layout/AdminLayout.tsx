@@ -24,6 +24,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import ConfirmLogoutModal from "../../../common/components/ConfirmLogoutModal";
 import NotificationPopover from "../../../common/components/NotificationPopover";
+import { useLogoutMutation } from "../../../common/hooks/useAuthMutation";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -94,6 +95,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [isCollapsed, setIsCollapsed] = useState(false); // Desktop icon-only mode
   const { data: user } = useProfile();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const { mutate: logoutMutate } = useLogoutMutation();
 
   // Auto collapse on small screens
   useEffect(() => {
@@ -107,24 +109,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }, []);
 
   const handleLogout = () => {
-    const cookies = document.cookie.split("; ");
-    const domain = window.location.hostname;
-    const past = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
-
-    for (const cookie of cookies) {
-      const name = cookie.split("=")[0];
-      if (name) {
-        document.cookie = `${name}=; ${past}; path=/; secure; samesite=strict`;
-        document.cookie = `${name}=; ${past}; path=/;`;
-        document.cookie = `${name}=; ${past}; path=/; domain=${domain}`;
+    logoutMutate(undefined, {
+      onSettled: () => {
+        localStorage.removeItem("roleName");
+        localStorage.removeItem("user");
+        queryClient.clear();
+        toast.success("Đăng xuất thành công!");
+        setTimeout(() => {
+          window.location.href = "/admin/login";
+        }, 500);
       }
-    }
-    queryClient.clear();
-
-    toast.success("Đăng xuất thành công!");
-    setTimeout(() => {
-      window.location.href = "/admin/login";
-    }, 500);
+    });
   };
 
   const isActive = (path: string) => location.pathname === path;

@@ -61,9 +61,9 @@ export const resetPassword = async (token: string, newPasswordRequest: NewPasswo
   }
 }
 
-export const logout = async (refreshToken: string): Promise<ApiResponse<string>> => {
+export const logout = async (): Promise<ApiResponse<string>> => {
   try {
-    const response = await axiosInstance.post("/auth/logout", { refreshToken });
+    const response = await axiosInstance.post("/auth/logout", {});
     return response.data;
   } catch (error) {
     console.error("Đăng xuất thất bại:", error);

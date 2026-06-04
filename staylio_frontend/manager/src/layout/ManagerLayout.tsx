@@ -118,7 +118,7 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
 
     toast.success("Đăng xuất thành công!");
     setTimeout(() => {
-      window.location.href = "/login";
+      window.location.href = "/";
     }, 500);
   };
 

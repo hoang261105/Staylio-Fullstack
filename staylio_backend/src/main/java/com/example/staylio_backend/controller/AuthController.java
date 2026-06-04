@@ -14,9 +14,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.List;
 
 @RestController
@@ -46,10 +48,58 @@ public class AuthController {
         );
     }
 
+    private void setCookies(HttpServletResponse response, String accessToken, String refreshToken) {
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.ofMinutes(15))
+                .sameSite("Lax")
+                .build();
+                
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.ofDays(7))
+                .sameSite("Lax")
+                .build();
+
+        response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, refreshCookie.toString());
+    }
+
+    private void clearCookies(HttpServletResponse response) {
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
+                
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
+
+        response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, refreshCookie.toString());
+    }
+
     @PostMapping("/login")
     @Operation(summary = "Đăng nhập tài khoản")
-    public ResponseEntity<ApiResponse<JWTResponse>> login(@Valid @RequestBody UserLoginRequest userLoginRequest) {
+    public ResponseEntity<ApiResponse<JWTResponse>> login(@Valid @RequestBody UserLoginRequest userLoginRequest, HttpServletResponse response) {
         JWTResponse loginResponse = authService.login(userLoginRequest);
+        
+        setCookies(response, loginResponse.getAccessToken(), loginResponse.getRefreshToken());
+        
+        loginResponse.setAccessToken(null);
+        loginResponse.setRefreshToken(null);
+        
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(loginResponse, "Đăng nhập thành công!"));
     }
@@ -95,28 +145,43 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Operation(summary = "Đăng xuất tài khoản")
-    public ResponseEntity<ApiResponse<String>> logout(
-            HttpServletRequest request,
-            @RequestBody RefreshTokenRequest tokenRequest
-    ) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String accessToken = authHeader.substring(7);
-            authService.logout(accessToken, tokenRequest.getRefreshToken());
+    public ResponseEntity<ApiResponse<String>> logout(HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = null;
+        String refreshToken = null;
+        
+        if (request.getCookies() != null) {
+            for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
+                if ("accessToken".equals(cookie.getName())) {
+                    accessToken = cookie.getValue();
+                } else if ("refreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                }
+            }
+        }
+        
+        if (accessToken != null && refreshToken != null) {
+            authService.logout(accessToken, refreshToken);
+            clearCookies(response);
             return ResponseEntity.ok(ApiResponse.success(
                 null,
                  "Đăng xuất thành công!"
             ));
         }
         return ResponseEntity.badRequest().body(ApiResponse.fail(
-                "Token không hợp lệ!",
+                "Token không hợp lệ hoặc đã đăng xuất!",
                 List.of()
         ));
     }
 
     @PostMapping("/google-login")
-    public ResponseEntity<ApiResponse<TokenResponse>> googleLogin(@RequestBody GoogleLoginRequest request) throws Exception {
+    public ResponseEntity<ApiResponse<TokenResponse>> googleLogin(@RequestBody GoogleLoginRequest request, HttpServletResponse response) throws Exception {
         TokenResponse token = authService.authenticateGoogleUser(request.getIdToken());
+        
+        setCookies(response, token.getAccessToken(), token.getRefreshToken());
+        
+        token.setAccessToken(null);
+        token.setRefreshToken(null);
+        
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(
                 token,
                 "Đăng nhập băng google thành công!"

@@ -18,8 +18,8 @@ export const useRegisterMutation = (onSuccess: () => void, onError: (err: any) =
 export const useLogoutMutation = () => {
   return useMutation({
     mutationKey: ["logout"],
-    mutationFn: async (refreshToken: string) => {
-      const response = await logout(refreshToken);
+    mutationFn: async () => {
+      const response = await logout();
       return response;
     }
   });

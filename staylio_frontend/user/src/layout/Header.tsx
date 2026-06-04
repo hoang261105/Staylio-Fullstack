@@ -26,8 +26,8 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const { data: profileData } = useProfile();
   const { mutate: logoutMutate } = useLogoutMutation();
 
   useEffect(() => {
@@ -41,24 +41,9 @@ export default function Header() {
   }, []);
 
   const handleLogout = () => {
-    const refreshToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("refreshToken="))
-      ?.split("=")[1];
-
     const clearAndRedirect = () => {
-      const cookies = document.cookie.split("; ");
-      const domain = window.location.hostname;
-      const past = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
-
-      for (const cookie of cookies) {
-        const name = cookie.split("=")[0];
-        if (name) {
-          document.cookie = `${name}=; ${past}; path=/; secure; samesite=strict`;
-          document.cookie = `${name}=; ${past}; path=/;`;
-          document.cookie = `${name}=; ${past}; path=/; domain=${domain}`;
-        }
-      }
+      localStorage.removeItem("roleName");
+      localStorage.removeItem("user");
 
       queryClient.clear();
       toast.success("Đăng xuất thành công!");
@@ -68,13 +53,9 @@ export default function Header() {
       }, 500);
     };
 
-    if (refreshToken) {
-      logoutMutate(refreshToken, {
-        onSettled: () => clearAndRedirect(),
-      });
-    } else {
-      clearAndRedirect();
-    }
+    logoutMutate(undefined, {
+      onSettled: () => clearAndRedirect(),
+    });
   };
 
   return (

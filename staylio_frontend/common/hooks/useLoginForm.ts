@@ -30,10 +30,7 @@ export const useLoginForm = (onSubmitSuccess: (path: string) => void) => {
         return;
       }
 
-      const domain = window.location.hostname;
-
-      document.cookie = `accessToken=${userData?.accessToken}; path=/; max-age=3600; domain=${domain}; secure; samesite=strict`;
-      document.cookie = `refreshToken=${userData?.refreshToken}; path=/; max-age=7200; domain=${domain}; secure; samesite=strict`;
+      // Cookies are now handled by the backend (HttpOnly)
 
       const role = authorities?.[0]?.authority;
       if (role) {
