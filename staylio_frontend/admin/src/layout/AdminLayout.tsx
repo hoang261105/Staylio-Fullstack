@@ -116,7 +116,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         queryClient.clear();
         toast.success("Đăng xuất thành công!");
         setTimeout(() => {
-          window.location.href = "/admin/login";
+          window.location.href = "/";
         }, 500);
       }
     });

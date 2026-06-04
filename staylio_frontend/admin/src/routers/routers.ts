@@ -15,7 +15,7 @@ import AdminReviews from "../pages/AdminReviews";
 
 export const routers = createBrowserRouter([
     {
-        path: "/admin/login",
+        path: "/",
         Component: AdminLogin
     },
     {
