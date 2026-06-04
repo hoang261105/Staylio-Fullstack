@@ -20,7 +20,7 @@ const TwitterIcon = ({ className }: { className?: string }) => (
 
 export default function Footer() {
   return (
-    <footer className="bg-blue-600 pt-20 pb-10 border-t border-blue-800 mt-auto">
+    <footer className="bg-blue-600 dark:bg-gray-950 pt-20 pb-10 border-t border-blue-800 dark:border-gray-900 mt-auto transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
