@@ -102,8 +102,8 @@ export default function Home() {
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                   <h3 className="text-2xl font-bold mb-2">{brand.name}</h3>
-                  <div className="flex items-center gap-2 text-white/90">
-                    <span className="bg-white dark:bg-gray-800/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
+                  <div className="flex items-center gap-2">
+                    <span className="bg-white dark:bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-900 dark:text-white">
                       {brand.branchCount} chi nhánh
                     </span>
                   </div>
