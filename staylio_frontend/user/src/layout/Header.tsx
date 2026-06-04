@@ -27,7 +27,6 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const { data: profileData } = useProfile();
   const { mutate: logoutMutate } = useLogoutMutation();
 
   useEffect(() => {

@@ -341,6 +341,7 @@ public class HotelBranchServiceImpl implements HotelBranchService {
                 .averageRating(roundRating(averageRating))
                 .latitude(hotelBranch.getLatitude())
                 .longitude(hotelBranch.getLongitude())
+                .managerName(hotelBranch.getHotel() != null && hotelBranch.getHotel().getManager() != null ? hotelBranch.getHotel().getManager().getFullName() : null)
                 .build();
     }
 

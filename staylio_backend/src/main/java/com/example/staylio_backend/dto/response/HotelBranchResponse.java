@@ -27,4 +27,5 @@ public class HotelBranchResponse {
     private Double averageRating;
     private Double latitude;
     private Double longitude;
+    private String managerName;
 }

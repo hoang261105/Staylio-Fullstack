@@ -1,5 +1,6 @@
 import { Star, MapPin, Users, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import type { HotelBranchResponse } from "../../../common/interfaces/response/HotelBranchResponse";
 
 interface HotelBranchCardProps {
@@ -74,9 +75,27 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
             </div>
           </div>
 
-          <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all shadow-md shadow-blue-100 active:scale-95">
-            Chi tiết
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                toast.success(`Chi nhánh: ${branch.hotelBranchName}\nQuản lý: ${branch.managerName || "Đang cập nhật"}`, {
+                  icon: "📞",
+                  duration: 5000,
+                  style: {
+                    whiteSpace: 'pre-line',
+                    minWidth: '250px'
+                  }
+                });
+              }}
+              className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-900/40 dark:hover:bg-emerald-900/60 dark:text-emerald-300 text-sm font-semibold px-4 py-2 rounded-xl transition-all active:scale-95 border border-emerald-200 dark:border-emerald-800"
+            >
+              Liên hệ
+            </button>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all shadow-md shadow-blue-100 dark:shadow-none active:scale-95">
+              Chi tiết
+            </button>
+          </div>
         </div>
       </div>
     </div>

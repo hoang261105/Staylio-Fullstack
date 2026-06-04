@@ -17,6 +17,7 @@ export interface HotelBranchResponse {
     status: BranchStatus;
     countReview: number;
     averageRating: number;
-    latitude: number;
-    longitude: number;
+    latitude?: number;
+    longitude?: number;
+    managerName?: string;
 }

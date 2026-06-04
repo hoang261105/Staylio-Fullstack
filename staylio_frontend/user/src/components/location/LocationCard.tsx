@@ -42,7 +42,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, onClick })
             {location.totalHotels} thương hiệu
           </span>
           <span className="bg-white dark:bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-900 dark:text-white">
-            {location.totalBranches} chi nhánh
+            {location.totalBranches} khách sạn
           </span>
         </div>
       </div>
