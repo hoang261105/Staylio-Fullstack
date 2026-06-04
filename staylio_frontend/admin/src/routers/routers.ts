@@ -19,47 +19,47 @@ export const routers = createBrowserRouter([
         Component: AdminLogin
     },
     {
-        path: "/admin/dashboard",
+        path: "/dashboard",
         Component: Dashboard
     },
     {
-        path: "/admin/customers",
+        path: "/customers",
         Component: AdminCustomers
     },
     {
-        path: "/admin/hotels",
+        path: "/hotels",
         Component: AdminHotels
     },
     {
-        path: "/admin/hotel-branches",
+        path: "/hotel-branches",
         Component: AdminHotelBranches
     },
     {
-        path: "/admin/rooms",
+        path: "/rooms",
         Component: AdminRooms
     },
     {
-        path: "/admin/room-images",
+        path: "/room-images",
         Component: AdminRoomImages
     },
     {
-        path: "/admin/room-images/detail/:id",
+        path: "/room-images/detail/:id",
         Component: AdminRoomImageDetail
     },
     {
-        path: "/admin/utilities",
+        path: "/utilities",
         Component: AdminUtilities
     },
     {
-        path: "/admin/vouchers",
+        path: "/vouchers",
         Component: AdminVouchers
     },
     {
-        path: "/admin/bookings",
+        path: "/bookings",
         Component: AdminBookings
     },
     {
-        path: "/admin/reviews",
+        path: "/reviews",
         Component: AdminReviews
     },
     {

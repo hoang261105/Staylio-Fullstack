@@ -31,17 +31,17 @@ interface AdminLayoutProps {
 }
 
 const NAVIGATION_ITEMS = [
-  { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
-  { name: "Quản lý khách hàng", path: "/admin/customers", icon: Users },
-  { name: "Quản lý thương hiệu khách sạn", path: "/admin/hotels", icon: Building2 },
-  { name: "Quản lý chi nhánh", path: "/admin/hotel-branches", icon: MapPin },
-  { name: "Quản lý phòng", path: "/admin/rooms", icon: Bed },
-  { name: "Kiểm duyệt hình ảnh", path: "/admin/room-images", icon: Image },
-  { name: "Quản lý tiện ích", path: "/admin/utilities", icon: Building2 },
-  { name: "Quản lý Voucher", path: "/admin/vouchers", icon: Tag },
-  { name: "Quản lý Đơn đặt phòng", path: "/admin/bookings", icon: Calendar },
-  { name: "Quản lý đánh giá", path: "/admin/reviews", icon: Star },
-  { name: "Cài đặt", path: "/admin/settings", icon: Settings },
+  { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+  { name: "Quản lý khách hàng", path: "/customers", icon: Users },
+  { name: "Quản lý thương hiệu khách sạn", path: "/hotels", icon: Building2 },
+  { name: "Quản lý chi nhánh", path: "/hotel-branches", icon: MapPin },
+  { name: "Quản lý phòng", path: "/rooms", icon: Bed },
+  { name: "Kiểm duyệt hình ảnh", path: "/room-images", icon: Image },
+  { name: "Quản lý tiện ích", path: "/utilities", icon: Building2 },
+  { name: "Quản lý Voucher", path: "/vouchers", icon: Tag },
+  { name: "Quản lý Đơn đặt phòng", path: "/bookings", icon: Calendar },
+  { name: "Quản lý đánh giá", path: "/reviews", icon: Star },
+  { name: "Cài đặt", path: "/settings", icon: Settings },
 ];
 
 interface SidebarItemProps {

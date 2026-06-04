@@ -100,7 +100,7 @@ const getRedirectPathByRole = (authorities: { authority: string }[]) => {
 
   switch (role) {
     case "ADMIN":
-      return "/admin/dashboard";
+      return "/dashboard";
     case "CUSTOMER":
       return "/";
     case "MANAGER":

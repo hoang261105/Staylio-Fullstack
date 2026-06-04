@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { RoleName } from "@common/enums/RoleName";
 import axios from "axios";
 import toast from "react-hot-toast";
 

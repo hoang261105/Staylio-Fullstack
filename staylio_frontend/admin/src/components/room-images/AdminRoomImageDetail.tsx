@@ -57,7 +57,7 @@ export default function AdminRoomImageDetail({
       if (onClose) {
         onClose();
       } else {
-        navigate("/admin/room-images");
+        navigate("/room-images");
       }
     }
   };
@@ -105,7 +105,7 @@ export default function AdminRoomImageDetail({
     if (onClose) {
       onClose();
     } else {
-      navigate("/admin/room-images");
+      navigate("/room-images");
     }
   };
 

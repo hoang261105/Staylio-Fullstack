@@ -36,11 +36,9 @@ export default function NotificationPopover() {
 
     if (type.startsWith("BOOKING_")) {
       if (role === "ROLE_CUSTOMER") navigate("/booking-history", { state: { bookingId: notification.referenceId } });
-      if (role === "ROLE_MANAGER") navigate("/bookings", { state: { bookingId: notification.referenceId } });
-      if (role === "ROLE_ADMIN") navigate("/admin/bookings", { state: { bookingId: notification.referenceId } });
+      if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/bookings", { state: { bookingId: notification.referenceId } });
     } else if (type.startsWith("REVIEW_")) {
-      if (role === "ROLE_MANAGER") navigate("/reviews", { state: { reviewId: notification.referenceId } });
-      if (role === "ROLE_ADMIN") navigate("/admin/reviews", { state: { reviewId: notification.referenceId } });
+      if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/reviews", { state: { reviewId: notification.referenceId } });
       if (role === "ROLE_CUSTOMER") {
         getReviewById(notification.referenceId).then(res => {
           const review = res.data;
@@ -52,13 +50,11 @@ export default function NotificationPopover() {
         });
       }
     } else if (type.startsWith("VOUCHER_")) {
-      if (role === "ROLE_MANAGER") navigate("/vouchers", { state: { voucherId: notification.referenceId } });
-      if (role === "ROLE_ADMIN") navigate("/admin/vouchers", { state: { voucherId: notification.referenceId } });
+      if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/vouchers", { state: { voucherId: notification.referenceId } });
     } else if (type.startsWith("ROOM_IMAGE_")) {
-      if (role === "ROLE_MANAGER") navigate("/room-images", { state: { imageId: notification.referenceId } });
-      if (role === "ROLE_ADMIN") navigate("/admin/room-images", { state: { imageId: notification.referenceId } });
+      if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/room-images", { state: { imageId: notification.referenceId } });
     } else if (type.startsWith("HOTEL_BRANCH_") || type.startsWith("HOTEL_BRAND_")) {
-      if (role === "ROLE_ADMIN") navigate("/admin/hotel-branches", { state: { branchId: notification.referenceId } });
+      if (role === "ROLE_ADMIN") navigate("/hotel-branches", { state: { branchId: notification.referenceId } });
       if (role === "ROLE_MANAGER") navigate("/branches", { state: { branchId: notification.referenceId } });
     }
   };
@@ -94,13 +90,13 @@ export default function NotificationPopover() {
         <Bell className="w-5 h-5" />
 
         {Number(unreadCount) > 0 && (
-          <span className="absolute -top-2 -right-2 flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold border-2 border-white shadow-sm">
+          <span className="absolute -top-2 -right-2 flex items-center justify-center min-w-4.5 h-4.5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold border-2 border-white shadow-sm">
             {Number(unreadCount) > 99 ? "99+" : unreadCount}
           </span>
         )}
       </button>
       {isOpen && (
-        <div className="fixed left-4 right-4 top-[76px] mt-0 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="fixed left-4 right-4 top-19 mt-0 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-100 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
             <h3 className="font-bold text-gray-900">Thông báo</h3>
             {Number(unreadCount) > 0 && (
@@ -110,7 +106,7 @@ export default function NotificationPopover() {
             )}
           </div>
 
-          <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+          <div className="max-h-100 overflow-y-auto custom-scrollbar">
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-8 gap-3">
                 <div className="w-6 h-6 border-2 border-[#0066FF] border-t-transparent rounded-full animate-spin"></div>

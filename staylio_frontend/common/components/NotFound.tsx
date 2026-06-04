@@ -13,9 +13,8 @@ export default function NotFound() {
 
       const role = user?.authorities?.[0]?.authority;
 
-      if (role === "ROLE_ADMIN") return "/admin/dashboard";
+      if (role === "ROLE_ADMIN" || role === "ROLE_MANAGER") return "/dashboard";
       if (role === "ROLE_CUSTOMER") return "/";
-      if (role === "ROLE_MANAGER") return "/dashboard";
 
       return "/";
     } catch {
