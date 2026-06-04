@@ -301,7 +301,7 @@ public class AuthServiceImpl implements AuthService {
 
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", newAccessToken)
                 .httpOnly(true)
-                .secure(true) // DEV
+                .secure(true)
                 .path("/")
                 .maxAge(Duration.ofMinutes(15))
                 .sameSite("None")

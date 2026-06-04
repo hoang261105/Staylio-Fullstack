@@ -84,15 +84,15 @@ export default function BranchDetails() {
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               {branchInfo?.hotelBranchName || "Đang tải..."}
             </h1>
-            <div className="flex flex-wrap items-center gap-6 text-gray-200">
-              <div className="flex items-center gap-2 bg-white dark:bg-gray-800/10 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
-                <MapPin className="w-4 h-4 text-emerald-400" />
+            <div className="flex flex-wrap items-center gap-6">
+              <div className="flex items-center gap-2 bg-white dark:bg-gray-800/30 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gray-100 dark:border-white/10 text-gray-800 dark:text-gray-200">
+                <MapPin className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                 <span className="text-sm font-medium">
                   {branchInfo ? `${branchInfo.address}, ${branchInfo.wardName}, ${branchInfo.provinceName}` : "Đang tải địa chỉ..."}
                 </span>
               </div>
-              <div className="flex items-center gap-2 bg-white dark:bg-gray-800/10 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
-                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+              <div className="flex items-center gap-2 bg-white dark:bg-gray-800/30 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gray-100 dark:border-white/10 text-gray-800 dark:text-gray-200">
+                <Star className="w-4 h-4 text-yellow-500 dark:text-yellow-400 fill-yellow-500 dark:fill-yellow-400" />
                 <span className="text-sm font-medium">
                   {branchInfo?.averageRating || "0.0"} ({branchInfo?.countReview || 0} đánh giá)
                 </span>
