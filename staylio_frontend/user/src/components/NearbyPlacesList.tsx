@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Coffee, MapPin, Utensils, Navigation, Landmark, Plane, GraduationCap, TreePine, Hospital } from "lucide-react";
+import { Coffee, MapPin, Utensils, Navigation, Landmark, Plane, TreePine, Hospital } from "lucide-react";
 import type { NearbyPlace } from "../../../common/hooks/useNearbyPlaces";
 
 interface NearbyPlacesListProps {
@@ -40,8 +40,6 @@ export default function NearbyPlacesList({ places, isLoading }: NearbyPlacesList
         return <Landmark className="w-5 h-5 text-indigo-500" />;
       case "hospital":
         return <Hospital className="w-5 h-5 text-red-500" />;
-      case "school":
-        return <GraduationCap className="w-5 h-5 text-blue-500" />;
       case "park":
         return <TreePine className="w-5 h-5 text-green-500" />;
       case "airport":
@@ -61,8 +59,6 @@ export default function NearbyPlacesList({ places, isLoading }: NearbyPlacesList
         return "Bảo tàng";
       case "hospital":
         return "Bệnh viện";
-      case "school":
-        return "Trường học";
       case "park":
         return "Công viên";
       case "airport":

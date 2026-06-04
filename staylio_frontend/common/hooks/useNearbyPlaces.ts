@@ -6,7 +6,7 @@ export interface NearbyPlace {
   lat: number;
   lon: number;
   name: string;
-  type: "restaurant" | "cafe" | "attraction" | "museum" | "hospital" | "school" | "park" | "airport" | "mall" | "square";
+  type: "restaurant" | "cafe" | "attraction" | "museum" | "hospital" | "park" | "airport" | "mall" | "square";
   distance: number;
 }
 
@@ -43,7 +43,6 @@ export const useNearbyPlaces = (lat: number | null, lon: number | null) => {
           nwr["amenity"="doctors"](around:3000,${lat},${lon});
           nwr["healthcare"="hospital"](around:3000,${lat},${lon});
           nwr["healthcare"="clinic"](around:3000,${lat},${lon});
-          nwr["amenity"="school"](around:3000,${lat},${lon});
           nwr["leisure"="park"](around:3000,${lat},${lon});
           nwr["aeroway"="aerodrome"](around:10000,${lat},${lon});
           nwr["shop"="mall"](around:3000,${lat},${lon});
@@ -66,7 +65,6 @@ export const useNearbyPlaces = (lat: number | null, lon: number | null) => {
           if (tags.amenity === "restaurant") type = "restaurant";
           else if (tags.amenity === "cafe") type = "cafe";
           else if (tags.amenity === "hospital" || tags.amenity === "clinic" || tags.amenity === "doctors" || tags.healthcare) type = "hospital";
-          else if (tags.amenity === "school") type = "school";
           else if (tags.tourism === "museum") type = "museum";
           else if (tags.leisure === "park") type = "park";
           else if (tags.aeroway === "aerodrome") type = "airport";

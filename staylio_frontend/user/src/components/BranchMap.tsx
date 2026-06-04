@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import type { NearbyPlace } from "../../../common/hooks/useNearbyPlaces";
 import { renderToString } from "react-dom/server";
-import { Utensils, Coffee, Landmark, Hospital, GraduationCap, TreePine, Plane, MapPin, ShoppingBag, Grid3X3 } from "lucide-react";
+import { Utensils, Coffee, Landmark, Hospital, TreePine, Plane, MapPin, ShoppingBag, Grid3X3 } from "lucide-react";
 import React from "react";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -52,7 +52,6 @@ const cafeIcon = getIconForType("cafe", "#8b5cf6", Coffee); // purple
 const attractionIcon = getIconForType("attraction", "#10b981", MapPin); // emerald
 const museumIcon = getIconForType("museum", "#6366f1", Landmark); // indigo
 const hospitalIcon = getIconForType("hospital", "#ef4444", Hospital); // red
-const schoolIcon = getIconForType("school", "#3b82f6", GraduationCap); // blue
 const parkIcon = getIconForType("park", "#22c55e", TreePine); // green
 const airportIcon = getIconForType("airport", "#0ea5e9", Plane); // sky
 const mallIcon = getIconForType("mall", "#eab308", ShoppingBag); // yellow
@@ -102,7 +101,6 @@ export default function BranchMap({
           else if (place.type === "cafe") icon = cafeIcon;
           else if (place.type === "museum") icon = museumIcon;
           else if (place.type === "hospital") icon = hospitalIcon;
-          else if (place.type === "school") icon = schoolIcon;
           else if (place.type === "park") icon = parkIcon;
           else if (place.type === "airport") icon = airportIcon;
           else if (place.type === "mall") icon = mallIcon;
@@ -114,7 +112,6 @@ export default function BranchMap({
               case "cafe": return "Quán Cafe";
               case "museum": return "Bảo tàng";
               case "hospital": return "Bệnh viện";
-              case "school": return "Trường học";
               case "park": return "Công viên";
               case "airport": return "Sân bay";
               case "mall": return "Trung tâm thương mại";
