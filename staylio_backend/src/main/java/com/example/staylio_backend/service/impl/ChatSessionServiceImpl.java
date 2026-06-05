@@ -17,6 +17,8 @@ import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.ChatSessionService;
 import com.example.staylio_backend.service.GeminiService;
 import com.example.staylio_backend.service.NotificationService;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
