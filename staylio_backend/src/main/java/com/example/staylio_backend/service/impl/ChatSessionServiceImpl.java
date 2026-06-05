@@ -4,29 +4,29 @@ import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.common.exception.AppException;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.ChatSessionRequest;
+import com.example.staylio_backend.dto.request.NotificationRequest;
+import com.example.staylio_backend.dto.request.SendChatMessageRequest;
+import com.example.staylio_backend.dto.request.StartManagerChatRequest;
 import com.example.staylio_backend.dto.response.ChatMessageResponse;
 import com.example.staylio_backend.dto.response.ChatSessionResponse;
-import com.example.staylio_backend.model.entity.ChatMessage;
-import com.example.staylio_backend.model.entity.ChatSession;
-import com.example.staylio_backend.model.entity.Profile;
-import com.example.staylio_backend.model.entity.Room;
-import com.example.staylio_backend.model.enums.ChatIntent;
-import com.example.staylio_backend.model.enums.ChatSessionStatus;
-import com.example.staylio_backend.model.enums.ChatSessionType;
-import com.example.staylio_backend.model.enums.MessageSenderType;
-import com.example.staylio_backend.model.enums.RoomStatus;
-import com.example.staylio_backend.repository.ChatMessageRepo;
-import com.example.staylio_backend.repository.ChatSessionRepo;
-import com.example.staylio_backend.repository.ProfileRepo;
-import com.example.staylio_backend.repository.RoomRepo;
+import com.example.staylio_backend.dto.response.page.PaginationDTO;
+import com.example.staylio_backend.dto.response.page.PaginationResponse;
+import com.example.staylio_backend.model.entity.*;
+import com.example.staylio_backend.model.enums.*;
+import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.ChatSessionService;
 import com.example.staylio_backend.service.GeminiService;
+import com.example.staylio_backend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -40,6 +40,8 @@ public class ChatSessionServiceImpl implements ChatSessionService {
     private final ProfileRepo profileRepo;
     private final GeminiService geminiService;
     private final RoomRepo roomRepo;
+    private final HotelBranchRepo branchRepo;
+    private final NotificationService notificationService;
 
     @Override
     public ChatSessionResponse createOrGetAiSession(UserPrincipal principal) {
@@ -146,6 +148,176 @@ public class ChatSessionServiceImpl implements ChatSessionService {
         return messages.stream()
                 .map(this::convertMessageToResponse)
                 .toList();
+    }
+
+    @Override
+    public ChatSessionResponse startChatWithManager(StartManagerChatRequest request, UserPrincipal principal) {
+        Profile customer = profileRepo.findById(principal.getId())
+                .orElseThrow(() -> new NoSuchElementException(
+                        ErrorCode.USER_NOT_FOUND.getMessage()
+                ));
+
+        HotelBranch branch;
+
+        if (request.getRoomId() != null) {
+            Room room = roomRepo.findById(request.getRoomId())
+                    .orElseThrow(() -> new NoSuchElementException(
+                            ErrorCode.ROOM_NOT_FOUND.getMessage()
+                    ));
+            branch = room.getHotelBranch();
+        } else {
+            branch = branchRepo.findById(request.getHotelBranchId())
+                    .orElseThrow(() -> new NoSuchElementException(
+                            ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()
+                    ));
+        }
+
+        Profile manager = branch.getHotel().getManager();
+
+        if (manager == null) {
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        ChatSession session = chatSessionRepo.findOpenManagerSession(
+                customer.getId(),
+                manager.getId()
+        ).orElseGet(() -> chatSessionRepo.save(
+                ChatSession.builder()
+                        .user(customer)
+                        .manager(manager)
+                        .hotelBranch(branch)
+                        .type(ChatSessionType.MANAGER)
+                        .status(ChatSessionStatus.OPEN)
+                        .build()
+        ));
+
+        return convertSessionToResponse(session);
+    }
+
+    @Override
+    public ChatMessageResponse sendMessageToManager(SendChatMessageRequest request, UserPrincipal principal) {
+        ChatSession session = chatSessionRepo.findById(request.getSessionId())
+                .orElseThrow(() -> new NoSuchElementException(
+                        ErrorCode.CHAT_SESSION_NOT_FOUND.getMessage()
+                ));
+
+        if (!session.getUser().getId().equals(principal.getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        Profile sender = profileRepo.findById(principal.getId())
+                .orElseThrow(() -> new NoSuchElementException(
+                        ErrorCode.USER_NOT_FOUND.getMessage()
+                ));
+
+        ChatMessage message = ChatMessage.builder()
+                .session(session)
+                .sender(sender)
+                .senderType(MessageSenderType.USER)
+                .content(request.getContent())
+                .isRead(false)
+                .build();
+
+        ChatMessage saved = chatMessageRepo.save(message);
+
+        session.setUpdatedAt(LocalDateTime.now());
+        chatSessionRepo.save(session);
+
+        notificationService.create(
+                NotificationRequest.builder()
+                        .senderId(session.getUser().getId())
+                        .receiverId(session.getManager().getId())
+                        .title("Có tin nhắn mới từ khách hàng")
+                        .content(session.getUser().getFullName()
+                                + " vừa gửi tin nhắn cho bạn.")
+                        .type(NotificationType.CHAT_MESSAGE_CREATED)
+                        .referenceId(session.getId())
+                        .build()
+        );
+
+        return convertMessageToResponse(saved);
+    }
+
+    @Override
+    public ChatMessageResponse managerReply(SendChatMessageRequest request, UserPrincipal principal) {
+        ChatSession session = chatSessionRepo.findById(request.getSessionId())
+                .orElseThrow(() -> new NoSuchElementException(
+                        ErrorCode.CHAT_SESSION_NOT_FOUND.getMessage()
+                ));
+
+        if (!session.getManager().getId().equals(principal.getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        Profile sender = profileRepo.findById(principal.getId())
+                .orElseThrow(() -> new NoSuchElementException(
+                        ErrorCode.USER_NOT_FOUND.getMessage()
+                ));
+
+        ChatMessage message = ChatMessage.builder()
+                .session(session)
+                .sender(sender)
+                .senderType(MessageSenderType.MANAGER)
+                .content(request.getContent())
+                .isRead(false)
+                .build();
+
+        ChatMessage saved = chatMessageRepo.save(message);
+
+        session.setUpdatedAt(LocalDateTime.now());
+        chatSessionRepo.save(session);
+
+        notificationService.create(
+                NotificationRequest.builder()
+                        .senderId(session.getManager().getId())
+                        .receiverId(session.getUser().getId())
+                        .title("Quản lý đã phản hồi tin nhắn của bạn")
+                        .content("Bạn có tin nhắn mới từ quản lý khách sạn.")
+                        .type(NotificationType.CHAT_MESSAGE_CREATED)
+                        .referenceId(session.getId())
+                        .build()
+        );
+
+        return convertMessageToResponse(saved);
+    }
+
+    @Override
+    public PaginationResponse<ChatSessionResponse> getMyManagerSessions(int page, int size, UserPrincipal principal) {
+        Pageable pageable = PageRequest.of(
+                Math.max(page - 1, 0),
+                size,
+                Sort.by(Sort.Direction.DESC, "updatedAt")
+        );
+
+        Page<ChatSession> sessionPage;
+
+        if (principal.hasRole(RoleName.ROLE_CUSTOMER)) {
+            sessionPage = chatSessionRepo.findCustomerManagerSessions(
+                    principal.getId(),
+                    pageable
+            );
+        } else if (principal.hasRole(RoleName.ROLE_MANAGER)) {
+            sessionPage = chatSessionRepo.findManagerSessions(
+                    principal.getId(),
+                    pageable
+            );
+        } else {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        List<ChatSessionResponse> content = sessionPage.getContent()
+                .stream()
+                .map(this::convertSessionToResponse)
+                .toList();
+
+        PaginationDTO pagination = new PaginationDTO(
+                sessionPage.getNumber() + 1,
+                sessionPage.getSize(),
+                sessionPage.getTotalPages(),
+                sessionPage.getTotalElements()
+        );
+
+        return new PaginationResponse<>(content, pagination);
     }
 
     private String buildPrompt(String userQuestion) {

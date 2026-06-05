@@ -7,19 +7,27 @@ import {
   useCreateChatAIMutation,
   useSendAIMessage,
   useGetMessagesQuery,
+  useStartManagerChatMutation,
+  useSendManagerMessage,
 } from "../../../common/hooks/useChatSession";
 import { MessageSenderType } from "../../../common/enums/MessageSenderType";
 import type { ChatMessageResponse } from "../../../common/interfaces/response/ChatMessageResponse";
+import { useChatContext } from "../../../common/contexts/ChatContext";
 
 export default function ChatBotWidget() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [sessionId, setSessionId] = useState<number>(0);
+  const { isOpen, chatType, targetBranchId, managerName, closeChat, toggleChat } = useChatContext();
+  const [currentSessionId, setCurrentSessionId] = useState<number>(0);
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { mutateAsync: createSession } = useCreateChatAIMutation();
-  const { mutateAsync: sendMessage, isPending: isSending } = useSendAIMessage(sessionId);
-  const { data: messages = [], refetch } = useGetMessagesQuery(sessionId);
+  const { mutateAsync: createAiSession } = useCreateChatAIMutation();
+  const { mutateAsync: createManagerSession } = useStartManagerChatMutation();
+
+  const { mutateAsync: sendAiMessage, isPending: isSendingAi } = useSendAIMessage(currentSessionId);
+  const { mutateAsync: sendManagerMessage, isPending: isSendingManager } = useSendManagerMessage(currentSessionId);
+
+  const isSending = chatType === "AI" ? isSendingAi : isSendingManager;
+  const { data: messages = [], refetch } = useGetMessagesQuery(currentSessionId);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -31,29 +39,42 @@ export default function ChatBotWidget() {
     }
   }, [messages, isOpen]);
 
-  const handleOpenChat = async () => {
-    setIsOpen(!isOpen);
-    if (!isOpen && sessionId === 0) {
-      try {
-        const res = await createSession();
-        if (res?.data?.id) {
-          setSessionId(res.data.id);
+  useEffect(() => {
+    if (isOpen) {
+      const initSession = async () => {
+        try {
+          if (chatType === "AI") {
+            const res = await createAiSession();
+            if (res?.data?.id) setCurrentSessionId(res.data.id);
+          } else if (chatType === "MANAGER" && targetBranchId) {
+            const res = await createManagerSession({ hotelBranchId: targetBranchId });
+            if (res?.data?.id) setCurrentSessionId(res.data.id);
+          }
+        } catch (error) {
+          console.error("Failed to init chat session", error);
         }
-      } catch (error) {
-        console.error("Failed to create chat session", error);
-      }
+      };
+      initSession();
     }
+  }, [isOpen, chatType, targetBranchId]);
+
+  const handleOpenChat = () => {
+    toggleChat();
   };
 
   const handleSend = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!inputValue.trim() || sessionId === 0) return;
+    if (!inputValue.trim() || currentSessionId === 0) return;
 
     const content = inputValue;
     setInputValue("");
 
     try {
-      await sendMessage(content);
+      if (chatType === "AI") {
+        await sendAiMessage(content);
+      } else {
+        await sendManagerMessage(content);
+      }
       refetch();
     } catch (error) {
       setInputValue(content);
@@ -81,7 +102,7 @@ export default function ChatBotWidget() {
           ? "bg-gray-900 text-white hover:bg-gray-800 rotate-90 scale-0 opacity-0 pointer-events-none"
           : "bg-linear-to-r from-blue-600 to-indigo-600 text-white hover:shadow-blue-500/30 hover:-translate-y-1 rotate-0 scale-100 opacity-100"
           }`}
-        aria-label="Open AI Chat"
+        aria-label="Open Chat"
       >
         <MessageSquare className="w-6 h-6" />
       </button>
@@ -97,15 +118,17 @@ export default function ChatBotWidget() {
           <div className="absolute top-0 right-0 -mr-10 -mt-10 w-32 h-32 bg-white dark:bg-gray-800/10 rounded-full blur-2xl"></div>
           <div className="flex items-center gap-3 relative z-10">
             <div className="w-10 h-10 bg-white dark:bg-gray-800/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
-              <Bot className="w-6 h-6 text-white" />
+              {chatType === "AI" ? <Bot className="w-6 h-6 text-white" /> : <User className="w-6 h-6 text-white" />}
             </div>
             <div>
-              <h3 className="text-white font-semibold text-lg leading-tight">Staylio AI</h3>
+              <h3 className="text-white font-semibold text-lg leading-tight">
+                {chatType === "AI" ? "Staylio AI" : `Quản lý: ${managerName || "Đang cập nhật"}`}
+              </h3>
               <p className="text-blue-100 text-xs font-medium">Trực tuyến</p>
             </div>
           </div>
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={closeChat}
             className="text-white/80 hover:text-white hover:bg-white dark:bg-gray-800/20 p-2 rounded-full transition-colors relative z-10"
             aria-label="Close chat"
           >
@@ -114,32 +137,32 @@ export default function ChatBotWidget() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 bg-slate-50 dark:bg-gray-900 space-y-4 scrollbar-thin scrollbar-thumb-gray-300">
-          {messages.length === 0 && sessionId !== 0 && (
+          {messages.length === 0 && currentSessionId !== 0 && (
             <div className="text-center text-gray-400 dark:text-gray-500 text-sm mt-4">
-              Hãy bắt đầu cuộc trò chuyện với AI...
+              Hãy bắt đầu cuộc trò chuyện với {chatType === "AI" ? "AI" : "Quản lý"}...
             </div>
           )}
           {messages.map((msg: ChatMessageResponse) => {
-            const isUser = msg.senderType === MessageSenderType.USER;
+            const isCustomer = msg.senderType === MessageSenderType.USER;
             return (
               <div
                 key={msg.id}
-                className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"
+                className={`flex items-end gap-2 ${isCustomer ? "justify-end" : "justify-start"
                   }`}
               >
-                {!isUser && (
+                {!isCustomer && (
                   <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-100 to-indigo-100 flex items-center justify-center shrink-0 border border-b dark:border-gray-700lue-200">
-                    <Bot className="w-4 h-4 text-blue-600" />
+                    {msg.senderType === MessageSenderType.AI ? <Bot className="w-4 h-4 text-blue-600" /> : <User className="w-4 h-4 text-blue-600" />}
                   </div>
                 )}
 
                 <div
-                  className={`max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${isUser
+                  className={`max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${isCustomer
                     ? "bg-blue-600 text-white rounded-br-none"
                     : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-none border border-gray-100 dark:border-gray-700"
                     }`}
                 >
-                  {isUser ? (
+                  {isCustomer ? (
                     <div className="whitespace-pre-wrap">{msg.content}</div>
                   ) : (
                     <div className="prose prose-sm max-w-none text-inherit">
@@ -150,9 +173,9 @@ export default function ChatBotWidget() {
                   )}
                 </div>
 
-                {isUser && (
+                {isCustomer && (
                   <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center shrink-0">
-                    <User className="w-4 h-4 text-gray-500 dark:text-gray-400 dark:text-gray-500" />
+                    <User className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                   </div>
                 )}
               </div>
@@ -178,12 +201,12 @@ export default function ChatBotWidget() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Nhập tin nhắn..."
-              disabled={isSending || sessionId === 0}
+              disabled={isSending || currentSessionId === 0}
               className="flex-1 bg-transparent px-3 py-2 text-sm focus:outline-none text-gray-800 dark:text-gray-100 disabled:opacity-50"
             />
             <button
               type="submit"
-              disabled={!inputValue.trim() || isSending || sessionId === 0}
+              disabled={!inputValue.trim() || isSending || currentSessionId === 0}
               className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:hover:bg-blue-600 shrink-0 shadow-sm"
             >
               <Send className="w-4 h-4 -translate-x-px translate-y-px" />

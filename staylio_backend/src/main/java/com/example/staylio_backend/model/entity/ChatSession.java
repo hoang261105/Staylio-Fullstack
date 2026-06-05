@@ -1,5 +1,6 @@
 package com.example.staylio_backend.model.entity;
 
+import com.example.staylio_backend.common.base.AuditableObject;
 import com.example.staylio_backend.common.base.BaseObject;
 import com.example.staylio_backend.model.enums.ChatSessionStatus;
 import com.example.staylio_backend.model.enums.ChatSessionType;
@@ -13,7 +14,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class ChatSession extends BaseObject {
+public class ChatSession extends AuditableObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Profile user;

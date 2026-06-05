@@ -39,5 +39,9 @@ public enum NotificationType {
     HOTEL_BRAND_REJECTED,
 
     // SYSTEM
-    SYSTEM_NOTIFICATION
+    SYSTEM_NOTIFICATION,
+
+    // CHAT
+    CHAT_MESSAGE_CREATED,
+
 }

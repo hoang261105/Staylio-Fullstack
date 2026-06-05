@@ -1,6 +1,6 @@
 import { Star, MapPin, Users, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import { useChatContext } from "../../../common/contexts/ChatContext";
 import type { HotelBranchResponse } from "../../../common/interfaces/response/HotelBranchResponse";
 
 interface HotelBranchCardProps {
@@ -9,6 +9,7 @@ interface HotelBranchCardProps {
 
 export function HotelBranchCard({ branch }: HotelBranchCardProps) {
   const navigate = useNavigate();
+  const { openManagerChat } = useChatContext();
 
   if (!branch) return null;
 
@@ -79,14 +80,7 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
             <button 
               onClick={(e) => {
                 e.stopPropagation();
-                toast.success(`Chi nhánh: ${branch.hotelBranchName}\nQuản lý: ${branch.managerName || "Đang cập nhật"}`, {
-                  icon: "📞",
-                  duration: 5000,
-                  style: {
-                    whiteSpace: 'pre-line',
-                    minWidth: '250px'
-                  }
-                });
+                openManagerChat(branch.id, branch.managerName || "Quản lý");
               }}
               className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-900/40 dark:hover:bg-emerald-900/60 dark:text-emerald-300 text-sm font-semibold px-4 py-2 rounded-xl transition-all active:scale-95 border border-emerald-200 dark:border-emerald-800"
             >

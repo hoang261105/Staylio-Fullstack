@@ -1,6 +1,8 @@
-import { createChatWithAI, getMessages, sendAIMessage } from "@common/services/chatSession.service";
+import { createChatWithAI, getMessages, sendAIMessage, startChatWithManager, sendManagerMessage, replyToCustomer, getChatSessions } from "@common/services/chatSession.service";
 import { useMutation, useQuery } from "@tanstack/react-query"
 import toast from "react-hot-toast";
+import { StartManagerChatRequest } from "@common/interfaces/request/StartManagerChatRequest";
+import { SendChatMessageRequest } from "@common/interfaces/request/SendChatMessageRequest";
 
 export const useCreateChatAIMutation = () => {
     return useMutation({
@@ -38,3 +40,45 @@ export const useGetMessagesQuery = (sessionId: number) => {
         enabled: sessionId > 0
     });
 }
+
+export const useStartManagerChatMutation = () => {
+    return useMutation({
+        mutationKey: ["startManagerChat"],
+        mutationFn: async (request: StartManagerChatRequest) => {
+            const response = await startChatWithManager(request);
+            return response;
+        }
+    });
+}
+
+export const useSendManagerMessage = (sessionId: number) => {
+    return useMutation({
+        mutationKey: ["sendManagerMessage", sessionId],
+        mutationFn: async (content: string) => {
+            const request: SendChatMessageRequest = { sessionId, content };
+            const response = await sendManagerMessage(request);
+            return response;
+        }
+    });
+}
+
+export const useReplyToCustomerMutation = (sessionId: number) => {
+    return useMutation({
+        mutationKey: ["replyToCustomer", sessionId],
+        mutationFn: async (content: string) => {
+            const request: SendChatMessageRequest = { sessionId, content };
+            const response = await replyToCustomer(request);
+            return response;
+        }
+    });
+}
+
+export const useGetChatSessionsQuery = () => {
+    return useQuery({
+        queryKey: ["getChatSessions"],
+        queryFn: async () => {
+            const response = await getChatSessions();
+            return response.data;
+        }
+    });
+}
