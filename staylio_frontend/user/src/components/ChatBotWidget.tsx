@@ -98,9 +98,9 @@ export default function ChatBotWidget() {
     <>
       <button
         onClick={handleOpenChat}
-        className={`fixed bottom-6 right-6 p-4 rounded-full shadow-2xl z-100 transition-all duration-300 flex items-center justify-center ${isOpen
+        className={`fixed bottom-6 right-6 p-4 rounded-full z-100 transition-all duration-300 flex items-center justify-center ${isOpen
           ? "bg-gray-900 text-white hover:bg-gray-800 rotate-90 scale-0 opacity-0 pointer-events-none"
-          : "bg-linear-to-r from-blue-600 to-indigo-600 text-white hover:shadow-blue-500/30 hover:-translate-y-1 rotate-0 scale-100 opacity-100"
+          : "bg-linear-to-r from-blue-600 to-indigo-600 text-white hover:-translate-y-1 rotate-0 scale-100 opacity-100"
           }`}
         aria-label="Open Chat"
       >
@@ -108,13 +108,13 @@ export default function ChatBotWidget() {
       </button>
 
       <div
-        className={`fixed bottom-6 right-6 w-full max-w-90 sm:max-w-100 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 z-100 overflow-hidden flex flex-col transition-all duration-500 origin-bottom-right ${isOpen
+        className={`fixed bottom-6 right-6 w-full max-w-90 sm:max-w-100 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 z-100 overflow-hidden flex flex-col transition-all duration-500 origin-bottom-right ${isOpen
           ? "scale-100 opacity-100 pointer-events-auto translate-y-0"
           : "scale-50 opacity-0 pointer-events-none translate-y-10"
           }`}
         style={{ height: "600px", maxHeight: "calc(100vh - 100px)" }}
       >
-        <div className="bg-linear-to-r from-blue-600 to-indigo-600 p-4 flex items-center justify-between shadow-md relative overflow-hidden">
+        <div className="bg-linear-to-r from-blue-600 to-indigo-600 p-4 flex items-center justify-between relative overflow-hidden">
           <div className="absolute top-0 right-0 -mr-10 -mt-10 w-32 h-32 bg-white dark:bg-gray-800/10 rounded-full blur-2xl"></div>
           <div className="flex items-center gap-3 relative z-10">
             <div className="w-10 h-10 bg-white dark:bg-gray-800/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
@@ -157,7 +157,7 @@ export default function ChatBotWidget() {
                 )}
 
                 <div
-                  className={`max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${isCustomer
+                  className={`max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed ${isCustomer
                     ? "bg-blue-600 text-white rounded-br-none"
                     : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-none border border-gray-100 dark:border-gray-700"
                     }`}
@@ -183,7 +183,7 @@ export default function ChatBotWidget() {
           })}
           {isSending && (
             <div className="flex items-end gap-2 justify-end">
-              <div className="max-w-[75%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm bg-blue-600 text-white rounded-br-none opacity-50">
+              <div className="max-w-[75%] p-3 rounded-2xl text-sm leading-relaxed bg-blue-600 text-white rounded-br-none opacity-50">
                 {inputValue || "Đang gửi..."}
               </div>
             </div>
@@ -207,7 +207,7 @@ export default function ChatBotWidget() {
             <button
               type="submit"
               disabled={!inputValue.trim() || isSending || currentSessionId === 0}
-              className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:hover:bg-blue-600 shrink-0 shadow-sm"
+              className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:hover:bg-blue-600 shrink-0"
             >
               <Send className="w-4 h-4 -translate-x-px translate-y-px" />
             </button>

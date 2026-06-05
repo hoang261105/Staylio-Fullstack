@@ -16,7 +16,7 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
   return (
     <div
       onClick={() => navigate(`/hotel/${branch.hotelId}/branch/${branch.id}`)}
-      className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group border border-gray-100 dark:border-gray-700 flex flex-col h-full"
+      className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group border border-gray-100 dark:border-gray-700 flex flex-col h-full"
     >
       <div className="relative h-52 w-full overflow-hidden">
         <img
@@ -24,10 +24,10 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
           alt={branch.hotelBranchName}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
-        <div className="absolute top-3 left-3 bg-emerald-500 text-white text-[12px] font-bold px-3 py-1 rounded-full shadow-sm z-10">
+        <div className="absolute top-3 left-3 bg-emerald-500 text-white text-[12px] font-bold px-3 py-1 rounded-full z-10">
           Nổi bật
         </div>
-        <div className="absolute bottom-3 right-3 bg-white dark:bg-gray-800/90 dark:bg-gray-900/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+        <div className="absolute bottom-3 right-3 bg-white dark:bg-gray-800/90 dark:bg-gray-900/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
           <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
           <span className="text-xs font-bold text-gray-800 dark:text-gray-100">{branch.averageRating?.toFixed(1) || "0.0"}</span>
         </div>
@@ -86,7 +86,7 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
             >
               Liên hệ
             </button>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all shadow-md shadow-blue-100 dark:shadow-none active:scale-95">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all active:scale-95">
               Chi tiết
             </button>
           </div>

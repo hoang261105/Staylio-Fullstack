@@ -42,10 +42,10 @@ export default function Home() {
       <HeroCarousel />
 
       <section className="relative z-20 -mt-6 md:-mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white dark:bg-gray-800/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 dark:border-gray-800 p-8">
+        <div className="bg-white dark:bg-gray-800/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/40 dark:border-gray-800 p-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-200/60 dark:divide-gray-800">
             <div className="flex flex-col items-center justify-center text-center px-4">
-              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
+              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-4">
                 <Users className="w-7 h-7 text-blue-600" />
               </div>
               <div className="text-3xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-1">2.5M+</div>
@@ -53,7 +53,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col items-center justify-center text-center px-4 pt-6 md:pt-0">
-              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
+              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center mb-4">
                 <Star className="w-7 h-7 text-emerald-600" />
               </div>
               <div className="text-3xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-1">4.8/5</div>
@@ -61,7 +61,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col items-center justify-center text-center px-4 pt-6 md:pt-0">
-              <div className="w-14 h-14 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
+              <div className="w-14 h-14 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center mb-4">
                 <Shield className="w-7 h-7 text-amber-600" />
               </div>
               <div className="text-3xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-1">100%</div>
@@ -92,7 +92,7 @@ export default function Home() {
             {topBrands.map((brand: HotelResponse) => (
               <div
                 key={brand.id}
-                className="relative h-80 rounded-2xl overflow-hidden group cursor-pointer shadow-md hover:shadow-2xl transition-all duration-300"
+                className="relative h-80 rounded-2xl overflow-hidden group cursor-pointer transition-all duration-300"
               >
                 <img
                   src={brand.imageUrl || "https://images.unsplash.com/photo-1562790351-d273a961e0e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600"}
@@ -183,7 +183,7 @@ export default function Home() {
 
       {/* Newsletter CTA */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 mb-12">
-        <div className="bg-linear-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 md:p-16 relative overflow-hidden shadow-2xl">
+        <div className="bg-linear-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 md:p-16 relative overflow-hidden">
           <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-white dark:bg-gray-800/10 blur-3xl"></div>
           <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-blue-400/20 blur-3xl"></div>
 
@@ -208,7 +208,7 @@ export default function Home() {
                 </div>
                 <button
                   type="submit"
-                  className="bg-gray-900 dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-700 text-white font-semibold py-3 md:py-4 px-8 rounded-xl transition-all active:scale-95 shadow-xl"
+                  className="bg-gray-900 dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-700 text-white font-semibold py-3 md:py-4 px-8 rounded-xl transition-all active:scale-95"
                 >
                   Đăng ký
                 </button>
