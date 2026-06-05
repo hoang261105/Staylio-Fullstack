@@ -181,7 +181,8 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
         ChatSession session = chatSessionRepo.findOpenManagerSession(
                 customer.getId(),
-                manager.getId()
+                manager.getId(),
+                branch.getId()
         ).orElseGet(() -> chatSessionRepo.save(
                 ChatSession.builder()
                         .user(customer)

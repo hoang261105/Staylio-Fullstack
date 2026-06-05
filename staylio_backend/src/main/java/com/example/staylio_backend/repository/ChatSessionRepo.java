@@ -25,12 +25,14 @@ public interface ChatSessionRepo extends JpaRepository<ChatSession, Long> {
         FROM ChatSession cs
         WHERE cs.user.id = :customerId
           AND cs.manager.id = :managerId
+          AND cs.hotelBranch.id = :branchId
           AND cs.type = 'MANAGER'
           AND cs.status = 'OPEN'
     """)
     Optional<ChatSession> findOpenManagerSession(
             @Param("customerId") Long customerId,
-            @Param("managerId") Long managerId
+            @Param("managerId") Long managerId,
+            @Param("branchId") Long branchId
     );
 
     @Query("""

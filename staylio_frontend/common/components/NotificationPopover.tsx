@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Bell, Info, Calendar, Star, Building2, Tag, Image as ImageIcon } from "lucide-react";
+import { Bell, Info, Calendar, Star, Building2, Tag, Image as ImageIcon, MessageCircle } from "lucide-react";
 import { useCountNotificationUnRead, useNotifications } from "../hooks/useNotifications";
 import { formatDateTime } from "../utils/date.util";
 import { NotificationType } from "../enums/NotificationType";
@@ -56,6 +56,9 @@ export default function NotificationPopover() {
     } else if (type.startsWith("HOTEL_BRANCH_") || type.startsWith("HOTEL_BRAND_")) {
       if (role === "ROLE_ADMIN") navigate("/hotel-branches", { state: { branchId: notification.referenceId } });
       if (role === "ROLE_MANAGER") navigate("/branches", { state: { branchId: notification.referenceId } });
+    } else if (type === "CHAT_MESSAGE_CREATED") {
+      if (role === "ROLE_MANAGER") navigate("/branches");
+      // For customer, they can open the chat widget manually
     }
   };
 
@@ -77,6 +80,7 @@ export default function NotificationPopover() {
     if (type.startsWith("HOTEL_")) return <Building2 className="w-5 h-5 text-indigo-500" />;
     if (type.startsWith("VOUCHER_")) return <Tag className="w-5 h-5 text-emerald-500" />;
     if (type.startsWith("ROOM_IMAGE_")) return <ImageIcon className="w-5 h-5 text-purple-500" />;
+    if (type === "CHAT_MESSAGE_CREATED") return <MessageCircle className="w-5 h-5 text-blue-500" />;
     return <Info className="w-5 h-5 text-gray-500" />;
   };
 
