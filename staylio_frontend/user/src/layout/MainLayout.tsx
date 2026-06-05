@@ -1,6 +1,5 @@
 import { Outlet, useLocation } from "react-router-dom";
 import ChatBotWidget from "../components/ChatBotWidget";
-import { ChatProvider } from "../../../common/contexts/ChatContext";
 
 export default function MainLayout() {
     const location = useLocation();
@@ -18,12 +17,10 @@ export default function MainLayout() {
     );
 
     return (
-        <ChatProvider>
-            <div className="min-h-screen">
-                <Outlet />
+        <div className="min-h-screen">
+            <Outlet />
 
-                {!shouldHideChat && <ChatBotWidget />}
-            </div>
-        </ChatProvider>
+            {!shouldHideChat && <ChatBotWidget />}
+        </div>
     );
-}
+}
