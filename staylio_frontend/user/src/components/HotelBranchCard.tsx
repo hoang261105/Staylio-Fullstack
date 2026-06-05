@@ -80,7 +80,7 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
             <button 
               onClick={(e) => {
                 e.stopPropagation();
-                openManagerChat(branch.id, branch.managerName || "Quản lý");
+                openManagerChat(branch.id, branch.hotelBranchName);
               }}
               className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-900/40 dark:hover:bg-emerald-900/60 dark:text-emerald-300 text-sm font-semibold px-4 py-2 rounded-xl transition-all active:scale-95 border border-emerald-200 dark:border-emerald-800"
             >

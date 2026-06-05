@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useRef, useEffect, type SyntheticEvent } from "react";
@@ -81,7 +82,6 @@ export default function ChatBotWidget() {
     }
   };
 
-  // Common components for markdown rendering
   const MarkdownComponents = {
     ul: ({ node, ...props }: any) => <ul className="list-disc list-outside ml-4 mt-2 mb-2 space-y-1" {...props} />,
     ol: ({ node, ...props }: any) => <ol className="list-decimal list-outside ml-4 mt-2 mb-2 space-y-1" {...props} />,
@@ -122,7 +122,7 @@ export default function ChatBotWidget() {
             </div>
             <div>
               <h3 className="text-white font-semibold text-lg leading-tight">
-                {chatType === "AI" ? "Staylio AI" : `Quản lý: ${managerName || "Đang cập nhật"}`}
+                {chatType === "AI" ? "Staylio AI" : `${managerName || "Đang cập nhật"}`}
               </h3>
               <p className="text-blue-100 text-xs font-medium">Trực tuyến</p>
             </div>
