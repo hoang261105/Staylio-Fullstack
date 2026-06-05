@@ -31,7 +31,7 @@ export default function ManagerHotelBranches() {
     hotelId: hotel?.id,
     search: debounceSearch || undefined,
     status: selectedFilter !== "all" ? selectedFilter as BranchStatus : undefined,
-  });
+  }, { enabled: !!hotel?.id });
 
   const { mutateAsync: deleteBranch } = useDeleteHotelBranch({ hotelId: hotel?.id || 0 });
 

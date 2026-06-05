@@ -16,7 +16,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-export const useHotelBranchs = (params: QueryParams) => {
+export const useHotelBranchs = (params: QueryParams, options?: { enabled?: boolean }) => {
   return useQuery<PaginationResponse<HotelBranchResponse>>({
     queryKey: [
       "hotelBranchs",
@@ -35,6 +35,7 @@ export const useHotelBranchs = (params: QueryParams) => {
       });
       return response.data;
     },
+    enabled: options?.enabled !== undefined ? options.enabled : true,
   });
 };
 
