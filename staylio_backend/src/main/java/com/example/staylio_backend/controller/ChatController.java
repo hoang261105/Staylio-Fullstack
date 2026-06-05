@@ -145,4 +145,23 @@ public class ChatController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/manager/branch/{branchId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<ApiResponse<PaginationResponse<ChatSessionResponse>>> getManagerSessionsByBranch(
+            @PathVariable Long branchId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        ApiResponse<PaginationResponse<ChatSessionResponse>> response = new ApiResponse<>(
+                true,
+                "Lấy danh sách phiên chat theo chi nhánh thành công!",
+                chatSessionService.getManagerSessionsByBranch(branchId, page, size, principal),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

@@ -138,7 +138,8 @@ public class ChatSessionServiceImpl implements ChatSessionService {
         ChatSession session = chatSessionRepo.findById(sessionId)
                 .orElseThrow(() -> new NoSuchElementException("Không tìm thấy đoạn chat!"));
 
-        if (!session.getUser().getId().equals(profile.getId())) {
+        if (!session.getUser().getId().equals(profile.getId()) && 
+            (session.getManager() == null || !session.getManager().getId().equals(profile.getId()))) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
@@ -304,6 +305,39 @@ public class ChatSessionServiceImpl implements ChatSessionService {
         } else {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
+
+        List<ChatSessionResponse> content = sessionPage.getContent()
+                .stream()
+                .map(this::convertSessionToResponse)
+                .toList();
+
+        PaginationDTO pagination = new PaginationDTO(
+                sessionPage.getNumber() + 1,
+                sessionPage.getSize(),
+                sessionPage.getTotalPages(),
+                sessionPage.getTotalElements()
+        );
+
+        return new PaginationResponse<>(content, pagination);
+    }
+
+    @Override
+    public PaginationResponse<ChatSessionResponse> getManagerSessionsByBranch(Long branchId, int page, int size, UserPrincipal principal) {
+        if (!principal.hasRole(RoleName.ROLE_MANAGER)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        Pageable pageable = PageRequest.of(
+                Math.max(page - 1, 0),
+                size,
+                Sort.by(Sort.Direction.DESC, "updatedAt")
+        );
+
+        Page<ChatSession> sessionPage = chatSessionRepo.findManagerSessionsByBranchId(
+                principal.getId(),
+                branchId,
+                pageable
+        );
 
         List<ChatSessionResponse> content = sessionPage.getContent()
                 .stream()
@@ -523,6 +557,8 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                 .findFirstBySession_IdOrderByCreatedAtDesc(session.getId())
                 .orElse(null);
 
+        Profile customer = session.getUser();
+
         return ChatSessionResponse.builder()
                 .id(session.getId())
                 .type(session.getType())
@@ -531,6 +567,10 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                 .lastMessageAt(lastMessage != null ? lastMessage.getCreatedAt() : null)
                 .unreadCount(0L)
                 .createdAt(session.getCreatedAt())
+                .customerId(customer != null ? customer.getId() : null)
+                .customerName(customer != null ? customer.getFullName() : null)
+                .customerAvatar(customer != null ? customer.getAvatarUrl() : null)
+                .branchId(session.getHotelBranch() != null ? session.getHotelBranch().getId() : null)
                 .build();
     }
 }

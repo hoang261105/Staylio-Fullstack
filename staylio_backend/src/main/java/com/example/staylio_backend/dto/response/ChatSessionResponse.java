@@ -25,4 +25,12 @@ public class ChatSessionResponse {
     private Long unreadCount;
 
     private LocalDateTime createdAt;
+
+    // Customer Information
+    private Long customerId;
+    private String customerName;
+    private String customerAvatar;
+
+    // Branch Information
+    private Long branchId;
 }

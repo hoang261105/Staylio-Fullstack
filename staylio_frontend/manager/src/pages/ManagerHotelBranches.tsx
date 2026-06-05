@@ -11,11 +11,13 @@ import HotelBranchDetailModal from "../components/hotel-branches/HotelBranchDeta
 import HotelBranchFormAdd from "../components/hotel-branches/HotelBranchFormAdd";
 import HotelBranchFormUpdate from "../components/hotel-branches/HotelBranchFormUpdate";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import ManagerBranchChatsModal from "../components/hotel-branches/ManagerBranchChatsModal";
 
 export default function ManagerHotelBranches() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [selectedBranch, setSelectedBranch] = useState<HotelBranchResponse | null>(null);
+  const [chatBranch, setChatBranch] = useState<HotelBranchResponse | null>(null);
   const [editingBranch, setEditingBranch] = useState<HotelBranchResponse | null>(null);
   const [deletingBranchId, setDeletingBranchId] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -50,6 +52,11 @@ export default function ManagerHotelBranches() {
 
   const handleEdit = (branch: HotelBranchResponse) => {
     setEditingBranch(branch);
+  };
+
+  const handleViewChats = (branchId: number) => {
+    const branch = branches.find(b => b.id === branchId);
+    if (branch) setChatBranch(branch);
   };
 
   const handleDelete = (id: number) => {
@@ -145,6 +152,7 @@ export default function ManagerHotelBranches() {
           onView={handleView}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onViewChats={handleViewChats}
         />
       </div>
 
@@ -175,6 +183,14 @@ export default function ManagerHotelBranches() {
           />
         )
       }
+
+      {chatBranch && (
+        <ManagerBranchChatsModal
+          branchId={chatBranch.id}
+          branchName={chatBranch.hotelBranchName}
+          onClose={() => setChatBranch(null)}
+        />
+      )}
     </ManagerLayout>
   );
 }

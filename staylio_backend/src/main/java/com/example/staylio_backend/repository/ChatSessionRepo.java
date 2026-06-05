@@ -56,4 +56,18 @@ public interface ChatSessionRepo extends JpaRepository<ChatSession, Long> {
             @Param("managerId") Long managerId,
             Pageable pageable
     );
+
+    @Query("""
+        SELECT cs
+        FROM ChatSession cs
+        WHERE cs.manager.id = :managerId
+          AND cs.hotelBranch.id = :branchId
+          AND cs.type = 'MANAGER'
+        ORDER BY cs.createdAt DESC
+    """)
+    Page<ChatSession> findManagerSessionsByBranchId(
+            @Param("managerId") Long managerId,
+            @Param("branchId") Long branchId,
+            Pageable pageable
+    );
 }

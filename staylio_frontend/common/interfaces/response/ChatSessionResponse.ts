@@ -9,4 +9,12 @@ export interface ChatSessionResponse {
     lastMessageAt: string;
     unreadCount: number;
     createdAt: string;
+
+    // Customer Information
+    customerId?: number;
+    customerName?: string;
+    customerAvatar?: string;
+
+    // Branch Information
+    branchId?: number;
 }

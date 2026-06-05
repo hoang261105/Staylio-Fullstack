@@ -4,6 +4,7 @@ import { ChatMessageResponse } from "@common/interfaces/response/ChatMessageResp
 import { ChatSessionResponse } from "@common/interfaces/response/ChatSessionResponse";
 import { axiosInstance } from "@common/utils/axiosInstance";
 import { StartManagerChatRequest } from "@common/interfaces/request/StartManagerChatRequest";
+import { PaginationResponse } from "@common/interfaces/response/PaginationResponse";
 // API tạo phiên chat với AI
 export const createChatWithAI = async (): Promise<ApiResponse<ChatSessionResponse>> => {
     try {
@@ -80,3 +81,21 @@ export const getChatSessions = async (): Promise<ApiResponse<ChatSessionResponse
         throw error;
     }
 }
+
+export const managerReply = async (data: SendChatMessageRequest) => {
+    return axiosInstance.post<ApiResponse<ChatMessageResponse>>("/chat/manager/reply", data);
+};
+
+export const getMyManagerSessions = async (params: { page?: number; size?: number }) => {
+    return axiosInstance.get<ApiResponse<PaginationResponse<ChatSessionResponse>>>("/chat/manager", { params });
+};
+
+export const getManagerSessionsByBranchId = async (branchId: number, params: { page?: number; size?: number }) => {
+    try {
+        const response = await axiosInstance.get(`/chat/manager/branch/${branchId}`, { params });
+        return response.data;
+    } catch (error) {
+        console.error("Lấy danh sách phiên chat chi nhánh thất bại!", error);
+        throw error;
+    }
+};

@@ -40,4 +40,11 @@ public interface ChatSessionService {
             int size,
             UserPrincipal principal
     );
+
+    PaginationResponse<ChatSessionResponse> getManagerSessionsByBranch(
+            Long branchId,
+            int page,
+            int size,
+            UserPrincipal principal
+    );
 }
