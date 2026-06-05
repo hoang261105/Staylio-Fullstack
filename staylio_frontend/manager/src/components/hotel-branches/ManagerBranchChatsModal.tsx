@@ -41,7 +41,7 @@ export default function ManagerBranchChatsModal({ branchId, branchName, onClose 
     }
   }, [sessions, selectedSessionId]);
 
-  const handleSend = async (e: React.FormEvent) => {
+  const handleSend = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!inputValue.trim() || !selectedSessionId || isSending) return;
 
