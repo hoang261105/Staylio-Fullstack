@@ -81,6 +81,12 @@
     }
   },
   "components": {
+    "confirmLogoutModal": {
+      "title": "Xác nhận đăng xuất",
+      "description": "Bạn có chắc chắn muốn đăng xuất không?",
+      "cancel": "Hủy",
+      "confirm": "Đăng xuất"
+    },
     "notification": {
       "title": "Thông báo",
       "unread": "chưa đọc",

@@ -8,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   open: boolean;
@@ -20,19 +21,20 @@ export default function ConfirmLogoutModal({
   onClose,
   onConfirm,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <AlertDialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Xác nhận đăng xuất</AlertDialogTitle>
+          <AlertDialogTitle>{t('components.confirmLogoutModal.title', 'Xác nhận đăng xuất')}</AlertDialogTitle>
           <AlertDialogDescription>
-            Bạn có chắc chắn muốn đăng xuất không?
+            {t('components.confirmLogoutModal.description', 'Bạn có chắc chắn muốn đăng xuất không?')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onClose}>Hủy</AlertDialogCancel>
+          <AlertDialogCancel onClick={onClose}>{t('components.confirmLogoutModal.cancel', 'Hủy')}</AlertDialogCancel>
           <AlertDialogAction onClick={(e) => { e.preventDefault(); onConfirm(); }} className="bg-red-500 hover:bg-red-600">
-            Đăng xuất
+            {t('components.confirmLogoutModal.confirm', 'Đăng xuất')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

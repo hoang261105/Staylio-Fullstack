@@ -81,6 +81,12 @@
     }
   },
   "components": {
+    "confirmLogoutModal": {
+      "title": "Confirm Logout",
+      "description": "Are you sure you want to log out?",
+      "cancel": "Cancel",
+      "confirm": "Logout"
+    },
     "notification": {
       "title": "Notifications",
       "unread": "unread",
