@@ -35,5 +35,49 @@
       "creatingAccount": "Creating account...",
       "createAccountButton": "Create account"
     }
+  },
+  "homeScreen": {
+    "hero": {
+      "titlePrefix": "Find the",
+      "titleHighlight": "perfect stay",
+      "subtitle": "Discover thousands of wonderful hotels, resorts, and homestays."
+    },
+    "stats": {
+      "happyUsers": "Happy Users",
+      "averageRating": "Average Rating",
+      "securePayment": "Secure Payment"
+    },
+    "featuredLocations": {
+      "title": "Featured Locations",
+      "desc": "Explore the most loved destinations",
+      "viewAll": "View all"
+    },
+    "popularBrands": {
+      "title": "Popular Brands",
+      "desc": "Discover the most loved hotel brands",
+      "viewAll": "View all",
+      "branches": "branches"
+    },
+    "whyChooseUs": {
+      "title": "Why choose Staylio?",
+      "desc": "We bring you an easy, secure booking experience and the best deals for your trip.",
+      "globalNetwork": "Global Network",
+      "globalNetworkDesc": "Over 1 million hotels and properties worldwide for you to choose from.",
+      "transparentPricing": "Transparent Pricing",
+      "transparentPricingDesc": "No hidden fees. Secure and flexible payment with various methods.",
+      "support247": "24/7 Support",
+      "support247Desc": "Our customer care team is always ready to assist you anytime."
+    },
+    "featuredBranches": {
+      "title": "Featured Branches",
+      "desc": "The highest-rated hotel branches",
+      "viewAll": "View all"
+    },
+    "newsletter": {
+      "title": "Get exclusive deals!",
+      "desc": "Subscribe to our newsletter so you don't miss out on promotions and useful travel guides.",
+      "emailPlaceholder": "Enter your email...",
+      "subscribeButton": "Subscribe"
+    }
   }
 }

@@ -35,5 +35,49 @@
       "creatingAccount": "Đang tạo tài khoản...",
       "createAccountButton": "Tạo tài khoản"
     }
+  },
+  "homeScreen": {
+    "hero": {
+      "titlePrefix": "Tìm chỗ nghỉ",
+      "titleHighlight": "hoàn hảo",
+      "subtitle": "Khám phá hàng nghìn khách sạn, resort và homestay tuyệt vời."
+    },
+    "stats": {
+      "happyUsers": "Người dùng hài lòng",
+      "averageRating": "Đánh giá trung bình",
+      "securePayment": "Thanh toán bảo mật"
+    },
+    "featuredLocations": {
+      "title": "Địa điểm nổi bật",
+      "desc": "Khám phá những điểm đến được du khách yêu thích nhất",
+      "viewAll": "Xem tất cả"
+    },
+    "popularBrands": {
+      "title": "Thương hiệu phổ biến",
+      "desc": "Khám phá những thương hiệu khách sạn được yêu thích nhất",
+      "viewAll": "Xem tất cả",
+      "branches": "chi nhánh"
+    },
+    "whyChooseUs": {
+      "title": "Vì sao chọn Staylio?",
+      "desc": "Chúng tôi mang đến trải nghiệm đặt phòng dễ dàng, an toàn và những ưu đãi tốt nhất cho chuyến đi của bạn.",
+      "globalNetwork": "Mạng lưới toàn cầu",
+      "globalNetworkDesc": "Hơn 1 triệu khách sạn và chỗ nghỉ trên toàn thế giới để bạn thỏa sức lựa chọn.",
+      "transparentPricing": "Giá cả minh bạch",
+      "transparentPricingDesc": "Không có phí ẩn. Thanh toán an toàn, linh hoạt với nhiều phương thức.",
+      "support247": "Hỗ trợ 24/7",
+      "support247Desc": "Đội ngũ chăm sóc khách hàng luôn sẵn sàng hỗ trợ bạn bất cứ lúc nào."
+    },
+    "featuredBranches": {
+      "title": "Chi nhánh nổi bật",
+      "desc": "Những chi nhánh khách sạn được đánh giá cao nhất",
+      "viewAll": "Xem tất cả"
+    },
+    "newsletter": {
+      "title": "Nhận ưu đãi độc quyền!",
+      "desc": "Đăng ký nhận bản tin để không bỏ lỡ các chương trình khuyến mãi và cẩm nang du lịch hữu ích.",
+      "emailPlaceholder": "Nhập email của bạn...",
+      "subscribeButton": "Đăng ký"
+    }
   }
 }

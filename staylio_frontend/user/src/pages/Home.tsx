@@ -12,8 +12,10 @@ import { useMemo } from "react";
 import type { HotelResponse } from "../../../common/interfaces/response/HotelResponse";
 import type { HotelBranchResponse } from "../../../common/interfaces/response/HotelBranchResponse";
 import { BranchStatus } from "../../../common/enums/BranchStatus";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
+  const { t } = useTranslation();
   const { data: hotelsData } = useAllHotels();
 
   const { data: branchesData } = useHotelBranchs({ page: 0, size: 1000, search: "", status: BranchStatus.CONFIRMED });
@@ -49,7 +51,7 @@ export default function Home() {
                 <Users className="w-7 h-7 text-blue-600" />
               </div>
               <div className="text-3xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-1">2.5M+</div>
-              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide">Người dùng hài lòng</div>
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide">{t('homeScreen.stats.happyUsers')}</div>
             </div>
 
             <div className="flex flex-col items-center justify-center text-center px-4 pt-6 md:pt-0">
@@ -57,7 +59,7 @@ export default function Home() {
                 <Star className="w-7 h-7 text-emerald-600" />
               </div>
               <div className="text-3xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-1">4.8/5</div>
-              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide">Đánh giá trung bình</div>
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide">{t('homeScreen.stats.averageRating')}</div>
             </div>
 
             <div className="flex flex-col items-center justify-center text-center px-4 pt-6 md:pt-0">
@@ -65,7 +67,7 @@ export default function Home() {
                 <Shield className="w-7 h-7 text-amber-600" />
               </div>
               <div className="text-3xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-1">100%</div>
-              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide">Thanh toán bảo mật</div>
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide">{t('homeScreen.stats.securePayment')}</div>
             </div>
           </div>
         </div>
@@ -78,13 +80,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">Thương hiệu phổ biến</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">{t('homeScreen.popularBrands.title')}</h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
-                Khám phá những thương hiệu khách sạn được yêu thích nhất
+                {t('homeScreen.popularBrands.desc')}
               </p>
             </div>
             <button className="text-blue-600 font-semibold hover:text-blue-800 flex items-center gap-2 transition-colors group">
-              Xem tất cả <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              {t('homeScreen.popularBrands.viewAll')} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
@@ -104,7 +106,7 @@ export default function Home() {
                   <h3 className="text-2xl font-bold mb-2">{brand.name}</h3>
                   <div className="flex items-center gap-2">
                     <span className="bg-white dark:bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-900 dark:text-white">
-                      {brand.branchCount} chi nhánh
+                      {brand.branchCount} {t('homeScreen.popularBrands.branches')}
                     </span>
                   </div>
                 </div>
@@ -118,9 +120,9 @@ export default function Home() {
       <section className="py-24 bg-white dark:bg-gray-800 dark:bg-gray-900 border-y border-gray-100 dark:border-gray-700 dark:border-gray-800 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-4">Vì sao chọn Staylio?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-4">{t('homeScreen.whyChooseUs.title')}</h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500 max-w-2xl mx-auto">
-              Chúng tôi mang đến trải nghiệm đặt phòng dễ dàng, an toàn và những ưu đãi tốt nhất cho chuyến đi của bạn.
+              {t('homeScreen.whyChooseUs.desc')}
             </p>
           </div>
 
@@ -129,9 +131,9 @@ export default function Home() {
               <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-6">
                 <Globe2 className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">Mạng lưới toàn cầu</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">{t('homeScreen.whyChooseUs.globalNetwork')}</h3>
               <p className="text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
-                Hơn 1 triệu khách sạn và chỗ nghỉ trên toàn thế giới để bạn thỏa sức lựa chọn.
+                {t('homeScreen.whyChooseUs.globalNetworkDesc')}
               </p>
             </div>
 
@@ -139,9 +141,9 @@ export default function Home() {
               <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mb-6">
                 <CreditCard className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">Giá cả minh bạch</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">{t('homeScreen.whyChooseUs.transparentPricing')}</h3>
               <p className="text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
-                Không có phí ẩn. Thanh toán an toàn, linh hoạt với nhiều phương thức.
+                {t('homeScreen.whyChooseUs.transparentPricingDesc')}
               </p>
             </div>
 
@@ -149,9 +151,9 @@ export default function Home() {
               <div className="w-16 h-16 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center mb-6">
                 <Headset className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">Hỗ trợ 24/7</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">{t('homeScreen.whyChooseUs.support247')}</h3>
               <p className="text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
-                Đội ngũ chăm sóc khách hàng luôn sẵn sàng hỗ trợ bạn bất cứ lúc nào.
+                {t('homeScreen.whyChooseUs.support247Desc')}
               </p>
             </div>
           </div>
@@ -163,13 +165,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">Chi nhánh nổi bật</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">{t('homeScreen.featuredBranches.title')}</h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
-                Những chi nhánh khách sạn được đánh giá cao nhất
+                {t('homeScreen.featuredBranches.desc')}
               </p>
             </div>
             <button className="text-blue-600 font-semibold hover:text-blue-800 flex items-center gap-2 transition-colors group">
-              Xem tất cả <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              {t('homeScreen.featuredBranches.viewAll')} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
@@ -189,9 +191,9 @@ export default function Home() {
 
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
             <div className="text-white max-w-xl text-center md:text-left">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Nhận ưu đãi độc quyền!</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('homeScreen.newsletter.title')}</h2>
               <p className="text-blue-100 text-lg">
-                Đăng ký nhận bản tin để không bỏ lỡ các chương trình khuyến mãi và cẩm nang du lịch hữu ích.
+                {t('homeScreen.newsletter.desc')}
               </p>
             </div>
 
@@ -201,7 +203,7 @@ export default function Home() {
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                   <input
                     type="email"
-                    placeholder="Nhập email của bạn..."
+                    placeholder={t('homeScreen.newsletter.emailPlaceholder')}
                     className="w-full pl-12 pr-4 py-3 md:py-4 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium transition-colors"
                     required
                   />
@@ -210,7 +212,7 @@ export default function Home() {
                   type="submit"
                   className="bg-gray-900 dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-700 text-white font-semibold py-3 md:py-4 px-8 rounded-xl transition-all active:scale-95"
                 >
-                  Đăng ký
+                  {t('homeScreen.newsletter.subscribeButton')}
                 </button>
               </form>
             </div>

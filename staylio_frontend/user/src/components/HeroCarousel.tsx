@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SearchBar } from "./SearchBar";
+import { useTranslation } from "react-i18next";
 
 const images = [
   "https://bdnd.1cdn.vn/2022/11/07/2022-11-04-09-14-02-543-min.jpg",
@@ -9,6 +10,7 @@ const images = [
 ];
 
 export function HeroCarousel() {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const prevSlide = () => {
@@ -56,10 +58,10 @@ export function HeroCarousel() {
       <div className="relative z-10 h-full max-w-7xl mx-auto px-4 flex flex-col justify-start pt-20 md:pt-0 md:justify-center items-center md:-mt-10">
         <div className="text-center mb-10 md:mb-12 space-y-4 md:space-y-6 mt-6 md:mt-0">
           <h1 className="text-4xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/90 drop-shadow-2xl leading-tight">
-            Tìm chỗ nghỉ <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">hoàn hảo</span>
+            {t('homeScreen.hero.titlePrefix')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">{t('homeScreen.hero.titleHighlight')}</span>
           </h1>
           <p className="text-base md:text-2xl text-white/90 max-w-2xl mx-auto font-medium drop-shadow-lg px-4">
-            Khám phá hàng nghìn khách sạn, resort và homestay tuyệt vời.
+            {t('homeScreen.hero.subtitle')}
           </p>
         </div>
 
