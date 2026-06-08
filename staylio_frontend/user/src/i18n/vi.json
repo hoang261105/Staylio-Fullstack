@@ -45,6 +45,25 @@
     "CANCELLED": "Đã hủy",
     "REFUNDED": "Đã hoàn tiền"
   },
+  "profile": {
+    "title": "Cài đặt tài khoản",
+    "personalInfo": "Thông tin cá nhân",
+    "myTrips": "Chuyến đi của tôi",
+    "savedHotels": "Khách sạn đã lưu",
+    "changePassword": "Đổi mật khẩu",
+    "logout": "Đăng xuất",
+    "memberSince": "Thành viên từ",
+    "edit": "Thay đổi",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "notSet": "Chưa có",
+    "dob": "Ngày sinh",
+    "address": "Địa chỉ",
+    "payment": "Thanh toán",
+    "addNew": "Thêm mới",
+    "expires": "Hết hạn",
+    "default": "MẶC ĐỊNH"
+  },
   "bookingHistory": {
     "title": "Lịch sử đặt phòng",
     "allStatuses": "Tất cả",

@@ -45,6 +45,25 @@
     "CANCELLED": "Cancelled",
     "REFUNDED": "Refunded"
   },
+  "profile": {
+    "title": "Account Settings",
+    "personalInfo": "Personal Information",
+    "myTrips": "My Trips",
+    "savedHotels": "Saved Hotels",
+    "changePassword": "Change Password",
+    "logout": "Logout",
+    "memberSince": "Member since",
+    "edit": "Edit",
+    "email": "Email",
+    "phone": "Phone Number",
+    "notSet": "Not set",
+    "dob": "Date of Birth",
+    "address": "Address",
+    "payment": "Payment",
+    "addNew": "Add new",
+    "expires": "Expires",
+    "default": "DEFAULT"
+  },
   "bookingHistory": {
     "title": "Booking History",
     "allStatuses": "All",
