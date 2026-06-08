@@ -1,4 +1,5 @@
 import { Mail, MapPin, Phone, Send } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const FacebookIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -19,6 +20,7 @@ const TwitterIcon = ({ className }: { className?: string }) => (
 );
 
 export default function Footer() {
+  const { t } = useTranslation();
   return (
     <footer className="bg-blue-600 dark:bg-gray-950 pt-20 pb-10 border-t border-blue-800 dark:border-gray-900 mt-auto transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,9 +34,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-blue-200 text-sm leading-relaxed">
-              Nền tảng đặt phòng khách sạn hàng đầu với hàng nghìn lựa chọn
-              tuyệt vời khắp thế giới. Trải nghiệm kỳ nghỉ hoàn hảo của bạn
-              bắt đầu từ đây.
+              {t('components.footer.description')}
             </p>
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-blue-200 text-sm hover:text-white transition-colors cursor-pointer">
@@ -55,16 +55,16 @@ export default function Footer() {
           {/* Links 1 */}
           <div>
             <h4 className="text-white font-bold mb-6 text-lg tracking-wide">
-              Về chúng tôi
+              {t('components.footer.aboutUs')}
             </h4>
             <ul className="space-y-3 text-sm font-medium">
-              {["Giới thiệu", "Tuyển dụng", "Đối tác", "Blog du lịch", "Báo chí"].map((item) => (
+              {["intro", "careers", "partners", "blog", "press"].map((item) => (
                 <li key={item}>
                   <a
                     href="#"
                     className="text-blue-200 hover:text-white hover:translate-x-1 inline-block transition-all duration-300"
                   >
-                    {item}
+                    {t(`components.footer.aboutUsLinks.${item}`)}
                   </a>
                 </li>
               ))}
@@ -74,16 +74,16 @@ export default function Footer() {
           {/* Links 2 */}
           <div>
             <h4 className="text-white font-bold mb-6 text-lg tracking-wide">
-              Hỗ trợ
+              {t('components.footer.support')}
             </h4>
             <ul className="space-y-3 text-sm font-medium">
-              {["Trung tâm trợ giúp", "Câu hỏi thường gặp", "Liên hệ & Khiếu nại", "Chính sách bảo mật", "Điều khoản sử dụng"].map((item) => (
+              {["helpCenter", "faq", "contact", "privacy", "terms"].map((item) => (
                 <li key={item}>
                   <a
                     href="#"
                     className="text-blue-200 hover:text-white hover:translate-x-1 inline-block transition-all duration-300"
                   >
-                    {item}
+                    {t(`components.footer.supportLinks.${item}`)}
                   </a>
                 </li>
               ))}
@@ -93,15 +93,15 @@ export default function Footer() {
           {/* Newsletter & Socials */}
           <div>
             <h4 className="text-white font-bold mb-6 text-lg tracking-wide">
-              Bản tin & Mạng xã hội
+              {t('components.footer.newsletterSocial')}
             </h4>
             <p className="text-blue-200 text-sm mb-4">
-              Nhận ngay các ưu đãi đặc biệt và tin tức du lịch mới nhất.
+              {t('components.footer.newsletterDesc')}
             </p>
             <div className="flex mb-8 relative">
               <input
                 type="email"
-                placeholder="Email của bạn"
+                placeholder={t('components.footer.emailPlaceholder')}
                 className="bg-blue-800/50 text-white border border-blue-700/50 rounded-xl pl-4 pr-12 py-3 text-sm w-full focus:ring-2 focus:ring-white/50 focus:border-white/50 outline-none transition-all placeholder:text-blue-300"
               />
               <button className="absolute right-1.5 top-1.5 bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-lg transition-colors flex items-center justify-center group">

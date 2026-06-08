@@ -79,5 +79,56 @@
       "emailPlaceholder": "Enter your email...",
       "subscribeButton": "Subscribe"
     }
+  },
+  "components": {
+    "hotelBranchCard": {
+      "featured": "Featured",
+      "reviews": "reviews",
+      "system": "System",
+      "capacity": "Capacity",
+      "contact": "Contact",
+      "details": "Details"
+    },
+    "searchBar": {
+      "location": "Location",
+      "whereTo": "Where are you going?",
+      "checkIn": "Check-in",
+      "addDate": "Add date",
+      "checkOut": "Check-out",
+      "guests": "Guests",
+      "twoPeople": "2 people",
+      "searchBtn": "Search"
+    },
+    "footer": {
+      "description": "Leading hotel booking platform with thousands of great choices worldwide. Your perfect holiday experience starts here.",
+      "aboutUs": "About Us",
+      "aboutUsLinks": {
+        "intro": "Introduction",
+        "careers": "Careers",
+        "partners": "Partners",
+        "blog": "Travel Blog",
+        "press": "Press"
+      },
+      "support": "Support",
+      "supportLinks": {
+        "helpCenter": "Help Center",
+        "faq": "FAQ",
+        "contact": "Contact & Complaints",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Use"
+      },
+      "newsletterSocial": "Newsletter & Socials",
+      "newsletterDesc": "Get special offers and latest travel news right away.",
+      "emailPlaceholder": "Your email"
+    },
+    "chatBotWidget": {
+      "online": "Online",
+      "startChatWith": "Start a conversation with",
+      "ai": "AI",
+      "manager": "Manager",
+      "updating": "Updating",
+      "sending": "Sending...",
+      "typeMessage": "Type a message..."
+    }
   }
 }

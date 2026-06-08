@@ -14,8 +14,10 @@ import {
 import { MessageSenderType } from "../../../common/enums/MessageSenderType";
 import type { ChatMessageResponse } from "../../../common/interfaces/response/ChatMessageResponse";
 import { useChatContext } from "../../../common/contexts/ChatContext";
+import { useTranslation } from "react-i18next";
 
 export default function ChatBotWidget() {
+  const { t } = useTranslation();
   const { isOpen, chatType, targetBranchId, managerName, closeChat, toggleChat } = useChatContext();
   const [currentSessionId, setCurrentSessionId] = useState<number>(0);
   const [inputValue, setInputValue] = useState("");
@@ -122,9 +124,9 @@ export default function ChatBotWidget() {
             </div>
             <div>
               <h3 className="text-white font-semibold text-lg leading-tight">
-                {chatType === "AI" ? "Staylio AI" : `${managerName || "Đang cập nhật"}`}
+                {chatType === "AI" ? "Staylio AI" : `${managerName || t('components.chatBotWidget.updating')}`}
               </h3>
-              <p className="text-blue-100 text-xs font-medium">Trực tuyến</p>
+              <p className="text-blue-100 text-xs font-medium">{t('components.chatBotWidget.online')}</p>
             </div>
           </div>
           <button
@@ -139,7 +141,7 @@ export default function ChatBotWidget() {
         <div className="flex-1 overflow-y-auto p-4 bg-slate-50 dark:bg-gray-900 space-y-4 scrollbar-thin scrollbar-thumb-gray-300">
           {messages.length === 0 && currentSessionId !== 0 && (
             <div className="text-center text-gray-400 dark:text-gray-500 text-sm mt-4">
-              Hãy bắt đầu cuộc trò chuyện với {chatType === "AI" ? "AI" : "Quản lý"}...
+              {t('components.chatBotWidget.startChatWith')} {chatType === "AI" ? t('components.chatBotWidget.ai') : t('components.chatBotWidget.manager')}...
             </div>
           )}
           {messages.map((msg: ChatMessageResponse) => {
@@ -184,7 +186,7 @@ export default function ChatBotWidget() {
           {isSending && (
             <div className="flex items-end gap-2 justify-end">
               <div className="max-w-[75%] p-3 rounded-2xl text-sm leading-relaxed bg-blue-600 text-white rounded-br-none opacity-50">
-                {inputValue || "Đang gửi..."}
+                {inputValue || t('components.chatBotWidget.sending')}
               </div>
             </div>
           )}
@@ -200,7 +202,7 @@ export default function ChatBotWidget() {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Nhập tin nhắn..."
+              placeholder={t('components.chatBotWidget.typeMessage')}
               disabled={isSending || currentSessionId === 0}
               className="flex-1 bg-transparent px-3 py-2 text-sm focus:outline-none text-gray-800 dark:text-gray-100 disabled:opacity-50"
             />

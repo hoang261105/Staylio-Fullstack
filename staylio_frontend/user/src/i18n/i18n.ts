@@ -13,15 +13,21 @@ const resources = {
   },
 };
 
+const savedLanguage = localStorage.getItem('staylio-lang') || 'vi';
+
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'vi', // default language
+    lng: savedLanguage,
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false, // react already safes from xss
     },
   });
+
+i18n.on('languageChanged', (lng) => {
+  localStorage.setItem('staylio-lang', lng);
+});
 
 export default i18n;

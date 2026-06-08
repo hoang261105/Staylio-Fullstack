@@ -79,5 +79,56 @@
       "emailPlaceholder": "Nhập email của bạn...",
       "subscribeButton": "Đăng ký"
     }
+  },
+  "components": {
+    "hotelBranchCard": {
+      "featured": "Nổi bật",
+      "reviews": "đánh giá",
+      "system": "Thuộc hệ thống",
+      "capacity": "Sức chứa",
+      "contact": "Liên hệ",
+      "details": "Chi tiết"
+    },
+    "searchBar": {
+      "location": "Địa điểm",
+      "whereTo": "Bạn muốn đi đâu?",
+      "checkIn": "Nhận phòng",
+      "addDate": "Thêm ngày",
+      "checkOut": "Trả phòng",
+      "guests": "Khách",
+      "twoPeople": "2 người",
+      "searchBtn": "Tìm kiếm"
+    },
+    "footer": {
+      "description": "Nền tảng đặt phòng khách sạn hàng đầu với hàng nghìn lựa chọn tuyệt vời khắp thế giới. Trải nghiệm kỳ nghỉ hoàn hảo của bạn bắt đầu từ đây.",
+      "aboutUs": "Về chúng tôi",
+      "aboutUsLinks": {
+        "intro": "Giới thiệu",
+        "careers": "Tuyển dụng",
+        "partners": "Đối tác",
+        "blog": "Blog du lịch",
+        "press": "Báo chí"
+      },
+      "support": "Hỗ trợ",
+      "supportLinks": {
+        "helpCenter": "Trung tâm trợ giúp",
+        "faq": "Câu hỏi thường gặp",
+        "contact": "Liên hệ & Khiếu nại",
+        "privacy": "Chính sách bảo mật",
+        "terms": "Điều khoản sử dụng"
+      },
+      "newsletterSocial": "Bản tin & Mạng xã hội",
+      "newsletterDesc": "Nhận ngay các ưu đãi đặc biệt và tin tức du lịch mới nhất.",
+      "emailPlaceholder": "Email của bạn"
+    },
+    "chatBotWidget": {
+      "online": "Trực tuyến",
+      "startChatWith": "Hãy bắt đầu cuộc trò chuyện với",
+      "ai": "AI",
+      "manager": "Quản lý",
+      "updating": "Đang cập nhật",
+      "sending": "Đang gửi...",
+      "typeMessage": "Nhập tin nhắn..."
+    }
   }
 }
