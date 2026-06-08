@@ -7,8 +7,10 @@ import { useMarkNotificationReadMutation } from "../hooks/useNotifications";
 import { useNavigate } from "react-router-dom";
 import { NotificationResponse } from "../interfaces/response/NotificationResponse";
 import { getReviewById } from "../services/review.service";
+import { useTranslation } from "react-i18next";
 
 export default function NotificationPopover() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -88,7 +90,7 @@ export default function NotificationPopover() {
     <div className="relative" ref={popoverRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        title="Thông báo"
+        title={t('components.notification.title', 'Thông báo')}
         className="relative p-2 hover:bg-gray-50 text-gray-600 rounded-full transition-colors border border-gray-100 bg-white"
       >
         <Bell className="w-5 h-5" />
@@ -102,10 +104,10 @@ export default function NotificationPopover() {
       {isOpen && (
         <div className="fixed left-4 right-4 top-19 mt-0 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-100 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
-            <h3 className="font-bold text-gray-900">Thông báo</h3>
+            <h3 className="font-bold text-gray-900">{t('components.notification.title', 'Thông báo')}</h3>
             {Number(unreadCount) > 0 && (
               <span className="text-xs font-medium text-[#0066FF] bg-blue-50 px-2.5 py-1 rounded-full">
-                {unreadCount} chưa đọc
+                {unreadCount} {t('components.notification.unread', 'chưa đọc')}
               </span>
             )}
           </div>
@@ -114,12 +116,12 @@ export default function NotificationPopover() {
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-8 gap-3">
                 <div className="w-6 h-6 border-2 border-[#0066FF] border-t-transparent rounded-full animate-spin"></div>
-                <span className="text-xs text-gray-500 font-medium">Đang tải thông báo...</span>
+                <span className="text-xs text-gray-500 font-medium">{t('components.notification.loading', 'Đang tải thông báo...')}</span>
               </div>
             ) : notifications.length === 0 ? (
               <div className="py-12 text-center flex flex-col items-center justify-center text-gray-500">
                 <Bell className="w-8 h-8 mb-2 text-gray-300" />
-                <span className="text-sm font-medium">Không có thông báo nào.</span>
+                <span className="text-sm font-medium">{t('components.notification.empty', 'Không có thông báo nào.')}</span>
               </div>
             ) : (
               <div className="divide-y divide-gray-50">
@@ -150,7 +152,7 @@ export default function NotificationPopover() {
                         {notification.content}
                       </p>
                       <div className="text-[10px] text-gray-400 mt-2 flex items-center gap-1.5 font-medium">
-                        <span className="truncate">{notification.senderName || 'Hệ thống'}</span>
+                        <span className="truncate">{notification.senderName || t('components.notification.system', 'Hệ thống')}</span>
                         <span>•</span>
                         <span>{formatDateTime(notification.createdAt)}</span>
                       </div>
@@ -166,7 +168,7 @@ export default function NotificationPopover() {
           {notifications.length > 0 && (
             <div className="p-3 border-t border-gray-100 bg-gray-50/50 text-center hover:bg-gray-100 transition-colors cursor-pointer">
               <span className="text-sm font-semibold text-[#0066FF]">
-                Xem tất cả
+                {t('components.notification.viewAll', 'Xem tất cả')}
               </span>
             </div>
           )}

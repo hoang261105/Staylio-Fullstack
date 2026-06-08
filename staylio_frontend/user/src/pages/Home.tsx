@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Shield, Star, Users, Globe2, Headset, CreditCard, ArrowRight, Mail } from "lucide-react";
 import { HeroCarousel } from "../components/HeroCarousel";
 import { HotelBranchCard } from "../components/HotelBranchCard";
@@ -38,36 +37,36 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 dark:bg-gray-950 font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans transition-colors duration-200">
       <Header />
 
       <HeroCarousel />
 
       <section className="relative z-20 -mt-6 md:-mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white dark:bg-gray-800/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/40 dark:border-gray-800 p-8">
+        <div className="bg-white dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl border border-white/40 dark:border-gray-800 p-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-200/60 dark:divide-gray-800">
             <div className="flex flex-col items-center justify-center text-center px-4">
               <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-4">
                 <Users className="w-7 h-7 text-blue-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-1">2.5M+</div>
-              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide">{t('homeScreen.stats.happyUsers')}</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">2.5M+</div>
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t('homeScreen.stats.happyUsers')}</div>
             </div>
 
             <div className="flex flex-col items-center justify-center text-center px-4 pt-6 md:pt-0">
               <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center mb-4">
                 <Star className="w-7 h-7 text-emerald-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-1">4.8/5</div>
-              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide">{t('homeScreen.stats.averageRating')}</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">4.8/5</div>
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t('homeScreen.stats.averageRating')}</div>
             </div>
 
             <div className="flex flex-col items-center justify-center text-center px-4 pt-6 md:pt-0">
               <div className="w-14 h-14 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center mb-4">
                 <Shield className="w-7 h-7 text-amber-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-1">100%</div>
-              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wide">{t('homeScreen.stats.securePayment')}</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">100%</div>
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t('homeScreen.stats.securePayment')}</div>
             </div>
           </div>
         </div>
@@ -80,8 +79,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">{t('homeScreen.popularBrands.title')}</h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">{t('homeScreen.popularBrands.title')}</h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300">
                 {t('homeScreen.popularBrands.desc')}
               </p>
             </div>
@@ -117,11 +116,11 @@ export default function Home() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-24 bg-white dark:bg-gray-800 dark:bg-gray-900 border-y border-gray-100 dark:border-gray-700 dark:border-gray-800 transition-colors duration-200">
+      <section className="py-24 bg-white dark:bg-gray-800 border-y border-gray-100 dark:border-gray-700 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-4">{t('homeScreen.whyChooseUs.title')}</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">{t('homeScreen.whyChooseUs.title')}</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               {t('homeScreen.whyChooseUs.desc')}
             </p>
           </div>
@@ -131,8 +130,8 @@ export default function Home() {
               <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-6">
                 <Globe2 className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">{t('homeScreen.whyChooseUs.globalNetwork')}</h3>
-              <p className="text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('homeScreen.whyChooseUs.globalNetwork')}</h3>
+              <p className="text-gray-600 dark:text-gray-300">
                 {t('homeScreen.whyChooseUs.globalNetworkDesc')}
               </p>
             </div>
@@ -141,8 +140,8 @@ export default function Home() {
               <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mb-6">
                 <CreditCard className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">{t('homeScreen.whyChooseUs.transparentPricing')}</h3>
-              <p className="text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('homeScreen.whyChooseUs.transparentPricing')}</h3>
+              <p className="text-gray-600 dark:text-gray-300">
                 {t('homeScreen.whyChooseUs.transparentPricingDesc')}
               </p>
             </div>
@@ -151,8 +150,8 @@ export default function Home() {
               <div className="w-16 h-16 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center mb-6">
                 <Headset className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">{t('homeScreen.whyChooseUs.support247')}</h3>
-              <p className="text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('homeScreen.whyChooseUs.support247')}</h3>
+              <p className="text-gray-600 dark:text-gray-300">
                 {t('homeScreen.whyChooseUs.support247Desc')}
               </p>
             </div>
@@ -161,12 +160,12 @@ export default function Home() {
       </section>
 
       {/* Featured Branches */}
-      <section className="py-24 bg-slate-50 dark:bg-gray-900 dark:bg-gray-950 transition-colors duration-200">
+      <section className="py-24 bg-slate-50 dark:bg-gray-900 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white dark:text-gray-100 mb-3">{t('homeScreen.featuredBranches.title')}</h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">{t('homeScreen.featuredBranches.title')}</h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300">
                 {t('homeScreen.featuredBranches.desc')}
               </p>
             </div>
@@ -204,7 +203,7 @@ export default function Home() {
                   <input
                     type="email"
                     placeholder={t('homeScreen.newsletter.emailPlaceholder')}
-                    className="w-full pl-12 pr-4 py-3 md:py-4 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium transition-colors"
+                    className="w-full pl-12 pr-4 py-3 md:py-4 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-800 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium transition-colors"
                     required
                   />
                 </div>

@@ -81,6 +81,14 @@
     }
   },
   "components": {
+    "notification": {
+      "title": "Thông báo",
+      "unread": "chưa đọc",
+      "loading": "Đang tải thông báo...",
+      "empty": "Không có thông báo nào.",
+      "system": "Hệ thống",
+      "viewAll": "Xem tất cả"
+    },
     "header": {
       "logoutSuccess": "Đăng xuất thành công!",
       "home": "Trang chủ",

@@ -81,6 +81,14 @@
     }
   },
   "components": {
+    "notification": {
+      "title": "Notifications",
+      "unread": "unread",
+      "loading": "Loading notifications...",
+      "empty": "No notifications.",
+      "system": "System",
+      "viewAll": "View all"
+    },
     "header": {
       "logoutSuccess": "Logged out successfully!",
       "home": "Home",
