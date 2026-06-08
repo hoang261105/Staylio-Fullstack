@@ -36,6 +36,38 @@
       "createAccountButton": "Tạo tài khoản"
     }
   },
+  "bookingStatus": {
+    "PENDING_PAYMENT": "Chờ thanh toán",
+    "PAID": "Đã thanh toán",
+    "CONFIRMED": "Đã xác nhận",
+    "CHECKED_IN": "Đã nhận phòng",
+    "CHECKED_OUT": "Đã trả phòng",
+    "CANCELLED": "Đã hủy",
+    "REFUNDED": "Đã hoàn tiền"
+  },
+  "bookingHistory": {
+    "title": "Lịch sử đặt phòng",
+    "allStatuses": "Tất cả",
+    "searchPlaceholder": "Tìm theo mã đơn, tên phòng, chi nhánh...",
+    "cancelBookingTitle": "Hủy đơn đặt phòng",
+    "cancelBookingDesc": "Bạn chắc chắn muốn hủy đơn đặt phòng này? Vui lòng cung cấp lý do hủy để chúng tôi hỗ trợ tốt hơn.",
+    "cancelReasonLabel": "Lý do hủy",
+    "cancelReasonPlaceholder": "Nhập lý do hủy của bạn...",
+    "cancelReasonEmpty": "Lý do hủy không được để trống!",
+    "close": "Đóng",
+    "processing": "Đang xử lý...",
+    "confirmCancel": "Xác nhận hủy",
+    "noBookingsFound": "Không tìm thấy đơn đặt phòng",
+    "noBookingsFoundDesc": "Chưa có lịch sử đặt phòng nào phù hợp với tìm kiếm của bạn.",
+    "bookedAt": "Đặt lúc: ",
+    "checkIn": "Nhận phòng",
+    "checkOut": "Trả phòng",
+    "guests": "Khách",
+    "guestCount": "{{adults}} NL, {{children}} TE",
+    "totalPrice": "Tổng tiền",
+    "payNow": "Thanh toán ngay",
+    "cancelAction": "Hủy đơn"
+  },
   "searchRooms": {
     "title": "Kết quả tìm kiếm",
     "foundRooms": "{{count}} phòng được tìm thấy cho \"{{keyword}}\"",

@@ -12,19 +12,21 @@ import { useHistoryBookings, useUpdateStatusBookingMutation } from "../../../com
 import { useDebounce } from "../../../common/hooks/useDebounce";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-
-const STATUS_OPTIONS = [
-    { value: "", label: "Tất cả" },
-    { value: BookingStatus.PENDING_PAYMENT, label: bookingStatusLabels[BookingStatus.PENDING_PAYMENT] },
-    { value: BookingStatus.PAID, label: bookingStatusLabels[BookingStatus.PAID] },
-    { value: BookingStatus.CONFIRMED, label: bookingStatusLabels[BookingStatus.CONFIRMED] },
-    { value: BookingStatus.CHECKED_IN, label: bookingStatusLabels[BookingStatus.CHECKED_IN] },
-    { value: BookingStatus.CHECKED_OUT, label: bookingStatusLabels[BookingStatus.CHECKED_OUT] },
-    { value: BookingStatus.CANCELLED, label: bookingStatusLabels[BookingStatus.CANCELLED] },
-    { value: BookingStatus.REFUNDED, label: bookingStatusLabels[BookingStatus.REFUNDED] },
-];
+import { useTranslation } from "react-i18next";
 
 export default function BookingHistory() {
+    const { t } = useTranslation();
+    const STATUS_OPTIONS = [
+        { value: "", label: t('bookingHistory.allStatuses') },
+        { value: BookingStatus.PENDING_PAYMENT, label: t(`bookingStatus.${BookingStatus.PENDING_PAYMENT}`, bookingStatusLabels[BookingStatus.PENDING_PAYMENT]) },
+        { value: BookingStatus.PAID, label: t(`bookingStatus.${BookingStatus.PAID}`, bookingStatusLabels[BookingStatus.PAID]) },
+        { value: BookingStatus.CONFIRMED, label: t(`bookingStatus.${BookingStatus.CONFIRMED}`, bookingStatusLabels[BookingStatus.CONFIRMED]) },
+        { value: BookingStatus.CHECKED_IN, label: t(`bookingStatus.${BookingStatus.CHECKED_IN}`, bookingStatusLabels[BookingStatus.CHECKED_IN]) },
+        { value: BookingStatus.CHECKED_OUT, label: t(`bookingStatus.${BookingStatus.CHECKED_OUT}`, bookingStatusLabels[BookingStatus.CHECKED_OUT]) },
+        { value: BookingStatus.CANCELLED, label: t(`bookingStatus.${BookingStatus.CANCELLED}`, bookingStatusLabels[BookingStatus.CANCELLED]) },
+        { value: BookingStatus.REFUNDED, label: t(`bookingStatus.${BookingStatus.REFUNDED}`, bookingStatusLabels[BookingStatus.REFUNDED]) },
+    ];
+
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState<string>("");
     const [page, setPage] = useState(0);
@@ -55,7 +57,7 @@ export default function BookingHistory() {
 
     const submitCancel = () => {
         if (!cancelReason.trim()) {
-            toast.error("Lý do hủy không được để trống!");
+            toast.error(t('bookingHistory.cancelReasonEmpty'));
             return;
         }
 
@@ -77,7 +79,7 @@ export default function BookingHistory() {
             <Header />
 
             <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Lịch sử đặt phòng</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t('bookingHistory.title')}</h1>
 
                 {/* Filters */}
                 <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 space-y-4">
@@ -85,7 +87,7 @@ export default function BookingHistory() {
                         <InputField
                             label=""
                             icon={Search}
-                            placeholder="Tìm theo mã đơn, tên phòng, chi nhánh..."
+                            placeholder={t('bookingHistory.searchPlaceholder')}
                             value={search}
                             onChange={(e) => {
                                 setSearch(e.target.value);
@@ -136,14 +138,14 @@ export default function BookingHistory() {
             {isCancelModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl w-full max-w-md mx-4 shadow-xl">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Hủy đơn đặt phòng</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">Bạn chắc chắn muốn hủy đơn đặt phòng này? Vui lòng cung cấp lý do hủy để chúng tôi hỗ trợ tốt hơn.</p>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t('bookingHistory.cancelBookingTitle')}</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">{t('bookingHistory.cancelBookingDesc')}</p>
                         
                         <InputField
-                            label="Lý do hủy"
+                            label={t('bookingHistory.cancelReasonLabel')}
                             value={cancelReason}
                             onChange={(e) => setCancelReason(e.target.value)}
-                            placeholder="Nhập lý do hủy của bạn..."
+                            placeholder={t('bookingHistory.cancelReasonPlaceholder')}
                             required
                         />
 
@@ -152,14 +154,14 @@ export default function BookingHistory() {
                                 onClick={() => setIsCancelModalOpen(false)}
                                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:bg-gray-700 rounded-lg transition-colors"
                             >
-                                Đóng
+                                {t('bookingHistory.close')}
                             </button>
                             <button
                                 onClick={submitCancel}
                                 disabled={updateStatusMutate.isPending}
                                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50"
                             >
-                                {updateStatusMutate.isPending ? "Đang xử lý..." : "Xác nhận hủy"}
+                                {updateStatusMutate.isPending ? t('bookingHistory.processing') : t('bookingHistory.confirmCancel')}
                             </button>
                         </div>
                     </div>

@@ -36,6 +36,38 @@
       "createAccountButton": "Create account"
     }
   },
+  "bookingStatus": {
+    "PENDING_PAYMENT": "Pending Payment",
+    "PAID": "Paid",
+    "CONFIRMED": "Confirmed",
+    "CHECKED_IN": "Checked In",
+    "CHECKED_OUT": "Checked Out",
+    "CANCELLED": "Cancelled",
+    "REFUNDED": "Refunded"
+  },
+  "bookingHistory": {
+    "title": "Booking History",
+    "allStatuses": "All",
+    "searchPlaceholder": "Search by booking code, room name, branch...",
+    "cancelBookingTitle": "Cancel Booking",
+    "cancelBookingDesc": "Are you sure you want to cancel this booking? Please provide a reason so we can assist you better.",
+    "cancelReasonLabel": "Cancellation Reason",
+    "cancelReasonPlaceholder": "Enter your cancellation reason...",
+    "cancelReasonEmpty": "Cancellation reason cannot be empty!",
+    "close": "Close",
+    "processing": "Processing...",
+    "confirmCancel": "Confirm Cancellation",
+    "noBookingsFound": "No Bookings Found",
+    "noBookingsFoundDesc": "There are no booking histories matching your search.",
+    "bookedAt": "Booked at: ",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "guests": "Guests",
+    "guestCount": "{{adults}} adults, {{children}} children",
+    "totalPrice": "Total Price",
+    "payNow": "Pay Now",
+    "cancelAction": "Cancel Booking"
+  },
   "searchRooms": {
     "title": "Search Results",
     "foundRooms": "{{count}} rooms found for \"{{keyword}}\"",
