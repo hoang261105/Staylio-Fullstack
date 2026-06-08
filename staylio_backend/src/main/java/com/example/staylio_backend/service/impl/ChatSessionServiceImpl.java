@@ -221,7 +221,8 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                                                 .receiverId(session.getManager().getId())
                                                 .title("Có tin nhắn mới từ khách hàng")
                                                 .content(session.getUser().getFullName()
-                                                                + " vừa gửi tin nhắn cho bạn.")
+                                                                + " vừa gửi tin nhắn cho bạn đến chi nhánh "
+                                                                + session.getHotelBranch().getBranchName() + ".")
                                                 .type(NotificationType.CHAT_MESSAGE_CREATED)
                                                 .referenceId(session.getId())
                                                 .build());
