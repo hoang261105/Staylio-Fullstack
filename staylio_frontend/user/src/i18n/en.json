@@ -64,6 +64,28 @@
     "expires": "Expires",
     "default": "DEFAULT"
   },
+  "editProfile": {
+    "notSet": "Not set",
+    "uploadError": "Failed to upload image. Please try again.",
+    "updateSuccess": "Update successful!",
+    "updateError": "An error occurred, please try again later.",
+    "backToProfile": "Back to Profile",
+    "title": "Edit Profile",
+    "subtitle": "Update your personal information",
+    "avatar": "Profile Picture",
+    "uploadImage": "Upload Image",
+    "imageFormat": "JPG, PNG. Max 5MB",
+    "personalInfo": "Personal Information",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "dob": "Date of Birth",
+    "address": "Address",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "uploading": "Uploading...",
+    "save": "Save"
+  },
   "bookingHistory": {
     "title": "Booking History",
     "allStatuses": "All",

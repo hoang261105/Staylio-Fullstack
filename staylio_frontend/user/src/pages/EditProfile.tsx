@@ -20,6 +20,7 @@ import { useProfile, useUpdateProfile } from "../../../common/hooks/useProfile";
 import { useApiErrors } from "../../../common/hooks/useApiErrors";
 import { uploadToCloudinary } from "../../../common/utils/cloudinary";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export function EditProfile() {
   const navigate = useNavigate();
@@ -32,12 +33,13 @@ export function EditProfile() {
   } = useApiErrors();
 
   const { data: user } = useProfile();    
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState<ProfileRequest>({
     fullName: user?.fullName || "",
     email: user?.email || "",
     phone: user?.phone || "0123456789",
-    address: user?.address || "Chưa có",
+    address: user?.address || t('editProfile.notSet'),
     dateOfBirth: user?.dateOfBirth || "",
     avatarUrl: user?.avatarUrl || "",
     gender: user?.gender || null,
@@ -60,7 +62,7 @@ export function EditProfile() {
       setFormData((prev) => ({ ...prev, avatarUrl: url }));
     } catch (error) {
       console.error("Lỗi khi upload ảnh:", error);
-      toast.error("Không thể tải ảnh lên. Vui lòng thử lại.");
+      toast.error(t('editProfile.uploadError'));
     } finally {
       setIsUploading(false);
     }
@@ -78,14 +80,14 @@ export function EditProfile() {
 
     try {
       await mutateAsync(formData);
-      toast.success("Cập nhật thành công!");
+      toast.success(t('editProfile.updateSuccess'));
     } catch (error: any) {
       const apiErrors = error?.response?.data?.errors;
 
       if (apiErrors) {
         handleApiErrors(apiErrors);
       } else {
-        toast.error("Đã xảy ra lỗi, vui lòng thử lại sau.");
+        toast.error(t('editProfile.updateError'));
       }
     }
   };
@@ -104,18 +106,18 @@ export function EditProfile() {
             className="flex items-center gap-2 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-black mb-4"
           >
             <ArrowLeft size={18} />
-            Quay lại hồ sơ
+            {t('editProfile.backToProfile')}
           </button>
 
-          <h1 className="text-3xl font-bold">Chỉnh sửa hồ sơ</h1>
+          <h1 className="text-3xl font-bold">{t('editProfile.title')}</h1>
           <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
-            Cập nhật thông tin cá nhân của bạn
+            {t('editProfile.subtitle')}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Avatar */}
-          <Section title="Ảnh đại diện">
+          <Section title={t('editProfile.avatar')}>
             <div className="flex items-center gap-6">
               <div className="relative">
                 <img
@@ -143,20 +145,20 @@ export function EditProfile() {
                   type="button"
                   className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:bg-gray-700"
                 >
-                  Tải ảnh lên
+                  {t('editProfile.uploadImage')}
                 </button>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-                  JPG, PNG. Tối đa 5MB
+                  {t('editProfile.imageFormat')}
                 </p>
               </div>
             </div>
           </Section>
 
           {/* Personal */}
-          <Section title="Thông tin cá nhân">
+          <Section title={t('editProfile.personalInfo')}>
             <div className="grid md:grid-cols-2 gap-5">
               <Input
-                label="Họ và tên"
+                label={t('editProfile.fullName')}
                 icon={User}
                 value={formData?.fullName}
                 onChange={(v: string) => handleChange("fullName", v)}
@@ -164,14 +166,14 @@ export function EditProfile() {
               />
 
               <Input
-                label="Email"
+                label={t('editProfile.email')}
                 icon={Mail}
                 value={formData?.email}
                 onChange={(v: string) => handleChange("email", v)}
                 error={errors.email}
               />
               <Input
-                label="Số điện thoại"
+                label={t('editProfile.phone')}
                 icon={Phone}
                 value={formData?.phone}
                 onChange={(v: string) => handleChange("phone", v)}
@@ -179,7 +181,7 @@ export function EditProfile() {
               />
 
               <Input
-                label="Ngày sinh"
+                label={t('editProfile.dob')}
                 type="date"
                 icon={Calendar}
                 value={formData?.dateOfBirth}
@@ -190,10 +192,10 @@ export function EditProfile() {
           </Section>
 
           {/* Address */}
-          <Section title="Địa chỉ">
+          <Section title={t('editProfile.address')}>
             <div className="grid md:grid-cols-2 gap-5">
               <Input
-                label="Địa chỉ"
+                label={t('editProfile.address')}
                 icon={MapPin}
                 value={formData?.address}
                 onChange={(v: string) => handleChange("address", v)}
@@ -209,7 +211,7 @@ export function EditProfile() {
               onClick={handleCancel}
               className="flex-1 py-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:bg-gray-700 flex items-center justify-center gap-2"
             >
-              <X size={18} /> Hủy
+              <X size={18} /> {t('editProfile.cancel')}
             </button>
 
             <button
@@ -218,7 +220,7 @@ export function EditProfile() {
               className="flex-1 py-3 bg-[#0066FF] text-white rounded-lg hover:bg-[#0052CC] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isPending || isUploading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-              {isPending ? "Đang lưu..." : isUploading ? "Đang tải ảnh..." : "Lưu"}
+              {isPending ? t('editProfile.saving') : isUploading ? t('editProfile.uploading') : t('editProfile.save')}
             </button>
           </div>
         </form>

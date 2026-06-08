@@ -64,6 +64,28 @@
     "expires": "Hết hạn",
     "default": "MẶC ĐỊNH"
   },
+  "editProfile": {
+    "notSet": "Chưa có",
+    "uploadError": "Không thể tải ảnh lên. Vui lòng thử lại.",
+    "updateSuccess": "Cập nhật thành công!",
+    "updateError": "Đã xảy ra lỗi, vui lòng thử lại sau.",
+    "backToProfile": "Quay lại hồ sơ",
+    "title": "Chỉnh sửa hồ sơ",
+    "subtitle": "Cập nhật thông tin cá nhân của bạn",
+    "avatar": "Ảnh đại diện",
+    "uploadImage": "Tải ảnh lên",
+    "imageFormat": "JPG, PNG. Tối đa 5MB",
+    "personalInfo": "Thông tin cá nhân",
+    "fullName": "Họ và tên",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "dob": "Ngày sinh",
+    "address": "Địa chỉ",
+    "cancel": "Hủy",
+    "saving": "Đang lưu...",
+    "uploading": "Đang tải ảnh...",
+    "save": "Lưu"
+  },
   "bookingHistory": {
     "title": "Lịch sử đặt phòng",
     "allStatuses": "Tất cả",
