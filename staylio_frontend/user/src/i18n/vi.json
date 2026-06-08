@@ -36,6 +36,33 @@
       "createAccountButton": "Tạo tài khoản"
     }
   },
+  "searchRooms": {
+    "title": "Kết quả tìm kiếm",
+    "foundRooms": "{{count}} phòng được tìm thấy cho \"{{keyword}}\"",
+    "allKeyword": "Tất cả",
+    "filterTitle": "Bộ lọc chi tiết",
+    "roomStatusLabel": "Trạng thái phòng",
+    "allStatus": "Tất cả trạng thái",
+    "statusAvailable": "Phòng trống (Available)",
+    "statusOccupied": "Đang sử dụng (Occupied)",
+    "statusReserved": "Đã đặt (Reserved)",
+    "priceRangeLabel": "Khoảng giá (VND)",
+    "priceMinPlaceholder": "Từ (VNĐ)",
+    "priceMaxPlaceholder": "Đến (VNĐ)",
+    "minRatingLabel": "Đánh giá tối thiểu (Số sao)",
+    "minRatingPlaceholder": "Ví dụ: 4",
+    "minCapacityLabel": "Sức chứa tối thiểu (người)",
+    "minCapacityPlaceholder": "Ví dụ: 2",
+    "clearFilter": "Xóa bộ lọc",
+    "searchPlaceholder": "Tìm kiếm địa điểm, khách sạn...",
+    "sortRoomName": "Tên phòng",
+    "sortPrice": "Giá phòng",
+    "sortRating": "Đánh giá sao",
+    "sortAsc": "Tăng dần",
+    "sortDesc": "Giảm dần",
+    "noResults": "Không tìm thấy kết quả",
+    "noResultsDesc": "Vui lòng thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm của bạn."
+  },
   "homeScreen": {
     "hero": {
       "titlePrefix": "Tìm chỗ nghỉ",

@@ -11,8 +11,10 @@ import Pagination from "../../../common/components/Pagination";
 import { RoomStatus } from "../../../common/enums/RoomStatus";
 import type { RoomSearchResponse } from "../../../common/interfaces/response/RoomSearchResponse";
 import { useDebounce } from "../../../common/hooks/useDebounce";
+import { useTranslation } from "react-i18next";
 
 export default function SearchRooms() {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initialKeyword = searchParams.get("keyword") || "";
@@ -71,9 +73,12 @@ export default function SearchRooms() {
 
       <div className="bg-blue-600 pt-28 pb-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 mt-6">Kết quả tìm kiếm</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 mt-6">{t('searchRooms.title')}</h1>
           <p className="text-blue-200">
-            {pagination?.totalItems || 0} phòng được tìm thấy cho "{debouncedSearch || 'Tất cả'}"
+            {t('searchRooms.foundRooms', {
+              count: pagination?.totalItems || 0,
+              keyword: debouncedSearch || t('searchRooms.allKeyword')
+            })}
           </p>
         </div>
       </div>
@@ -84,30 +89,30 @@ export default function SearchRooms() {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sticky top-28">
             <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
               <Filter className="w-5 h-5 text-gray-700 dark:text-gray-200" />
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">Bộ lọc chi tiết</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">{t('searchRooms.filterTitle')}</h2>
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">Trạng thái phòng</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('searchRooms.roomStatusLabel')}</label>
               <select
                 className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as RoomStatus | "")}
               >
-                <option value="">Tất cả trạng thái</option>
-                <option value={RoomStatus.AVAILABLE}>Phòng trống (Available)</option>
-                <option value={RoomStatus.OCCUPIED}>Đang sử dụng (Occupied)</option>
-                <option value={RoomStatus.RESERVED}>Đã đặt (Reserved)</option>
+                <option value="">{t('searchRooms.allStatus')}</option>
+                <option value={RoomStatus.AVAILABLE}>{t('searchRooms.statusAvailable')}</option>
+                <option value={RoomStatus.OCCUPIED}>{t('searchRooms.statusOccupied')}</option>
+                <option value={RoomStatus.RESERVED}>{t('searchRooms.statusReserved')}</option>
               </select>
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">Khoảng giá (VND)</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('searchRooms.priceRangeLabel')}</label>
               <div className="flex flex-col gap-3">
                 <input
                   type="number"
                   min={0}
-                  placeholder="Từ (VNĐ)"
+                  placeholder={t('searchRooms.priceMinPlaceholder')}
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value ? Number(e.target.value) : "")}
                   className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
@@ -115,7 +120,7 @@ export default function SearchRooms() {
                 <input
                   type="number"
                   min={0}
-                  placeholder="Đến (VNĐ)"
+                  placeholder={t('searchRooms.priceMaxPlaceholder')}
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value ? Number(e.target.value) : "")}
                   className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
@@ -124,10 +129,10 @@ export default function SearchRooms() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">Đánh giá tối thiểu (Số sao)</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('searchRooms.minRatingLabel')}</label>
               <input
                 type="number"
-                placeholder="Ví dụ: 4"
+                placeholder={t('searchRooms.minRatingPlaceholder')}
                 min="0" max="5" step="0.5"
                 value={minRating}
                 onChange={(e) => setMinRating(e.target.value ? Number(e.target.value) : "")}
@@ -136,10 +141,10 @@ export default function SearchRooms() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">Sức chứa tối thiểu (người)</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('searchRooms.minCapacityLabel')}</label>
               <input
                 type="number"
-                placeholder="Ví dụ: 2"
+                placeholder={t('searchRooms.minCapacityPlaceholder')}
                 min="1"
                 value={capacity}
                 onChange={(e) => setCapacity(e.target.value ? Number(e.target.value) : "")}
@@ -155,7 +160,7 @@ export default function SearchRooms() {
               }}
               className="w-full mt-2 py-3 px-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-semibold rounded-xl transition-colors text-sm"
             >
-              Xóa bộ lọc
+              {t('searchRooms.clearFilter')}
             </button>
           </div>
         </div>
@@ -171,7 +176,7 @@ export default function SearchRooms() {
               <input
                 type="text"
                 className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-600 rounded-xl leading-5 bg-gray-50 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 sm:text-sm font-medium transition-all"
-                placeholder="Tìm kiếm địa điểm, khách sạn..."
+                placeholder={t('searchRooms.searchPlaceholder')}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
               />
@@ -185,16 +190,16 @@ export default function SearchRooms() {
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                 >
-                  <option value="roomName">Tên phòng</option>
-                  <option value="price">Giá phòng</option>
-                  <option value="averageRating">Đánh giá sao</option>
+                  <option value="roomName">{t('searchRooms.sortRoomName')}</option>
+                  <option value="price">{t('searchRooms.sortPrice')}</option>
+                  <option value="averageRating">{t('searchRooms.sortRating')}</option>
                 </select>
               </div>
 
               <button
                 onClick={() => setDirection(d => d === "asc" ? "desc" : "asc")}
                 className="flex items-center justify-center p-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200 shrink-0"
-                title={direction === "asc" ? "Tăng dần" : "Giảm dần"}
+                title={direction === "asc" ? t('searchRooms.sortAsc') : t('searchRooms.sortDesc')}
               >
                 <ArrowUpDown className="w-4 h-4" />
               </button>
@@ -210,8 +215,8 @@ export default function SearchRooms() {
               <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Search className="w-8 h-8 text-gray-400 dark:text-gray-500" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Không tìm thấy kết quả</h3>
-              <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">Vui lòng thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm của bạn.</p>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('searchRooms.noResults')}</h3>
+              <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">{t('searchRooms.noResultsDesc')}</p>
             </div>
           ) : (
             <>

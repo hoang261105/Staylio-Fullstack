@@ -36,6 +36,33 @@
       "createAccountButton": "Create account"
     }
   },
+  "searchRooms": {
+    "title": "Search Results",
+    "foundRooms": "{{count}} rooms found for \"{{keyword}}\"",
+    "allKeyword": "All",
+    "filterTitle": "Detailed Filters",
+    "roomStatusLabel": "Room Status",
+    "allStatus": "All statuses",
+    "statusAvailable": "Available",
+    "statusOccupied": "Occupied",
+    "statusReserved": "Reserved",
+    "priceRangeLabel": "Price Range (VND)",
+    "priceMinPlaceholder": "From (VND)",
+    "priceMaxPlaceholder": "To (VND)",
+    "minRatingLabel": "Minimum Rating (Stars)",
+    "minRatingPlaceholder": "E.g., 4",
+    "minCapacityLabel": "Minimum Capacity (People)",
+    "minCapacityPlaceholder": "E.g., 2",
+    "clearFilter": "Clear Filters",
+    "searchPlaceholder": "Search for locations, hotels...",
+    "sortRoomName": "Room Name",
+    "sortPrice": "Price",
+    "sortRating": "Star Rating",
+    "sortAsc": "Ascending",
+    "sortDesc": "Descending",
+    "noResults": "No results found",
+    "noResultsDesc": "Please try adjusting your filters or search keywords."
+  },
   "homeScreen": {
     "hero": {
       "titlePrefix": "Find the",
