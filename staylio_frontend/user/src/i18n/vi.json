@@ -110,6 +110,13 @@
     }
   },
   "components": {
+    "roomSearchCard": {
+      "reviews": "đánh giá",
+      "capacity": "Sức chứa: {{capacity}} (Max: {{adults}}L, {{children}}TE)",
+      "priceFrom": "Giá từ",
+      "perNight": "/đêm",
+      "roomDetails": "Chi tiết phòng"
+    },
     "confirmLogoutModal": {
       "title": "Xác nhận đăng xuất",
       "description": "Bạn có chắc chắn muốn đăng xuất không?",

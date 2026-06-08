@@ -110,6 +110,13 @@
     }
   },
   "components": {
+    "roomSearchCard": {
+      "reviews": "reviews",
+      "capacity": "Capacity: {{capacity}} (Max: {{adults}} adults, {{children}} children)",
+      "priceFrom": "From",
+      "perNight": "/night",
+      "roomDetails": "Room Details"
+    },
     "confirmLogoutModal": {
       "title": "Confirm Logout",
       "description": "Are you sure you want to log out?",

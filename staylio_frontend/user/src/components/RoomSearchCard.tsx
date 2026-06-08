@@ -1,6 +1,7 @@
 import { Star, MapPin, Users, Building, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { RoomSearchResponse } from "../../../common/interfaces/response/RoomSearchResponse";
+import { useTranslation } from "react-i18next";
 
 interface RoomSearchCardProps {
   room: RoomSearchResponse;
@@ -8,6 +9,8 @@ interface RoomSearchCardProps {
 
 export function RoomSearchCard({ room }: RoomSearchCardProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   if (!room) return null;
 
   const primaryImage = room.images && room.images.length > 0
@@ -45,7 +48,7 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
               <span className="text-sm font-bold">{room.averageRating?.toFixed(1) || "0.0"}</span>
             </div>
             <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium mt-1">
-              ({room.countReview || 0} đánh giá)
+              ({room.countReview || 0} {t('components.roomSearchCard.reviews')})
             </span>
           </div>
         </div>
@@ -58,26 +61,30 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
             <Users className="w-4 h-4 text-emerald-500" />
-            <span className="text-sm font-medium">Sức chứa: {room.capacity} (Max: {room.maxAdults}L, {room.maxChildren}TE)</span>
+            <span className="text-sm font-medium">{t('components.roomSearchCard.capacity', {
+              capacity: room.capacity,
+              adults: room.maxAdults,
+              children: room.maxChildren
+            })}</span>
           </div>
         </div>
 
         <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider mb-1">Giá từ</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider mb-1">{t('components.roomSearchCard.priceFrom')}</p>
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-bold text-blue-600">
-                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(room.price)}
+                {new Intl.NumberFormat(t('homeScreen.hero.locale', 'vi-VN'), { style: 'currency', currency: t('homeScreen.hero.currency', 'VND') }).format(room.price)}
               </span>
-              <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium">/đêm</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium">{t('components.roomSearchCard.perNight')}</span>
             </div>
           </div>
 
-          <button 
+          <button
             onClick={() => navigate(`/hotel/${room.hotelId}/branch/${room.hotelBranchId}/room/${room.roomId}`)}
             className="bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-2"
           >
-            Chi tiết phòng <ArrowRight className="w-4 h-4" />
+            {t('components.roomSearchCard.roomDetails')} <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </div>
