@@ -1,0 +1,39 @@
+{
+  "greeting": "Xin chào",
+  "registerScreen": {
+    "sidebar": {
+      "startJourney": "Bắt đầu hành trình",
+      "your": "của bạn",
+      "communityDescription": "Tham gia cộng đồng hơn 2.5 triệu người dùng đang khám phá thế giới cùng Staylio.",
+      "discountTitle": "Giảm 10% đơn đầu",
+      "discountDesc": "Cho thành viên mới",
+      "rewardTitle": "Tích điểm thưởng",
+      "rewardDesc": "Đổi ưu đãi hấp dẫn",
+      "supportTitle": "Hỗ trợ 24/7",
+      "supportDesc": "Luôn sẵn sàng giúp đỡ"
+    },
+    "form": {
+      "createAccount": "Tạo tài khoản",
+      "alreadyHaveAccount": "Đã có tài khoản?",
+      "loginNow": "Đăng nhập ngay",
+      "continueWithGoogle": "Tiếp tục với Google",
+      "orRegisterWithEmail": "Hoặc đăng ký với email",
+      "username": "Tên đăng nhập",
+      "usernamePlaceholder": "username123",
+      "fullName": "Họ và tên",
+      "fullNamePlaceholder": "Nguyễn Văn A",
+      "gender": "Giới tính",
+      "male": "Nam",
+      "female": "Nữ",
+      "other": "Khác",
+      "dob": "Ngày sinh",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
+      "password": "Mật khẩu",
+      "passwordPlaceholder": "••••••••",
+      "passwordStrengthLabel": "Độ mạnh",
+      "creatingAccount": "Đang tạo tài khoản...",
+      "createAccountButton": "Tạo tài khoản"
+    }
+  }
+}

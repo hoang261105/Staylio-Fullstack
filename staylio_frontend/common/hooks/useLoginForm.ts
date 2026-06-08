@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserLoginForm } from "@common/interfaces/request/UserLoginForm";
 import { login } from "@common/services/auth.service";
@@ -30,7 +29,6 @@ export const useLoginForm = (onSubmitSuccess: (path: string) => void) => {
         return;
       }
 
-      // Cookies are now handled by the backend (HttpOnly)
 
       const role = authorities?.[0]?.authority;
       if (role) {

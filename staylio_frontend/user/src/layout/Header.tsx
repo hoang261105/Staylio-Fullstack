@@ -4,8 +4,9 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import ConfirmLogoutModal from "../../../common/components/ConfirmLogoutModal";
 import NotificationPopover from "../../../common/components/NotificationPopover";
-import { Heart, History, LogOut, User, ChevronDown, Menu, X, Sun, Moon } from "lucide-react";
+import { Heart, History, LogOut, User, ChevronDown, Menu, X, Sun, Moon, Globe } from "lucide-react";
 import { useTheme } from "../components/ThemeProvider";
+import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { useProfile } from "../../../common/hooks/useProfile";
 import { useLogoutMutation } from "../../../common/hooks/useAuthMutation";
@@ -19,6 +20,7 @@ export default function Header() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { theme, setTheme } = useTheme();
+  const { i18n } = useTranslation();
 
   const { data: user } = useProfile();
   const { data: hotelsData } = useAllHotels();
@@ -175,6 +177,23 @@ export default function Header() {
                         >
                           <Heart size={18} />
                           Yêu thích
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            const newLang = (i18n.language || 'vi').startsWith('vi') ? 'en' : 'vi';
+                            i18n.changeLanguage(newLang);
+                            setOpen(false);
+                          }}
+                          className="w-full flex items-center justify-between px-3 py-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-200">
+                            <Globe size={18} />
+                            Ngôn ngữ
+                          </div>
+                          <span className="text-xs bg-gray-200 dark:bg-gray-700 dark:text-gray-200 px-2 py-1 rounded-md font-medium uppercase">
+                            {(i18n.language || 'vi').substring(0, 2)}
+                          </span>
                         </button>
 
                         <button

@@ -1,6 +1,8 @@
 import { Gem, PartyPopper, Smartphone } from 'lucide-react'
+import { useTranslation } from 'react-i18next';
 
 export default function RegisterSideBar() {
+  const { t } = useTranslation();
   return (
     <>
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden group bg-slate-900">
@@ -24,10 +26,10 @@ export default function RegisterSideBar() {
 
           <div className="max-w-md mt-auto mb-20">
             <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight drop-shadow-md">
-              Bắt đầu hành trình <br/><span className="text-emerald-300">của bạn</span>
+              {t('registerScreen.sidebar.startJourney')} <br/><span className="text-emerald-300">{t('registerScreen.sidebar.your')}</span>
             </h1>
             <p className="text-lg text-white/90 mb-10 font-medium leading-relaxed drop-shadow-sm">
-              Tham gia cộng đồng hơn 2.5 triệu người dùng đang khám phá thế giới cùng Staylio.
+              {t('registerScreen.sidebar.communityDescription')}
             </p>
 
             <div className="space-y-6">
@@ -36,8 +38,8 @@ export default function RegisterSideBar() {
                   <PartyPopper className="w-6 h-6 text-yellow-200" />
                 </div>
                 <div>
-                  <div className="text-lg font-semibold text-white">Giảm 10% đơn đầu</div>
-                  <div className="text-yellow-100/80">Cho thành viên mới</div>
+                  <div className="text-lg font-semibold text-white">{t('registerScreen.sidebar.discountTitle')}</div>
+                  <div className="text-yellow-100/80">{t('registerScreen.sidebar.discountDesc')}</div>
                 </div>
               </div>
 
@@ -46,8 +48,8 @@ export default function RegisterSideBar() {
                   <Gem className="w-6 h-6 text-purple-200" />
                 </div>
                 <div>
-                  <div className="text-lg font-semibold text-white">Tích điểm thưởng</div>
-                  <div className="text-purple-100/80">Đổi ưu đãi hấp dẫn</div>
+                  <div className="text-lg font-semibold text-white">{t('registerScreen.sidebar.rewardTitle')}</div>
+                  <div className="text-purple-100/80">{t('registerScreen.sidebar.rewardDesc')}</div>
                 </div>
               </div>
 
@@ -56,8 +58,8 @@ export default function RegisterSideBar() {
                   <Smartphone className="w-6 h-6 text-blue-200" />
                 </div>
                 <div>
-                  <div className="text-lg font-semibold text-white">Hỗ trợ 24/7</div>
-                  <div className="text-blue-100/80">Luôn sẵn sàng giúp đỡ</div>
+                  <div className="text-lg font-semibold text-white">{t('registerScreen.sidebar.supportTitle')}</div>
+                  <div className="text-blue-100/80">{t('registerScreen.sidebar.supportDesc')}</div>
                 </div>
               </div>
             </div>

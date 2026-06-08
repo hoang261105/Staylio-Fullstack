@@ -1,0 +1,39 @@
+{
+  "greeting": "Hello",
+  "registerScreen": {
+    "sidebar": {
+      "startJourney": "Start your journey",
+      "your": "with us",
+      "communityDescription": "Join a community of over 2.5 million users exploring the world with Staylio.",
+      "discountTitle": "10% off first order",
+      "discountDesc": "For new members",
+      "rewardTitle": "Earn reward points",
+      "rewardDesc": "Redeem exciting offers",
+      "supportTitle": "24/7 Support",
+      "supportDesc": "Always ready to help"
+    },
+    "form": {
+      "createAccount": "Create an account",
+      "alreadyHaveAccount": "Already have an account?",
+      "loginNow": "Login now",
+      "continueWithGoogle": "Continue with Google",
+      "orRegisterWithEmail": "Or register with email",
+      "username": "Username",
+      "usernamePlaceholder": "username123",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "John Doe",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "dob": "Date of Birth",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "passwordStrengthLabel": "Strength",
+      "creatingAccount": "Creating account...",
+      "createAccountButton": "Create account"
+    }
+  }
+}
