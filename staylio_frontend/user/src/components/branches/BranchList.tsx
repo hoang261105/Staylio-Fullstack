@@ -1,5 +1,6 @@
 import type { HotelBranchResponse } from "../../../../common/interfaces/response/HotelBranchResponse";
 import BranchCard from "./BranchCard";
+import { useTranslation } from "react-i18next";
 
 interface BranchListProps {
   branches: HotelBranchResponse[];
@@ -7,6 +8,8 @@ interface BranchListProps {
 }
 
 export default function BranchList({ branches, isLoading }: BranchListProps) {
+  const { t } = useTranslation();
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -36,8 +39,8 @@ export default function BranchList({ branches, isLoading }: BranchListProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
         </div>
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Chưa có khách sạn nào</h3>
-        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 max-w-sm">Hiện tại chưa có chi nhánh khách sạn nào hoạt động tại khu vực này. Vui lòng quay lại sau hoặc tìm kiếm ở khu vực khác.</p>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{t('locationBranches.noHotelsFound')}</h3>
+        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 max-w-sm">{t('locationBranches.noHotelsFoundDesc')}</p>
       </div>
     );
   }

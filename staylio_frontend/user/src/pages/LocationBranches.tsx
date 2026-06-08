@@ -6,10 +6,12 @@ import BranchList from "../components/branches/BranchList";
 import Pagination from "../../../common/components/Pagination";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
+import { useTranslation } from "react-i18next";
 
 export default function LocationBranches() {
   const { provinceId } = useParams<{ provinceId: string }>();
   const [currentPage, setCurrentPage] = useState(1);
+  const { t } = useTranslation();
 
   const pId = provinceId ? parseInt(provinceId, 10) : 0;
 
@@ -26,7 +28,7 @@ export default function LocationBranches() {
   const totalPages = paginationData?.pagination.totalPages || 0;
   const totalElements = paginationData?.pagination.totalItems || 0;
 
-  const provinceName = branches.length > 0 ? branches[0].provinceName : "điểm đến này";
+  const provinceName = branches.length > 0 ? branches[0].provinceName : t('locationBranches.thisDestination');
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-700/50 flex flex-col">
@@ -36,10 +38,10 @@ export default function LocationBranches() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-              Khách sạn tại <span className="text-[#0066FF]">{provinceName}</span>
+              {t('locationBranches.hotelsIn')} <span className="text-[#0066FF]">{provinceName}</span>
             </h1>
             <p className="mt-2 text-gray-500 dark:text-gray-400 dark:text-gray-500">
-              Tìm thấy {totalElements} chi nhánh khách sạn phù hợp.
+              {t('locationBranches.foundBranches', { count: totalElements })}
             </p>
           </div>
 

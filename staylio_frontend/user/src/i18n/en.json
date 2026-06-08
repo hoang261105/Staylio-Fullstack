@@ -86,6 +86,16 @@
     "uploading": "Uploading...",
     "save": "Save"
   },
+  "locationBranches": {
+    "thisDestination": "this destination",
+    "hotelsIn": "Hotels in",
+    "foundBranches": "Found {{count}} matching hotel branches.",
+    "noHotelsFound": "No hotels found",
+    "noHotelsFoundDesc": "There are currently no operating hotel branches in this area. Please check back later or search in another area.",
+    "notRatedYet": "Not rated",
+    "capacity": "Capacity: {{count}} people",
+    "details": "Details"
+  },
   "bookingHistory": {
     "title": "Booking History",
     "allStatuses": "All",

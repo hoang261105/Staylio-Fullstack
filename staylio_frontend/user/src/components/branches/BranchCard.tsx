@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import type { HotelBranchResponse } from "../../../../common/interfaces/response/HotelBranchResponse";
 import { Star, MapPin } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface BranchCardProps {
   branch: HotelBranchResponse;
@@ -8,6 +9,7 @@ interface BranchCardProps {
 
 export default function BranchCard({ branch }: BranchCardProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div
@@ -28,7 +30,7 @@ export default function BranchCard({ branch }: BranchCardProps) {
         {/* Rating Badge */}
         <div className="absolute top-4 right-4 bg-white dark:bg-gray-800/90 backdrop-blur-sm px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm">
           <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-          <span className="text-sm font-bold text-gray-900 dark:text-white">{branch.averageRating > 0 ? branch.averageRating.toFixed(1) : "Chưa có"}</span>
+          <span className="text-sm font-bold text-gray-900 dark:text-white">{branch.averageRating > 0 ? branch.averageRating.toFixed(1) : t('locationBranches.notRatedYet')}</span>
           {branch.countReview > 0 && (
             <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium">({branch.countReview})</span>
           )}
@@ -55,10 +57,10 @@ export default function BranchCard({ branch }: BranchCardProps) {
         <div className="mt-auto pt-4 flex items-center justify-between border-t border-gray-50">
           <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-green-500"></span>
-            Sức chứa: {branch.capacity} người
+            {t('locationBranches.capacity', { count: branch.capacity })}
           </div>
           <button className="text-sm font-semibold text-[#0066FF] bg-blue-50 px-3 py-1.5 rounded-lg group-hover:bg-[#0066FF] group-hover:text-white transition-colors">
-            Chi tiết
+            {t('locationBranches.details')}
           </button>
         </div>
       </div>

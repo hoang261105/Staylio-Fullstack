@@ -86,6 +86,16 @@
     "uploading": "Đang tải ảnh...",
     "save": "Lưu"
   },
+  "locationBranches": {
+    "thisDestination": "điểm đến này",
+    "hotelsIn": "Khách sạn tại",
+    "foundBranches": "Tìm thấy {{count}} chi nhánh khách sạn phù hợp.",
+    "noHotelsFound": "Chưa có khách sạn nào",
+    "noHotelsFoundDesc": "Hiện tại chưa có chi nhánh khách sạn nào hoạt động tại khu vực này. Vui lòng quay lại sau hoặc tìm kiếm ở khu vực khác.",
+    "notRatedYet": "Chưa có",
+    "capacity": "Sức chứa: {{count}} người",
+    "details": "Chi tiết"
+  },
   "bookingHistory": {
     "title": "Lịch sử đặt phòng",
     "allStatuses": "Tất cả",
