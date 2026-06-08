@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { RoomResponse } from "../../../common/interfaces/response/RoomResponse";
 import type { HotelBranchResponse } from "../../../common/interfaces/response/HotelBranchResponse";
 import { getUtilityIcon } from "../../../common/utils/iconUtils";
+import { useTranslation } from "react-i18next";
 
 interface RoomCardProps {
   room: RoomResponse;
@@ -11,6 +12,8 @@ interface RoomCardProps {
 
 export default function RoomCard({ room, branchInfo }: RoomCardProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   if (!room) return null;
 
   const primaryImage = room.images?.find(img => img.isPrimary)?.imageUrl
@@ -27,7 +30,7 @@ export default function RoomCard({ room, branchInfo }: RoomCardProps) {
         />
         {room.isVoucherApplicable && (
           <div className="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm z-10 uppercase tracking-wider">
-            Có ưu đãi
+            {t('components.roomCard.voucher')}
           </div>
         )}
         <div className="absolute bottom-3 right-3 bg-white dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
@@ -51,7 +54,7 @@ export default function RoomCard({ room, branchInfo }: RoomCardProps) {
         <div className="flex flex-wrap items-center gap-3 mt-3 mb-4">
           <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
             <Users className="w-4 h-4 text-blue-500" />
-            <span className="text-xs font-medium">{room.maxAdults} Lớn, {room.maxChildren} Trẻ em</span>
+            <span className="text-xs font-medium">{t('components.roomCard.capacity', { adults: room.maxAdults, children: room.maxChildren })}</span>
           </div>
           <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
             <Maximize className="w-4 h-4 text-blue-500" />
@@ -77,14 +80,14 @@ export default function RoomCard({ room, branchInfo }: RoomCardProps) {
           })}
           {room.utilities?.length > 3 && (
             <div className="text-xs text-blue-600 font-medium pl-6">
-              +{room.utilities.length - 3} tiện ích khác
+              {t('components.roomCard.otherUtilities', { count: room.utilities.length - 3 })}
             </div>
           )}
         </div>
 
         <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex items-end justify-between">
           <div>
-            <p className="text-[10px] text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider mb-0.5">Giá mỗi đêm</p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider mb-0.5">{t('components.roomCard.pricePerNight')}</p>
             <div className="flex items-baseline gap-1">
               <span className="text-xl font-bold text-gray-900 dark:text-white">
                 {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(room.price)}
@@ -96,7 +99,7 @@ export default function RoomCard({ room, branchInfo }: RoomCardProps) {
             onClick={() => navigate(`/hotel/${branchInfo?.hotelId}/branch/${room.hotelBranchId}/room/${room.id}`)}
             className="bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-md active:scale-95"
           >
-            Chi tiết
+            {t('components.roomCard.detailsBtn')}
           </button>
         </div>
       </div>

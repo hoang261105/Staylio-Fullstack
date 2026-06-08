@@ -8,6 +8,7 @@ import React from "react";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import iconRetina from "leaflet/dist/images/marker-icon-2x.png";
+import { useTranslation } from "react-i18next";
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -72,6 +73,8 @@ export default function BranchMap({
   address,
   nearbyPlaces = [],
 }: BranchMapProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="h-112.5 w-full overflow-hidden rounded-2xl border">
       <MapContainer
@@ -108,15 +111,15 @@ export default function BranchMap({
 
           const getTypeName = (type: string) => {
             switch (type) {
-              case "restaurant": return "Nhà hàng";
-              case "cafe": return "Quán Cafe";
-              case "museum": return "Bảo tàng";
-              case "hospital": return "Bệnh viện";
-              case "park": return "Công viên";
-              case "airport": return "Sân bay";
-              case "mall": return "Trung tâm thương mại";
-              case "square": return "Quảng trường";
-              default: return "Điểm tham quan";
+              case "restaurant": return t('components.nearbyPlaces.restaurant');
+              case "cafe": return t('components.nearbyPlaces.cafe');
+              case "museum": return t('components.nearbyPlaces.museum');
+              case "hospital": return t('components.nearbyPlaces.hospital');
+              case "park": return t('components.nearbyPlaces.park');
+              case "airport": return t('components.nearbyPlaces.airport');
+              case "mall": return t('components.nearbyPlaces.mall');
+              case "square": return t('components.nearbyPlaces.square');
+              default: return t('components.nearbyPlaces.default');
             }
           };
 
@@ -128,7 +131,11 @@ export default function BranchMap({
                   <br />
                   <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 capitalize">{getTypeName(place.type)}</span>
                   <br />
-                  <span className="text-xs font-semibold text-blue-600">Cách đây {place.distance < 1000 ? `${place.distance}m` : `${(place.distance / 1000).toFixed(1)}km`}</span>
+                  <span className="text-xs font-semibold text-blue-600">
+                    {t('components.nearbyPlaces.distanceAway', { 
+                      distance: place.distance < 1000 ? `${place.distance}m` : `${(place.distance / 1000).toFixed(1)}km` 
+                    })}
+                  </span>
                 </div>
               </Popup>
             </Marker>

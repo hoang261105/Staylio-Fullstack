@@ -68,6 +68,36 @@
     "payNow": "Pay Now",
     "cancelAction": "Cancel Booking"
   },
+  "branchDetails": {
+    "hotel": "Hotel",
+    "loading": "Loading...",
+    "loadingAddress": "Loading address...",
+    "reviews": "reviews",
+    "filterTitle": "Search Filters",
+    "roomStatusLabel": "Room Status",
+    "allStatus": "All statuses",
+    "statusAvailable": "Available",
+    "statusOccupied": "Occupied",
+    "statusReserved": "Reserved",
+    "statusMaintenance": "Maintenance",
+    "priceRangeLabel": "Price Range (VND)",
+    "priceMinPlaceholder": "From",
+    "priceMaxPlaceholder": "To",
+    "ratingLabel": "Rating (Stars)",
+    "ratingMinPlaceholder": "Min (0-5)",
+    "ratingMaxPlaceholder": "Max (0-5)",
+    "clearFilter": "Clear Filters",
+    "searchRoomPlaceholder": "Search room name...",
+    "sortRating": "Star Rating",
+    "sortPrice": "Price",
+    "sortRoomName": "Room Name",
+    "sortRoomNumber": "Room Number",
+    "sortAsc": "Ascending",
+    "sortDesc": "Descending",
+    "noRoomsFound": "No rooms found",
+    "noRoomsFoundDesc": "No rooms match your current filters. Please try again with different criteria.",
+    "aroundBranchTitle": "What's around {{branchName}}?"
+  },
   "searchRooms": {
     "title": "Search Results",
     "foundRooms": "{{count}} rooms found for \"{{keyword}}\"",
@@ -227,6 +257,29 @@
       "updating": "Updating",
       "sending": "Sending...",
       "typeMessage": "Type a message..."
+    },
+    "roomCard": {
+      "voucher": "Voucher applied",
+      "capacity": "{{adults}} Adults, {{children}} Children",
+      "otherUtilities": "+{{count}} other utilities",
+      "pricePerNight": "Price per night",
+      "detailsBtn": "Details"
+    },
+    "nearbyPlaces": {
+      "restaurant": "Restaurant",
+      "cafe": "Cafe",
+      "museum": "Museum",
+      "hospital": "Hospital",
+      "park": "Park",
+      "airport": "Airport",
+      "mall": "Mall",
+      "square": "Square",
+      "default": "Attraction",
+      "distanceAway": "{{distance}} away",
+      "empty": "No notable places found around this area.",
+      "collapse": "Collapse",
+      "viewAllPlaces": "View all {{count}} places",
+      "distanceNote": "* Displayed distance is based on straight-line flight. Actual travel distance may vary."
     }
   }
 }

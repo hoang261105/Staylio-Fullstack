@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Coffee, MapPin, Utensils, Navigation, Landmark, Plane, TreePine, Hospital } from "lucide-react";
 import type { NearbyPlace } from "../../../common/hooks/useNearbyPlaces";
+import { useTranslation } from "react-i18next";
 
 interface NearbyPlacesListProps {
   places: NearbyPlace[];
@@ -8,6 +9,8 @@ interface NearbyPlacesListProps {
 }
 
 export default function NearbyPlacesList({ places, isLoading }: NearbyPlacesListProps) {
+  const { t } = useTranslation();
+
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
@@ -21,7 +24,7 @@ export default function NearbyPlacesList({ places, isLoading }: NearbyPlacesList
   if (!places || places.length === 0) {
     return (
       <div className="text-gray-500 dark:text-gray-400 dark:text-gray-500 italic text-sm">
-        Chưa tìm thấy địa điểm nổi bật nào xung quanh khu vực này.
+        {t('components.nearbyPlaces.empty')}
       </div>
     );
   }
@@ -52,19 +55,19 @@ export default function NearbyPlacesList({ places, isLoading }: NearbyPlacesList
   const getTypeName = (type: string) => {
     switch (type) {
       case "restaurant":
-        return "Nhà hàng";
+        return t('components.nearbyPlaces.restaurant');
       case "cafe":
-        return "Quán Cafe";
+        return t('components.nearbyPlaces.cafe');
       case "museum":
-        return "Bảo tàng";
+        return t('components.nearbyPlaces.museum');
       case "hospital":
-        return "Bệnh viện";
+        return t('components.nearbyPlaces.hospital');
       case "park":
-        return "Công viên";
+        return t('components.nearbyPlaces.park');
       case "airport":
-        return "Sân bay";
+        return t('components.nearbyPlaces.airport');
       default:
-        return "Điểm tham quan";
+        return t('components.nearbyPlaces.default');
     }
   };
 
@@ -98,13 +101,13 @@ export default function NearbyPlacesList({ places, isLoading }: NearbyPlacesList
             onClick={() => setShowAll(!showAll)}
             className="px-6 py-2 border border-b dark:border-gray-700lue-600 text-blue-600 font-medium text-sm rounded-full hover:bg-blue-50 transition-colors"
           >
-            {showAll ? "Thu gọn" : `Xem tất cả ${places.length} địa điểm`}
+            {showAll ? t('components.nearbyPlaces.collapse') : t('components.nearbyPlaces.viewAllPlaces', { count: places.length })}
           </button>
         </div>
       )}
 
       <p className="mt-6 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 italic text-center">
-        * Khoảng cách hiển thị dựa trên đường chim bay. Khoảng cách di chuyển thực tế có thể khác.
+        {t('components.nearbyPlaces.distanceNote')}
       </p>
     </div>
   );

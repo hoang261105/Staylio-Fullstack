@@ -68,6 +68,36 @@
     "payNow": "Thanh toán ngay",
     "cancelAction": "Hủy đơn"
   },
+  "branchDetails": {
+    "hotel": "Khách sạn",
+    "loading": "Đang tải...",
+    "loadingAddress": "Đang tải địa chỉ...",
+    "reviews": "đánh giá",
+    "filterTitle": "Bộ lọc tìm kiếm",
+    "roomStatusLabel": "Trạng thái phòng",
+    "allStatus": "Tất cả trạng thái",
+    "statusAvailable": "Phòng trống (Available)",
+    "statusOccupied": "Đang sử dụng (Occupied)",
+    "statusReserved": "Đã đặt (Reserved)",
+    "statusMaintenance": "Đang bảo trì (Maintenance)",
+    "priceRangeLabel": "Khoảng giá (VND)",
+    "priceMinPlaceholder": "Từ",
+    "priceMaxPlaceholder": "Đến",
+    "ratingLabel": "Đánh giá (Số sao)",
+    "ratingMinPlaceholder": "Min (0-5)",
+    "ratingMaxPlaceholder": "Max (0-5)",
+    "clearFilter": "Xóa bộ lọc",
+    "searchRoomPlaceholder": "Tìm kiếm tên phòng...",
+    "sortRating": "Đánh giá sao",
+    "sortPrice": "Giá phòng",
+    "sortRoomName": "Tên phòng",
+    "sortRoomNumber": "Số phòng",
+    "sortAsc": "Tăng dần",
+    "sortDesc": "Giảm dần",
+    "noRoomsFound": "Không tìm thấy phòng",
+    "noRoomsFoundDesc": "Không có phòng nào phù hợp với bộ lọc hiện tại của bạn. Vui lòng thử lại với các tiêu chí khác.",
+    "aroundBranchTitle": "Xung quanh {{branchName}} có gì?"
+  },
   "searchRooms": {
     "title": "Kết quả tìm kiếm",
     "foundRooms": "{{count}} phòng được tìm thấy cho \"{{keyword}}\"",
@@ -227,6 +257,29 @@
       "updating": "Đang cập nhật",
       "sending": "Đang gửi...",
       "typeMessage": "Nhập tin nhắn..."
+    },
+    "roomCard": {
+      "voucher": "Có ưu đãi",
+      "capacity": "{{adults}} Lớn, {{children}} Trẻ em",
+      "otherUtilities": "+{{count}} tiện ích khác",
+      "pricePerNight": "Giá mỗi đêm",
+      "detailsBtn": "Chi tiết"
+    },
+    "nearbyPlaces": {
+      "restaurant": "Nhà hàng",
+      "cafe": "Quán Cafe",
+      "museum": "Bảo tàng",
+      "hospital": "Bệnh viện",
+      "park": "Công viên",
+      "airport": "Sân bay",
+      "mall": "Trung tâm thương mại",
+      "square": "Quảng trường",
+      "default": "Điểm tham quan",
+      "distanceAway": "Cách đây {{distance}}",
+      "empty": "Chưa tìm thấy địa điểm nổi bật nào xung quanh khu vực này.",
+      "collapse": "Thu gọn",
+      "viewAllPlaces": "Xem tất cả {{count}} địa điểm",
+      "distanceNote": "* Khoảng cách hiển thị dựa trên đường chim bay. Khoảng cách di chuyển thực tế có thể khác."
     }
   }
 }
