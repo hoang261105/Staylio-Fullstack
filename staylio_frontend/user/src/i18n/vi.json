@@ -50,7 +50,9 @@
     "featuredLocations": {
       "title": "Địa điểm nổi bật",
       "desc": "Khám phá những điểm đến được du khách yêu thích nhất",
-      "viewAll": "Xem tất cả"
+      "viewAll": "Xem tất cả",
+      "brandCount": "thương hiệu",
+      "hotelCount": "khách sạn"
     },
     "popularBrands": {
       "title": "Thương hiệu phổ biến",

@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { FeaturedLocationResponse } from "../../../../common/interfaces/response/FeaturedLocationResponse";
+import { useTranslation } from "react-i18next";
 
 interface LocationCardProps {
   location: FeaturedLocationResponse;
@@ -8,6 +9,7 @@ interface LocationCardProps {
 }
 
 export const LocationCard: React.FC<LocationCardProps> = ({ location, onClick }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -39,10 +41,10 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, onClick })
         </h3>
         <div className="flex flex-wrap items-center gap-2">
           <span className="bg-white dark:bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-900 dark:text-white">
-            {location.totalHotels} thương hiệu
+            {location.totalHotels} {t('homeScreen.featuredLocations.brandCount')}
           </span>
           <span className="bg-white dark:bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-900 dark:text-white">
-            {location.totalBranches} khách sạn
+            {location.totalBranches} {t('homeScreen.featuredLocations.hotelCount')}
           </span>
         </div>
       </div>

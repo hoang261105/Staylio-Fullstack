@@ -50,7 +50,9 @@
     "featuredLocations": {
       "title": "Featured Locations",
       "desc": "Explore the most loved destinations",
-      "viewAll": "View all"
+      "viewAll": "View all",
+      "brandCount": "brands",
+      "hotelCount": "hotels"
     },
     "popularBrands": {
       "title": "Popular Brands",

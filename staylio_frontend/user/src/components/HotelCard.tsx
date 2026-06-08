@@ -34,7 +34,7 @@ export function HotelCard({ hotel }: HotelCardProps) {
           <h3 className="font-bold text-gray-800 dark:text-gray-100 text-lg line-clamp-1 group-hover:text-blue-600 transition-colors">
             {hotel.name}
           </h3>
-          <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+          <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 mt-1">
             <MapPin className="w-3.5 h-3.5" />
             <span className="text-xs">{hotel.location}</span>
           </div>
@@ -79,7 +79,7 @@ export function HotelCard({ hotel }: HotelCardProps) {
               <span className="text-xl font-bold text-blue-600">
                 ${hotel.price}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">/đêm</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">/đêm</span>
             </div>
           </div>
           
