@@ -81,6 +81,22 @@
     }
   },
   "components": {
+    "header": {
+      "logoutSuccess": "Logged out successfully!",
+      "home": "Home",
+      "hotels": "Hotels",
+      "destinations": "Destinations",
+      "offers": "Offers",
+      "noData": "No data",
+      "hotelsCount": "hotels",
+      "profile": "Profile",
+      "bookingHistory": "Booking History",
+      "favorites": "Favorites",
+      "language": "Language",
+      "logout": "Logout",
+      "login": "Login",
+      "register": "Register"
+    },
     "hotelBranchCard": {
       "featured": "Featured",
       "reviews": "reviews",

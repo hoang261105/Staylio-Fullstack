@@ -81,6 +81,22 @@
     }
   },
   "components": {
+    "header": {
+      "logoutSuccess": "Đăng xuất thành công!",
+      "home": "Trang chủ",
+      "hotels": "Khách sạn",
+      "destinations": "Điểm đến",
+      "offers": "Ưu đãi",
+      "noData": "Không có dữ liệu",
+      "hotelsCount": "khách sạn",
+      "profile": "Thông tin cá nhân",
+      "bookingHistory": "Lịch sử đặt phòng",
+      "favorites": "Yêu thích",
+      "language": "Ngôn ngữ",
+      "logout": "Đăng xuất",
+      "login": "Đăng nhập",
+      "register": "Đăng ký"
+    },
     "hotelBranchCard": {
       "featured": "Nổi bật",
       "reviews": "đánh giá",

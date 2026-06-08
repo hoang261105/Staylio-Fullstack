@@ -20,7 +20,7 @@ export default function Header() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { theme, setTheme } = useTheme();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { data: user } = useProfile();
   const { data: hotelsData } = useAllHotels();
@@ -47,7 +47,7 @@ export default function Header() {
       localStorage.removeItem("user");
 
       queryClient.clear();
-      toast.success("Đăng xuất thành công!");
+      toast.success(t('components.header.logoutSuccess'));
 
       setTimeout(() => {
         window.location.href = "/";
@@ -70,13 +70,13 @@ export default function Header() {
 
             <nav className="hidden md:flex items-center gap-6">
               <a href="/" className="hover:text-[#0066FF] dark:text-gray-200 dark:hover:text-[#0066FF]">
-                Trang chủ
+                {t('components.header.home')}
               </a>
 
               {/* Khách sạn Dropdown */}
               <div className="relative group py-4">
                 <div className="flex items-center gap-1 cursor-pointer hover:text-[#0066FF] dark:text-gray-200 dark:hover:text-[#0066FF]">
-                  Khách sạn
+                  {t('components.header.hotels')}
                   <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform" />
                 </div>
                 <div className="absolute top-full left-0 mt-0 w-64 bg-white dark:bg-gray-900 rounded-xl shadow-lg border dark:border-gray-800 p-2 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity z-50">
@@ -88,7 +88,7 @@ export default function Header() {
                       </div>
                     ))}
                     {(!hotelsData || hotelsData.filter((h: HotelResponse) => h.status === HotelStatus.CONFIRMED).length === 0) && (
-                      <div className="px-3 py-2 text-sm text-gray-500">Không có dữ liệu</div>
+                      <div className="px-3 py-2 text-sm text-gray-500">{t('components.header.noData')}</div>
                     )}
                   </div>
                 </div>
@@ -97,7 +97,7 @@ export default function Header() {
               {/* Điểm đến Dropdown */}
               <div className="relative group py-4">
                 <div className="flex items-center gap-1 cursor-pointer hover:text-[#0066FF] dark:text-gray-200 dark:hover:text-[#0066FF]">
-                  Điểm đến
+                  {t('components.header.destinations')}
                   <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform" />
                 </div>
                 <div className="absolute top-full left-0 mt-0 w-64 bg-white dark:bg-gray-900 rounded-xl shadow-lg border dark:border-gray-800 p-2 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity z-50">
@@ -107,19 +107,19 @@ export default function Header() {
                         <img src={location.imageUrl || 'https://images.unsplash.com/photo-1596422846543-75c6ef08b739?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=100'} alt={location.provinceName} className="w-8 h-8 rounded-md object-cover" />
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-gray-200">{location.provinceName}</p>
-                          <p className="text-xs text-gray-500">{location.totalBranches} khách sạn</p>
+                          <p className="text-xs text-gray-500">{location.totalBranches} {t('components.header.hotelsCount')}</p>
                         </div>
                       </div>
                     ))}
                     {(!featuredLocations || featuredLocations.length === 0) && (
-                      <div className="px-3 py-2 text-sm text-gray-500">Không có dữ liệu</div>
+                      <div className="px-3 py-2 text-sm text-gray-500">{t('components.header.noData')}</div>
                     )}
                   </div>
                 </div>
               </div>
 
               <a href="#" className="hover:text-[#0066FF] dark:text-gray-200 dark:hover:text-[#0066FF]">
-                Ưu đãi
+                {t('components.header.offers')}
               </a>
             </nav>
 
@@ -160,7 +160,7 @@ export default function Header() {
                           className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg"
                         >
                           <User size={18} />
-                          Thông tin cá nhân
+                          {t('components.header.profile')}
                         </button>
 
                         <button
@@ -168,7 +168,7 @@ export default function Header() {
                           className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg"
                         >
                           <History size={18} />
-                          Lịch sử đặt phòng
+                          {t('components.header.bookingHistory')}
                         </button>
 
                         <button
@@ -176,7 +176,7 @@ export default function Header() {
                           className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg"
                         >
                           <Heart size={18} />
-                          Yêu thích
+                          {t('components.header.favorites')}
                         </button>
 
                         <button
@@ -189,7 +189,7 @@ export default function Header() {
                         >
                           <div className="flex items-center gap-2 text-gray-700 dark:text-gray-200">
                             <Globe size={18} />
-                            Ngôn ngữ
+                            {t('components.header.language')}
                           </div>
                           <span className="text-xs bg-gray-200 dark:bg-gray-700 dark:text-gray-200 px-2 py-1 rounded-md font-medium uppercase">
                             {(i18n.language || 'vi').substring(0, 2)}
@@ -201,7 +201,7 @@ export default function Header() {
                           className="w-full flex items-center gap-2 px-3 py-2 text-red-500 hover:bg-red-50 rounded-lg"
                         >
                           <LogOut size={18} />
-                          Đăng xuất
+                          {t('components.header.logout')}
                         </button>
                       </div>
                     )}
@@ -219,13 +219,13 @@ export default function Header() {
                     onClick={() => navigate("/login")}
                     className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-200 rounded-lg"
                   >
-                    Đăng nhập
+                    {t('components.header.login')}
                   </button>
                   <button
                     onClick={() => navigate("/register")}
                     className="px-4 py-2 bg-[#0066FF] text-white rounded-lg"
                   >
-                    Đăng ký
+                    {t('components.header.register')}
                   </button>
                 </>
               )}
@@ -245,11 +245,11 @@ export default function Header() {
             <div className="md:hidden mt-4 pt-4 border-t border-gray-100">
               <nav className="flex flex-col gap-4">
                 <a href="/" className="font-medium hover:text-[#0066FF]">
-                  Trang chủ
+                  {t('components.header.home')}
                 </a>
                 
                 <div className="flex flex-col gap-2">
-                  <div className="font-medium text-gray-900">Khách sạn</div>
+                  <div className="font-medium text-gray-900">{t('components.header.hotels')}</div>
                   <div className="flex flex-col gap-2 pl-4 max-h-48 overflow-y-auto">
                     {hotelsData?.filter((h: HotelResponse) => h.status === HotelStatus.CONFIRMED).map((hotel: HotelResponse) => (
                       <div key={hotel.id} onClick={() => { navigate(`/hotel/${hotel.id}`); setMobileMenuOpen(false); }} className="text-sm text-gray-600 hover:text-[#0066FF] cursor-pointer">
@@ -260,7 +260,7 @@ export default function Header() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <div className="font-medium text-gray-900">Điểm đến</div>
+                  <div className="font-medium text-gray-900">{t('components.header.destinations')}</div>
                   <div className="flex flex-col gap-2 pl-4 max-h-48 overflow-y-auto">
                     {featuredLocations?.map((location: FeaturedLocationResponse) => (
                       <div key={location.provinceId} onClick={() => { navigate(`/location/${location.provinceId}`); setMobileMenuOpen(false); }} className="text-sm text-gray-600 hover:text-[#0066FF] cursor-pointer">
@@ -271,7 +271,7 @@ export default function Header() {
                 </div>
 
                 <a href="#" className="font-medium hover:text-[#0066FF]">
-                  Ưu đãi
+                  {t('components.header.offers')}
                 </a>
               </nav>
             </div>
