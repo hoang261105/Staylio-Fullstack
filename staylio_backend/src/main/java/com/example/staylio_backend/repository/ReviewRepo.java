@@ -126,7 +126,6 @@ public interface ReviewRepo extends JpaRepository<Review, Long> {
         JOIN r.room room
         JOIN room.hotelBranch branch
         WHERE branch.id = :branchId
-          AND r.status = 'VISIBLE'
           AND r.isDeleted = false
     """)
     Long countReviewsByBranchId(@Param("branchId") Long branchId);
@@ -137,7 +136,6 @@ public interface ReviewRepo extends JpaRepository<Review, Long> {
         JOIN r.room room
         JOIN room.hotelBranch branch
         WHERE branch.id = :branchId
-          AND r.status = 'VISIBLE'
           AND r.isDeleted = false
     """)
     Double averageRatingByBranchId(@Param("branchId") Long branchId);

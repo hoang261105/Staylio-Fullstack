@@ -180,7 +180,7 @@ export default function RoomDetail() {
             <RoomReviewForm roomId={Number(roomId)} />
             <RoomReviewsPreview
               reviews={reviews}
-              totalItems={reviewsData?.pagination?.totalItems || 0}
+              totalItems={room.countReview || 0}
               room={room}
               hotelId={hotelId || ""}
               branchId={branchId || ""}

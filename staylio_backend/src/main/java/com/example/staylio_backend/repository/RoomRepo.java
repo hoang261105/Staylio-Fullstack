@@ -111,7 +111,6 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
                 SELECT COUNT(r)
                 FROM Review r
                 WHERE r.room.id = :roomId
-                  AND r.status = 'VISIBLE'
                   AND r.isDeleted = false
             """)
     Long countReviewsByRoomId(@Param("roomId") Long roomId);
@@ -120,7 +119,6 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
                 SELECT COALESCE(AVG(r.rating), 0)
                 FROM Review r
                 WHERE r.room.id = :roomId
-                  AND r.status = 'VISIBLE'
                   AND r.isDeleted = false
             """)
     Double averageRatingByRoomId(@Param("roomId") Long roomId);
@@ -134,7 +132,6 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
                 JOIN w.province p
                 LEFT JOIN Review rv
                     ON rv.room.id = r.id
-                    AND rv.status = 'VISIBLE'
                     AND rv.isDeleted = false
                 WHERE r.isActive = true
                 AND (:status IS NULL OR r.status = :status)
