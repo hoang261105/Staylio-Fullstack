@@ -1,4 +1,5 @@
 import { Maximize, Users, BedDouble } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { getUtilityIcon } from "../../../../common/utils/iconUtils";
 import type { RoomResponse } from "../../../../common/interfaces/response/RoomResponse";
 import type { UtilityResponse } from "../../../../common/interfaces/response/UtilityResponse";
@@ -9,22 +10,23 @@ interface RoomOverviewProps {
 }
 
 export default function RoomOverview({ room, policy }: RoomOverviewProps) {
+  const { t } = useTranslation();
   return (
     <>
       {/* Về phòng này */}
       <section>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Tổng quan phòng</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{t("roomDetail.overviewTitle")}</h2>
         <div className="flex flex-wrap gap-4 mb-6">
           <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700/80 px-4 py-2.5 rounded-xl">
             <Maximize className="w-5 h-5 text-gray-600 dark:text-gray-300" />
             <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-              Diện tích: {room.area} m²
+              {t("roomDetail.area", { area: room.area })}
             </span>
           </div>
           <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700/80 px-4 py-2.5 rounded-xl">
             <Users className="w-5 h-5 text-gray-600 dark:text-gray-300" />
             <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-              Tối đa: {room.maxAdults} Lớn, {room.maxChildren} Trẻ em
+              {t("roomDetail.capacity", { adults: room.maxAdults, children: room.maxChildren })}
             </span>
           </div>
           <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700/80 px-4 py-2.5 rounded-xl">
@@ -35,7 +37,7 @@ export default function RoomOverview({ room, policy }: RoomOverviewProps) {
           </div>
         </div>
         <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line text-sm md:text-base">
-          {room.description || "Chưa có mô tả cho phòng này."}
+          {room.description || t("roomDetail.noDescription")}
         </p>
       </section>
 
@@ -43,7 +45,7 @@ export default function RoomOverview({ room, policy }: RoomOverviewProps) {
 
       {/* Tiện ích */}
       <section>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Tiện ích phòng</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t("roomDetail.utilitiesTitle")}</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-2">
           {room.utilities?.map((u: UtilityResponse) => {
             const Icon = getUtilityIcon(u.iconName);
@@ -57,7 +59,7 @@ export default function RoomOverview({ room, policy }: RoomOverviewProps) {
             );
           })}
           {(!room.utilities || room.utilities.length === 0) && (
-            <div className="text-gray-500 dark:text-gray-400 dark:text-gray-500 italic">Chưa có thông tin tiện ích.</div>
+            <div className="text-gray-500 dark:text-gray-400 dark:text-gray-500 italic">{t("roomDetail.noUtilities")}</div>
           )}
         </div>
       </section>
@@ -69,7 +71,7 @@ export default function RoomOverview({ room, policy }: RoomOverviewProps) {
         <>
           <section>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Chính sách thương hiệu
+              {t("roomDetail.policyTitle")}
             </h2>
             <div className="bg-gray-50 dark:bg-gray-700/80 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
               <ul className="space-y-3">

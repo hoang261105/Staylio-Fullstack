@@ -7,6 +7,7 @@ import { InputField } from "../../../../common/components/InputField";
 import { useApiErrors } from "../../../../common/hooks/useApiErrors";
 import { useBookedDates } from "../../../../common/hooks/useBookings";
 import { useProfile } from "../../../../common/hooks/useProfile";
+import { useTranslation } from "react-i18next";
 import type { RoomResponse } from "../../../../common/interfaces/response/RoomResponse";
 
 interface RoomBookingCardProps {
@@ -18,6 +19,7 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
   const navigate = useNavigate();
   const { data: user } = useProfile();
   const { fieldErrors, clearFieldError } = useApiErrors();
+  const { t } = useTranslation();
   
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
@@ -86,11 +88,11 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
 
   const handleBookNow = () => {
     if (!checkInDate || !checkOutDate) {
-      toast.error("Vui lòng chọn ngày nhận và trả phòng");
+      toast.error(t("roomDetail.missingDates"));
       return;
     }
     if (!adults || adults <= 0) {
-      toast.error("Vui lòng nhập số lượng người lớn");
+      toast.error(t("roomDetail.missingAdults"));
       return;
     }
 
@@ -121,14 +123,14 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
             currency: "VND",
           }).format(room.price)}
         </span>
-        <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium">/ đêm</span>
+        <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium">{t("roomDetail.perNight")}</span>
       </div>
 
       <div className="flex flex-col gap-4 mb-6">
         <div className="grid grid-cols-2 gap-2 border border-gray-300 rounded-xl overflow-hidden p-1 bg-gray-50 dark:bg-gray-700/50">
           <div className="p-2 text-left border-r border-gray-200 dark:border-gray-600">
             <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1 block">
-              Nhận phòng
+              {t("roomDetail.checkIn")}
             </label>
             <DatePicker
               selected={checkInDate}
@@ -136,13 +138,13 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
               minDate={today}
               excludeDateIntervals={excludeCheckInIntervals}
               dateFormat="dd/MM/yyyy"
-              placeholderText="Chọn ngày"
+              placeholderText={t("roomDetail.selectDate")}
               className="text-sm font-semibold text-gray-900 dark:text-white bg-transparent outline-none w-full cursor-pointer placeholder:font-normal placeholder:text-gray-400 dark:text-gray-500"
             />
           </div>
           <div className="p-2 text-left">
             <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1 block">
-              Trả phòng
+              {t("roomDetail.checkOut")}
             </label>
             <DatePicker
               selected={checkOutDate}
@@ -151,31 +153,31 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
               minDate={minCheckOutDate}
               excludeDateIntervals={excludeCheckOutIntervals}
               dateFormat="dd/MM/yyyy"
-              placeholderText="Chọn ngày"
+              placeholderText={t("roomDetail.selectDate")}
               className="text-sm font-semibold text-gray-900 dark:text-white bg-transparent outline-none w-full cursor-pointer placeholder:font-normal placeholder:text-gray-400 dark:text-gray-500"
             />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2 mt-2">
           <InputField
-            label="Người lớn"
+            label={t("roomDetail.adults")}
             type="number"
             min={1}
             max={room.maxAdults}
             value={adults}
             onChange={handleAdultsChange}
             error={fieldErrors.adults}
-            placeholder={`Tối đa: ${room.maxAdults}`}
+            placeholder={`${t("roomDetail.max")}: ${room.maxAdults}`}
           />
           <InputField
-            label="Trẻ em"
+            label={t("roomDetail.children")}
             type="number"
             min={0}
             max={room.maxChildren}
             value={children}
             onChange={handleChildrenChange}
             error={fieldErrors.children}
-            placeholder={`Tối đa: ${room.maxChildren}`}
+            placeholder={`${t("roomDetail.max")}: ${room.maxChildren}`}
           />
         </div>
       </div>
@@ -186,10 +188,10 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
             onClick={handleBookNow}
             className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0"
           >
-            Đặt phòng ngay
+            {t("roomDetail.bookNow")}
           </button>
           <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-4">
-            Bạn chưa bị trừ tiền lúc này
+            {t("roomDetail.notChargedYet")}
           </p>
         </>
       ) : (
@@ -197,7 +199,7 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
           onClick={() => navigate("/login")}
           className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0"
         >
-          Bạn cần đăng nhập để đặt phòng
+          {t("roomDetail.loginToBook")}
         </button>
       )}
     </div>

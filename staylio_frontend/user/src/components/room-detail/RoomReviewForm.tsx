@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Star } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useCreateReviewMutation, useReviews } from "../../../../common/hooks/useReviews";
 import { InputField } from "../../../../common/components/InputField";
 import { useApiErrors } from "../../../../common/hooks/useApiErrors";
@@ -15,6 +17,7 @@ interface RoomReviewFormProps {
 
 export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
   const { data: user } = useProfile();
+  const { t } = useTranslation();
 
   const { data: historyBookings } = useHistoryBookings({
     status: BookingStatus.CHECKED_OUT,
@@ -65,7 +68,7 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
         } else if (errorData?.message) {
           handleApiErrors([{ message: errorData.message }]);
         } else {
-          handleApiErrors([{ message: "Đã có lỗi xảy ra khi gửi đánh giá." }]);
+          handleApiErrors([{ message: t("roomDetail.submitReviewError") }]);
         }
       },
       onSuccess: () => {
@@ -78,7 +81,7 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600 mb-8">
       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-        Đánh giá trải nghiệm của bạn
+        {t("roomDetail.writeReviewTitle")}
       </h3>
       <form onSubmit={handleSubmit}>
         {formError && (
@@ -88,7 +91,7 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
         )}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Đánh giá sao <span className="text-red-500">*</span>
+            {t("roomDetail.ratingLabel")} <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -110,10 +113,10 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
         </div>
 
         <InputField
-          label="Bình luận của bạn"
+          label={t("roomDetail.commentLabel")}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          placeholder="Chia sẻ trải nghiệm của bạn về phòng này..."
+          placeholder={t("roomDetail.commentPlaceholder")}
           error={fieldErrors.comment}
           required
         />
@@ -123,7 +126,7 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
           disabled={createReviewMutation.isPending}
           className="mt-2 px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
         >
-          {createReviewMutation.isPending ? "Đang gửi..." : "Gửi đánh giá"}
+          {createReviewMutation.isPending ? t("roomDetail.submittingReview") : t("roomDetail.submitReview")}
         </button>
       </form>
     </div>

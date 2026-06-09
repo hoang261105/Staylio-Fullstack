@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Star, UserCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { ReviewResponse } from "../../../../common/interfaces/response/ReviewResponse";
 import type { RoomResponse } from "../../../../common/interfaces/response/RoomResponse";
 
@@ -20,10 +21,11 @@ export default function RoomReviewsPreview({
   branchId,
   roomId,
 }: RoomReviewsPreviewProps) {
+  const { t } = useTranslation();
   return (
     <section>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Đánh giá khách hàng</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("roomDetail.customerReviews")}</h2>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-lg">
             <Star className="w-4 h-4 fill-yellow-900" />
@@ -32,14 +34,14 @@ export default function RoomReviewsPreview({
             </span>
           </div>
           <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium text-sm">
-            / 5 ({room.countReview || 0} đánh giá)
+            / 5 ({room.countReview || 0} {t("roomDetail.reviews")})
           </span>
         </div>
       </div>
 
       {reviews.length === 0 ? (
         <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-8 text-center border border-gray-100 dark:border-gray-700">
-          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">Phòng này chưa có đánh giá nào.</p>
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">{t("roomDetail.noReviews")}</p>
         </div>
       ) : (
         <div className="flex flex-col gap-6">
@@ -82,7 +84,7 @@ export default function RoomReviewsPreview({
                       S
                     </div>
                     <span className="font-bold text-sm text-gray-900 dark:text-white">
-                      Phản hồi từ Staylio
+                      {t("roomDetail.staylioReply")}
                     </span>
                     <span className="text-xs text-gray-400 dark:text-gray-500 ml-auto">
                       {new Date(review.replyAt).toLocaleDateString("vi-VN")}
@@ -98,7 +100,7 @@ export default function RoomReviewsPreview({
               to={`/hotel/${hotelId}/branch/${branchId}/room/${roomId}/reviews`}
               className="w-full block text-center py-3 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-50 dark:bg-gray-700 transition-colors"
             >
-              Xem tất cả {totalItems} đánh giá
+              {t("roomDetail.viewAllReviews", { count: totalItems })}
             </Link>
           )}
         </div>

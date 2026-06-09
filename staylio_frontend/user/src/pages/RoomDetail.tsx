@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
+import { useTranslation } from "react-i18next";
 import { ChevronRight, MapPin, Star } from "lucide-react";
 
 import { useRoomById, useRooms } from "../../../common/hooks/useRooms";
@@ -25,6 +26,7 @@ import type { RoomImageResponse } from "../../../common/interfaces/response/Room
 export default function RoomDetail() {
   const { hotelId, branchId, roomId } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { data: room, isLoading: isLoadingRoom } = useRoomById(Number(roomId));
   const { data: branch } = useHotelBranchById(Number(branchId));
@@ -64,13 +66,13 @@ export default function RoomDetail() {
       <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
         <Header />
         <div className="flex-1 flex flex-col items-center justify-center pt-28 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Không tìm thấy phòng</h2>
-          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">Phòng bạn yêu cầu không tồn tại hoặc đã bị xóa.</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t("roomDetail.notFoundTitle")}</h2>
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">{t("roomDetail.notFoundDesc")}</p>
           <button
             onClick={() => navigate(-1)}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
           >
-            Quay lại
+            {t("roomDetail.back")}
           </button>
         </div>
         <Footer />
@@ -104,14 +106,14 @@ export default function RoomDetail() {
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 w-full">
         <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-6">
           <Link to="/" className="hover:text-blue-600 transition-colors">
-            Trang chủ
+            {t("roomDetail.home")}
           </Link>
           <ChevronRight className="w-4 h-4" />
           <Link
             to={`/hotel/${hotelId}/branch/${branchId}`}
             className="hover:text-blue-600 transition-colors"
           >
-            {branch?.branchName || "Chi nhánh"}
+            {branch?.branchName || t("roomDetail.branch")}
           </Link>
           <ChevronRight className="w-4 h-4" />
           <span className="text-gray-900 dark:text-white font-medium">{room.roomName}</span>
@@ -129,7 +131,7 @@ export default function RoomDetail() {
                   {room.averageRating?.toFixed(1) || "0.0"}
                 </span>
                 <span className="text-xs ml-1 opacity-80">
-                  ({room.countReview || 0} đánh giá)
+                  ({room.countReview || 0} {t("roomDetail.reviews")})
                 </span>
               </div>
             </div>
@@ -145,7 +147,7 @@ export default function RoomDetail() {
                 <br />
                 {branch?.address
                   ? `${branch.address}, ${branch?.wardName}, ${branch?.provinceName}`
-                  : "Đang tải địa chỉ..."}
+                  : t("roomDetail.loadingAddress")}
               </span>
             </div>
           </div>
@@ -163,7 +165,7 @@ export default function RoomDetail() {
             {branch?.latitude && branch?.longitude && (
               <>
                 <section>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Vị trí chi nhánh</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t("roomDetail.branchLocation")}</h2>
                   <BranchMap
                     latitude={branch.latitude}
                     longitude={branch.longitude}
@@ -196,7 +198,7 @@ export default function RoomDetail() {
         {similarRooms.length > 0 && (
           <div className="mt-16 pt-12 border-t border-gray-200 dark:border-gray-600">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Các phòng khác tại chi nhánh này
+              {t("roomDetail.otherRooms")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {similarRooms.map((room: RoomResponse) => (

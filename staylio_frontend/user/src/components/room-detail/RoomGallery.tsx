@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface RoomImageResponse {
   id?: number;
@@ -15,6 +16,7 @@ interface RoomGalleryProps {
 
 export default function RoomGallery({ primaryImage, otherImages, allImageUrls }: RoomGalleryProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -57,7 +59,7 @@ export default function RoomGallery({ primaryImage, otherImages, allImageUrls }:
           onClick={() => setSelectedImageIndex(0)}
           className="absolute bottom-4 right-4 bg-white dark:bg-gray-800/90 backdrop-blur-md text-gray-900 dark:text-white font-semibold px-4 py-2 rounded-lg shadow-lg hover:bg-white dark:bg-gray-800 transition-colors text-sm z-10"
         >
-          Xem tất cả ảnh
+          {t("roomDetail.viewAllImages")}
         </button>
       </div>
 
