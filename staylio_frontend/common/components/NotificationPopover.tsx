@@ -9,8 +9,17 @@ import { NotificationResponse } from "../interfaces/response/NotificationRespons
 import { getReviewById } from "../services/review.service";
 import { useTranslation } from "react-i18next";
 
-export default function NotificationPopover() {
+interface NotificationPopoverProps {
+  forceLight?: boolean;
+}
+
+export default function NotificationPopover({ forceLight = false }: NotificationPopoverProps) {
   const { t } = useTranslation();
+  
+  const cx = (classes: string) => {
+    if (!forceLight) return classes;
+    return classes.split(' ').filter(c => !c.startsWith('dark:')).join(' ');
+  };
   const [isOpen, setIsOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -91,22 +100,22 @@ export default function NotificationPopover() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         title={t('components.notification.title', 'Thông báo')}
-        className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+        className={cx("relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors")}
       >
         <Bell className="w-5 h-5" />
 
         {Number(unreadCount) > 0 && (
-          <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-4.5 h-4.5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold border-2 border-white dark:border-gray-900 shadow-sm">
+          <span className={cx("absolute -top-1 -right-1 flex items-center justify-center min-w-4.5 h-4.5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold border-2 border-white dark:border-gray-900 shadow-sm")}>
             {Number(unreadCount) > 99 ? "99+" : unreadCount}
           </span>
         )}
       </button>
       {isOpen && (
-        <div className="fixed left-4 right-4 top-19 mt-0 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden z-100 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 flex items-center justify-between">
-            <h3 className="font-bold text-gray-900 dark:text-gray-100">{t('components.notification.title', 'Thông báo')}</h3>
+        <div className={cx("fixed left-4 right-4 top-19 mt-0 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden z-100 animate-in fade-in slide-in-from-top-2 duration-200")}>
+          <div className={cx("px-4 py-3 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 flex items-center justify-between")}>
+            <h3 className={cx("font-bold text-gray-900 dark:text-gray-100")}>{t('components.notification.title', 'Thông báo')}</h3>
             {Number(unreadCount) > 0 && (
-              <span className="text-xs font-medium text-[#0066FF] dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-full">
+              <span className={cx("text-xs font-medium text-[#0066FF] dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-full")}>
                 {unreadCount} {t('components.notification.unread', 'chưa đọc')}
               </span>
             )}
@@ -119,39 +128,39 @@ export default function NotificationPopover() {
                 <span className="text-xs text-gray-500 font-medium">{t('components.notification.loading', 'Đang tải thông báo...')}</span>
               </div>
             ) : notifications.length === 0 ? (
-              <div className="py-12 text-center flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
-                <Bell className="w-8 h-8 mb-2 text-gray-300 dark:text-gray-600" />
+              <div className={cx("py-12 text-center flex flex-col items-center justify-center text-gray-500 dark:text-gray-400")}>
+                <Bell className={cx("w-8 h-8 mb-2 text-gray-300 dark:text-gray-600")} />
                 <span className="text-sm font-medium">{t('components.notification.empty', 'Không có thông báo nào.')}</span>
               </div>
             ) : (
-              <div className="divide-y divide-gray-50 dark:divide-gray-800/50">
+              <div className={cx("divide-y divide-gray-50 dark:divide-gray-800/50")}>
                 {notifications.map((notification) => (
                   <div
                     key={notification.id}
                     onClick={() => handleNotificationClick(notification)}
-                    className={`p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors flex gap-3 cursor-pointer ${!notification.isRead ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`}
+                    className={cx(`p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors flex gap-3 cursor-pointer ${!notification.isRead ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`)}
                   >
                     <div className="shrink-0 mt-0.5">
                       {notification.senderAvatar ? (
                         <img
                           src={notification.senderAvatar}
                           alt={notification.senderName}
-                          className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-700"
+                          className={cx("w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-700")}
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center shadow-sm border border-gray-200/60 dark:border-gray-700/60">
+                        <div className={cx("w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center shadow-sm border border-gray-200/60 dark:border-gray-700/60")}>
                           {getNotificationIcon(notification.type)}
                         </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm leading-tight ${!notification.isRead ? 'font-semibold text-gray-900 dark:text-gray-100' : 'text-gray-800 dark:text-gray-300'}`}>
+                      <p className={cx(`text-sm leading-tight ${!notification.isRead ? 'font-semibold text-gray-900 dark:text-gray-100' : 'text-gray-800 dark:text-gray-300'}`)}>
                         {notification.title}
                       </p>
-                      <p className={`text-xs mt-1 line-clamp-2 leading-relaxed ${!notification.isRead ? 'text-gray-700 dark:text-gray-300 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+                      <p className={cx(`text-xs mt-1 line-clamp-2 leading-relaxed ${!notification.isRead ? 'text-gray-700 dark:text-gray-300 font-medium' : 'text-gray-500 dark:text-gray-400'}`)}>
                         {notification.content}
                       </p>
-                      <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-2 flex items-center gap-1.5 font-medium">
+                      <div className={cx("text-[10px] text-gray-400 dark:text-gray-500 mt-2 flex items-center gap-1.5 font-medium")}>
                         <span className="truncate">{notification.senderName || t('components.notification.system', 'Hệ thống')}</span>
                         <span>•</span>
                         <span>{formatDateTime(notification.createdAt)}</span>
@@ -166,8 +175,8 @@ export default function NotificationPopover() {
             )}
           </div>
           {notifications.length > 0 && (
-            <div className="p-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 text-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
-              <span className="text-sm font-semibold text-[#0066FF] dark:text-blue-400">
+            <div className={cx("p-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 text-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer")}>
+              <span className={cx("text-sm font-semibold text-[#0066FF] dark:text-blue-400")}>
                 {t('components.notification.viewAll', 'Xem tất cả')}
               </span>
             </div>

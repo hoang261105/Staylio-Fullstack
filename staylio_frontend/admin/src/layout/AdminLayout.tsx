@@ -251,7 +251,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             </div>
 
             <div className="flex items-center gap-3">
-              <NotificationPopover />
+              <NotificationPopover forceLight={true} />
             </div>
           </div>
         </header>

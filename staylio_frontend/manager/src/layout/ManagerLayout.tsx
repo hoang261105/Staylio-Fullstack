@@ -262,7 +262,7 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
             </div>
 
             <div className="flex items-center gap-3">
-              <NotificationPopover />
+              <NotificationPopover forceLight={true} />
             </div>
           </div>
         </header>

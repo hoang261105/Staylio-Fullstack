@@ -165,7 +165,7 @@ export default function BookingConfirmation() {
                     </div>
 
                     {/* Right Column - Sticky */}
-                    <div className="w-full lg:w-[400px] shrink-0">
+                    <div className="w-full lg:w-100 shrink-0">
                         <PriceBreakdownCard
                             previewData={previewData}
                             isLoadingPreview={isLoadingPreview}
