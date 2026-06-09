@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Ticket, X, Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useVoucherApplicable } from "../../../../common/hooks/useVouchers";
 import type { ApplicableVoucherResponse } from "../../../../common/interfaces/response/ApplicableVoucherResponse";
 
@@ -19,6 +20,7 @@ export const VoucherSelector = ({
   checkOutDate,
 }: VoucherSelectorProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t } = useTranslation();
 
   const { data: responseData, isLoading } = useVoucherApplicable({
     roomId,
@@ -40,14 +42,14 @@ export const VoucherSelector = ({
     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
       <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
         <Ticket className="w-6 h-6 text-blue-600" />
-        Mã giảm giá
+        {t("bookingConfirmation.voucherTitle")}
       </h2>
 
       {isLoading ? (
         <div className="animate-pulse bg-gray-100 dark:bg-gray-700 h-12 rounded-xl"></div>
       ) : responseData?.length === 0 ? (
         <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
-          Bạn chưa có mã giảm giá nào có thể áp dụng cho phòng này.
+          {t("bookingConfirmation.noVoucher")}
         </p>
       ) : (
         <div
@@ -56,13 +58,13 @@ export const VoucherSelector = ({
         >
           {selectedVoucher ? (
             <span className="text-blue-600 font-semibold">
-              Đã chọn: {selectedVoucher.code} - Giảm{" "}
+              {t("bookingConfirmation.selected")} {selectedVoucher.code} - {t("bookingConfirmation.discount")}{" "}
               {selectedVoucher.discountType === "PERCENTAGE"
                 ? `${selectedVoucher.discountValue}%`
                 : `${new Intl.NumberFormat("vi-VN").format(selectedVoucher.discountValue)}đ`}
             </span>
           ) : (
-            <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">Chọn hoặc nhập mã giảm giá</span>
+            <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500">{t("bookingConfirmation.selectVoucher")}</span>
           )}
           <Ticket className="w-5 h-5 text-gray-400 dark:text-gray-500" />
         </div>
@@ -74,7 +76,7 @@ export const VoucherSelector = ({
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-700">
               <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                Chọn mã giảm giá
+                {t("bookingConfirmation.selectVoucherModalTitle")}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -110,27 +112,27 @@ export const VoucherSelector = ({
                           </span>
                           {isUsed && (
                             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-600">
-                              Đã sử dụng
+                              {t("bookingConfirmation.used")}
                             </span>
                           )}
                         </div>
                         <p className="text-sm font-medium text-blue-600 mb-1">
-                          Giảm{" "}
+                          {t("bookingConfirmation.discount")}{" "}
                           {voucher.discountType === "PERCENTAGE"
                             ? `${voucher.discountValue}%`
                             : `${new Intl.NumberFormat("vi-VN").format(voucher.discountValue)}đ`}
                           {voucher.maxDiscountAmount > 0 &&
-                            ` (Tối đa ${new Intl.NumberFormat("vi-VN").format(voucher.maxDiscountAmount)}đ)`}
+                            ` ${t("bookingConfirmation.maxDiscount", { max: new Intl.NumberFormat("vi-VN").format(voucher.maxDiscountAmount) })}`}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
-                          Đơn tối thiểu:{" "}
+                          {t("bookingConfirmation.minOrder")}{" "}
                           {new Intl.NumberFormat("vi-VN").format(
                             voucher.minOrderValue,
                           )}
                           đ
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
-                          HSD:{" "}
+                          {t("bookingConfirmation.expiryDate")}{" "}
                           {new Date(voucher.expiryDate).toLocaleDateString(
                             "vi-VN",
                           )}

@@ -1,4 +1,5 @@
 import { CreditCard, Wallet, Landmark, Banknote, ShieldCheck } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PaymentMethod } from "../../../../common/enums/PaymentMethod";
 
 interface PaymentMethodSelectorProps {
@@ -7,45 +8,47 @@ interface PaymentMethodSelectorProps {
     error?: string;
 }
 
-const PAYMENT_OPTIONS = [
-    {
-        id: PaymentMethod.VNPAY,
-        name: "VNPAY",
-        description: "Thanh toán qua ví VNPAY hoặc thẻ nội địa/quốc tế",
-        icon: <ShieldCheck className="w-6 h-6 text-blue-600" />
-    },
-    {
-        id: PaymentMethod.MOMO,
-        name: "Ví MoMo",
-        description: "Quét mã QR qua ứng dụng MoMo",
-        icon: <Wallet className="w-6 h-6 text-pink-600" />
-    },
-    {
-        id: PaymentMethod.ZALOPAY,
-        name: "ZaloPay",
-        description: "Thanh toán tiện lợi bằng ZaloPay",
-        icon: <Wallet className="w-6 h-6 text-blue-500" />
-    },
-    {
-        id: PaymentMethod.BANK_TRANSFER,
-        name: "Chuyển khoản ngân hàng",
-        description: "Chuyển khoản trực tiếp tới tài khoản khách sạn",
-        icon: <Landmark className="w-6 h-6 text-green-600" />
-    },
-    {
-        id: PaymentMethod.CASH,
-        name: "Thanh toán tại khách sạn",
-        description: "Thanh toán bằng tiền mặt khi nhận phòng",
-        icon: <Banknote className="w-6 h-6 text-yellow-600" />
-    }
-];
-
 export const PaymentMethodSelector = ({ selectedMethod, onChange, error }: PaymentMethodSelectorProps) => {
+    const { t } = useTranslation();
+    
+    const PAYMENT_OPTIONS = [
+        {
+            id: PaymentMethod.VNPAY,
+            name: t("bookingConfirmation.paymentMethods.vnpay"),
+            description: t("bookingConfirmation.paymentMethods.vnpayDesc"),
+            icon: <ShieldCheck className="w-6 h-6 text-blue-600" />
+        },
+        {
+            id: PaymentMethod.MOMO,
+            name: t("bookingConfirmation.paymentMethods.momo"),
+            description: t("bookingConfirmation.paymentMethods.momoDesc"),
+            icon: <Wallet className="w-6 h-6 text-pink-600" />
+        },
+        {
+            id: PaymentMethod.ZALOPAY,
+            name: t("bookingConfirmation.paymentMethods.zalopay"),
+            description: t("bookingConfirmation.paymentMethods.zalopayDesc"),
+            icon: <Wallet className="w-6 h-6 text-blue-500" />
+        },
+        {
+            id: PaymentMethod.BANK_TRANSFER,
+            name: t("bookingConfirmation.paymentMethods.bank"),
+            description: t("bookingConfirmation.paymentMethods.bankDesc"),
+            icon: <Landmark className="w-6 h-6 text-green-600" />
+        },
+        {
+            id: PaymentMethod.CASH,
+            name: t("bookingConfirmation.paymentMethods.cash"),
+            description: t("bookingConfirmation.paymentMethods.cashDesc"),
+            icon: <Banknote className="w-6 h-6 text-yellow-600" />
+        }
+    ];
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                 <CreditCard className="w-6 h-6 text-blue-600" />
-                Phương thức thanh toán
+                {t("bookingConfirmation.paymentMethodTitle")}
             </h2>
 
             <div className="space-y-3">

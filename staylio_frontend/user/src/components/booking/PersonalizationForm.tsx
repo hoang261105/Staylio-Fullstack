@@ -1,4 +1,5 @@
 import { Flower2, Moon, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export interface PersonalizationData {
   scent: string;
@@ -11,11 +12,30 @@ interface PersonalizationFormProps {
   setPreferences: React.Dispatch<React.SetStateAction<PersonalizationData>>;
 }
 
-const scents = ["Không mùi", "Hoa Oải hương (Lavender)", "Sả chanh", "Bạc hà"];
-const pillows = ["Tiêu chuẩn", "Gối mềm (Lông vũ)", "Gối cứng (Cao su non)", "Gối chống mỏi cổ"];
-const setups = ["Không cần", "Sinh nhật", "Kỷ niệm / Trăng mật", "Công tác"];
-
 export function PersonalizationForm({ preferences, setPreferences }: PersonalizationFormProps) {
+  const { t } = useTranslation();
+
+  const scents = [
+    t("bookingConfirmation.scents.none"),
+    t("bookingConfirmation.scents.lavender"),
+    t("bookingConfirmation.scents.lemongrass"),
+    t("bookingConfirmation.scents.mint"),
+  ];
+
+  const pillows = [
+    t("bookingConfirmation.pillows.standard"),
+    t("bookingConfirmation.pillows.soft"),
+    t("bookingConfirmation.pillows.hard"),
+    t("bookingConfirmation.pillows.neck"),
+  ];
+
+  const setups = [
+    t("bookingConfirmation.setups.none"),
+    t("bookingConfirmation.setups.birthday"),
+    t("bookingConfirmation.setups.anniversary"),
+    t("bookingConfirmation.setups.business"),
+  ];
+
   return (
     <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6">
       <div className="flex items-center gap-2 mb-4">
@@ -23,9 +43,9 @@ export function PersonalizationForm({ preferences, setPreferences }: Personaliza
           <Sparkles className="w-4 h-4 text-amber-600" />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-gray-900">Cá nhân hóa trải nghiệm</h3>
+          <h3 className="text-xl font-bold text-gray-900">{t("bookingConfirmation.personalizationTitle")}</h3>
           <p className="text-sm text-gray-500">
-            Thiết lập phòng theo sở thích của bạn hoàn toàn miễn phí
+            {t("bookingConfirmation.personalizationDesc")}
           </p>
         </div>
       </div>
@@ -35,7 +55,7 @@ export function PersonalizationForm({ preferences, setPreferences }: Personaliza
         <div>
           <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
             <Flower2 className="w-4 h-4 text-pink-500" />
-            Mùi hương phòng
+            {t("bookingConfirmation.scentLabel")}
           </label>
           <div className="flex flex-wrap gap-2">
             {scents.map((s) => (
@@ -59,7 +79,7 @@ export function PersonalizationForm({ preferences, setPreferences }: Personaliza
         <div>
           <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
             <Moon className="w-4 h-4 text-indigo-500" />
-            Loại gối ngủ
+            {t("bookingConfirmation.pillowLabel")}
           </label>
           <div className="flex flex-wrap gap-2">
             {pillows.map((p) => (
@@ -83,7 +103,7 @@ export function PersonalizationForm({ preferences, setPreferences }: Personaliza
         <div>
           <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
             <Sparkles className="w-4 h-4 text-amber-500" />
-            Yêu cầu Set-up đặc biệt
+            {t("bookingConfirmation.setupLabel")}
           </label>
           <div className="flex flex-wrap gap-2">
             {setups.map((s) => (

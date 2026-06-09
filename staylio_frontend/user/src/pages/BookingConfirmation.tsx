@@ -16,6 +16,7 @@ import { usePreviewBookingMutation, useCreateBookingMutation } from "../../../co
 import toast from "react-hot-toast";
 import { PaymentMethod } from "../../../common/enums/PaymentMethod";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface BookingState {
     roomId: number;
@@ -40,10 +41,11 @@ export default function BookingConfirmation() {
     const [userVoucherId, setUserVoucherId] = useState<number | null>(null);
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | "">("");
     const [paymentError, setPaymentError] = useState("");
+    const { t } = useTranslation();
     const [preferences, setPreferences] = useState<PersonalizationData>({
-        scent: "Không mùi",
-        pillow: "Tiêu chuẩn",
-        setup: "Không cần"
+        scent: t("bookingConfirmation.scents.none"),
+        pillow: t("bookingConfirmation.pillows.standard"),
+        setup: t("bookingConfirmation.setups.none")
     });
 
     const { data: room } = useRoomById(roomId);
@@ -70,7 +72,7 @@ export default function BookingConfirmation() {
 
     const handleSubmit = () => {
         if (!paymentMethod) {
-            setPaymentError("Vui lòng chọn phương thức thanh toán");
+            setPaymentError(t("bookingConfirmation.paymentError"));
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             return;
         }
@@ -97,7 +99,7 @@ export default function BookingConfirmation() {
                 }
             },
             onError: (error: any) => {
-                toast.error(error?.response?.data?.message || "Có lỗi xảy ra khi đặt phòng");
+                toast.error(error?.response?.data?.message || t("bookingConfirmation.submitError"));
             }
         });
     };
@@ -113,11 +115,11 @@ export default function BookingConfirmation() {
                         className="flex items-center text-blue-100 hover:text-white mb-4 transition-colors font-medium text-sm gap-1"
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        Quay lại
+                        {t("bookingConfirmation.back")}
                     </button>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 mt-2">Xác nhận đặt phòng</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 mt-2">{t("bookingConfirmation.title")}</h1>
                     <p className="text-blue-100">
-                        Vui lòng kiểm tra lại thông tin và chọn phương thức thanh toán.
+                        {t("bookingConfirmation.subtitle")}
                     </p>
                 </div>
             </div>

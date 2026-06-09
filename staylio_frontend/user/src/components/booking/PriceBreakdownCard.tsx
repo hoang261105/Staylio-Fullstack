@@ -1,4 +1,5 @@
 import { Receipt, Loader2, ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { BookingPreviewResponse } from "../../../../common/interfaces/response/BookingPreviewResponse";
 
 interface PriceBreakdownCardProps {
@@ -9,11 +10,12 @@ interface PriceBreakdownCardProps {
 }
 
 export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting, onSubmit }: PriceBreakdownCardProps) => {
+    const { t } = useTranslation();
     return (
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden sticky top-28">
             <div className="bg-blue-600 p-6 text-white flex items-center gap-2">
                 <Receipt className="w-6 h-6" />
-                <h2 className="text-xl font-bold">Chi tiết thanh toán</h2>
+                <h2 className="text-xl font-bold">{t("bookingConfirmation.priceBreakdownTitle")}</h2>
             </div>
 
             <div className="p-6">
@@ -28,22 +30,22 @@ export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting
                 ) : previewData ? (
                     <div className="space-y-4 text-sm font-medium text-gray-700 dark:text-gray-200">
                         <div className="flex justify-between items-center">
-                            <span>Giá mỗi đêm</span>
+                            <span>{t("bookingConfirmation.pricePerNight")}</span>
                             <span className="font-bold text-gray-900 dark:text-white">{new Intl.NumberFormat('vi-VN').format(previewData.pricePerNight)}đ</span>
                         </div>
                         <div className="flex justify-between items-center">
-                            <span>Số đêm</span>
+                            <span>{t("bookingConfirmation.numberOfNights")}</span>
                             <span className="font-bold text-gray-900 dark:text-white">{previewData.nights}</span>
                         </div>
                         <div className="h-px bg-gray-100 dark:bg-gray-700 my-2"></div>
                         <div className="flex justify-between items-center">
-                            <span>Tạm tính</span>
+                            <span>{t("bookingConfirmation.subtotal")}</span>
                             <span className="font-bold text-gray-900 dark:text-white">{new Intl.NumberFormat('vi-VN').format(previewData.originalPrice)}đ</span>
                         </div>
 
                         {previewData.discountAmount > 0 && (
                             <div className="flex justify-between items-center text-green-600">
-                                <span>Giảm giá Voucher</span>
+                                <span>{t("bookingConfirmation.voucherDiscount")}</span>
                                 <span className="font-bold">- {new Intl.NumberFormat('vi-VN').format(previewData.discountAmount)}đ</span>
                             </div>
                         )}
@@ -51,13 +53,13 @@ export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting
                         <div className="h-px bg-gray-100 dark:bg-gray-700 my-4"></div>
 
                         <div className="flex justify-between items-center">
-                            <span className="text-base font-bold text-gray-900 dark:text-white">Tổng thanh toán</span>
+                            <span className="text-base font-bold text-gray-900 dark:text-white">{t("bookingConfirmation.totalPayment")}</span>
                             <span className="text-2xl font-bold text-blue-600">{new Intl.NumberFormat('vi-VN').format(previewData.finalPrice)}đ</span>
                         </div>
-                        <div className="text-right text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-normal">Đã bao gồm thuế và phí</div>
+                        <div className="text-right text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-normal">{t("bookingConfirmation.includesTaxes")}</div>
                     </div>
                 ) : (
-                    <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center py-4">Vui lòng điền đầy đủ thông tin để xem giá</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center py-4">{t("bookingConfirmation.fillInfo")}</div>
                 )}
 
                 <button
@@ -68,11 +70,11 @@ export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting
                     {isSubmitting ? (
                         <>
                             <Loader2 className="w-5 h-5 animate-spin" />
-                            Đang xử lý...
+                            {t("bookingConfirmation.processing")}
                         </>
                     ) : (
                         <>
-                            Xác nhận đặt phòng
+                            {t("bookingConfirmation.confirmBooking")}
                             <ArrowRight className="w-5 h-5" />
                         </>
                     )}

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { X, User, Phone, Mail, Calendar, Building, CreditCard, Tag, FileText, Info, Hash, Building2, BedDouble, Sparkles } from "lucide-react";
 import { useBookingById, useUpdateStatusBookingMutation } from "@common/hooks/useBookings";
