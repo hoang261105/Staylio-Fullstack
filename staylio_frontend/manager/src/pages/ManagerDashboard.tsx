@@ -6,6 +6,8 @@ import { HotelStatus } from "@common/enums/HotelStatus";
 import { useState } from "react";
 import CreateHotelModal from "../components/CreateHotelModal";
 import EditHotelModal from "../components/EditHotelModal";
+import RecentActivities from "../components/dashboard/RecentActivities";
+import UpcomingBookings from "../components/dashboard/UpcomingBookings";
 
 const getStatusConfig = (status: HotelStatus) => {
   switch (status) {
@@ -144,20 +146,20 @@ export default function ManagerDashboard() {
             <DashboardStats />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col h-full">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Hoạt động gần đây
                 </h3>
-                <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-                  <p>Chưa có hoạt động nào được ghi nhận</p>
+                <div className="flex-1 overflow-y-auto min-h-[300px] pr-2 custom-scrollbar">
+                  <RecentActivities hotelBranchId={hotel.id} />
                 </div>
               </div>
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col h-full">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Phòng sắp Check-in/Check-out
                 </h3>
-                <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-                  <p>Không có dữ liệu hôm nay</p>
+                <div className="flex-1 overflow-y-auto min-h-[300px] pr-2 custom-scrollbar">
+                  <UpcomingBookings hotelBranchId={hotel.id} />
                 </div>
               </div>
             </div>
