@@ -61,6 +61,9 @@ public class Booking extends BaseObject {
     @Column(name = "note", columnDefinition = "TEXT")
     private String note;
 
+    @Column(name = "preferences", columnDefinition = "TEXT")
+    private String preferences;
+
     @Column(name = "confirmed_at")
     private LocalDateTime confirmedAt;
 

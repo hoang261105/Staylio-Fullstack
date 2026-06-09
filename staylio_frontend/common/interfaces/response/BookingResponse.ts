@@ -7,6 +7,7 @@ export interface BookingResponse {
     bookingCode: string;
     status: BookingStatus;
     note: string;
+    preferences: string;
     userId: number;
     customerName: string;
     customerEmail: string;

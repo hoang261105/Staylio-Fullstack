@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import Header from "../layout/Header";
@@ -8,11 +9,13 @@ import { StayInfoCard } from "../components/booking/StayInfoCard";
 import { VoucherSelector } from "../components/booking/VoucherSelector";
 import { PaymentMethodSelector } from "../components/booking/PaymentMethodSelector";
 import { PriceBreakdownCard } from "../components/booking/PriceBreakdownCard";
+import { PersonalizationForm, type PersonalizationData } from "../components/booking/PersonalizationForm";
 import { useRoomById } from "../../../common/hooks/useRooms";
 import { useHotelBranchById } from "../../../common/hooks/useHotelBranch";
 import { usePreviewBookingMutation, useCreateBookingMutation } from "../../../common/hooks/useBookings";
 import toast from "react-hot-toast";
 import { PaymentMethod } from "../../../common/enums/PaymentMethod";
+import { useEffect, useState } from "react";
 
 interface BookingState {
     roomId: number;
@@ -37,6 +40,11 @@ export default function BookingConfirmation() {
     const [userVoucherId, setUserVoucherId] = useState<number | null>(null);
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | "">("");
     const [paymentError, setPaymentError] = useState("");
+    const [preferences, setPreferences] = useState<PersonalizationData>({
+        scent: "Không mùi",
+        pillow: "Tiêu chuẩn",
+        setup: "Không cần"
+    });
 
     const { data: room } = useRoomById(roomId);
     const { data: branch } = useHotelBranchById(room?.hotelBranchId || 0);
@@ -55,9 +63,10 @@ export default function BookingConfirmation() {
             children,
             userVoucherId,
             note: "",
+            preferences: JSON.stringify(preferences),
             paymentMethod: PaymentMethod.CASH // dummy for preview
         });
-    }, [roomId, checkInDate, checkOutDate, adults, children, userVoucherId, previewBooking]);
+    }, [roomId, checkInDate, checkOutDate, adults, children, userVoucherId, preferences, previewBooking]);
 
     const handleSubmit = () => {
         if (!paymentMethod) {
@@ -76,6 +85,7 @@ export default function BookingConfirmation() {
             children,
             userVoucherId,
             note,
+            preferences: JSON.stringify(preferences),
             paymentMethod
         }, {
             onSuccess: (response) => {
@@ -125,6 +135,11 @@ export default function BookingConfirmation() {
                             children={children}
                             note={note}
                             setNote={setNote}
+                        />
+
+                        <PersonalizationForm
+                            preferences={preferences}
+                            setPreferences={setPreferences}
                         />
 
                         {room && branch && (

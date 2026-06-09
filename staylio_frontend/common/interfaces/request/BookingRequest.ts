@@ -8,5 +8,6 @@ export interface BookingRequest {
     children: number;
     userVoucherId: number | null;
     note: string;
+    preferences: string;
     paymentMethod: PaymentMethod
 }

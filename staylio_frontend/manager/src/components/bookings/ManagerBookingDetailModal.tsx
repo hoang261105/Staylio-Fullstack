@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, User, Phone, Mail, Calendar, Building, CreditCard, Tag, FileText, Info, Hash, Clock, Building2, BedDouble } from "lucide-react";
+import { X, User, Phone, Mail, Calendar, Building, CreditCard, Tag, FileText, Info, Hash, Building2, BedDouble, Sparkles } from "lucide-react";
 import { useBookingById, useUpdateStatusBookingMutation } from "@common/hooks/useBookings";
 import { BookingStatus } from "@common/enums/BookingStatus";
 import { InputField } from "@common/components/InputField";
@@ -34,7 +34,7 @@ export default function ManagerBookingDetailModal({ bookingId, onClose }: Manage
 
   const handleUpdateStatus = () => {
     if (!confirmAction) return;
-    
+
     if (confirmAction.isCancel) {
       if (!cancellationReason.trim()) {
         setCancelError("Vui lòng nhập lý do hủy");
@@ -118,7 +118,46 @@ export default function ManagerBookingDetailModal({ bookingId, onClose }: Manage
                     {booking.note && (
                       <div className="pt-2 border-t border-gray-100 mt-2">
                         <span className="text-gray-500 block mb-1">Ghi chú của khách:</span>
-                        <p className="text-gray-700 italic bg-amber-50 p-2 rounded-lg text-xs">{booking.note}</p>
+                        <p className="text-gray-700 italic bg-gray-50 p-2 rounded-lg text-xs">{booking.note}</p>
+                      </div>
+                    )}
+                    {booking.preferences && (
+                      <div className="pt-2 border-t border-gray-100 mt-2">
+                        <span className="text-gray-500 flex items-center gap-1.5 mb-2 font-medium">
+                          <Sparkles className="w-4 h-4 text-amber-500" />
+                          Yêu cầu cá nhân hóa (Checklist)
+                        </span>
+                        <div className="bg-amber-50 rounded-lg p-3 space-y-2 border border-amber-100/50">
+                          {(() => {
+                            try {
+                              const prefs = JSON.parse(booking.preferences);
+                              return (
+                                <ul className="space-y-2">
+                                  {prefs.scent && (
+                                    <li className="flex items-center gap-2 text-sm text-gray-700">
+                                      <input type="checkbox" className="w-4 h-4 rounded text-amber-500 border-gray-300 focus:ring-amber-500" />
+                                      <span><strong>Mùi hương:</strong> {prefs.scent}</span>
+                                    </li>
+                                  )}
+                                  {prefs.pillow && (
+                                    <li className="flex items-center gap-2 text-sm text-gray-700">
+                                      <input type="checkbox" className="w-4 h-4 rounded text-amber-500 border-gray-300 focus:ring-amber-500" />
+                                      <span><strong>Gối ngủ:</strong> {prefs.pillow}</span>
+                                    </li>
+                                  )}
+                                  {prefs.setup && (
+                                    <li className="flex items-center gap-2 text-sm text-gray-700">
+                                      <input type="checkbox" className="w-4 h-4 rounded text-amber-500 border-gray-300 focus:ring-amber-500" />
+                                      <span><strong>Set-up đặc biệt:</strong> {prefs.setup}</span>
+                                    </li>
+                                  )}
+                                </ul>
+                              );
+                            } catch (e: any) {
+                              return <p className="text-xs text-gray-500">Lỗi định dạng cấu hình: {booking.preferences}</p>;
+                            }
+                          })()}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -287,7 +326,7 @@ export default function ManagerBookingDetailModal({ bookingId, onClose }: Manage
                 Hủy booking
               </button>
             )}
-            
+
             {booking?.status === BookingStatus.PAID && (
               <button
                 onClick={() => handleOpenConfirm(BookingStatus.CONFIRMED, "Xác nhận booking")}

@@ -26,6 +26,8 @@ public class BookingResponse {
 
     private String note;
 
+    private String preferences;
+
     private Long userId;
 
     private String customerName;

@@ -173,10 +173,10 @@ public class BookingServiceImpl implements BookingService {
             BookingRequest request,
             UserPrincipal principal) {
         User user = userRepo.findById(principal.getId())
-                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy user!"));
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         Room room = roomRepo.findById(request.getRoomId())
-                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy phòng!"));
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.ROOM_NOT_FOUND.getMessage()));
 
         validateBookingRequest(request, room);
 
@@ -284,6 +284,7 @@ public class BookingServiceImpl implements BookingService {
                 .bookingCode(generateBookingCode())
                 .status(BookingStatus.PENDING_PAYMENT)
                 .note(request.getNote())
+                .preferences(request.getPreferences())
                 .build();
 
         Booking savedBooking = bookingRepo.save(booking);
@@ -418,6 +419,7 @@ public class BookingServiceImpl implements BookingService {
                 booking.getBookingCode(),
                 booking.getStatus(),
                 booking.getNote(),
+                booking.getPreferences(),
 
                 booking.getUser().getId(),
                 booking.getUser().getProfile().getFullName(),

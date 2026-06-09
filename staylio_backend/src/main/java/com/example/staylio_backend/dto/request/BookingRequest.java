@@ -33,6 +33,7 @@ public class BookingRequest {
     private Integer children;
     private Long userVoucherId;
     private String note;
+    private String preferences;
 
     private PaymentMethod paymentMethod;
 }
