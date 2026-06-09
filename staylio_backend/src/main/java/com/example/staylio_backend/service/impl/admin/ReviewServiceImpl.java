@@ -60,6 +60,9 @@ public class ReviewServiceImpl implements ReviewService {
                     pageable
             );
         } else {
+            if (principal == null || (!principal.hasRole(RoleName.ROLE_ADMIN) && !principal.hasRole(RoleName.ROLE_MANAGER))) {
+                request.setStatus(ReviewStatus.VISIBLE);
+            }
             reviewPage = reviewRepo.searchReviews(
                     request.getSearch(),
                     request.getRating(),

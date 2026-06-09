@@ -55,7 +55,7 @@ export default function ManagerBookingDetailModal({ bookingId, onClose }: Manage
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
 
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
@@ -109,7 +109,7 @@ export default function ManagerBookingDetailModal({ bookingId, onClose }: Manage
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-500 flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> Email:</span>
-                      <span className="font-medium text-gray-900 truncate max-w-[200px]" title={booking.customerEmail}>{booking.customerEmail || "---"}</span>
+                      <span className="font-medium text-gray-900 truncate max-w-50" title={booking.customerEmail}>{booking.customerEmail || "---"}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-500">Người lớn / Trẻ em:</span>
@@ -367,7 +367,7 @@ export default function ManagerBookingDetailModal({ bookingId, onClose }: Manage
       </div>
 
       {confirmAction && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-110 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200 p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-4">{confirmAction.title}</h3>
             <p className="text-sm text-gray-600 mb-4">
