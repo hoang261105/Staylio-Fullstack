@@ -204,4 +204,16 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
             @Param("hotelId") Long hotelId,
             @Param("active") Boolean active
     );
+
+    @Query("""
+        SELECT COUNT(r)
+        FROM Room r
+        JOIN r.hotelBranch hb
+        JOIN hb.hotel h
+        WHERE h.manager.id = :managerId
+          AND r.isActive = true
+    """)
+    Long countTotalRooms(
+            @Param("managerId") Long managerId
+    );
 }

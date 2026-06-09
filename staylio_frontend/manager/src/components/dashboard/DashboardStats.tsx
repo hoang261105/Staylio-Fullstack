@@ -1,37 +1,53 @@
-import { Users, Building2, CalendarCheck, TrendingUp } from "lucide-react";
+import { Users, Building2, CalendarCheck, TrendingUp, Loader2 } from "lucide-react";
+import { useStatisticManager } from "@common/hooks/useStatisticManager";
+import { formatCurrency } from "@common/utils/currency.util";
 
 export default function DashboardStats() {
+  const { data, isLoading, isError } = useStatisticManager();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-10">
+        <Loader2 className="w-8 h-8 animate-spin text-[#0066FF]" />
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return null;
+  }
+
   const stats = [
     {
       label: "Tổng số phòng",
-      value: "124",
-      change: "+2 so với tháng trước",
+      value: data.totalRooms.toString(),
+      change: `${data.roomGrowth > 0 ? '+' : ''}${data.roomGrowth} so với tháng trước`,
       icon: Building2,
-      trend: "up",
+      trend: data.roomGrowth >= 0 ? "up" : "down",
       color: "blue",
     },
     {
       label: "Khách đang lưu trú",
-      value: "86",
-      change: "+12% so với tháng trước",
+      value: data.stayingGuests.toString(),
+      change: `${data.guestGrowthPercent > 0 ? '+' : ''}${data.guestGrowthPercent}% so với tháng trước`,
       icon: Users,
-      trend: "up",
+      trend: data.guestGrowthPercent >= 0 ? "up" : "down",
       color: "green",
     },
     {
       label: "Đặt phòng mới",
-      value: "45",
-      change: "+5% so với tuần trước",
+      value: data.newBookings.toString(),
+      change: `${data.bookingGrowthPercent > 0 ? '+' : ''}${data.bookingGrowthPercent}% so với tuần trước`,
       icon: CalendarCheck,
-      trend: "up",
+      trend: data.bookingGrowthPercent >= 0 ? "up" : "down",
       color: "purple",
     },
     {
       label: "Doanh thu ước tính",
-      value: "320.5M",
-      change: "+8.4% so với tháng trước",
+      value: formatCurrency(data.estimatedRevenue),
+      change: `${data.revenueGrowthPercent > 0 ? '+' : ''}${data.revenueGrowthPercent}% so với tháng trước`,
       icon: TrendingUp,
-      trend: "up",
+      trend: data.revenueGrowthPercent >= 0 ? "up" : "down",
       color: "emerald",
     },
   ];
@@ -76,7 +92,11 @@ export default function DashboardStats() {
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
                 {stat.value}
               </h3>
-              <p className="text-xs font-medium text-emerald-600 bg-emerald-50 inline-flex px-2 py-1 rounded-full">
+              <p className={`text-xs font-medium inline-flex px-2 py-1 rounded-full ${
+                stat.trend === "up" 
+                  ? "text-emerald-600 bg-emerald-50" 
+                  : "text-red-600 bg-red-50"
+              }`}>
                 {stat.change}
               </p>
             </div>

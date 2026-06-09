@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -159,4 +160,49 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
         long countFutureActiveBookingsByHotelId(
                         @Param("hotelId") Long hotelId,
                         @Param("statuses") List<BookingStatus> statuses);
+
+        @Query("""
+            SELECT COALESCE(SUM(b.adults + b.children), 0)
+            FROM Booking b
+            JOIN b.room r
+            JOIN r.hotelBranch hb
+            JOIN hb.hotel h
+            WHERE h.manager.id = :managerId
+              AND b.status =
+                  com.example.staylio_backend.model.enums.BookingStatus.CHECKED_IN
+        """)
+        Long countStayingGuests(
+                @Param("managerId") Long managerId
+        );
+
+        @Query("""
+            SELECT COUNT(b)
+            FROM Booking b
+            JOIN b.room r
+            JOIN r.hotelBranch hb
+            JOIN hb.hotel h
+            WHERE h.manager.id = :managerId
+              AND b.createdAt >= :fromDate
+        """)
+        Long countNewBookings(
+                @Param("managerId") Long managerId,
+                @Param("fromDate") LocalDateTime fromDate
+        );
+
+        @Query("""
+            SELECT COALESCE(SUM(b.finalPrice), 0)
+            FROM Booking b
+            JOIN b.room r
+            JOIN r.hotelBranch hb
+            JOIN hb.hotel h
+            WHERE h.manager.id = :managerId
+              AND b.status IN (
+                  com.example.staylio_backend.model.enums.BookingStatus.CONFIRMED,
+                  com.example.staylio_backend.model.enums.BookingStatus.CHECKED_IN,
+                  com.example.staylio_backend.model.enums.BookingStatus.CHECKED_OUT
+              )
+        """)
+        BigDecimal calculateEstimatedRevenue(
+                @Param("managerId") Long managerId
+        );
 }
