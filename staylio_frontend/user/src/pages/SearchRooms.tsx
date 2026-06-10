@@ -12,6 +12,7 @@ import { RoomStatus } from "../../../common/enums/RoomStatus";
 import type { RoomSearchResponse } from "../../../common/interfaces/response/RoomSearchResponse";
 import { useDebounce } from "../../../common/hooks/useDebounce";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../../common/components/ui/button";
 
 export default function SearchRooms() {
   const { t } = useTranslation();
@@ -68,13 +69,13 @@ export default function SearchRooms() {
   const pagination = searchResults?.pagination;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
+    <div className="min-h-screen bg-background font-sans flex flex-col">
       <Header />
 
-      <div className="bg-blue-600 pt-28 pb-10">
+      <div className="bg-primary pt-28 pb-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 mt-6">{t('searchRooms.title')}</h1>
-          <p className="text-blue-200">
+          <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4 mt-6">{t('searchRooms.title')}</h1>
+          <p className="text-primary-foreground/80">
             {t('searchRooms.foundRooms', {
               count: pagination?.totalItems || 0,
               keyword: debouncedSearch || t('searchRooms.allKeyword')
@@ -86,16 +87,16 @@ export default function SearchRooms() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grow w-full flex flex-col md:flex-row gap-8">
 
         <div className="w-full md:w-72 shrink-0">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sticky top-28">
-            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
-              <Filter className="w-5 h-5 text-gray-700 dark:text-gray-200" />
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">{t('searchRooms.filterTitle')}</h2>
+          <div className="bg-card rounded-2xl shadow-sm border border-border p-6 sticky top-28">
+            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-border">
+              <Filter className="w-5 h-5 text-card-foreground" />
+              <h2 className="text-lg font-bold text-card-foreground">{t('searchRooms.filterTitle')}</h2>
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('searchRooms.roomStatusLabel')}</label>
+              <label className="block text-sm font-semibold text-card-foreground mb-3">{t('searchRooms.roomStatusLabel')}</label>
               <select
-                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
+                className="w-full bg-background border border-input text-foreground rounded-xl focus:ring-primary focus:border-primary block p-3 text-sm font-medium outline-none transition-all"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as RoomStatus | "")}
               >
@@ -107,7 +108,7 @@ export default function SearchRooms() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('searchRooms.priceRangeLabel')}</label>
+              <label className="block text-sm font-semibold text-card-foreground mb-3">{t('searchRooms.priceRangeLabel')}</label>
               <div className="flex flex-col gap-3">
                 <input
                   type="number"
@@ -115,7 +116,7 @@ export default function SearchRooms() {
                   placeholder={t('searchRooms.priceMinPlaceholder')}
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value ? Number(e.target.value) : "")}
-                  className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
+                  className="w-full bg-background border border-input text-foreground rounded-xl focus:ring-primary focus:border-primary block p-3 text-sm font-medium outline-none transition-all"
                 />
                 <input
                   type="number"
@@ -123,59 +124,60 @@ export default function SearchRooms() {
                   placeholder={t('searchRooms.priceMaxPlaceholder')}
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value ? Number(e.target.value) : "")}
-                  className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
+                  className="w-full bg-background border border-input text-foreground rounded-xl focus:ring-primary focus:border-primary block p-3 text-sm font-medium outline-none transition-all"
                 />
               </div>
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('searchRooms.minRatingLabel')}</label>
+              <label className="block text-sm font-semibold text-card-foreground mb-3">{t('searchRooms.minRatingLabel')}</label>
               <input
                 type="number"
                 placeholder={t('searchRooms.minRatingPlaceholder')}
                 min="0" max="5" step="0.5"
                 value={minRating}
                 onChange={(e) => setMinRating(e.target.value ? Number(e.target.value) : "")}
-                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
+                className="w-full bg-background border border-input text-foreground rounded-xl focus:ring-primary focus:border-primary block p-3 text-sm font-medium outline-none transition-all"
               />
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('searchRooms.minCapacityLabel')}</label>
+              <label className="block text-sm font-semibold text-card-foreground mb-3">{t('searchRooms.minCapacityLabel')}</label>
               <input
                 type="number"
                 placeholder={t('searchRooms.minCapacityPlaceholder')}
                 min="1"
                 value={capacity}
                 onChange={(e) => setCapacity(e.target.value ? Number(e.target.value) : "")}
-                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
+                className="w-full bg-background border border-input text-foreground rounded-xl focus:ring-primary focus:border-primary block p-3 text-sm font-medium outline-none transition-all"
               />
             </div>
 
-            <button
+            <Button
+              variant="outline"
               onClick={() => {
                 setMinPrice(""); setMaxPrice("");
                 setMinRating(""); setStatus("");
                 setCapacity("");
               }}
-              className="w-full mt-2 py-3 px-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-semibold rounded-xl transition-colors text-sm"
+              className="w-full mt-2 py-6 font-semibold rounded-xl text-sm"
             >
               {t('searchRooms.clearFilter')}
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className="flex-1">
 
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="bg-card rounded-2xl shadow-sm border border-border p-4 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
 
             <form onSubmit={(e) => e.preventDefault()} className="relative w-full md:w-96 flex">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                <Search className="h-5 w-5 text-muted-foreground" />
               </div>
               <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-600 rounded-xl leading-5 bg-gray-50 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 sm:text-sm font-medium transition-all"
+                className="block w-full pl-10 pr-3 py-3 border border-input rounded-xl leading-5 bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-primary focus:border-primary sm:text-sm font-medium transition-all"
                 placeholder={t('searchRooms.searchPlaceholder')}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
@@ -183,10 +185,10 @@ export default function SearchRooms() {
             </form>
 
             <div className="flex items-center gap-3 w-full md:w-auto">
-              <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 w-full md:w-auto">
-                <SlidersHorizontal className="w-4 h-4 text-gray-500 dark:text-gray-400 dark:text-gray-500 shrink-0" />
+              <div className="flex items-center gap-2 bg-background px-4 py-2.5 rounded-xl border border-input w-full md:w-auto">
+                <SlidersHorizontal className="w-4 h-4 text-muted-foreground shrink-0" />
                 <select
-                  className="bg-transparent text-sm font-semibold text-gray-700 dark:text-gray-200 outline-none cursor-pointer w-full"
+                  className="bg-transparent text-sm font-semibold text-foreground outline-none cursor-pointer w-full"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                 >
@@ -196,27 +198,29 @@ export default function SearchRooms() {
                 </select>
               </div>
 
-              <button
+              <Button
+                variant="outline"
+                size="icon"
                 onClick={() => setDirection(d => d === "asc" ? "desc" : "asc")}
-                className="flex items-center justify-center p-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200 shrink-0"
+                className="shrink-0 p-3 h-auto rounded-xl"
                 title={direction === "asc" ? t('searchRooms.sortAsc') : t('searchRooms.sortDesc')}
               >
                 <ArrowUpDown className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           </div>
 
           {isLoading ? (
             <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-b dark:border-gray-700lue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
             </div>
           ) : rooms.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-16 text-center">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+            <div className="bg-card rounded-2xl shadow-sm border border-border p-16 text-center">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('searchRooms.noResults')}</h3>
-              <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">{t('searchRooms.noResultsDesc')}</p>
+              <h3 className="text-xl font-bold text-card-foreground mb-2">{t('searchRooms.noResults')}</h3>
+              <p className="text-muted-foreground">{t('searchRooms.noResultsDesc')}</p>
             </div>
           ) : (
             <>

@@ -76,7 +76,7 @@ export default function BranchMap({
   const { t } = useTranslation();
 
   return (
-    <div className="h-112.5 w-full overflow-hidden rounded-2xl border">
+    <div className="h-112.5 w-full overflow-hidden rounded-2xl border border-border">
       <MapContainer
         center={[latitude, longitude]}
         zoom={15}
@@ -91,7 +91,7 @@ export default function BranchMap({
         <Marker position={[latitude, longitude]}>
           <Popup>
             <div>
-              <strong className="text-blue-600">{branchName}</strong>
+              <strong className="text-primary">{branchName}</strong>
               <br />
               <span className="text-sm">{address}</span>
             </div>
@@ -127,11 +127,11 @@ export default function BranchMap({
             <Marker key={place.id} position={[place.lat, place.lon]} icon={icon}>
               <Popup>
                 <div>
-                  <strong className="text-gray-900 dark:text-white">{place.name}</strong>
+                  <strong className="text-foreground">{place.name}</strong>
                   <br />
-                  <span className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 capitalize">{getTypeName(place.type)}</span>
+                  <span className="text-xs text-muted-foreground capitalize">{getTypeName(place.type)}</span>
                   <br />
-                  <span className="text-xs font-semibold text-blue-600">
+                  <span className="text-xs font-semibold text-primary">
                     {t('components.nearbyPlaces.distanceAway', { 
                       distance: place.distance < 1000 ? `${place.distance}m` : `${(place.distance / 1000).toFixed(1)}km` 
                     })}

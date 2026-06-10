@@ -64,8 +64,8 @@ export default function Header() {
       <header className="bg-white dark:bg-gray-900 shadow-sm dark:border-b dark:border-gray-800 sticky top-0 z-50 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 w-32 h-10" onClick={() => navigate("/")}>
-              <img src="/slogan.png" alt="Staylio" />
+            <div className="flex items-center gap-2 w-32 h-10 cursor-pointer" onClick={() => navigate("/")}>
+              <img src="/slogan.png" alt="Staylio" className="dark:brightness-0 dark:invert" />
             </div>
 
             <nav className="hidden md:flex items-center gap-6">

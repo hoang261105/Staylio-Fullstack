@@ -12,6 +12,7 @@ import NearbyPlacesList from "../components/NearbyPlacesList";
 import { useDebounce } from "../../../common/hooks/useDebounce";
 import { useNearbyPlaces } from "../../../common/hooks/useNearbyPlaces";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../../common/components/ui/button";
 
 export default function BranchDetails() {
   const { branchId } = useParams();
@@ -68,7 +69,7 @@ export default function BranchDetails() {
   }, [roomsData, minPrice, maxPrice, minRating, maxRating]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
+    <div className="min-h-screen bg-background font-sans flex flex-col">
       <Header />
 
       <div className="relative h-80 bg-gray-900">
@@ -87,13 +88,13 @@ export default function BranchDetails() {
               {branchInfo?.hotelBranchName || t('branchDetails.loading')}
             </h1>
             <div className="flex flex-wrap items-center gap-6">
-              <div className="flex items-center gap-2 bg-white dark:bg-gray-800/30 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gray-100 dark:border-white/10 text-gray-800 dark:text-gray-200">
+              <div className="flex items-center gap-2 bg-background/50 backdrop-blur-md px-3 py-1.5 rounded-lg border border-border text-foreground">
                 <MapPin className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                 <span className="text-sm font-medium">
                   {branchInfo ? `${branchInfo.address}, ${branchInfo.wardName}, ${branchInfo.provinceName}` : t('branchDetails.loadingAddress')}
                 </span>
               </div>
-              <div className="flex items-center gap-2 bg-white dark:bg-gray-800/30 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gray-100 dark:border-white/10 text-gray-800 dark:text-gray-200">
+              <div className="flex items-center gap-2 bg-background/50 backdrop-blur-md px-3 py-1.5 rounded-lg border border-border text-foreground">
                 <Star className="w-4 h-4 text-yellow-500 dark:text-yellow-400 fill-yellow-500 dark:fill-yellow-400" />
                 <span className="text-sm font-medium">
                   {branchInfo?.averageRating || "0.0"} ({branchInfo?.countReview || 0} {t('branchDetails.reviews')})
@@ -107,16 +108,16 @@ export default function BranchDetails() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full flex flex-col md:flex-row gap-8">
 
         <div className="w-full md:w-72 flex-shrink-0">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sticky top-28">
-            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
-              <Filter className="w-5 h-5 text-gray-700 dark:text-gray-200" />
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">{t('branchDetails.filterTitle')}</h2>
+          <div className="bg-card rounded-2xl shadow-sm border border-border p-6 sticky top-28">
+            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-border">
+              <Filter className="w-5 h-5 text-foreground" />
+              <h2 className="text-lg font-bold text-foreground">{t('branchDetails.filterTitle')}</h2>
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('branchDetails.roomStatusLabel')}</label>
+              <label className="block text-sm font-semibold text-foreground mb-3">{t('branchDetails.roomStatusLabel')}</label>
               <select
-                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
+                className="w-full bg-background border border-input text-foreground rounded-xl focus:ring-primary focus:border-primary block p-3 text-sm font-medium outline-none transition-all"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as RoomStatus | "")}
               >
@@ -129,7 +130,7 @@ export default function BranchDetails() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('branchDetails.priceRangeLabel')}</label>
+              <label className="block text-sm font-semibold text-foreground mb-3">{t('branchDetails.priceRangeLabel')}</label>
               <div className="flex items-center gap-2">
                 <input
                   type="number"
@@ -137,22 +138,22 @@ export default function BranchDetails() {
                   value={minPrice}
                   min={0}
                   onChange={(e) => setMinPrice(e.target.value ? Number(e.target.value) : "")}
-                  className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
+                  className="w-full bg-background border border-input text-foreground rounded-xl focus:ring-primary focus:border-primary block p-3 text-sm font-medium outline-none transition-all"
                 />
-                <span className="text-gray-400 dark:text-gray-500">-</span>
+                <span className="text-muted-foreground">-</span>
                 <input
                   type="number"
                   placeholder={t('branchDetails.priceMaxPlaceholder')}
                   value={maxPrice}
                   min={1}
                   onChange={(e) => setMaxPrice(e.target.value ? Number(e.target.value) : "")}
-                  className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
+                  className="w-full bg-background border border-input text-foreground rounded-xl focus:ring-primary focus:border-primary block p-3 text-sm font-medium outline-none transition-all"
                 />
               </div>
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">{t('branchDetails.ratingLabel')}</label>
+              <label className="block text-sm font-semibold text-foreground mb-3">{t('branchDetails.ratingLabel')}</label>
               <div className="flex items-center gap-2">
                 <input
                   type="number"
@@ -160,45 +161,46 @@ export default function BranchDetails() {
                   min="0" max="5"
                   value={minRating}
                   onChange={(e) => setMinRating(e.target.value ? Number(e.target.value) : "")}
-                  className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
+                  className="w-full bg-background border border-input text-foreground rounded-xl focus:ring-primary focus:border-primary block p-3 text-sm font-medium outline-none transition-all"
                 />
-                <span className="text-gray-400 dark:text-gray-500">-</span>
+                <span className="text-muted-foreground">-</span>
                 <input
                   type="number"
                   placeholder={t('branchDetails.ratingMaxPlaceholder')}
                   min="0" max="5"
                   value={maxRating}
                   onChange={(e) => setMaxRating(e.target.value ? Number(e.target.value) : "")}
-                  className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 block p-3 text-sm font-medium outline-none transition-all"
+                  className="w-full bg-background border border-input text-foreground rounded-xl focus:ring-primary focus:border-primary block p-3 text-sm font-medium outline-none transition-all"
                 />
               </div>
             </div>
 
-            <button
+            <Button
+              variant="secondary"
               onClick={() => {
                 setMinPrice(""); setMaxPrice("");
                 setMinRating(""); setMaxRating("");
                 setStatus("");
                 setSearchInput("");
               }}
-              className="w-full mt-2 py-3 px-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 font-semibold rounded-xl transition-colors text-sm"
+              className="w-full mt-2 py-6 rounded-xl font-semibold transition-colors"
             >
               {t('branchDetails.clearFilter')}
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className="flex-1">
 
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="bg-card rounded-2xl shadow-sm border border-border p-4 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
 
             <form onSubmit={(e) => e.preventDefault()} className="relative w-full sm:w-96">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                <Search className="h-5 w-5 text-muted-foreground" />
               </div>
               <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-600 rounded-xl leading-5 bg-gray-50 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-b dark:border-gray-700lue-500 sm:text-sm font-medium transition-all"
+                className="block w-full pl-10 pr-3 py-3 border border-input rounded-xl leading-5 bg-background placeholder-muted-foreground focus:outline-none focus:ring-primary focus:border-primary sm:text-sm font-medium transition-all"
                 placeholder={t('branchDetails.searchRoomPlaceholder')}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
@@ -206,10 +208,10 @@ export default function BranchDetails() {
             </form>
 
             <div className="flex items-center gap-3 w-full sm:w-auto">
-              <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600">
-                <SlidersHorizontal className="w-4 h-4 text-gray-500 dark:text-gray-400 dark:text-gray-500" />
+              <div className="flex items-center gap-2 bg-background px-4 py-2.5 rounded-xl border border-input">
+                <SlidersHorizontal className="w-4 h-4 text-muted-foreground" />
                 <select
-                  className="bg-transparent text-sm font-semibold text-gray-700 dark:text-gray-200 outline-none cursor-pointer"
+                  className="bg-transparent text-sm font-semibold text-foreground outline-none cursor-pointer"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                 >
@@ -220,27 +222,28 @@ export default function BranchDetails() {
                 </select>
               </div>
 
-              <button
+              <Button
+                variant="outline"
                 onClick={() => setDirection(d => d === "asc" ? "desc" : "asc")}
-                className="flex items-center justify-center p-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
+                className="p-3 h-auto rounded-xl"
                 title={direction === "asc" ? t('branchDetails.sortAsc') : t('branchDetails.sortDesc')}
               >
                 <ArrowUpDown className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           </div>
 
           {isLoadingRooms ? (
             <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-b dark:border-gray-700lue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
             </div>
           ) : filteredRooms.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-16 text-center">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+            <div className="bg-card rounded-2xl shadow-sm border border-border p-16 text-center">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t('branchDetails.noRoomsFound')}</h3>
-              <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">{t('branchDetails.noRoomsFoundDesc')}</p>
+              <h3 className="text-xl font-bold text-card-foreground mb-2">{t('branchDetails.noRoomsFound')}</h3>
+              <p className="text-muted-foreground">{t('branchDetails.noRoomsFoundDesc')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -255,11 +258,11 @@ export default function BranchDetails() {
 
       {branchInfo?.latitude && branchInfo?.longitude && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 w-full">
-          <hr className="border-gray-200 dark:border-gray-600 mb-10" />
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          <hr className="border-border mb-10" />
+          <h2 className="text-2xl font-bold text-foreground mb-6">
             {t('branchDetails.aroundBranchTitle', { branchName: branchInfo.hotelBranchName })}
           </h2>
-          <p className="text-gray-900 dark:text-white mb-10 text-lg">{branchInfo.address}, {branchInfo.wardName}, {branchInfo.provinceName}</p>
+          <p className="text-foreground mb-10 text-lg">{branchInfo.address}, {branchInfo.wardName}, {branchInfo.provinceName}</p>
           <BranchMap
             latitude={branchInfo.latitude}
             longitude={branchInfo.longitude}

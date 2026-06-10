@@ -131,22 +131,22 @@ export default function BookingConfirmation() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
+    <div className="min-h-screen bg-background font-sans flex flex-col">
       <Header />
 
-      <div className="bg-blue-600 pt-28 pb-10">
+      <div className="bg-primary pt-28 pb-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center text-blue-100 hover:text-white mb-4 transition-colors font-medium text-sm gap-1"
+            className="flex items-center text-primary-foreground/80 hover:text-primary-foreground mb-4 transition-colors font-medium text-sm gap-1"
           >
             <ArrowLeft className="w-4 h-4" />
             {t("bookingConfirmation.back")}
           </button>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 mt-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2 mt-2">
             {t("bookingConfirmation.title")}
           </h1>
-          <p className="text-blue-100">{t("bookingConfirmation.subtitle")}</p>
+          <p className="text-primary-foreground/80">{t("bookingConfirmation.subtitle")}</p>
         </div>
       </div>
 

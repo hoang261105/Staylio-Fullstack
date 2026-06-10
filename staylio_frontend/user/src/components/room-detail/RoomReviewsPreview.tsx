@@ -3,6 +3,7 @@ import { Star, UserCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { ReviewResponse } from "../../../../common/interfaces/response/ReviewResponse";
 import type { RoomResponse } from "../../../../common/interfaces/response/RoomResponse";
+import { Button } from "../../../../common/components/ui/button";
 
 interface RoomReviewsPreviewProps {
   reviews: ReviewResponse[];
@@ -25,7 +26,7 @@ export default function RoomReviewsPreview({
   return (
     <section>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("roomDetail.customerReviews")}</h2>
+        <h2 className="text-2xl font-bold text-foreground">{t("roomDetail.customerReviews")}</h2>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-lg">
             <Star className="w-4 h-4 fill-yellow-900" />
@@ -33,22 +34,22 @@ export default function RoomReviewsPreview({
               {room.averageRating?.toFixed(1) || "0.0"}
             </span>
           </div>
-          <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium text-sm">
+          <span className="text-muted-foreground font-medium text-sm">
             / 5 ({room.countReview || 0} {t("roomDetail.reviews")})
           </span>
         </div>
       </div>
 
       {reviews.length === 0 ? (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-8 text-center border border-gray-100 dark:border-gray-700">
-          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">{t("roomDetail.noReviews")}</p>
+        <div className="bg-muted rounded-2xl p-8 text-center border border-border">
+          <p className="text-muted-foreground">{t("roomDetail.noReviews")}</p>
         </div>
       ) : (
         <div className="flex flex-col gap-6">
           {reviews.map((review: ReviewResponse) => (
             <div
               key={review.id}
-              className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-2xl shadow-sm"
+              className="bg-card border border-border p-6 rounded-2xl shadow-sm"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -59,11 +60,11 @@ export default function RoomReviewsPreview({
                       className="w-10 h-10 rounded-full object-cover"
                     />
                   ) : (
-                    <UserCircle className="w-10 h-10 text-gray-300" />
+                    <UserCircle className="w-10 h-10 text-muted-foreground" />
                   )}
                   <div>
-                    <h4 className="font-bold text-gray-900 dark:text-white">{review.fullName}</h4>
-                    <p className="text-xs text-gray-400 dark:text-gray-500">
+                    <h4 className="font-bold text-card-foreground">{review.fullName}</h4>
+                    <p className="text-xs text-muted-foreground">
                       {new Date(review.createdAt).toLocaleDateString("vi-VN")}
                     </p>
                   </div>
@@ -73,35 +74,38 @@ export default function RoomReviewsPreview({
                   <span className="text-xs font-bold">{review.rating}</span>
                 </div>
               </div>
-              <p className="text-gray-700 dark:text-gray-200 text-sm leading-relaxed">
+              <p className="text-card-foreground text-sm leading-relaxed">
                 {review.comment}
               </p>
 
               {review.replyComment && (
-                <div className="mt-4 bg-blue-50/50 rounded-xl p-4 border border-b dark:border-gray-700lue-100">
+                <div className="mt-4 bg-primary/5 rounded-xl p-4 border border-primary/10">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">
+                    <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold">
                       S
                     </div>
-                    <span className="font-bold text-sm text-gray-900 dark:text-white">
+                    <span className="font-bold text-sm text-foreground">
                       {t("roomDetail.staylioReply")}
                     </span>
-                    <span className="text-xs text-gray-400 dark:text-gray-500 ml-auto">
+                    <span className="text-xs text-muted-foreground ml-auto">
                       {new Date(review.replyAt).toLocaleDateString("vi-VN")}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-200">{review.replyComment}</p>
+                  <p className="text-sm text-foreground">{review.replyComment}</p>
                 </div>
               )}
             </div>
           ))}
           {totalItems > 2 && (
-            <Link
-              to={`/hotel/${hotelId}/branch/${branchId}/room/${roomId}/reviews`}
-              className="w-full block text-center py-3 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-50 dark:bg-gray-700 transition-colors"
+            <Button
+              variant="outline"
+              asChild
+              className="w-full py-6 rounded-xl text-foreground font-semibold"
             >
-              {t("roomDetail.viewAllReviews", { count: totalItems })}
-            </Link>
+              <Link to={`/hotel/${hotelId}/branch/${branchId}/room/${roomId}/reviews`}>
+                {t("roomDetail.viewAllReviews", { count: totalItems })}
+              </Link>
+            </Button>
           )}
         </div>
       )}

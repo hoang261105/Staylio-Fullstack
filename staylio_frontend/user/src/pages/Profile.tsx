@@ -15,6 +15,7 @@ import Header from "../layout/Header";
 import { formatDate } from "../../../common/utils/formatDate";
 import { useProfile } from "../../../common/hooks/useProfile";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../../common/components/ui/button";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -22,20 +23,20 @@ export default function Profile() {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-700">
+    <div className="min-h-screen bg-background">
       <Header />
 
       <div className="max-w-6xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold mb-8 text-gray-800 dark:text-gray-100">
+        <h1 className="text-3xl font-bold mb-8 text-foreground">
           {t('profile.title')}
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="space-y-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-2">
+            <div className="bg-card rounded-2xl border border-border shadow-sm p-2">
               <button
                 onClick={() => navigate("/profile")}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50 text-blue-600 font-medium shadow-sm"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-medium shadow-sm"
               >
                 <Settings size={20} />
                 {t('profile.personalInfo')}
@@ -43,47 +44,47 @@ export default function Profile() {
 
               <button
                 onClick={() => navigate("/history-bookings")}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-100 dark:bg-gray-700/70 transition group"
+                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-accent transition group"
               >
-                <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 dark:text-gray-500 group-hover:text-gray-800 dark:text-gray-100">
+                <div className="flex items-center gap-3 text-muted-foreground group-hover:text-foreground">
                   <Calendar size={20} />
                   <span>{t('profile.myTrips')}</span>
                 </div>
-                <ChevronRight size={16} className="text-gray-400 dark:text-gray-500" />
+                <ChevronRight size={16} className="text-muted-foreground" />
               </button>
 
               <button
                 onClick={() => navigate("/favorites")}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-100 dark:bg-gray-700/70 transition group"
+                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-accent transition group"
               >
-                <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 dark:text-gray-500 group-hover:text-gray-800 dark:text-gray-100">
+                <div className="flex items-center gap-3 text-muted-foreground group-hover:text-foreground">
                   <Heart size={20} />
                   <span>{t('profile.savedHotels')}</span>
                 </div>
-                <ChevronRight size={16} className="text-gray-400 dark:text-gray-500" />
+                <ChevronRight size={16} className="text-muted-foreground" />
               </button>
 
               <button
                 onClick={() => navigate("/change-password")}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-100 dark:bg-gray-700/70 transition group"
+                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-accent transition group"
               >
-                <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 dark:text-gray-500 group-hover:text-gray-800 dark:text-gray-100">
+                <div className="flex items-center gap-3 text-muted-foreground group-hover:text-foreground">
                   <Lock size={20} />
                   <span>{t('profile.changePassword')}</span>
                 </div>
 
-                <ChevronRight size={16} className="text-gray-400 dark:text-gray-500" />
+                <ChevronRight size={16} className="text-muted-foreground" />
               </button>
             </div>
 
-            <button className="w-full flex items-center gap-3 px-6 py-4 bg-red-50/60 text-red-500 rounded-2xl font-medium hover:bg-red-100 transition">
+            <button className="w-full flex items-center gap-3 px-6 py-4 bg-destructive/10 text-destructive rounded-2xl font-medium hover:bg-destructive/20 transition">
               <LogOut size={20} />
               {t('profile.logout')}
             </button>
           </div>
 
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-md p-8">
+            <div className="bg-card rounded-2xl border border-border shadow-md p-8">
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
                   <img
@@ -92,22 +93,23 @@ export default function Profile() {
                   />
 
                   <div>
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                    <h2 className="text-xl font-semibold text-card-foreground">
                       {user?.fullName || "Nguyễn Văn A"}
                     </h2>
-                    <p className="text-sm text-gray-400 dark:text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       {t('profile.memberSince')} 01/2026
                     </p>
                   </div>
                 </div>
 
-                <button
+                <Button
+                  variant="outline"
                   onClick={() => navigate("/profile/edit")}
-                  className="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 dark:bg-gray-700 transition"
+                  className="flex items-center gap-2"
                 >
                   <Edit size={16} />
                   {t('profile.edit')}
-                </button>
+                </Button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -139,31 +141,31 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-md p-8">
+            <div className="bg-card rounded-2xl border border-border shadow-md p-8">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                <h3 className="text-lg font-semibold text-card-foreground">
                   {t('profile.payment')}
                 </h3>
-                <button className="text-sm text-blue-600 font-medium hover:underline">
+                <button className="text-sm text-primary font-medium hover:underline">
                   {t('profile.addNew')}
                 </button>
               </div>
 
-              <div className="p-4 rounded-xl border border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 flex items-center justify-between">
+              <div className="p-4 rounded-xl border border-border bg-muted flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">
+                  <div className="w-12 h-8 bg-primary rounded flex items-center justify-center text-primary-foreground text-xs font-bold">
                     VISA
                   </div>
 
                   <div>
-                    <p className="font-medium text-gray-800 dark:text-gray-100">
+                    <p className="font-medium text-card-foreground">
                       •••• •••• •••• 4242
                     </p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500">{t('profile.expires')} 12/28</p>
+                    <p className="text-xs text-muted-foreground">{t('profile.expires')} 12/28</p>
                   </div>
                 </div>
 
-                <span className="text-xs font-semibold text-blue-600 bg-white dark:bg-gray-800 px-2 py-1 rounded border border-gray-200 dark:border-gray-600 shadow-sm">
+                <span className="text-xs font-semibold text-primary bg-background px-2 py-1 rounded border border-border shadow-sm">
                   {t('profile.default')}
                 </span>
               </div>
@@ -186,10 +188,10 @@ function InfoItem({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="text-blue-500 mt-1">{icon}</div>
+      <div className="text-primary mt-1">{icon}</div>
       <div>
-        <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide">{label}</p>
-        <p className="font-medium text-gray-800 dark:text-gray-100">{value}</p>
+        <p className="text-xs text-muted-foreground uppercase tracking-wide">{label}</p>
+        <p className="font-medium text-card-foreground">{value}</p>
       </div>
     </div>
   );

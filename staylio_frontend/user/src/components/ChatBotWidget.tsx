@@ -15,6 +15,7 @@ import { MessageSenderType } from "../../../common/enums/MessageSenderType";
 import type { ChatMessageResponse } from "../../../common/interfaces/response/ChatMessageResponse";
 import { useChatContext } from "../../../common/contexts/ChatContext";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../../common/components/ui/button";
 
 export default function ChatBotWidget() {
   const { t } = useTranslation();
@@ -110,7 +111,7 @@ export default function ChatBotWidget() {
       </button>
 
       <div
-        className={`fixed bottom-6 right-6 w-full max-w-90 sm:max-w-100 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 z-100 overflow-hidden flex flex-col transition-all duration-500 origin-bottom-right ${isOpen
+        className={`fixed bottom-6 right-6 w-full max-w-90 sm:max-w-100 bg-card rounded-3xl border border-border z-100 overflow-hidden flex flex-col transition-all duration-500 origin-bottom-right ${isOpen
           ? "scale-100 opacity-100 pointer-events-auto translate-y-0"
           : "scale-50 opacity-0 pointer-events-none translate-y-10"
           }`}
@@ -138,9 +139,9 @@ export default function ChatBotWidget() {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 bg-slate-50 dark:bg-gray-900 space-y-4 scrollbar-thin scrollbar-thumb-gray-300">
+        <div className="flex-1 overflow-y-auto p-4 bg-background space-y-4 scrollbar-thin scrollbar-thumb-gray-300">
           {messages.length === 0 && currentSessionId !== 0 && (
-            <div className="text-center text-gray-400 dark:text-gray-500 text-sm mt-4">
+            <div className="text-center text-muted-foreground text-sm mt-4">
               {t('components.chatBotWidget.startChatWith')} {chatType === "AI" ? t('components.chatBotWidget.ai') : t('components.chatBotWidget.manager')}...
             </div>
           )}
@@ -160,8 +161,8 @@ export default function ChatBotWidget() {
 
                 <div
                   className={`max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed ${isCustomer
-                    ? "bg-blue-600 text-white rounded-br-none"
-                    : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-none border border-gray-100 dark:border-gray-700"
+                    ? "bg-primary text-primary-foreground rounded-br-none"
+                    : "bg-card text-card-foreground rounded-bl-none border border-border"
                     }`}
                 >
                   {isCustomer ? (
@@ -176,8 +177,8 @@ export default function ChatBotWidget() {
                 </div>
 
                 {isCustomer && (
-                  <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center shrink-0">
-                    <User className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+                    <User className="w-4 h-4 text-muted-foreground" />
                   </div>
                 )}
               </div>
@@ -185,7 +186,7 @@ export default function ChatBotWidget() {
           })}
           {isSending && (
             <div className="flex items-end gap-2 justify-end">
-              <div className="max-w-[75%] p-3 rounded-2xl text-sm leading-relaxed bg-blue-600 text-white rounded-br-none opacity-50">
+              <div className="max-w-[75%] p-3 rounded-2xl text-sm leading-relaxed bg-primary text-primary-foreground rounded-br-none opacity-50">
                 {inputValue || t('components.chatBotWidget.sending')}
               </div>
             </div>
@@ -193,10 +194,10 @@ export default function ChatBotWidget() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+        <div className="p-4 bg-card border-t border-border">
           <form
             onSubmit={handleSend}
-            className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 p-1.5 rounded-2xl border border-gray-200 dark:border-gray-600 focus-within:border-b dark:border-gray-700lue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all"
+            className="flex items-center gap-2 bg-background p-1.5 rounded-2xl border border-input focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all"
           >
             <input
               type="text"
@@ -204,15 +205,16 @@ export default function ChatBotWidget() {
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={t('components.chatBotWidget.typeMessage')}
               disabled={isSending || currentSessionId === 0}
-              className="flex-1 bg-transparent px-3 py-2 text-sm focus:outline-none text-gray-800 dark:text-gray-100 disabled:opacity-50"
+              className="flex-1 bg-transparent px-3 py-2 text-sm focus:outline-none text-foreground disabled:opacity-50"
             />
-            <button
+            <Button
               type="submit"
+              size="icon"
               disabled={!inputValue.trim() || isSending || currentSessionId === 0}
-              className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:hover:bg-blue-600 shrink-0"
+              className="w-10 h-10 rounded-xl shrink-0"
             >
               <Send className="w-4 h-4 -translate-x-px translate-y-px" />
-            </button>
+            </Button>
           </form>
         </div>
       </div>

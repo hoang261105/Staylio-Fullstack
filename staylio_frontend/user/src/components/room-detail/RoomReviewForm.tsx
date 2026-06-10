@@ -10,6 +10,7 @@ import { BookingStatus } from "../../../../common/enums/BookingStatus";
 import { useProfile } from "../../../../common/hooks/useProfile";
 import type { BookingHistoryResponse } from "../../../../common/interfaces/response/BookingHistoryResponse";
 import type { ReviewResponse } from "../../../../common/interfaces/response/ReviewResponse";
+import { Button } from "../../../../common/components/ui/button";
 
 interface RoomReviewFormProps {
   roomId: number;
@@ -79,8 +80,8 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600 mb-8">
-      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border mb-8">
+      <h3 className="text-xl font-bold text-foreground mb-4">
         {t("roomDetail.writeReviewTitle")}
       </h3>
       <form onSubmit={handleSubmit}>
@@ -90,7 +91,7 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
           </div>
         )}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             {t("roomDetail.ratingLabel")} <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-2">
@@ -121,13 +122,13 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
           required
         />
 
-        <button
+        <Button
           type="submit"
           disabled={createReviewMutation.isPending}
-          className="mt-2 px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          className="mt-2 px-6 py-6 rounded-lg font-semibold transition-colors"
         >
           {createReviewMutation.isPending ? t("roomDetail.submittingReview") : t("roomDetail.submitReview")}
-        </button>
+        </Button>
       </form>
     </div>
   );

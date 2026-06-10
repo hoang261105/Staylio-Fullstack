@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { InputField } from "../../../common/components/InputField";
 import type { UserRegisterRequest } from "../../../common/interfaces/request/UserRegisterRequest";
 import toast from "react-hot-toast";
+import { Button } from "../../../common/components/ui/button";
 
 interface RegisterFormErrors {
   userName?: string;
@@ -51,12 +52,12 @@ export const RegisterForm = ({
       </div>
 
       <div className="mb-10 text-center lg:text-left">
-        <h2 className="text-3xl font-bold mb-3 text-gray-900 dark:text-white">{t('registerScreen.form.createAccount')}</h2>
-        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
+        <h2 className="text-3xl font-bold mb-3 text-foreground">{t('registerScreen.form.createAccount')}</h2>
+        <p className="text-muted-foreground">
           {t('registerScreen.form.alreadyHaveAccount')}{" "}
           <a
             onClick={() => navigate("/login")}
-            className="text-blue-600 hover:text-blue-700 hover:underline cursor-pointer font-semibold transition-colors"
+            className="text-primary hover:text-primary/80 hover:underline cursor-pointer font-semibold transition-colors"
           >
             {t('registerScreen.form.loginNow')}
           </a>
@@ -79,11 +80,11 @@ export const RegisterForm = ({
       </div>
 
       <div className="flex items-center mb-8">
-        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
-        <span className="px-4 text-sm text-gray-400 dark:text-gray-500 font-medium whitespace-nowrap">
+        <div className="flex-1 h-px bg-border"></div>
+        <span className="px-4 text-sm text-muted-foreground font-medium whitespace-nowrap">
           {t('registerScreen.form.orRegisterWithEmail')}
         </span>
-        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
+        <div className="flex-1 h-px bg-border"></div>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-5">
@@ -116,17 +117,17 @@ export const RegisterForm = ({
         {/* Giới tính & Ngày sinh */}
         <div className="grid grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1.5">
-              {t('registerScreen.form.gender')} <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-foreground mb-1.5">
+              {t('registerScreen.form.gender')} <span className="text-destructive">*</span>
             </label>
             <select
               value={formData.gender}
               onChange={(e) =>
                 setFormData({ ...formData, gender: e.target.value })
               }
-              className={`w-full px-4 py-3 border bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-b dark:border-gray-700lue-500 transition-colors ${
-                errors.gender ? "border-red-500" : "border-gray-200 dark:border-gray-600"
-              } rounded-xl shadow-sm text-gray-900 dark:text-white`}
+              className={`w-full px-4 py-3 border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${
+                errors.gender ? "border-destructive" : "border-input"
+              } rounded-xl shadow-sm text-foreground`}
             >
               <option value="MALE">{t('registerScreen.form.male')}</option>
               <option value="FEMALE">{t('registerScreen.form.female')}</option>
@@ -185,12 +186,12 @@ export const RegisterForm = ({
                     className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
                       level <= passwordStrength.strength
                         ? passwordStrength.color
-                        : "bg-gray-200 dark:bg-gray-600"
+                        : "bg-muted"
                     }`}
                   />
                 ))}
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium">
+              <p className="text-xs text-muted-foreground font-medium">
                 {t('registerScreen.form.passwordStrengthLabel')}: <span className={passwordStrength.color.replace('bg-', 'text-')}>{passwordStrength.label}</span>
               </p>
             </div>
@@ -198,13 +199,13 @@ export const RegisterForm = ({
         </div>
 
         {/* Nút Submit */}
-        <button
+        <Button
           type="submit"
           disabled={isLoading}
-          className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed font-semibold text-lg shadow-lg shadow-blue-500/30 active:scale-[0.98] mt-4"
+          className="w-full py-6 mt-4 text-lg font-semibold rounded-xl"
         >
           {isLoading ? t('registerScreen.form.creatingAccount') : t('registerScreen.form.createAccountButton')}
-        </button>
+        </Button>
       </form>
     </>
   );

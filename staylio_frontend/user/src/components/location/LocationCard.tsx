@@ -36,14 +36,14 @@ export const LocationCard: React.FC<LocationCardProps> = ({ location, onClick })
       <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
       <div className="absolute bottom-0 left-0   right-0 p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
         <h3 className="text-2xl font-bold mb-2 flex items-center gap-2">
-          <MapPin className="w-5 h-5 text-blue-400" />
+          <MapPin className="w-5 h-5 text-white" />
           {location.provinceName}
         </h3>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="bg-white dark:bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-900 dark:text-white">
+          <span className="bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-foreground">
             {location.totalHotels} {t('homeScreen.featuredLocations.brandCount')}
           </span>
-          <span className="bg-white dark:bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-900 dark:text-white">
+          <span className="bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-foreground">
             {location.totalBranches} {t('homeScreen.featuredLocations.hotelCount')}
           </span>
         </div>

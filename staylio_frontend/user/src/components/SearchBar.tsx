@@ -2,6 +2,7 @@ import { MapPin, Calendar, Users, Search } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../../common/components/ui/button";
 
 interface SearchBarProps {
   compact?: boolean;
@@ -26,29 +27,29 @@ export function SearchBar({ compact = false }: SearchBarProps) {
   };
 
   return (
-    <div className={`w-full max-w-7xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 ${compact ? 'p-2' : 'p-4 md:p-6'}`}>
+    <div className={`w-full max-w-7xl mx-auto bg-card rounded-2xl shadow-2xl border border-border ${compact ? 'p-2' : 'p-4 md:p-6'}`}>
       <div className={`grid gap-3 ${compact ? 'grid-cols-[1fr_1fr_1fr_1fr_auto]' : 'grid-cols-1 lg:grid-cols-[1fr_1fr_1fr_1fr_auto]'}`}>
         
         {/* Mục: Địa điểm */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:bg-gray-700 rounded-xl transition-all cursor-text group border border-transparent focus-within:border-blue-400 focus-within:bg-white dark:bg-gray-800">
-          <MapPin className="w-5 h-5 text-blue-600 shrink-0 group-hover:scale-110 transition-transform" />
+        <div className="flex items-center gap-3 px-4 py-3 bg-muted hover:bg-accent rounded-xl transition-all cursor-text group border border-transparent focus-within:border-primary focus-within:bg-background">
+          <MapPin className="w-5 h-5 text-primary shrink-0 group-hover:scale-110 transition-transform" />
           <div className="flex flex-col w-full overflow-hidden">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">{t('components.searchBar.location')}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{t('components.searchBar.location')}</span>
             <input
               type="text"
               placeholder={t('components.searchBar.whereTo')}
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
-              className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 dark:text-gray-200 placeholder:text-gray-400 dark:text-gray-500"
+              className="w-full bg-transparent outline-none text-[15px] font-medium text-foreground placeholder:text-muted-foreground"
             />
           </div>
         </div>
 
         {/* Mục: Nhận phòng */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:bg-gray-700 rounded-xl transition-all cursor-pointer group border border-transparent focus-within:border-blue-400 focus-within:bg-white dark:bg-gray-800">
-          <Calendar className="w-5 h-5 text-blue-600 shrink-0 group-hover:scale-110 transition-transform" />
+        <div className="flex items-center gap-3 px-4 py-3 bg-muted hover:bg-accent rounded-xl transition-all cursor-pointer group border border-transparent focus-within:border-primary focus-within:bg-background">
+          <Calendar className="w-5 h-5 text-primary shrink-0 group-hover:scale-110 transition-transform" />
           <div className="flex flex-col w-full overflow-hidden">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">{t('components.searchBar.checkIn')}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{t('components.searchBar.checkIn')}</span>
             <input
               type="text"
               onFocus={(e) => (e.target.type = "date")}
@@ -56,16 +57,16 @@ export function SearchBar({ compact = false }: SearchBarProps) {
               placeholder={t('components.searchBar.addDate')}
               value={checkInDate}
               onChange={(e) => setCheckInDate(e.target.value)}
-              className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 dark:text-gray-200 cursor-pointer"
+              className="w-full bg-transparent outline-none text-[15px] font-medium text-foreground cursor-pointer"
             />
           </div>
         </div>
 
         {/* Mục: Trả phòng */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:bg-gray-700 rounded-xl transition-all cursor-pointer group border border-transparent focus-within:border-blue-400 focus-within:bg-white dark:bg-gray-800">
-          <Calendar className="w-5 h-5 text-blue-600 shrink-0 group-hover:scale-110 transition-transform" />
+        <div className="flex items-center gap-3 px-4 py-3 bg-muted hover:bg-accent rounded-xl transition-all cursor-pointer group border border-transparent focus-within:border-primary focus-within:bg-background">
+          <Calendar className="w-5 h-5 text-primary shrink-0 group-hover:scale-110 transition-transform" />
           <div className="flex flex-col w-full overflow-hidden">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">{t('components.searchBar.checkOut')}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{t('components.searchBar.checkOut')}</span>
             <input
               type="text"
               onFocus={(e) => (e.target.type = "date")}
@@ -73,36 +74,36 @@ export function SearchBar({ compact = false }: SearchBarProps) {
               placeholder={t('components.searchBar.addDate')}
               value={checkOutDate}
               onChange={(e) => setCheckOutDate(e.target.value)}
-              className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 dark:text-gray-200 cursor-pointer"
+              className="w-full bg-transparent outline-none text-[15px] font-medium text-foreground cursor-pointer"
             />
           </div>
         </div>
 
         {/* Mục: Số khách */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:bg-gray-700 rounded-xl transition-all cursor-pointer group border border-transparent focus-within:border-blue-400 focus-within:bg-white dark:bg-gray-800">
-          <Users className="w-5 h-5 text-blue-600 shrink-0 group-hover:scale-110 transition-transform" />
+        <div className="flex items-center gap-3 px-4 py-3 bg-muted hover:bg-accent rounded-xl transition-all cursor-pointer group border border-transparent focus-within:border-primary focus-within:bg-background">
+          <Users className="w-5 h-5 text-primary shrink-0 group-hover:scale-110 transition-transform" />
           <div className="flex flex-col w-full overflow-hidden">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">{t('components.searchBar.guests')}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{t('components.searchBar.guests')}</span>
             <input
               type="number"
               min="1"
               placeholder={t('components.searchBar.twoPeople')}
               value={adults}
               onChange={(e) => setAdults(e.target.value ? Number(e.target.value) : "")}
-              className="w-full bg-transparent outline-none text-[15px] font-medium text-gray-700 dark:text-gray-200 cursor-pointer"
+              className="w-full bg-transparent outline-none text-[15px] font-medium text-foreground cursor-pointer"
             />
           </div>
         </div>
         
         {/* Nút tìm kiếm */}
-        <button
+        <Button
           onClick={handleSearch}
-          className={`bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center shrink-0 
-            ${compact ? 'w-12 h-12 self-center' : 'w-full py-4 lg:w-auto lg:px-8 h-full'}`}
+          className={`rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center shrink-0 
+            ${compact ? 'w-12 h-12 self-center' : 'w-full py-6 lg:w-auto lg:px-8 h-full'}`}
         >
           <Search className="w-5 h-5" />
           {!compact && <span className="ml-2 font-semibold hidden lg:inline">{t('components.searchBar.searchBtn')}</span>}
-        </button>
+        </Button>
 
       </div>
     </div>

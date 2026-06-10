@@ -22,6 +22,7 @@ import RoomReviewForm from "../components/room-detail/RoomReviewForm";
 
 import type { RoomResponse } from "../../../common/interfaces/response/RoomResponse";
 import type { RoomImageResponse } from "../../../common/interfaces/response/RoomImageResponse";
+import { Button } from "../../../common/components/ui/button";
 
 export default function RoomDetail() {
   const { hotelId, branchId, roomId } = useParams();
@@ -51,10 +52,10 @@ export default function RoomDetail() {
 
   if (isLoadingRoom) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
+      <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
         <Header />
         <div className="flex-1 flex items-center justify-center pt-28">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-b dark:border-gray-700lue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
         <Footer />
       </div>
@@ -63,17 +64,17 @@ export default function RoomDetail() {
 
   if (!room) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
+      <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
         <Header />
         <div className="flex-1 flex flex-col items-center justify-center pt-28 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t("roomDetail.notFoundTitle")}</h2>
-          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">{t("roomDetail.notFoundDesc")}</p>
-          <button
+          <h2 className="text-2xl font-bold text-foreground mb-2">{t("roomDetail.notFoundTitle")}</h2>
+          <p className="text-muted-foreground mb-4">{t("roomDetail.notFoundDesc")}</p>
+          <Button
             onClick={() => navigate(-1)}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
+            className="px-6 py-6 font-semibold rounded-lg"
           >
             {t("roomDetail.back")}
-          </button>
+          </Button>
         </div>
         <Footer />
       </div>
@@ -100,29 +101,29 @@ export default function RoomDetail() {
     : [primaryImage];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
+    <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
       <Header />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 w-full">
-        <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-6">
-          <Link to="/" className="hover:text-blue-600 transition-colors">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+          <Link to="/" className="hover:text-primary transition-colors">
             {t("roomDetail.home")}
           </Link>
           <ChevronRight className="w-4 h-4" />
           <Link
             to={`/hotel/${hotelId}/branch/${branchId}`}
-            className="hover:text-blue-600 transition-colors"
+            className="hover:text-primary transition-colors"
           >
             {branch?.branchName || t("roomDetail.branch")}
           </Link>
           <ChevronRight className="w-4 h-4" />
-          <span className="text-gray-900 dark:text-white font-medium">{room.roomName}</span>
+          <span className="text-foreground font-medium">{room.roomName}</span>
         </nav>
 
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
           <div>
             <div className="flex flex-wrap items-center gap-3 mb-2">
-              <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-md uppercase tracking-wide shadow-sm">
+              <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-md uppercase tracking-wide shadow-sm">
                 {room.roomType}
               </span>
               <div className="flex items-center gap-1 bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-md border border-yellow-100">
@@ -135,13 +136,13 @@ export default function RoomDetail() {
                 </span>
               </div>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3 leading-tight">
               {room.roomName}
             </h1>
-            <div className="flex items-start gap-2 text-gray-600 dark:text-gray-300">
-              <MapPin className="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 text-muted-foreground">
+              <MapPin className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
               <span className="text-sm">
-                <strong className="text-gray-800 dark:text-gray-100">
+                <strong className="text-foreground">
                   {branch?.hotelName} - {branch?.hotelBranchName}
                 </strong>{" "}
                 <br />
@@ -165,7 +166,7 @@ export default function RoomDetail() {
             {branch?.latitude && branch?.longitude && (
               <>
                 <section>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t("roomDetail.branchLocation")}</h2>
+                  <h2 className="text-2xl font-bold text-foreground mb-6">{t("roomDetail.branchLocation")}</h2>
                   <BranchMap
                     latitude={branch.latitude}
                     longitude={branch.longitude}
@@ -175,7 +176,7 @@ export default function RoomDetail() {
                   />
                   <NearbyPlacesList places={nearbyPlaces || []} isLoading={isLoadingNearby} />
                 </section>
-                <hr className="border-gray-200 dark:border-gray-600" />
+                <hr className="border-border" />
               </>
             )}
 
@@ -196,8 +197,8 @@ export default function RoomDetail() {
         </div>
 
         {similarRooms.length > 0 && (
-          <div className="mt-16 pt-12 border-t border-gray-200 dark:border-gray-600">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          <div className="mt-16 pt-12 border-t border-border">
+            <h2 className="text-2xl font-bold text-foreground mb-6">
               {t("roomDetail.otherRooms")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

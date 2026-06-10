@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "./ui/button";
 
 interface Props {
   page: number; 
@@ -24,59 +25,63 @@ export default function Pagination({ page, totalPages, onChange }: Props) {
 
   return (
     <div className="flex items-center justify-center gap-2 mt-6">
-      <button
+      <Button
+        variant="outline"
+        size="icon"
         onClick={() => onChange(page - 1)}
         disabled={page === 0}
-        className="px-3 py-1 border border-gray-300 rounded-lg disabled:opacity-50"
       >
         ←
-      </button>
+      </Button>
 
       {page > 2 && (
         <>
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => onChange(0)}
-            className="px-3 py-1 border rounded-lg"
+            className="w-10 h-10 p-0 rounded-lg"
           >
             1
-          </button>
-          <span>...</span>
+          </Button>
+          <span className="text-muted-foreground px-2">...</span>
         </>
       )}
 
       {getPages().map((p) => (
-        <button
+        <Button
           key={p}
+          variant={p === page ? "default" : "outline"}
+          size="sm"
           onClick={() => onChange(p)}
-          className={`px-3 py-1 border border-gray-300 rounded-lg ${
-            p === page
-              ? "bg-[#0066FF] text-white border-[#0066FF]"
-              : "hover:bg-gray-100"
-          }`}
+          className="w-10 h-10 p-0 rounded-lg"
         >
           {p + 1}
-        </button>
+        </Button>
       ))}
 
       {page < totalPages - 3 && (
         <>
-          <span>...</span>
-          <button
+          <span className="text-muted-foreground px-2">...</span>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => onChange(totalPages - 1)}
-            className="px-3 py-1 border border-gray-300 rounded-lg"
+            className="w-10 h-10 p-0 rounded-lg"
           >
             {totalPages}
-          </button>
+          </Button>
         </>
       )}
 
-      <button
+      <Button
+        variant="outline"
+        size="icon"
         onClick={() => onChange(page + 1)}
         disabled={page + 1 >= totalPages}
-        className="px-3 py-1 border border-gray-300 rounded-lg disabled:opacity-50"
       >
         →
-      </button>
+      </Button>
     </div>
   );
 }

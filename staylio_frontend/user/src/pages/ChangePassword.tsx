@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../../../common/components/ui/button";
 
 import Header from "../layout/Header";
 
@@ -18,14 +19,13 @@ import { useChangePasswordMutation } from "../../../common/hooks/useChangePasswo
 
 const inputClassName = `
 w-full pl-11 pr-12 py-3.5
-border border-gray-200 dark:border-gray-600
+border border-input
 rounded-2xl
-bg-white dark:bg-gray-800 shadow-sm
+bg-background text-foreground shadow-sm
 focus:outline-none
-focus:ring-4
-focus:ring-blue-100
-focus:border-[#0066FF]
-focus:shadow-md
+focus:ring-2
+focus:ring-ring
+focus:border-primary
 transition-all duration-200
 `;
 
@@ -112,14 +112,14 @@ export default function ChangePassword() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-background">
       <Header />
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="mb-10">
           <button
             onClick={handleCancel}
-            className="flex items-center gap-2 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-[#0066FF] mb-4 transition-colors group"
+            className="flex items-center gap-2 text-muted-foreground hover:text-primary mb-4 transition-colors group"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
 
@@ -128,28 +128,28 @@ export default function ChangePassword() {
             </span>
           </button>
 
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-foreground">
             Bảo mật tài khoản
           </h1>
 
-          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-2">
+          <p className="text-muted-foreground mt-2">
             Thay đổi mật khẩu để tăng cường bảo mật cho tài khoản của bạn.
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm p-8 md:p-10">
+          <div className="bg-card rounded-3xl border border-border shadow-sm p-8 md:p-10">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center">
-                <ShieldCheck className="w-6 h-6 text-[#0066FF]" />
+              <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6 text-primary" />
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                <h2 className="text-xl font-semibold text-card-foreground">
                   Đổi mật khẩu
                 </h2>
 
-                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                   Mật khẩu mạnh giúp tài khoản an toàn hơn.
                 </p>
               </div>
@@ -207,48 +207,26 @@ export default function ChangePassword() {
             )}
 
             <div className="flex flex-col sm:flex-row gap-4 mt-10">
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={handleCancel}
-                className="
-                  flex-1 py-3.5
-                  border border-gray-200 dark:border-gray-600
-                  rounded-2xl
-                  font-semibold
-                  hover:bg-gray-50 dark:bg-gray-700
-                  transition-all duration-200
-                  flex items-center justify-center gap-2
-                "
+                className="flex-1 py-6 rounded-2xl font-semibold flex items-center justify-center gap-2"
               >
                 <X size={18} />
                 Hủy bỏ
-              </button>
+              </Button>
 
-              <button
+              <Button
                 type="submit"
                 disabled={isPending}
-                className="
-                  flex-1 py-3.5
-                  bg-[#0066FF]
-                  text-white
-                  rounded-2xl
-                  font-semibold
-                  hover:bg-[#0052CC]
-                  hover:scale-[1.01]
-                  active:scale-[0.99]
-                  shadow-lg shadow-blue-100
-                  transition-all duration-200
-                  flex items-center justify-center gap-2
-                  disabled:opacity-70
-                  disabled:cursor-not-allowed
-                "
+                className="flex-1 py-6 rounded-2xl font-semibold flex items-center justify-center gap-2"
               >
                 <Save size={18} />
-
                 {isPending
                   ? "Đang cập nhật..."
                   : "Lưu mật khẩu"}
-              </button>
+              </Button>
             </div>
           </div>
         </form>
@@ -274,13 +252,13 @@ function PasswordInput({
 }: PasswordInputProps) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+      <label className="block text-sm font-semibold text-foreground mb-2">
         {label}
       </label>
 
       <div className="relative">
         <Lock
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
           size={18}
         />
 
@@ -296,7 +274,7 @@ function PasswordInput({
         <button
           type="button"
           onClick={onToggle}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300 transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
         >
           {visible ? (
             <EyeOff size={20} />

@@ -31,16 +31,16 @@ export default function LocationBranches() {
   const provinceName = branches.length > 0 ? branches[0].provinceName : t('locationBranches.thisDestination');
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-700/50 flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header />
 
       <main className="flex-1 py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-              {t('locationBranches.hotelsIn')} <span className="text-[#0066FF]">{provinceName}</span>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+              {t('locationBranches.hotelsIn')} <span className="text-primary">{provinceName}</span>
             </h1>
-            <p className="mt-2 text-gray-500 dark:text-gray-400 dark:text-gray-500">
+            <p className="mt-2 text-muted-foreground">
               {t('locationBranches.foundBranches', { count: totalElements })}
             </p>
           </div>

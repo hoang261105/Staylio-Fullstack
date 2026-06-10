@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -21,6 +20,7 @@ import { useApiErrors } from "../../../common/hooks/useApiErrors";
 import { uploadToCloudinary } from "../../../common/utils/cloudinary";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../../common/components/ui/button";
 
 export function EditProfile() {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ export function EditProfile() {
     clearFieldError,
   } = useApiErrors();
 
-  const { data: user } = useProfile();    
+  const { data: user } = useProfile();
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState<ProfileRequest>({
@@ -95,7 +95,7 @@ export function EditProfile() {
   const handleCancel = () => navigate("/profile/me");
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-background text-foreground">
       <Header />
 
       <div className="max-w-4xl mx-auto px-4 py-10">
@@ -103,14 +103,14 @@ export function EditProfile() {
         <div className="mb-8">
           <button
             onClick={handleCancel}
-            className="flex items-center gap-2 text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-black mb-4"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4"
           >
             <ArrowLeft size={18} />
             {t('editProfile.backToProfile')}
           </button>
 
           <h1 className="text-3xl font-bold">{t('editProfile.title')}</h1>
-          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+          <p className="text-muted-foreground mt-1">
             {t('editProfile.subtitle')}
           </p>
         </div>
@@ -129,7 +129,7 @@ export function EditProfile() {
                     <Loader2 className="w-6 h-6 text-white animate-spin" />
                   </div>
                 )}
-                <label className="absolute bottom-0 right-0 w-8 h-8 bg-[#0066FF] text-white rounded-full flex items-center justify-center shadow hover:bg-[#0052CC] cursor-pointer">
+                <label className="absolute bottom-0 right-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow hover:bg-primary/90 cursor-pointer">
                   <Camera size={14} />
                   <input
                     type="file"
@@ -141,13 +141,13 @@ export function EditProfile() {
               </div>
 
               <div>
-                <button
+                <Button
+                  variant="outline"
                   type="button"
-                  className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:bg-gray-700"
                 >
                   {t('editProfile.uploadImage')}
-                </button>
-                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+                </Button>
+                <p className="text-sm text-muted-foreground mt-1">
                   {t('editProfile.imageFormat')}
                 </p>
               </div>
@@ -205,23 +205,24 @@ export function EditProfile() {
             </div>
           </Section>
 
-          <div className="flex gap-4 sticky bottom-4 bg-white dark:bg-gray-800/80 backdrop-blur p-4 rounded-xl shadow border border-gray-200 dark:border-gray-600">
-            <button
+          <div className="flex gap-4 sticky bottom-4 bg-background/80 backdrop-blur p-4 rounded-xl shadow border border-border">
+            <Button
               type="button"
+              variant="outline"
               onClick={handleCancel}
-              className="flex-1 py-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:bg-gray-700 flex items-center justify-center gap-2"
+              className="flex-1 py-6 flex items-center justify-center gap-2 rounded-lg"
             >
               <X size={18} /> {t('editProfile.cancel')}
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="submit"
               disabled={isPending || isUploading}
-              className="flex-1 py-3 bg-[#0066FF] text-white rounded-lg hover:bg-[#0052CC] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex-1 py-6 flex items-center justify-center gap-2 rounded-lg"
             >
               {isPending || isUploading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
               {isPending ? t('editProfile.saving') : isUploading ? t('editProfile.uploading') : t('editProfile.save')}
-            </button>
+            </Button>
           </div>
         </form>
       </div>
@@ -231,8 +232,8 @@ export function EditProfile() {
 
 function Section({ title, children }: any) {
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-      <h2 className="text-lg font-semibold mb-5">{title}</h2>
+    <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+      <h2 className="text-lg font-semibold mb-5 text-card-foreground">{title}</h2>
       {children}
     </div>
   );
@@ -253,7 +254,7 @@ function Input({
       <div className="relative mt-2">
         {Icon && (
           <Icon
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             size={18}
           />
         )}
@@ -261,10 +262,10 @@ function Input({
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full px-4 py-3 ${Icon ? "pl-10" : ""} border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0066FF]/30 outline-none ${error ? "border-red-500" : ""}`}
+          className={`w-full px-4 py-3 bg-background text-foreground ${Icon ? "pl-10" : ""} border border-input rounded-lg focus:ring-2 focus:ring-primary/30 outline-none ${error ? "border-destructive" : ""}`}
         />
       </div>
-      {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
+      {error && <p className="text-sm text-destructive mt-1">{error}</p>}
     </div>
   );
 }

@@ -19,23 +19,23 @@ export const LocationsPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="flex flex-col min-h-screen bg-background transition-colors duration-200">
       <Header />
 
       <main className="flex-1 py-12 pt-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="mb-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-center gap-3">
-            <MapPin className="w-10 h-10 text-blue-600 dark:text-blue-400" />
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 flex items-center justify-center gap-3">
+            <MapPin className="w-10 h-10 text-primary" />
             Tất cả địa điểm
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Khám phá danh sách tất cả các tỉnh thành có chi nhánh khách sạn, sắp xếp theo số lượng từ cao đến thấp.
           </p>
         </div>
 
         {isLoading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         ) : (
           <>

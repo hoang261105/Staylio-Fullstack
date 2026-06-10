@@ -9,7 +9,7 @@ interface LocationGridProps {
 export const LocationGrid: React.FC<LocationGridProps> = ({ locations }) => {
   if (!locations || locations.length === 0) {
     return (
-      <div className="py-12 text-center text-gray-500 dark:text-gray-400">
+      <div className="py-12 text-center text-muted-foreground">
         Không có địa điểm nào để hiển thị.
       </div>
     );

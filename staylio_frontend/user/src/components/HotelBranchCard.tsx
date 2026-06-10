@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useChatContext } from "../../../common/contexts/ChatContext";
 import type { HotelBranchResponse } from "../../../common/interfaces/response/HotelBranchResponse";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../../common/components/ui/button";
 
 interface HotelBranchCardProps {
   branch: HotelBranchResponse;
@@ -18,7 +19,7 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
   return (
     <div
       onClick={() => navigate(`/hotel/${branch.hotelId}/branch/${branch.id}`)}
-      className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group border border-gray-100 dark:border-gray-700 flex flex-col h-full"
+      className="bg-card rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer group border border-border flex flex-col h-full"
     >
       <div className="relative h-52 w-full overflow-hidden">
         <img
@@ -29,18 +30,18 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
         <div className="absolute top-3 left-3 bg-emerald-500 text-white text-[12px] font-bold px-3 py-1 rounded-full z-10">
           {t('components.hotelBranchCard.featured')}
         </div>
-        <div className="absolute bottom-3 right-3 bg-white dark:bg-gray-800/90 dark:bg-gray-900/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
+        <div className="absolute bottom-3 right-3 bg-background/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
           <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-          <span className="text-xs font-bold text-gray-800 dark:text-gray-100">{branch.averageRating?.toFixed(1) || "0.0"}</span>
+          <span className="text-xs font-bold text-foreground">{branch.averageRating?.toFixed(1) || "0.0"}</span>
         </div>
       </div>
 
       <div className="p-4 flex flex-col grow">
         <div className="mb-2">
-          <h3 className="font-bold text-gray-800 dark:text-gray-100 text-lg line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          <h3 className="font-bold text-card-foreground text-lg line-clamp-1 group-hover:text-primary transition-colors">
             {branch.hotelBranchName}
           </h3>
-          <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+          <div className="flex items-center gap-1 text-muted-foreground mt-1">
             <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="text-xs line-clamp-1">{branch.address}, {branch.wardName}, {branch.provinceName}</span>
           </div>
@@ -51,46 +52,48 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-3.5 h-3.5 ${i < Math.round(branch.averageRating || 0) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200 dark:text-gray-600 dark:text-gray-300'}`}
+                className={`w-3.5 h-3.5 ${i < Math.round(branch.averageRating || 0) ? 'fill-yellow-400 text-yellow-400' : 'text-muted'}`}
               />
             ))}
           </div>
-          <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">
+          <span className="text-xs text-muted-foreground font-medium">
             ({branch.countReview?.toLocaleString() || 0} {t('components.hotelBranchCard.reviews')})
           </span>
         </div>
 
         <div className="mb-4">
-          <span className="text-xs font-semibold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1.5 rounded-lg border border-b dark:border-gray-700lue-100 dark:border-b dark:border-gray-700lue-800/50 line-clamp-1">
+          <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1.5 rounded-lg border border-primary/20 line-clamp-1">
             {t('components.hotelBranchCard.system')}: {branch.hotelName}
           </span>
         </div>
 
-        <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+        <div className="mt-auto pt-4 border-t border-border flex items-center justify-between">
           <div>
-            <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500 mb-1">
+            <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
               <Users className="w-3.5 h-3.5" />
               <span className="text-[11px] font-medium">{t('components.hotelBranchCard.capacity')}: {branch.capacity}</span>
             </div>
-            <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
               <Phone className="w-3.5 h-3.5" />
               <span className="text-[11px] font-medium">{branch.phone}</span>
             </div>
           </div>
 
           <div className="flex gap-2">
-            <button 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={(e) => {
                 e.stopPropagation();
                 openManagerChat(branch.id, branch.hotelBranchName);
               }}
-              className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-900/40 dark:hover:bg-emerald-900/60 dark:text-emerald-300 text-sm font-semibold px-4 py-2 rounded-xl transition-all active:scale-95 border border-emerald-200 dark:border-emerald-800"
+              className="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 border-emerald-500/20 rounded-xl"
             >
               {t('components.hotelBranchCard.contact')}
-            </button>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all active:scale-95">
+            </Button>
+            <Button size="sm" className="rounded-xl">
               {t('components.hotelBranchCard.details')}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

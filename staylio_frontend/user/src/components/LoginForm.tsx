@@ -4,6 +4,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from "react-router-dom";
 import { InputField } from "../../../common/components/InputField";
 import toast from "react-hot-toast";
+import { Button } from "../../../common/components/ui/button";
 
 export default function LoginForm({
   formData,
@@ -23,12 +24,12 @@ export default function LoginForm({
       </div>
 
       <div className="mb-10 text-center lg:text-left">
-        <h2 className="text-3xl font-bold mb-3 text-gray-900 dark:text-white">Đăng nhập</h2>
-        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500">
+        <h2 className="text-3xl font-bold mb-3 text-foreground">Đăng nhập</h2>
+        <p className="text-muted-foreground">
           Chưa có tài khoản?{" "}
           <a
             onClick={() => navigate("/register")}
-            className="text-blue-600 hover:text-blue-700 hover:underline cursor-pointer font-semibold transition-colors"
+            className="text-primary hover:text-primary/80 hover:underline cursor-pointer font-semibold transition-colors"
           >
             Đăng ký ngay
           </a>
@@ -50,11 +51,11 @@ export default function LoginForm({
       </div>
 
       <div className="flex items-center mb-8">
-        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
-        <span className="px-4 text-sm text-gray-400 dark:text-gray-500 font-medium whitespace-nowrap">
+        <div className="flex-1 h-px bg-border"></div>
+        <span className="px-4 text-sm text-muted-foreground font-medium whitespace-nowrap">
           Hoặc đăng nhập với email
         </span>
-        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
+        <div className="flex-1 h-px bg-border"></div>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-5">
@@ -87,7 +88,7 @@ export default function LoginForm({
           <div className="flex justify-end pt-1">
             <a
               href="/forgot-password"
-              className="text-sm text-blue-600 hover:text-blue-700 hover:underline font-medium transition-colors"
+              className="text-sm text-primary hover:text-primary/80 hover:underline font-medium transition-colors"
             >
               Quên mật khẩu?
             </a>
@@ -100,29 +101,29 @@ export default function LoginForm({
             id="rememberMe"
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
-            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+            className="w-4 h-4 rounded border-input text-primary focus:ring-primary cursor-pointer"
           />
-          <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer select-none">
+          <label htmlFor="rememberMe" className="ml-2 text-sm text-muted-foreground cursor-pointer select-none">
             Ghi nhớ đăng nhập
           </label>
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={isLoading}
-          className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed font-semibold text-lg shadow-lg shadow-blue-500/30 active:scale-[0.98] mt-4"
+          className="w-full py-6 mt-4 text-lg font-semibold rounded-xl"
         >
           {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
-        </button>
+        </Button>
       </form>
 
-      <p className="mt-10 text-center text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 leading-relaxed">
+      <p className="mt-10 text-center text-sm text-muted-foreground leading-relaxed">
         Bằng cách đăng nhập, bạn đồng ý với{" "}
-        <a href="#" className="text-blue-600 hover:underline font-medium">
+        <a href="#" className="text-primary hover:underline font-medium">
           Điều khoản dịch vụ
         </a>{" "}
         và{" "}
-        <a href="#" className="text-blue-600 hover:underline font-medium">
+        <a href="#" className="text-primary hover:underline font-medium">
           Chính sách bảo mật
         </a>{" "}
         của chúng tôi.

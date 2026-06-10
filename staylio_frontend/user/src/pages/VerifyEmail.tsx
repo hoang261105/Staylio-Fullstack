@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useVerifyEmail } from "../../../common/hooks/useVerifyEmail";
 import toast from "react-hot-toast";
 import VerifyEmailSideBar from "../components/VerifyEmailSideBar";
+import { Button } from "../../../common/components/ui/button";
 
 export default function VerifyEmail() {
   const navigate = useNavigate();
@@ -77,38 +78,38 @@ export default function VerifyEmail() {
         <div className="w-full max-w-md">
           {/* Main Content */}
           <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-[#0066FF]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Mail className="w-10 h-10 text-[#0066FF]" />
+            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Mail className="w-10 h-10 text-primary" />
             </div>
 
-            <h2 className="text-3xl mb-3">Kiểm tra email của bạn</h2>
+            <h2 className="text-3xl mb-3 text-foreground">Kiểm tra email của bạn</h2>
             <p className="text-muted-foreground">
               Chúng tôi đã gửi một email xác thực đến
             </p>
-            <p className="font-medium text-[#0066FF] mt-1">{email}</p>
+            <p className="font-medium text-primary mt-1">{email}</p>
           </div>
 
           {/* Instructions */}
-          <div className="bg-accent/50 rounded-xl p-6 mb-6">
+          <div className="bg-accent/50 rounded-xl p-6 mb-6 text-foreground">
             <h3 className="font-medium mb-4 flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-[#0066FF]" />
+              <AlertCircle className="w-5 h-5 text-primary" />
               Hướng dẫn xác thực
             </h3>
             <ol className="space-y-3 text-sm text-muted-foreground">
               <li className="flex gap-3">
-                <span className="shrink-0 w-6 h-6 bg-[#0066FF] text-white rounded-full flex items-center justify-center text-xs">
+                <span className="shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs">
                   1
                 </span>
                 <span>Mở hộp thư đến của bạn</span>
               </li>
               <li className="flex gap-3">
-                <span className="shrink-0 w-6 h-6 bg-[#0066FF] text-white rounded-full flex items-center justify-center text-xs">
+                <span className="shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs">
                   2
                 </span>
                 <span>Tìm email từ STAYLIO (kiểm tra cả thư mục spam)</span>
               </li>
               <li className="flex gap-3">
-                <span className="shrink-0 w-6 h-6 bg-[#0066FF] text-white rounded-full flex items-center justify-center text-xs">
+                <span className="shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs">
                   3
                 </span>
                 <span>Nhấp vào nút "Xác thực tài khoản" trong email</span>
@@ -117,8 +118,8 @@ export default function VerifyEmail() {
           </div>
 
           {/* Resend Email */}
-          <div className="border border-gray-300 rounded-xl p-6 mb-6">
-            <div className="flex items-start gap-3 mb-4">
+          <div className="border border-border rounded-xl p-6 mb-6">
+            <div className="flex items-start gap-3 mb-4 text-foreground">
               <Clock className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm font-medium mb-1">
@@ -131,16 +132,17 @@ export default function VerifyEmail() {
             </div>
 
             {resendSuccess && (
-              <div className="bg-[#10B981]/10 border border-[#10B981]/20 rounded-lg p-3 mb-4 flex items-center gap-2 text-sm text-[#10B981]">
+              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 mb-4 flex items-center gap-2 text-sm text-emerald-500">
                 <CheckCircle className="w-4 h-4" />
                 <span>Email đã được gửi lại thành công!</span>
               </div>
             )}
 
-            <button
+            <Button
+              variant="outline"
               onClick={handleResendEmail}
               disabled={!canResend || isResending}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-[#0066FF] text-[#0066FF] rounded-lg hover:bg-[#0066FF]/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="w-full flex items-center justify-center gap-2 py-6 border-2 border-primary text-primary hover:bg-primary/5 font-medium rounded-lg"
             >
               <RefreshCw
                 className={`w-5 h-5 ${isResending ? "animate-spin" : ""}`}
@@ -150,25 +152,26 @@ export default function VerifyEmail() {
                 : canResend
                   ? "Gửi lại email"
                   : `Gửi lại sau ${countdown}s`}
-            </button>
+            </Button>
           </div>
 
           {/* Actions */}
           <div className="space-y-3">
-            <button
+            <Button
               onClick={handleTabLogin}
               disabled={!canLogin}
-              className="w-full py-3 bg-[#0066FF] text-white rounded-lg hover:bg-[#0052CC] transition-colors font-medium"
+              className="w-full py-6 font-medium rounded-lg"
             >
               Đã xác thực, đăng nhập ngay
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant="outline"
               onClick={() => navigate("/")}
-              className="w-full py-3 border border-gray-300 rounded-lg hover:bg-accent transition-colors"
+              className="w-full py-6 rounded-lg"
             >
               Về trang chủ
-            </button>
+            </Button>
           </div>
 
           {/* Help Text */}
@@ -178,7 +181,7 @@ export default function VerifyEmail() {
             </p>
             <a
               href="#"
-              className="text-sm text-[#0066FF] hover:underline font-medium"
+              className="text-sm text-primary hover:underline font-medium"
             >
               Liên hệ bộ phận hỗ trợ
             </a>
@@ -187,8 +190,8 @@ export default function VerifyEmail() {
           {/* Security Note */}
           <div className="mt-8 bg-accent/30 rounded-lg p-4">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-[#F59E0B]/10 rounded-lg flex items-center justify-center shrink-0">
-                <AlertCircle className="w-4 h-4 text-[#F59E0B]" />
+              <div className="w-8 h-8 bg-amber-500/10 rounded-lg flex items-center justify-center shrink-0">
+                <AlertCircle className="w-4 h-4 text-amber-500" />
               </div>
               <div className="text-xs text-muted-foreground">
                 <p className="font-medium text-foreground mb-1">

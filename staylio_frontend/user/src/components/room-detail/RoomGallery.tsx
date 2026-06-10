@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../../../common/components/ui/button";
 
 interface RoomImageResponse {
   id?: number;
@@ -55,12 +56,13 @@ export default function RoomGallery({ primaryImage, otherImages, allImageUrls }:
             />
           ))}
         </div>
-        <button
+        <Button
+          variant="outline"
           onClick={() => setSelectedImageIndex(0)}
-          className="absolute bottom-4 right-4 bg-white dark:bg-gray-800/90 backdrop-blur-md text-gray-900 dark:text-white font-semibold px-4 py-2 rounded-lg shadow-lg hover:bg-white dark:bg-gray-800 transition-colors text-sm z-10"
+          className="absolute bottom-4 right-4 bg-background/90 backdrop-blur-md text-foreground font-semibold rounded-lg shadow-lg z-10"
         >
           {t("roomDetail.viewAllImages")}
-        </button>
+        </Button>
       </div>
 
       {/* Lightbox */}

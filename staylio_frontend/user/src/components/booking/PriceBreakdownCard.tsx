@@ -1,6 +1,7 @@
 import { Receipt, Loader2, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { BookingPreviewResponse } from "../../../../common/interfaces/response/BookingPreviewResponse";
+import { Button } from "../../../../common/components/ui/button";
 
 interface PriceBreakdownCardProps {
     previewData?: BookingPreviewResponse;
@@ -12,8 +13,8 @@ interface PriceBreakdownCardProps {
 export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting, onSubmit }: PriceBreakdownCardProps) => {
     const { t } = useTranslation();
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden sticky top-28">
-            <div className="bg-blue-600 p-6 text-white flex items-center gap-2">
+        <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden sticky top-28">
+            <div className="bg-primary p-6 text-primary-foreground flex items-center gap-2">
                 <Receipt className="w-6 h-6" />
                 <h2 className="text-xl font-bold">{t("bookingConfirmation.priceBreakdownTitle")}</h2>
             </div>
@@ -21,26 +22,26 @@ export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting
             <div className="p-6">
                 {isLoadingPreview ? (
                     <div className="space-y-4 animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-3/4"></div>
-                        <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/2"></div>
-                        <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-full"></div>
-                        <div className="h-px bg-gray-200 dark:bg-gray-600 my-4"></div>
-                        <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded w-full"></div>
+                        <div className="h-4 bg-muted rounded w-3/4"></div>
+                        <div className="h-4 bg-muted rounded w-1/2"></div>
+                        <div className="h-4 bg-muted rounded w-full"></div>
+                        <div className="h-px bg-muted my-4"></div>
+                        <div className="h-6 bg-muted rounded w-full"></div>
                     </div>
                 ) : previewData ? (
-                    <div className="space-y-4 text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <div className="space-y-4 text-sm font-medium text-muted-foreground">
                         <div className="flex justify-between items-center">
                             <span>{t("bookingConfirmation.pricePerNight")}</span>
-                            <span className="font-bold text-gray-900 dark:text-white">{new Intl.NumberFormat('vi-VN').format(previewData.pricePerNight)}đ</span>
+                            <span className="font-bold text-foreground">{new Intl.NumberFormat('vi-VN').format(previewData.pricePerNight)}đ</span>
                         </div>
                         <div className="flex justify-between items-center">
                             <span>{t("bookingConfirmation.numberOfNights")}</span>
-                            <span className="font-bold text-gray-900 dark:text-white">{previewData.nights}</span>
+                            <span className="font-bold text-foreground">{previewData.nights}</span>
                         </div>
-                        <div className="h-px bg-gray-100 dark:bg-gray-700 my-2"></div>
+                        <div className="h-px bg-border my-2"></div>
                         <div className="flex justify-between items-center">
                             <span>{t("bookingConfirmation.subtotal")}</span>
-                            <span className="font-bold text-gray-900 dark:text-white">{new Intl.NumberFormat('vi-VN').format(previewData.originalPrice)}đ</span>
+                            <span className="font-bold text-foreground">{new Intl.NumberFormat('vi-VN').format(previewData.originalPrice)}đ</span>
                         </div>
 
                         {previewData.discountAmount > 0 && (
@@ -50,22 +51,22 @@ export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting
                             </div>
                         )}
 
-                        <div className="h-px bg-gray-100 dark:bg-gray-700 my-4"></div>
+                        <div className="h-px bg-border my-4"></div>
 
                         <div className="flex justify-between items-center">
-                            <span className="text-base font-bold text-gray-900 dark:text-white">{t("bookingConfirmation.totalPayment")}</span>
-                            <span className="text-2xl font-bold text-blue-600">{new Intl.NumberFormat('vi-VN').format(previewData.finalPrice)}đ</span>
+                            <span className="text-base font-bold text-foreground">{t("bookingConfirmation.totalPayment")}</span>
+                            <span className="text-2xl font-bold text-primary">{new Intl.NumberFormat('vi-VN').format(previewData.finalPrice)}đ</span>
                         </div>
-                        <div className="text-right text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 font-normal">{t("bookingConfirmation.includesTaxes")}</div>
+                        <div className="text-right text-xs text-muted-foreground font-normal">{t("bookingConfirmation.includesTaxes")}</div>
                     </div>
                 ) : (
-                    <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center py-4">{t("bookingConfirmation.fillInfo")}</div>
+                    <div className="text-sm text-muted-foreground text-center py-4">{t("bookingConfirmation.fillInfo")}</div>
                 )}
 
-                <button
+                <Button
                     onClick={onSubmit}
                     disabled={isSubmitting || isLoadingPreview || !previewData}
-                    className="w-full mt-6 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
+                    className="w-full mt-6 py-6 font-bold rounded-xl text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2"
                 >
                     {isSubmitting ? (
                         <>
@@ -78,7 +79,7 @@ export const PriceBreakdownCard = ({ previewData, isLoadingPreview, isSubmitting
                             <ArrowRight className="w-5 h-5" />
                         </>
                     )}
-                </button>
+                </Button>
             </div>
         </div>
     );

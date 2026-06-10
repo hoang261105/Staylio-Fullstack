@@ -1,5 +1,8 @@
 @import "tailwindcss";
+@import "../../common/styles/theme.css";
 @source "../../common";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --font-sans: "Be Vietnam Pro", system-ui, sans-serif;
@@ -7,6 +10,7 @@
 
 body {
   font-family: var(--font-sans);
+  @apply bg-background text-foreground transition-colors duration-200;
 }
 
 * {

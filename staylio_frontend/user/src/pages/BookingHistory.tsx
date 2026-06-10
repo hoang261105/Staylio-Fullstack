@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
@@ -13,6 +12,7 @@ import { useDebounce } from "../../../common/hooks/useDebounce";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../../common/components/ui/button";
 
 export default function BookingHistory() {
     const { t } = useTranslation();
@@ -75,14 +75,14 @@ export default function BookingHistory() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
+        <div className="min-h-screen bg-background font-sans flex flex-col">
             <Header />
 
             <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t('bookingHistory.title')}</h1>
+                <h1 className="text-2xl font-bold text-foreground mb-6">{t('bookingHistory.title')}</h1>
 
                 {/* Filters */}
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6 space-y-4">
+                <div className="bg-card p-4 rounded-2xl shadow-sm border border-border mb-6 space-y-4">
                     <div className="max-w-md">
                         <InputField
                             label=""
@@ -105,8 +105,8 @@ export default function BookingHistory() {
                                     setPage(0);
                                 }}
                                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${status === opt.value
-                                        ? "bg-[#0066FF] text-white border-[#0066FF]"
-                                        : "bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700"
+                                    ? "bg-primary text-primary-foreground border-primary"
+                                    : "bg-muted text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground"
                                     }`}
                             >
                                 {opt.label}
@@ -137,10 +137,10 @@ export default function BookingHistory() {
             {/* Cancel Modal */}
             {isCancelModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl w-full max-w-md mx-4 shadow-xl">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t('bookingHistory.cancelBookingTitle')}</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-4">{t('bookingHistory.cancelBookingDesc')}</p>
-                        
+                    <div className="bg-card p-6 rounded-2xl w-full max-w-md mx-4 shadow-xl border border-border">
+                        <h3 className="text-xl font-bold text-card-foreground mb-4">{t('bookingHistory.cancelBookingTitle')}</h3>
+                        <p className="text-sm text-muted-foreground mb-4">{t('bookingHistory.cancelBookingDesc')}</p>
+
                         <InputField
                             label={t('bookingHistory.cancelReasonLabel')}
                             value={cancelReason}
@@ -150,19 +150,19 @@ export default function BookingHistory() {
                         />
 
                         <div className="flex justify-end gap-3 mt-6">
-                            <button
+                            <Button
+                                variant="outline"
                                 onClick={() => setIsCancelModalOpen(false)}
-                                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:bg-gray-700 rounded-lg transition-colors"
                             >
                                 {t('bookingHistory.close')}
-                            </button>
-                            <button
+                            </Button>
+                            <Button
+                                variant="destructive"
                                 onClick={submitCancel}
                                 disabled={updateStatusMutate.isPending}
-                                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50"
                             >
                                 {updateStatusMutate.isPending ? t('bookingHistory.processing') : t('bookingHistory.confirmCancel')}
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>

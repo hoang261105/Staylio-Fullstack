@@ -9,6 +9,7 @@ import { useBookedDates } from "../../../../common/hooks/useBookings";
 import { useProfile } from "../../../../common/hooks/useProfile";
 import { useTranslation } from "react-i18next";
 import type { RoomResponse } from "../../../../common/interfaces/response/RoomResponse";
+import { Button } from "../../../../common/components/ui/button";
 
 interface RoomBookingCardProps {
   room: RoomResponse;
@@ -115,21 +116,21 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
   };
 
   return (
-    <div className="sticky top-28 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-2xl shadow-xl p-6">
-      <div className="flex items-end gap-1 mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
-        <span className="text-3xl font-bold text-blue-600">
+    <div className="sticky top-28 bg-card border border-border rounded-2xl shadow-xl p-6">
+      <div className="flex items-end gap-1 mb-6 pb-6 border-b border-border">
+        <span className="text-3xl font-bold text-primary">
           {new Intl.NumberFormat("vi-VN", {
             style: "currency",
             currency: "VND",
           }).format(room.price)}
         </span>
-        <span className="text-gray-500 dark:text-gray-400 dark:text-gray-500 font-medium">{t("roomDetail.perNight")}</span>
+        <span className="text-muted-foreground font-medium">{t("roomDetail.perNight")}</span>
       </div>
 
       <div className="flex flex-col gap-4 mb-6">
-        <div className="grid grid-cols-2 gap-2 border border-gray-300 rounded-xl overflow-hidden p-1 bg-gray-50 dark:bg-gray-700/50">
-          <div className="p-2 text-left border-r border-gray-200 dark:border-gray-600">
-            <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1 block">
+        <div className="grid grid-cols-2 gap-2 border border-input rounded-xl overflow-hidden p-1 bg-background">
+          <div className="p-2 text-left border-r border-border">
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 block">
               {t("roomDetail.checkIn")}
             </label>
             <DatePicker
@@ -139,11 +140,11 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
               excludeDateIntervals={excludeCheckInIntervals}
               dateFormat="dd/MM/yyyy"
               placeholderText={t("roomDetail.selectDate")}
-              className="text-sm font-semibold text-gray-900 dark:text-white bg-transparent outline-none w-full cursor-pointer placeholder:font-normal placeholder:text-gray-400 dark:text-gray-500"
+              className="text-sm font-semibold text-foreground bg-transparent outline-none w-full cursor-pointer placeholder:font-normal placeholder:text-muted-foreground"
             />
           </div>
           <div className="p-2 text-left">
-            <label className="text-[10px] font-bold text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1 block">
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 block">
               {t("roomDetail.checkOut")}
             </label>
             <DatePicker
@@ -154,7 +155,7 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
               excludeDateIntervals={excludeCheckOutIntervals}
               dateFormat="dd/MM/yyyy"
               placeholderText={t("roomDetail.selectDate")}
-              className="text-sm font-semibold text-gray-900 dark:text-white bg-transparent outline-none w-full cursor-pointer placeholder:font-normal placeholder:text-gray-400 dark:text-gray-500"
+              className="text-sm font-semibold text-foreground bg-transparent outline-none w-full cursor-pointer placeholder:font-normal placeholder:text-muted-foreground"
             />
           </div>
         </div>
@@ -184,23 +185,23 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
 
       {user ? (
         <>
-          <button
+          <Button
             onClick={handleBookNow}
-            className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0"
+            className="w-full py-6 font-bold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all"
           >
             {t("roomDetail.bookNow")}
-          </button>
-          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-4">
+          </Button>
+          <p className="text-center text-xs text-muted-foreground mt-4">
             {t("roomDetail.notChargedYet")}
           </p>
         </>
       ) : (
-        <button
+        <Button
           onClick={() => navigate("/login")}
-          className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0"
+          className="w-full py-6 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all"
         >
           {t("roomDetail.loginToBook")}
-        </button>
+        </Button>
       )}
     </div>
   );

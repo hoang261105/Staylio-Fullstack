@@ -16,7 +16,7 @@ export const PaymentMethodSelector = ({ selectedMethod, onChange, error }: Payme
             id: PaymentMethod.VNPAY,
             name: t("bookingConfirmation.paymentMethods.vnpay"),
             description: t("bookingConfirmation.paymentMethods.vnpayDesc"),
-            icon: <ShieldCheck className="w-6 h-6 text-blue-600" />
+            icon: <ShieldCheck className="w-6 h-6 text-primary" />
         },
         {
             id: PaymentMethod.MOMO,
@@ -28,7 +28,7 @@ export const PaymentMethodSelector = ({ selectedMethod, onChange, error }: Payme
             id: PaymentMethod.ZALOPAY,
             name: t("bookingConfirmation.paymentMethods.zalopay"),
             description: t("bookingConfirmation.paymentMethods.zalopayDesc"),
-            icon: <Wallet className="w-6 h-6 text-blue-500" />
+            icon: <Wallet className="w-6 h-6 text-primary" />
         },
         {
             id: PaymentMethod.BANK_TRANSFER,
@@ -45,9 +45,9 @@ export const PaymentMethodSelector = ({ selectedMethod, onChange, error }: Payme
     ];
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                <CreditCard className="w-6 h-6 text-blue-600" />
+        <div className="bg-card rounded-2xl shadow-sm border border-border p-6 mb-6">
+            <h2 className="text-xl font-bold text-card-foreground mb-6 flex items-center gap-2">
+                <CreditCard className="w-6 h-6 text-primary" />
                 {t("bookingConfirmation.paymentMethodTitle")}
             </h2>
 
@@ -56,8 +56,8 @@ export const PaymentMethodSelector = ({ selectedMethod, onChange, error }: Payme
                     <label
                         key={option.id}
                         className={`flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedMethod === option.id
-                                ? "border-b dark:border-gray-700lue-600 bg-blue-50/50"
-                                : "border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:border-gray-600"
+                                ? "border-primary bg-primary/5"
+                                : "border-border hover:border-primary/50"
                             }`}
                     >
                         <div className="pt-0.5">
@@ -67,15 +67,15 @@ export const PaymentMethodSelector = ({ selectedMethod, onChange, error }: Payme
                                 value={option.id}
                                 checked={selectedMethod === option.id}
                                 onChange={() => onChange(option.id)}
-                                className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-600"
+                                className="w-4 h-4 text-primary border-input focus:ring-primary"
                             />
                         </div>
                         <div className="shrink-0">
                             {option.icon}
                         </div>
                         <div className="flex-1">
-                            <div className="font-bold text-gray-900 dark:text-white">{option.name}</div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">{option.description}</div>
+                            <div className="font-bold text-foreground">{option.name}</div>
+                            <div className="text-xs text-muted-foreground mt-1">{option.description}</div>
                         </div>
                     </label>
                 ))}
