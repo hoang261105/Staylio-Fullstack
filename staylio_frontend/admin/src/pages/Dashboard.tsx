@@ -5,17 +5,10 @@ import {
   Users,
   Building2,
   DollarSign,
-  Calendar,
+  Tags,
 } from "lucide-react";
 import AdminLayout from "../layout/AdminLayout";
-
-// Đưa data tĩnh ra ngoài component để tối ưu hiệu suất (không bị re-render lại mảng)
-const STATS_DATA = [
-  { name: "Tổng doanh thu", value: "$125,847", change: "+12.5%", trend: "up", icon: DollarSign, color: "bg-blue-500" },
-  { name: "Đặt phòng mới", value: "1,234", change: "+8.2%", trend: "up", icon: Calendar, color: "bg-green-500" },
-  { name: "Khách hàng", value: "8,567", change: "+23.1%", trend: "up", icon: Users, color: "bg-purple-500" },
-  { name: "Khách sạn", value: "156", change: "-2.4%", trend: "down", icon: Building2, color: "bg-orange-500" },
-];
+import { useAdminStats } from "@common/hooks/useAdminStats";
 
 const RECENT_BOOKINGS = [1, 2, 3, 4, 5];
 
@@ -31,10 +24,19 @@ const MONTHLY_REVENUE = [65, 78, 85, 72, 90, 88, 95, 82, 78, 85, 92, 98];
 const WEEK_DAYS = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
 export default function Dashboard() {
+  const { data: statsData } = useAdminStats();
+
+  const STATS_DATA = [
+    { name: "Tổng doanh thu", value: statsData ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(statsData.totalRevenue) : "$0", change: "+12.5%", trend: "up", icon: DollarSign, color: "bg-blue-500" },
+    { name: "Tổng số thương hiệu", value: statsData ? statsData.totalBrands.toLocaleString() : "0", change: "+8.2%", trend: "up", icon: Tags, color: "bg-green-500" },
+    { name: "Khách hàng hoạt động", value: statsData ? statsData.activeCustomers.toLocaleString() : "0", change: "+23.1%", trend: "up", icon: Users, color: "bg-purple-500" },
+    { name: "Chi nhánh khách sạn", value: statsData ? statsData.totalBranches.toLocaleString() : "0", change: "-2.4%", trend: "down", icon: Building2, color: "bg-orange-500" },
+  ];
+
   return (
     <AdminLayout>
       <div className="space-y-8">
-        
+
         {/* Header */}
         <div>
           <h1 className="text-3xl font-semibold text-gray-900 mb-2">Dashboard</h1>
@@ -50,7 +52,6 @@ export default function Dashboard() {
             return (
               <div
                 key={stat.name}
-                // Dùng border-gray-200 kết hợp shadow-sm cho thẻ Card gọn gàng, tinh tế
                 className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
@@ -58,9 +59,8 @@ export default function Dashboard() {
                     <Icon className="w-6 h-6 text-white" />
                   </div>
                   <div
-                    className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                      stat.trend === "up" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                    }`}
+                    className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${stat.trend === "up" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                      }`}
                   >
                     <TrendIcon className="w-3 h-3" />
                     {stat.change}

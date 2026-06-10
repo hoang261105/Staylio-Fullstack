@@ -9,174 +9,198 @@ import { StayInfoCard } from "../components/booking/StayInfoCard";
 import { VoucherSelector } from "../components/booking/VoucherSelector";
 import { PaymentMethodSelector } from "../components/booking/PaymentMethodSelector";
 import { PriceBreakdownCard } from "../components/booking/PriceBreakdownCard";
-import { PersonalizationForm, type PersonalizationData } from "../components/booking/PersonalizationForm";
+import {
+  PersonalizationForm,
+  type PersonalizationData,
+} from "../components/booking/PersonalizationForm";
 import { useRoomById } from "../../../common/hooks/useRooms";
 import { useHotelBranchById } from "../../../common/hooks/useHotelBranch";
-import { usePreviewBookingMutation, useCreateBookingMutation } from "../../../common/hooks/useBookings";
+import {
+  usePreviewBookingMutation,
+  useCreateBookingMutation,
+} from "../../../common/hooks/useBookings";
 import toast from "react-hot-toast";
 import { PaymentMethod } from "../../../common/enums/PaymentMethod";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface BookingState {
-    roomId: number;
-    checkInDate: string;
-    checkOutDate: string;
-    adults: number;
-    children: number;
+  roomId: number;
+  checkInDate: string;
+  checkOutDate: string;
+  adults: number;
+  children: number;
 }
 
 export default function BookingConfirmation() {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const bookingState = location.state as BookingState | null;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const bookingState = location.state as BookingState | null;
 
-    if (!bookingState) {
-        return <Navigate to="/" replace />;
+  if (!bookingState) {
+    return <Navigate to="/" replace />;
+  }
+
+  const { roomId, checkInDate, checkOutDate, adults, children } = bookingState;
+
+  const [note, setNote] = useState("");
+  const [userVoucherId, setUserVoucherId] = useState<number | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | "">("");
+  const [paymentError, setPaymentError] = useState("");
+  const { t } = useTranslation();
+  const [preferences, setPreferences] = useState<PersonalizationData>({
+    scent: t("bookingConfirmation.scents.none"),
+    pillow: t("bookingConfirmation.pillows.standard"),
+    setup: t("bookingConfirmation.setups.none"),
+  });
+
+  const { data: room } = useRoomById(roomId);
+  const { data: branch } = useHotelBranchById(room?.hotelBranchId || 0);
+
+  const {
+    mutate: previewBooking,
+    data: previewResponse,
+    isPending: isLoadingPreview,
+  } = usePreviewBookingMutation();
+  const { mutate: createBooking, isPending: isSubmitting } =
+    useCreateBookingMutation();
+
+  const previewData = previewResponse?.data;
+
+  useEffect(() => {
+    previewBooking({
+      roomId,
+      checkInDate,
+      checkOutDate,
+      adults,
+      children,
+      userVoucherId,
+      note: "",
+      preferences: JSON.stringify(preferences),
+      paymentMethod: PaymentMethod.CASH, 
+    });
+  }, [
+    roomId,
+    checkInDate,
+    checkOutDate,
+    adults,
+    children,
+    userVoucherId,
+    preferences,
+    previewBooking,
+  ]);
+
+  const handleSubmit = () => {
+    if (!paymentMethod) {
+      setPaymentError(t("bookingConfirmation.paymentError"));
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      return;
     }
 
-    const { roomId, checkInDate, checkOutDate, adults, children } = bookingState;
+    setPaymentError("");
 
-    const [note, setNote] = useState("");
-    const [userVoucherId, setUserVoucherId] = useState<number | null>(null);
-    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | "">("");
-    const [paymentError, setPaymentError] = useState("");
-    const { t } = useTranslation();
-    const [preferences, setPreferences] = useState<PersonalizationData>({
-        scent: t("bookingConfirmation.scents.none"),
-        pillow: t("bookingConfirmation.pillows.standard"),
-        setup: t("bookingConfirmation.setups.none")
-    });
-
-    const { data: room } = useRoomById(roomId);
-    const { data: branch } = useHotelBranchById(room?.hotelBranchId || 0);
-
-    const { mutate: previewBooking, data: previewResponse, isPending: isLoadingPreview } = usePreviewBookingMutation();
-    const { mutate: createBooking, isPending: isSubmitting } = useCreateBookingMutation();
-
-    const previewData = previewResponse?.data;
-
-    useEffect(() => {
-        previewBooking({
-            roomId,
-            checkInDate,
-            checkOutDate,
-            adults,
-            children,
-            userVoucherId,
-            note: "",
-            preferences: JSON.stringify(preferences),
-            paymentMethod: PaymentMethod.CASH // dummy for preview
-        });
-    }, [roomId, checkInDate, checkOutDate, adults, children, userVoucherId, preferences, previewBooking]);
-
-    const handleSubmit = () => {
-        if (!paymentMethod) {
-            setPaymentError(t("bookingConfirmation.paymentError"));
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            return;
-        }
-
-        setPaymentError("");
-
-        createBooking({
-            roomId,
-            checkInDate,
-            checkOutDate,
-            adults,
-            children,
-            userVoucherId,
-            note,
-            preferences: JSON.stringify(preferences),
-            paymentMethod
-        }, {
-            onSuccess: (response) => {
-                const data = response.data as any;
-                if (data?.paymentUrl) {
-                    window.location.href = data.paymentUrl;
-                } else {
-                    navigate("/booking-history", { replace: true });
-                }
-            },
-            onError: (error: any) => {
-                toast.error(error?.response?.data?.message || t("bookingConfirmation.submitError"));
-            }
-        });
-    };
-
-    return (
-        <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
-            <Header />
-
-            <div className="bg-blue-600 pt-28 pb-10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="flex items-center text-blue-100 hover:text-white mb-4 transition-colors font-medium text-sm gap-1"
-                    >
-                        <ArrowLeft className="w-4 h-4" />
-                        {t("bookingConfirmation.back")}
-                    </button>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 mt-2">{t("bookingConfirmation.title")}</h1>
-                    <p className="text-blue-100">
-                        {t("bookingConfirmation.subtitle")}
-                    </p>
-                </div>
-            </div>
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-1">
-                <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Left Column */}
-                    <div className="flex-1 max-w-3xl">
-                        <RoomInfoCard room={room} branch={branch} />
-
-                        <StayInfoCard
-                            checkInDate={checkInDate}
-                            checkOutDate={checkOutDate}
-                            adults={adults}
-                            children={children}
-                            note={note}
-                            setNote={setNote}
-                        />
-
-                        <PersonalizationForm
-                            preferences={preferences}
-                            setPreferences={setPreferences}
-                        />
-
-                        {room && branch && (
-                            <VoucherSelector
-                                selectedVoucherId={userVoucherId}
-                                onSelectVoucher={setUserVoucherId}
-                                roomId={roomId}
-                                checkInDate={checkInDate}
-                                checkOutDate={checkOutDate}
-                            />
-                        )}
-
-                        <PaymentMethodSelector
-                            selectedMethod={paymentMethod}
-                            onChange={(m) => {
-                                setPaymentMethod(m);
-                                setPaymentError("");
-                            }}
-                            error={paymentError}
-                        />
-                    </div>
-
-                    {/* Right Column - Sticky */}
-                    <div className="w-full lg:w-100 shrink-0">
-                        <PriceBreakdownCard
-                            previewData={previewData}
-                            isLoadingPreview={isLoadingPreview}
-                            isSubmitting={isSubmitting}
-                            onSubmit={handleSubmit}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <Footer />
-        </div>
+    createBooking(
+      {
+        roomId,
+        checkInDate,
+        checkOutDate,
+        adults,
+        children,
+        userVoucherId,
+        note,
+        preferences: JSON.stringify(preferences),
+        paymentMethod,
+      },
+      {
+        onSuccess: (response) => {
+          const data = response.data as any;
+          if (data?.paymentUrl) {
+            window.location.href = data.paymentUrl;
+          } else {
+            navigate("/booking-history", { replace: true });
+          }
+        },
+        onError: (error: any) => {
+          toast.error(
+            error?.response?.data?.message ||
+              t("bookingConfirmation.submitError"),
+          );
+        },
+      },
     );
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 font-sans flex flex-col">
+      <Header />
+
+      <div className="bg-blue-600 pt-28 pb-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center text-blue-100 hover:text-white mb-4 transition-colors font-medium text-sm gap-1"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {t("bookingConfirmation.back")}
+          </button>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 mt-2">
+            {t("bookingConfirmation.title")}
+          </h1>
+          <p className="text-blue-100">{t("bookingConfirmation.subtitle")}</p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-1">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex-1 max-w-3xl">
+            <RoomInfoCard room={room} branch={branch} />
+
+            <StayInfoCard
+              checkInDate={checkInDate}
+              checkOutDate={checkOutDate}
+              adults={adults}
+              children={children}
+              note={note}
+              setNote={setNote}
+            />
+
+            <PersonalizationForm
+              preferences={preferences}
+              setPreferences={setPreferences}
+            />
+
+            {room && branch && (
+              <VoucherSelector
+                selectedVoucherId={userVoucherId}
+                onSelectVoucher={setUserVoucherId}
+                roomId={roomId}
+                checkInDate={checkInDate}
+                checkOutDate={checkOutDate}
+              />
+            )}
+
+            <PaymentMethodSelector
+              selectedMethod={paymentMethod}
+              onChange={(m) => {
+                setPaymentMethod(m);
+                setPaymentError("");
+              }}
+              error={paymentError}
+            />
+          </div>
+
+          <div className="w-full lg:w-100 shrink-0">
+            <PriceBreakdownCard
+              previewData={previewData}
+              isLoadingPreview={isLoadingPreview}
+              isSubmitting={isSubmitting}
+              onSubmit={handleSubmit}
+            />
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  );
 }

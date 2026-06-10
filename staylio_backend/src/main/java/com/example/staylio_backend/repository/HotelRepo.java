@@ -34,4 +34,6 @@ public interface HotelRepo extends JpaRepository<Hotel, Long> {
     @Transactional
     @Query("UPDATE Hotel h SET h.isActive = :active WHERE h.id in :ids")
     void updateBulkActive(@Param("ids") List<Long> ids, @Param("active") boolean active);
+
+    long countByStatus(HotelStatus status);
 }

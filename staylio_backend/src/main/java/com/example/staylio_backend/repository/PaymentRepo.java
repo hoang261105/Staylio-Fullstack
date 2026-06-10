@@ -126,4 +126,7 @@ public interface PaymentRepo extends JpaRepository<Payment, Long> {
     );
 
     Optional<Payment> findByGatewayOrderId( String gatewayOrderId);
+
+    @Query("SELECT COALESCE(SUM(p.amount), 0) FROM Payment p WHERE p.status = 'PAID'")
+    BigDecimal sumTotalRevenue();
 }

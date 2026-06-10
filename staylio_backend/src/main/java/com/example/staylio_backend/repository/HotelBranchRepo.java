@@ -65,4 +65,6 @@ public interface HotelBranchRepo extends JpaRepository<HotelBranch, Long> {
             @Param("provinceId") Long provinceId,
             Pageable pageable
     );
+
+    long countByStatus(BranchStatus status);
 }

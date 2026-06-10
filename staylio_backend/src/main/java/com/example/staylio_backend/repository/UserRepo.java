@@ -30,4 +30,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
             @Param("search") String search,
             Pageable pageable
     );
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.role.roleName = 'CUSTOMER' AND u.status = 'ACTIVE'")
+    long countActiveCustomers();
 }
