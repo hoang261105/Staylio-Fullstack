@@ -16,21 +16,20 @@ import java.util.List;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {
-    @Modifying
-    @Transactional
-    @Query("UPDATE User u SET u.status = :status WHERE u.id IN :ids")
-    void updateStatusByIds(@Param("ids") List<Long> ids, @Param("status") UserStatus status);
+        @Modifying
+        @Transactional
+        @Query("UPDATE User u SET u.status = :status WHERE u.id IN :ids")
+        void updateStatusByIds(@Param("ids") List<Long> ids, @Param("status") UserStatus status);
 
-    List<User> findAllByIdIn(List<Long> ids);
+        List<User> findAllByIdIn(List<Long> ids);
 
-    @Query("SELECT u FROM User u WHERE u.role.roleName IN :roles " +
-            "AND (:search IS NULL OR u.profile.fullName LIKE %:search% OR u.email LIKE %:search%)")
-    Page<User> searchUsersByRoles(
-            @Param("roles") List<RoleName> roles,
-            @Param("search") String search,
-            Pageable pageable
-    );
+        @Query("SELECT u FROM User u WHERE u.role.roleName IN :roles " +
+                        "AND (:search IS NULL OR u.profile.fullName LIKE %:search% OR u.email LIKE %:search%)")
+        Page<User> searchUsersByRoles(
+                        @Param("roles") List<RoleName> roles,
+                        @Param("search") String search,
+                        Pageable pageable);
 
-    @Query("SELECT COUNT(u) FROM User u WHERE u.role.roleName = 'CUSTOMER' AND u.status = 'ACTIVE'")
-    long countActiveCustomers();
+        @Query("SELECT COUNT(u) FROM User u WHERE u.role.roleName = 'ROLE_CUSTOMER' AND u.status = 'ACTIVE'")
+        long countActiveCustomers();
 }
