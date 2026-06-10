@@ -5,7 +5,7 @@ import { useRegisterForm } from "../../../common/hooks/useRegisterForm";
 
 export default function Register() {
   const navigate = useNavigate();
-  const { formData, setFormData, fieldErrors, isLoading, handleSubmit, getPasswordStrength } = 
+  const { formData, setFormData, fieldErrors, isLoading, handleSubmit, getPasswordStrength, handleGoogleLogin } = 
     useRegisterForm(() => navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`));
 
   return (
@@ -25,6 +25,7 @@ export default function Register() {
               isLoading={isLoading}
               onSubmit={handleSubmit}
               passwordStrength={getPasswordStrength()}
+              onGoogleLogin={handleGoogleLogin}
            />
         </div>
       </div>

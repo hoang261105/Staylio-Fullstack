@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserLoginForm } from "@common/interfaces/request/UserLoginForm";
-import { login } from "@common/services/auth.service";
+import { login, googleLogin } from "@common/services/auth.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -17,54 +17,62 @@ export const useLoginForm = (onSubmitSuccess: (path: string) => void) => {
 
   const { fieldErrors, handleApiErrors, clearAllErrors } = useApiErrors();
 
-  const mutation = useLoginMutation(
-    async (response: any) => {
-      const userData = response?.data;
+  const handleLoginSuccess = async (response: any) => {
+    const userData = response?.data;
+    const userObj = userData?.user;
 
-      const authorities = userData?.authorities;
+    const roleName = userObj?.roleName || userData?.authorities?.[0]?.authority;
+    const authorities = userData?.authorities || [{ authority: roleName }];
 
-      const redirectPath = getRedirectPathByRole(authorities);
-      if (!redirectPath) {
-        toast.error("Không xác định được vai trò người dùng.");
-        return;
+    const redirectPath = getRedirectPathByRole(authorities);
+    if (!redirectPath) {
+      toast.error("Không xác định được vai trò người dùng.");
+      return;
+    }
+
+    if (roleName) {
+      localStorage.setItem("roleName", roleName.replace("ROLE_", ""));
+    }
+
+    await queryClient.invalidateQueries({ queryKey: ["profile"] });
+    toast.success("Đăng nhập thành công!");
+    clearAllErrors();
+
+    setTimeout(() => {
+      if (onSubmitSuccess) {
+        onSubmitSuccess(redirectPath);
+      } else {
+        window.location.href = redirectPath;
       }
+    }, 500);
+  };
 
+  const handleLoginError = (error: any) => {
+    const serverErrors = error?.response?.data?.errors;
 
-      const role = authorities?.[0]?.authority;
-      if (role) {
-        localStorage.setItem("roleName", role);
-      }
+    if (Array.isArray(serverErrors)) {
+      handleApiErrors(serverErrors);
+      return;
+    }
 
-      await queryClient.invalidateQueries({ queryKey: ["profile"] });
-      toast.success("Đăng nhập thành công!");
-      clearAllErrors();
+    toast.error(
+      error?.response?.data?.message || "Đã có lỗi xảy ra, vui lòng thử lại.",
+    );
+  };
 
-      setTimeout(() => {
-        if (onSubmitSuccess) {
-          onSubmitSuccess(redirectPath);
-        } else {
-          window.location.href = redirectPath;
-        }
-      }, 500);
-    },
-    (error: any) => {
-      const serverErrors = error?.response?.data?.errors;
+  const mutation = useLoginMutation(handleLoginSuccess, handleLoginError);
 
-      if (Array.isArray(serverErrors)) {
-        handleApiErrors(serverErrors);
-        return;
-      }
-
-      toast.error(
-        error?.response?.data?.message || "Đã có lỗi xảy ra, vui lòng thử lại.",
-      );
-    },
-  );
+  const googleMutation = useGoogleLoginMutation(handleLoginSuccess, handleLoginError);
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     clearAllErrors();
     mutation.mutate(formData);
+  };
+
+  const handleGoogleLogin = (credential: string) => {
+    clearAllErrors();
+    googleMutation.mutate(credential);
   };
 
   return {
@@ -73,8 +81,9 @@ export const useLoginForm = (onSubmitSuccess: (path: string) => void) => {
     rememberMe,
     setRememberMe,
     fieldErrors,
-    isLoading: mutation.isPending,
+    isLoading: mutation.isPending || googleMutation.isPending,
     handleSubmit,
+    handleGoogleLogin,
   };
 };
 
@@ -93,8 +102,23 @@ export const useLoginMutation = (
   });
 };
 
+export const useGoogleLoginMutation = (
+  onSuccess: (data: any) => void,
+  onError: (err: unknown) => void,
+) => {
+  return useMutation({
+    mutationFn: (idToken: string) => googleLogin(idToken),
+    onSuccess: (response) => {
+      onSuccess(response);
+    },
+    onError: (error: unknown) => {
+      onError(error);
+    },
+  });
+};
+
 const getRedirectPathByRole = (authorities: { authority: string }[]) => {
-  const role = authorities?.[0]?.authority.replace("ROLE_", "");
+  const role = authorities?.[0]?.authority?.replace("ROLE_", "");
 
   switch (role) {
     case "ADMIN":

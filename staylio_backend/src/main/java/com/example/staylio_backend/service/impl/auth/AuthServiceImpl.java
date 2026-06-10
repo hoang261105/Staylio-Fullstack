@@ -46,6 +46,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.NoSuchElementException;
@@ -245,19 +246,17 @@ public class AuthServiceImpl implements AuthService {
             newUser.setStatus(UserStatus.ACTIVE);
             newUser.setIsEmailVerified(true);
             newUser.setIsFirstLogin(true);
-            newUser.setRole(
-                    roleRepo.findByRoleName(RoleName.ROLE_CUSTOMER));
-
-            User savedUser = accountRepo.save(newUser);
+            newUser.setRole(roleRepo.findByRoleName(RoleName.ROLE_CUSTOMER));
 
             Profile profile = new Profile();
-            profile.setUser(savedUser); // MapsId
             profile.setFullName((String) payload.get("name"));
             profile.setAvatarUrl((String) payload.get("picture"));
+            profile.setDateOfBirth(LocalDate.now()); // Set default dateOfBirth because it's non-null
 
-            profileRepo.save(profile);
+            newUser.setProfile(profile);
+            profile.setUser(newUser);
 
-            return savedUser;
+            return accountRepo.save(newUser);
         });
 
         return generateTokenResponse(user);

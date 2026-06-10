@@ -37,6 +37,16 @@ export const login = async (loginData: UserLoginForm) => {
   }
 };
 
+export const googleLogin = async (idToken: string) => {
+  try {
+    const response = await axiosInstance.post("/auth/google-login", { idToken });
+    return response.data;
+  } catch (error) {
+    console.error("Đăng nhập Google thất bại:", error);
+    throw error;
+  }
+};
+
 export const forgotPassword = async (email: string): Promise<ApiResponse<string>> => {
   try {
     const response = await axiosInstance.get("/auth/forgot-password", {

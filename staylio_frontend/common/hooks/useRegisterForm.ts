@@ -1,11 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Gender } from "@common/enums/Gender";
 import { useState } from "react";
 import { useRegisterMutation } from "./useAuthMutation";
 import toast from "react-hot-toast";
 import { useApiErrors } from "./useApiErrors";
 import { UserRegisterRequest } from "@common/interfaces/request/UserRegisterRequest";
+import { useGoogleLoginMutation } from "./useLoginForm";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useRegisterForm = (onSubmitSuccess: () => void) => {
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState<UserRegisterRequest>({
     userName: "",
     fullName: "",
@@ -41,6 +45,51 @@ export const useRegisterForm = (onSubmitSuccess: () => void) => {
     },
   );
 
+  const getRedirectPathByRole = (authorities: { authority: string }[]) => {
+    const role = authorities?.[0]?.authority?.replace("ROLE_", "");
+    switch (role) {
+      case "ADMIN": return "/dashboard";
+      case "MANAGER": return "/dashboard";
+      default: return "/";
+    }
+  };
+
+  const handleGoogleSuccess = async (response: any) => {
+    const userData = response?.data;
+    const userObj = userData?.user;
+    const roleName = userObj?.roleName || userData?.authorities?.[0]?.authority;
+    const authorities = userData?.authorities || [{ authority: roleName }];
+
+    const redirectPath = getRedirectPathByRole(authorities);
+    if (!redirectPath) {
+      toast.error("Không xác định được vai trò người dùng.");
+      return;
+    }
+
+    if (roleName) {
+      localStorage.setItem("roleName", roleName.replace("ROLE_", ""));
+    }
+
+    await queryClient.invalidateQueries({ queryKey: ["profile"] });
+    toast.success("Đăng nhập Google thành công!");
+    clearAllErrors();
+
+    setTimeout(() => {
+      window.location.href = redirectPath;
+    }, 500);
+  };
+
+  const handleGoogleError = () => {
+    toast.error("Đăng nhập Google thất bại.");
+  };
+
+  const googleMutation = useGoogleLoginMutation(handleGoogleSuccess, handleGoogleError);
+
+  const handleGoogleLogin = (credential: string) => {
+    clearAllErrors();
+    googleMutation.mutate(credential);
+  };
+
   const getPasswordStrength = () => {
     const password = formData.password;
     if (password.length === 0) return { strength: 0, label: "", color: "" };
@@ -62,9 +111,10 @@ export const useRegisterForm = (onSubmitSuccess: () => void) => {
     setFormData,
     fieldErrors,
     formError,
-    isLoading: mutation.isPending,
+    isLoading: mutation.isPending || googleMutation.isPending,
     clearFieldError,
     handleSubmit,
     getPasswordStrength,
+    handleGoogleLogin,
   };
 };

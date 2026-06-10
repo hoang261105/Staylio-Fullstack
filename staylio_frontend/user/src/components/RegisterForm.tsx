@@ -1,10 +1,11 @@
 import { User, Mail, Lock } from "lucide-react";
 import React, { type Dispatch, type SetStateAction } from "react";
-import { FaGoogle } from "react-icons/fa6";
+import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { InputField } from "../../../common/components/InputField";
 import type { UserRegisterRequest } from "../../../common/interfaces/request/UserRegisterRequest";
+import toast from "react-hot-toast";
 
 interface RegisterFormErrors {
   userName?: string;
@@ -28,6 +29,7 @@ interface RegisterFormProps {
   isLoading: boolean;
   onSubmit: (event: React.SyntheticEvent<HTMLFormElement>) => void;
   passwordStrength: PasswordStrength;
+  onGoogleLogin?: (credential: string) => void;
 }
 
 export const RegisterForm = ({
@@ -37,6 +39,7 @@ export const RegisterForm = ({
   isLoading,
   onSubmit,
   passwordStrength,
+  onGoogleLogin,
 }: RegisterFormProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -61,11 +64,18 @@ export const RegisterForm = ({
       </div>
 
       {/* Social Register */}
-      <div className="space-y-4 mb-8">
-        <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-xl hover:bg-gray-50 dark:bg-gray-700 hover:border-gray-400 transition-all shadow-sm font-medium text-gray-700 dark:text-gray-200 active:scale-[0.98]">
-          <FaGoogle className="w-5 h-5 text-red-500" />
-          <span>{t('registerScreen.form.continueWithGoogle')}</span>
-        </button>
+      <div className="flex justify-center w-full mb-8">
+        <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            if (credentialResponse.credential && onGoogleLogin) {
+              onGoogleLogin(credentialResponse.credential);
+            }
+          }}
+          onError={() => {
+            toast.error("Đăng nhập Google thất bại");
+          }}
+          useOneTap
+        />
       </div>
 
       <div className="flex items-center mb-8">

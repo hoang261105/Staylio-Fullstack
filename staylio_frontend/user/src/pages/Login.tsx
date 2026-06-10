@@ -14,7 +14,8 @@ export default function Login() {
     setRememberMe, 
     fieldErrors, 
     isLoading, 
-    handleSubmit 
+    handleSubmit,
+    handleGoogleLogin
   } = useLoginForm(() => {
     navigate("/");
   });
@@ -36,6 +37,7 @@ export default function Login() {
             fieldErrors={fieldErrors}
             isLoading={isLoading}
             onSubmit={handleSubmit}
+            onGoogleLogin={handleGoogleLogin}
           />
         </div>
       </div>

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Mail, Lock } from "lucide-react";
-import { FaGoogle } from "react-icons/fa";
+import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from "react-router-dom";
 import { InputField } from "../../../common/components/InputField";
+import toast from "react-hot-toast";
 
 export default function LoginForm({
   formData,
@@ -12,6 +13,7 @@ export default function LoginForm({
   fieldErrors,
   isLoading,
   onSubmit,
+  onGoogleLogin,
 }: any) {
   const navigate = useNavigate();
   return (
@@ -33,11 +35,18 @@ export default function LoginForm({
         </p>
       </div>
 
-      <div className="space-y-4 mb-8">
-        <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-xl hover:bg-gray-50 dark:bg-gray-700 hover:border-gray-400 transition-all shadow-sm font-medium text-gray-700 dark:text-gray-200 active:scale-[0.98]">
-          <FaGoogle className="w-5 h-5 text-red-500" />
-          <span>Tiếp tục với Google</span>
-        </button>
+      <div className="flex justify-center w-full mb-8">
+        <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            if (credentialResponse.credential) {
+              onGoogleLogin(credentialResponse.credential);
+            }
+          }}
+          onError={() => {
+            toast.error("Đăng nhập Google thất bại");
+          }}
+          useOneTap
+        />
       </div>
 
       <div className="flex items-center mb-8">
