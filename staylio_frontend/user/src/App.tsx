@@ -7,7 +7,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const queryClient = new QueryClient();
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "148721644781-iun8k2fntp42qikof6l051q330d80m2k.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "118146961643-tirpb2rd9vcjcbtphk3s58e4o75jr7rn.apps.googleusercontent.com";
 
 export default function App() {
   return (
