@@ -505,7 +505,9 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
                 q = q.replaceAll("[?.,!]", " ");
 
-                q = q.replaceAll("\\b(có|không|cho tôi|tìm|kiếm|muốn|cần|xem|hỏi|giúp tôi|cho hỏi)\\b", " ");
+                q = q.replaceAll(
+                                "\\b(có|không|cho tôi|tìm|kiếm|muốn|cần|xem|hỏi|giúp tôi|cho hỏi|mà|thì|là|được|vậy|nhé|nha|nhỉ|ạ|chứ|cho|để|về|của|các|những)\\b",
+                                " ");
                 q = q.replaceAll("\\b(phòng|khách sạn|chi nhánh|ở|tại|giá|bao nhiêu|còn|trống|nào|loại|với)\\b", " ");
 
                 q = q.replaceAll("\\b(dưới|trên|từ|đến|khoảng|tầm|nhỏ hơn|lớn hơn|ít hơn|nhiều hơn|hơn)\\b", " ");
@@ -515,7 +517,7 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
                 q = q.replaceAll("\\s+", " ").trim();
 
-                return q.isBlank() ? null : q;
+                return q.isBlank() || q.length() <= 2 ? null : q;
         }
 
         private ChatMessageResponse convertMessageToResponse(ChatMessage message) {
