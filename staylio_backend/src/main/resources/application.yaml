@@ -54,10 +54,13 @@ spring:
             scope:
               - email
               - profile
-
-spring.ai.openai.api-key: ${GEMINI_API_KEY}
-spring.ai.openai.base-url: https://generativelanguage.googleapis.com/v1beta/openai/
-spring.ai.openai.chat.options.model: gemini-2.5-flash
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.groq.com/openai
+      chat:
+        options:
+          model: llama-3.1-8b-instant
 
 zalopay:
   app-id: ${ZALOPAY_APP_ID}

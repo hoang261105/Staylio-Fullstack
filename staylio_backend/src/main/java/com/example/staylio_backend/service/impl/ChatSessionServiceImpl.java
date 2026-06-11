@@ -142,9 +142,10 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                         return convertMessageToResponse(savedAiMessage);
 
                 } catch (Exception ex) {
+                        ex.printStackTrace();
                         throw new AppException(
                                         ErrorCode.AI_QUOTA_EXCEEDED,
-                                        "AI hiện đã hết lượt miễn phí hoặc đang gặp sự cố, vui lòng thử lại sau.");
+                                        "AI hiện đã hết lượt miễn phí hoặc đang gặp sự cố, vui lòng thử lại sau. (Chi tiết lỗi xem ở Console log)");
                 }
         }
 
