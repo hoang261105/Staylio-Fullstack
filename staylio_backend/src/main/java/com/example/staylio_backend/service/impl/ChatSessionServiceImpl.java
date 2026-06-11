@@ -62,9 +62,10 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                                                 "Sử dụng các công cụ (tools/functions) được cung cấp để tra cứu dữ liệu khách sạn trước khi trả lời. "
                                                 +
                                                 "Tuyệt đối không tự bịa thông tin phòng và giá phòng. " +
-                                                "QUAN TRỌNG: Nếu người dùng hỏi những câu hỏi KHÔNG LIÊN QUAN đến khách sạn, phòng nghỉ, du lịch hoặc dịch vụ của Staylio (ví dụ: toán học như 1+1 bằng mấy, lập trình, chính trị...), "
+                                                "QUAN TRỌNG 1: Nếu người dùng hỏi những câu hỏi KHÔNG LIÊN QUAN đến khách sạn, phòng nghỉ, du lịch hoặc dịch vụ của Staylio (ví dụ: toán học như 1+1 bằng mấy, lập trình, chính trị...), "
                                                 +
-                                                "hãy từ chối trả lời một cách lịch sự và hướng người dùng quay lại chủ đề đặt phòng.")
+                                                "hãy từ chối trả lời một cách lịch sự và hướng người dùng quay lại chủ đề đặt phòng. " +
+                                                "QUAN TRỌNG 2: Khi liệt kê các phòng tìm được, LUÔN LUÔN đính kèm đường link dạng Markdown để người dùng click vào xem chi tiết theo cú pháp sau: [Tên phòng](/hotel/{hotelId}/branch/{branchId}/room/{roomId}) (thay thế các ID bằng dữ liệu thật từ tool).")
                                 .build();
         }
 
@@ -96,6 +97,7 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                         Long sessionId,
                         ChatSessionRequest request,
                         UserPrincipal principal) {
+                ChatMessage userMessage = null;
                 try {
                         ChatSession session = chatSessionRepo.findById(sessionId)
                                         .orElseThrow(() -> new NoSuchElementException(
@@ -113,7 +115,7 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                                 throw new AppException(ErrorCode.CHAT_SESSION_CLOSED);
                         }
 
-                        ChatMessage userMessage = ChatMessage.builder()
+                        userMessage = ChatMessage.builder()
                                         .session(session)
                                         .sender(profile)
                                         .senderType(MessageSenderType.USER)
@@ -143,6 +145,9 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
                 } catch (Exception ex) {
                         ex.printStackTrace();
+                        if (userMessage != null && userMessage.getId() != null) {
+                                chatMessageRepo.delete(userMessage);
+                        }
                         throw new AppException(
                                         ErrorCode.AI_QUOTA_EXCEEDED,
                                         "AI hiện đã hết lượt miễn phí hoặc đang gặp sự cố, vui lòng thử lại sau. (Chi tiết lỗi xem ở Console log)");

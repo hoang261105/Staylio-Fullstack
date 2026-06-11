@@ -12,6 +12,7 @@ interface NearbyPlacesListProps {
 
 export default function NearbyPlacesList({ places, isLoading }: NearbyPlacesListProps) {
   const { t } = useTranslation();
+  const [showAll, setShowAll] = useState(false);
 
   if (isLoading) {
     return (
@@ -30,8 +31,6 @@ export default function NearbyPlacesList({ places, isLoading }: NearbyPlacesList
       </div>
     );
   }
-
-  const [showAll, setShowAll] = useState(false);
 
   const visiblePlaces = showAll ? places : places.slice(0, 6);
 

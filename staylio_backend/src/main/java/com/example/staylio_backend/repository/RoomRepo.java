@@ -89,6 +89,7 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
                 JOIN hb.hotel h
                 WHERE r.isActive = true
                   AND (:status IS NULL OR r.status = :status)
+                  AND (:capacity IS NULL OR r.capacity >= :capacity)
                   AND (:minPrice IS NULL OR r.price >= :minPrice)
                   AND (:maxPrice IS NULL OR r.price <= :maxPrice)
                   AND (
@@ -103,6 +104,7 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
     List<Room> searchRoomsForAI(
             @Param("search") String search,
             @Param("status") RoomStatus status,
+            @Param("capacity") Integer capacity,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
             Pageable pageable);

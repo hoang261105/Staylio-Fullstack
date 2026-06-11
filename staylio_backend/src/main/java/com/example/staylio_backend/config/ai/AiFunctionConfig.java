@@ -23,10 +23,14 @@ public class AiFunctionConfig {
             String keyword,
             BigDecimal minPrice,
             BigDecimal maxPrice,
-            RoomStatus status
+            RoomStatus status,
+            Integer capacity
     ) {}
 
     public record RoomSearchDto(
+            Long hotelId,
+            Long branchId,
+            Long roomId,
             String roomName,
             String roomNumber,
             String branchName,
@@ -37,12 +41,13 @@ public class AiFunctionConfig {
     ) {}
 
     @Bean
-    @Description("Tìm kiếm các phòng/khách sạn trong hệ thống dựa trên từ khóa (địa điểm, tên khách sạn), khoảng giá (minPrice, maxPrice) hoặc trạng thái phòng (chỉ truyền 'AVAILABLE' nếu khách muốn phòng trống).")
+    @Description("Tìm kiếm các phòng/khách sạn trong hệ thống dựa trên từ khóa (địa điểm, tên khách sạn), khoảng giá (minPrice, maxPrice), trạng thái phòng (truyền 'AVAILABLE'), hoặc sức chứa (capacity - số lượng người ở).")
     public Function<RoomSearchRequest, List<RoomSearchDto>> searchAvailableRoomsFunction() {
         return request -> {
             List<Room> rooms = roomRepo.searchRoomsForAI(
                     request.keyword(),
                     request.status(),
+                    request.capacity(),
                     request.minPrice(),
                     request.maxPrice(),
                     PageRequest.of(0, 10)
@@ -50,6 +55,9 @@ public class AiFunctionConfig {
 
             return rooms.stream()
                     .map(room -> new RoomSearchDto(
+                            room.getHotelBranch().getHotel().getId(),
+                            room.getHotelBranch().getId(),
+                            room.getId(),
                             room.getRoomName(),
                             room.getRoomNumber(),
                             room.getHotelBranch().getBranchName(),
