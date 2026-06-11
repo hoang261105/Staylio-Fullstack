@@ -16,7 +16,7 @@ export default function RegisterSideBar() {
         </div>
 
         <div className="relative z-10 flex flex-col justify-between p-16 text-white h-full w-full">
-          <div className="bg-white dark:bg-gray-800/10 backdrop-blur-md rounded-2xl w-48 p-4 inline-flex items-center justify-center mb-6 shadow-xl border border-white/20">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl w-48 p-4 inline-flex items-center justify-center mb-6 shadow-xl border border-white/20">
             <img
               src="/slogan.png"
               alt="Staylio"
@@ -34,7 +34,7 @@ export default function RegisterSideBar() {
 
             <div className="space-y-6">
               <div className="flex items-center gap-4 group/item">
-                <div className="w-12 h-12 bg-white dark:bg-gray-800/10 backdrop-blur-md rounded-xl flex items-center justify-center shrink-0 border border-white/20 group-hover/item:bg-white dark:bg-gray-800/20 transition-colors shadow-lg">
+                <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center shrink-0 border border-white/20 group-hover/item:bg-white/20 transition-colors shadow-lg">
                   <PartyPopper className="w-6 h-6 text-yellow-200" />
                 </div>
                 <div>
@@ -44,7 +44,7 @@ export default function RegisterSideBar() {
               </div>
 
               <div className="flex items-center gap-4 group/item">
-                <div className="w-12 h-12 bg-white dark:bg-gray-800/10 backdrop-blur-md rounded-xl flex items-center justify-center shrink-0 border border-white/20 group-hover/item:bg-white dark:bg-gray-800/20 transition-colors shadow-lg">
+                <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center shrink-0 border border-white/20 group-hover/item:bg-white/20 transition-colors shadow-lg">
                   <Gem className="w-6 h-6 text-purple-200" />
                 </div>
                 <div>
@@ -54,7 +54,7 @@ export default function RegisterSideBar() {
               </div>
 
               <div className="flex items-center gap-4 group/item">
-                <div className="w-12 h-12 bg-white dark:bg-gray-800/10 backdrop-blur-md rounded-xl flex items-center justify-center shrink-0 border border-white/20 group-hover/item:bg-white dark:bg-gray-800/20 transition-colors shadow-lg">
+                <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center shrink-0 border border-white/20 group-hover/item:bg-white/20 transition-colors shadow-lg">
                   <Smartphone className="w-6 h-6 text-blue-200" />
                 </div>
                 <div>

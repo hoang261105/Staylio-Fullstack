@@ -1,6 +1,5 @@
 server:
   port: ${PORT:8080}
-  forward-headers-strategy: framework
   servlet:
     context-path: /api/v1
 
@@ -21,8 +20,8 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        format_sql: false
-        show_sql: false
+        format_sql: true
+        show_sql: true
   mail:
     host: smtp.gmail.com
     port: 587
