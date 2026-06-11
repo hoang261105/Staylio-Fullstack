@@ -16,9 +16,11 @@ export const LocationGrid: React.FC<LocationGridProps> = ({ locations }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {locations.map((location) => (
-        <LocationCard key={location.provinceId} location={location} />
+        <div key={location.provinceId} className="w-[80vw] sm:w-[300px] shrink-0 snap-start">
+          <LocationCard location={location} />
+        </div>
       ))}
     </div>
   );
