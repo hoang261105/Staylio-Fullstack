@@ -16,6 +16,7 @@ java {
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
 }
 
 dependencies {
@@ -68,6 +69,9 @@ dependencies {
 
     // 3. OAuth2 Client của Spring Boot (Hỗ trợ cấu hình Security dễ dàng hơn)
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter:1.0.0-M1'
+
 }
 
 tasks.named('test') {

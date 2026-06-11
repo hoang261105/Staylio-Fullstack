@@ -15,35 +15,58 @@ import com.example.staylio_backend.model.entity.*;
 import com.example.staylio_backend.model.enums.*;
 import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.ChatSessionService;
-import com.example.staylio_backend.service.GeminiService;
 import com.example.staylio_backend.service.NotificationService;
+import org.springframework.ai.chat.client.ChatClient;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ChatSessionServiceImpl implements ChatSessionService {
 
         private final ChatSessionRepo chatSessionRepo;
         private final ChatMessageRepo chatMessageRepo;
         private final ProfileRepo profileRepo;
-        private final GeminiService geminiService;
         private final RoomRepo roomRepo;
         private final HotelBranchRepo branchRepo;
         private final NotificationService notificationService;
+        private final ChatClient chatClient;
+
+        public ChatSessionServiceImpl(
+                        ChatSessionRepo chatSessionRepo,
+                        ChatMessageRepo chatMessageRepo,
+                        ProfileRepo profileRepo,
+                        RoomRepo roomRepo,
+                        HotelBranchRepo branchRepo,
+                        NotificationService notificationService,
+                        ChatClient.Builder chatClientBuilder) {
+                this.chatSessionRepo = chatSessionRepo;
+                this.chatMessageRepo = chatMessageRepo;
+                this.profileRepo = profileRepo;
+                this.roomRepo = roomRepo;
+                this.branchRepo = branchRepo;
+                this.notificationService = notificationService;
+                this.chatClient = chatClientBuilder
+                                .defaultSystem("Bạn là trợ lý AI của hệ thống đặt phòng khách sạn Staylio. " +
+                                                "Nhiệm vụ của bạn là hỗ trợ khách hàng tìm kiếm khách sạn, phòng, và trả lời các thắc mắc. "
+                                                +
+                                                "Luôn trả lời bằng tiếng Việt, thân thiện, và ngắn gọn. " +
+                                                "Sử dụng các công cụ (tools/functions) được cung cấp để tra cứu dữ liệu khách sạn trước khi trả lời. "
+                                                +
+                                                "Tuyệt đối không tự bịa thông tin phòng và giá phòng. " +
+                                                "QUAN TRỌNG: Nếu người dùng hỏi những câu hỏi KHÔNG LIÊN QUAN đến khách sạn, phòng nghỉ, du lịch hoặc dịch vụ của Staylio (ví dụ: toán học như 1+1 bằng mấy, lập trình, chính trị...), "
+                                                +
+                                                "hãy từ chối trả lời một cách lịch sự và hướng người dùng quay lại chủ đề đặt phòng.")
+                                .build();
+        }
 
         @Override
         public ChatSessionResponse createOrGetAiSession(UserPrincipal principal) {
@@ -100,9 +123,11 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
                         chatMessageRepo.save(userMessage);
 
-                        String prompt = buildPrompt(request.getContent());
-
-                        String aiAnswer = geminiService.ask(prompt);
+                        String aiAnswer = chatClient.prompt()
+                                        .user(request.getContent())
+                                        .functions("searchAvailableRoomsFunction")
+                                        .call()
+                                        .content();
 
                         ChatMessage aiMessage = ChatMessage.builder()
                                         .session(session)
@@ -116,10 +141,10 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
                         return convertMessageToResponse(savedAiMessage);
 
-                } catch (HttpClientErrorException.TooManyRequests ex) {
+                } catch (Exception ex) {
                         throw new AppException(
                                         ErrorCode.AI_QUOTA_EXCEEDED,
-                                        "AI hiện đã hết lượt miễn phí hoặc đang bị giới hạn, vui lòng thử lại sau.");
+                                        "AI hiện đã hết lượt miễn phí hoặc đang gặp sự cố, vui lòng thử lại sau.");
                 }
         }
 
@@ -338,187 +363,8 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                 return new PaginationResponse<>(content, pagination);
         }
 
-        private String buildPrompt(String userQuestion) {
-                ChatIntent intent = detectIntent(userQuestion);
-
-                BigDecimal minPrice = extractMinPrice(userQuestion);
-                BigDecimal maxPrice = extractMaxPrice(userQuestion);
-                String keyword = extractKeyword(userQuestion);
-
-                RoomStatus status = null;
-
-                if (intent == ChatIntent.ROOM_AVAILABILITY) {
-                        status = RoomStatus.AVAILABLE;
-                }
-
-                List<Room> rooms = roomRepo.searchRoomsForAI(
-                                keyword,
-                                status,
-                                minPrice,
-                                maxPrice,
-                                PageRequest.of(0, 10));
-
-                String roomContext = buildRoomContext(rooms);
-
-                return """
-                                Bạn là trợ lý AI của hệ thống khách sạn Staylio.
-
-                                Quy tắc trả lời:
-                                - Chỉ trả lời dựa trên dữ liệu hệ thống được cung cấp.
-                                - Không tự bịa khách sạn, chi nhánh, phòng, giá hoặc trạng thái phòng.
-                                - Nếu không có dữ liệu phù hợp, hãy nói rõ chưa tìm thấy thông tin phù hợp trong hệ thống.
-                                - Trả lời ngắn gọn, dễ hiểu, bằng tiếng Việt.
-                                - Nếu có danh sách phòng, hãy liệt kê tên phòng, chi nhánh, giá và sức chứa.
-
-                                Intent: %s
-                                Từ khóa tìm kiếm: %s
-                                Giá tối thiểu: %s
-                                Giá tối đa: %s
-                                Trạng thái phòng cần tìm: %s
-
-                                Dữ liệu phòng phù hợp:
-                                %s
-
-                                Câu hỏi khách hàng:
-                                %s
-                                """
-                                .formatted(
-                                                intent,
-                                                keyword != null ? keyword : "Không có",
-                                                minPrice != null ? minPrice + " VNĐ" : "Không có",
-                                                maxPrice != null ? maxPrice + " VNĐ" : "Không có",
-                                                status != null ? status : "Không lọc",
-                                                roomContext,
-                                                userQuestion);
-        }
-
-        private ChatIntent detectIntent(String question) {
-                if (question == null || question.isBlank()) {
-                        return ChatIntent.GENERAL;
-                }
-
-                String q = question.toLowerCase();
-
-                if (q.contains("còn phòng")
-                                || q.contains("phòng trống")
-                                || q.contains("còn trống")
-                                || q.contains("available")) {
-                        return ChatIntent.ROOM_AVAILABILITY;
-                }
-
-                if (q.contains("giá")
-                                || q.contains("bao nhiêu")
-                                || q.contains("triệu")
-                                || q.contains("vnđ")
-                                || q.contains("vnd")
-                                || q.contains("đồng")) {
-                        return ChatIntent.ROOM_PRICE;
-                }
-
-                if (q.contains("phòng")
-                                || q.contains("room")
-                                || q.contains("chi nhánh")
-                                || q.contains("khách sạn")) {
-                        return ChatIntent.ROOM_SEARCH;
-                }
-
-                return ChatIntent.GENERAL;
-        }
-
-        private String buildRoomContext(List<Room> rooms) {
-                if (rooms == null || rooms.isEmpty()) {
-                        return "Hiện chưa tìm thấy phòng phù hợp trong hệ thống.";
-                }
-
-                return rooms.stream()
-                                .map(room -> """
-                                                - Tên phòng: %s
-                                                  Số phòng: %s
-                                                  Chi nhánh: %s
-                                                  Khách sạn: %s
-                                                  Giá: %s VNĐ
-                                                  Sức chứa: %s người
-                                                  Trạng thái: %s
-                                                """.formatted(
-                                                room.getRoomName(),
-                                                room.getRoomNumber(),
-                                                room.getHotelBranch().getBranchName(),
-                                                room.getHotelBranch().getHotel().getName(),
-                                                room.getPrice(),
-                                                room.getCapacity(),
-                                                room.getStatus()))
-                                .collect(Collectors.joining("\n"));
-        }
-
-        private BigDecimal extractMinPrice(String question) {
-                if (question == null) {
-                        return null;
-                }
-
-                String q = question.toLowerCase();
-
-                if (q.contains("trên 1 triệu")
-                                || q.contains("hơn 1 triệu")
-                                || q.contains("hon 1 trieu")) {
-                        return BigDecimal.valueOf(1_000_000);
-                }
-
-                if (q.contains("trên 2 triệu")
-                                || q.contains("hơn 2 triệu")
-                                || q.contains("hon 2 trieu")) {
-                        return BigDecimal.valueOf(2_000_000);
-                }
-
-                return null;
-        }
-
-        private BigDecimal extractMaxPrice(String question) {
-                if (question == null) {
-                        return null;
-                }
-
-                String q = question.toLowerCase();
-
-                if (q.contains("dưới 1 triệu")
-                                || q.contains("duoi 1 trieu")
-                                || q.contains("nhỏ hơn 1 triệu")
-                                || q.contains("ít hơn 1 triệu")) {
-                        return BigDecimal.valueOf(1_000_000);
-                }
-
-                if (q.contains("dưới 2 triệu")
-                                || q.contains("duoi 2 trieu")
-                                || q.contains("nhỏ hơn 2 triệu")
-                                || q.contains("ít hơn 2 triệu")) {
-                        return BigDecimal.valueOf(2_000_000);
-                }
-
-                return null;
-        }
-
-        private String extractKeyword(String question) {
-                if (question == null || question.isBlank()) {
-                        return null;
-                }
-
-                String q = question.toLowerCase();
-
-                q = q.replaceAll("[?.,!]", " ");
-
-                q = q.replaceAll(
-                                "\\b(có|không|cho tôi|tìm|kiếm|muốn|cần|xem|hỏi|giúp tôi|cho hỏi|mà|thì|là|được|vậy|nhé|nha|nhỉ|ạ|chứ|cho|để|về|của|các|những)\\b",
-                                " ");
-                q = q.replaceAll("\\b(phòng|khách sạn|chi nhánh|ở|tại|giá|bao nhiêu|còn|trống|nào|loại|với)\\b", " ");
-
-                q = q.replaceAll("\\b(dưới|trên|từ|đến|khoảng|tầm|nhỏ hơn|lớn hơn|ít hơn|nhiều hơn|hơn)\\b", " ");
-                q = q.replaceAll("\\b(triệu|tr|k|nghìn|ngàn|vnd|vnđ|đồng)\\b", " ");
-
-                q = q.replaceAll("\\d+(\\.\\d+)?", " ");
-
-                q = q.replaceAll("\\s+", " ").trim();
-
-                return q.isBlank() || q.length() <= 2 ? null : q;
-        }
+        // Các helper methods cũ đã được xóa vì Spring AI tự động gọi Tool (Function
+        // Calling).
 
         private ChatMessageResponse convertMessageToResponse(ChatMessage message) {
                 Profile sender = message.getSender();
