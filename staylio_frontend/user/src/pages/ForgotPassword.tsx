@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Mail, ArrowLeft } from "lucide-react";
+import { Mail, ArrowLeft, Loader2 } from "lucide-react";
 import VerifyResetEmail from "./VerifyResetEmail";
 import ForgotPassSideBar from "../components/ForgotPassSideBar";
 import { useForgotPassword } from "../../../common/hooks/useForgotPassword";
@@ -13,7 +13,8 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { mutateAsync } = useForgotPassword();
+  const { mutateAsync, isPending, isLoading } = useForgotPassword() as any;
+  const loading = isPending || isLoading;
   const { handleApiErrors } = useApiErrors();
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -85,9 +86,17 @@ export default function ForgotPassword() {
 
             <Button
               type="submit"
+              disabled={loading}
               className="w-full py-6 text-lg font-semibold rounded-xl"
             >
-              Gửi link khôi phục
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Đang gửi...
+                </>
+              ) : (
+                "Gửi link khôi phục"
+              )}
             </Button>
           </form>
 
