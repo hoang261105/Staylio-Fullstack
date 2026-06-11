@@ -71,6 +71,7 @@ public class AuthServiceImpl implements AuthService {
     private String googleClientId;
 
     @Override
+    @Transactional
     public User register(UserRegisterRequest userRegisterRequest) {
         boolean isExistUserName = accountRepo.existsByUserName(userRegisterRequest.getUserName());
         boolean isExistEmail = accountRepo.existsByEmail(userRegisterRequest.getEmail());
