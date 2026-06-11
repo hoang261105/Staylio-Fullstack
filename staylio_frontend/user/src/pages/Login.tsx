@@ -27,7 +27,7 @@ export default function Login() {
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
 
-        <div className="w-full max-w-[440px] bg-card p-8 sm:p-10 rounded-3xl shadow-2xl border border-border relative z-10">
+        <div className="w-full max-w-110 bg-card p-8 sm:p-10 rounded-3xl shadow-2xl border border-border relative z-10">
           <LoginForm
             formData={formData}
             setFormData={setFormData}

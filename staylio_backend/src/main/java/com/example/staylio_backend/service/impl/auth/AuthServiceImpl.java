@@ -70,6 +70,9 @@ public class AuthServiceImpl implements AuthService {
     @Value(value = "${spring.security.oauth2.client.registration.google.client-id}")
     private String googleClientId;
 
+    @Value(value = "${spring.app.frontend.url}")
+    private String frontendUrl;
+
     @Override
     @Transactional
     public User register(UserRegisterRequest userRegisterRequest) {
@@ -110,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
         String token = verificationService.createVerificationToken(savedUser, VerificationType.VERIFY_EMAIL);
 
         try {
-            String verifyLink = "http://localhost:3002/verify-email?token=" + token;
+            String verifyLink = frontendUrl + "/verify-email?token=" + token;
 
             String content = "<h3>Dear " + savedUser.getUserName() + ",</h3>" +
                     "<p>Thank you for registering an account at Staylio.</p>" +
@@ -174,7 +177,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             String token = verificationService.createVerificationToken(optionalUser, VerificationType.RESET_PASSWORD);
 
-            String resetLink = "http://localhost:3002/reset-password?token=" + token;
+            String resetLink = frontendUrl + "/reset-password?token=" + token;
 
             String content = "<p>You have requested a password reset. Please click the link below:</p>" +
                     "<a href='" + resetLink + "'>RESET PASSWORD</a>";
