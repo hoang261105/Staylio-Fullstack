@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
@@ -637,6 +638,10 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if (!request.getCheckOutDate().isAfter(request.getCheckInDate())) {
+            throw new AppException(ErrorCode.INVALID_BOOKING_DATE);
+        }
+
+        if (request.getCheckInDate().isBefore(LocalDate.now())) {
             throw new AppException(ErrorCode.INVALID_BOOKING_DATE);
         }
 

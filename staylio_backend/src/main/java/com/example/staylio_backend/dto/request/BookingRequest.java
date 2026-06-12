@@ -4,6 +4,7 @@ import com.example.staylio_backend.common.utils.CustomDateDeserializer;
 import com.example.staylio_backend.model.enums.PaymentMethod;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,7 @@ public class BookingRequest {
 
     @NotNull(message = "Vui lòng nhập ngày nhận phòng!")
     @JsonDeserialize(using = CustomDateDeserializer.class)
-    @Future(message = "Ngày nhận phòng phải lớn hơn ngày hiện tại!")
+    @FutureOrPresent(message = "Ngày nhận phòng không được ở trong quá khứ!")
     private LocalDate checkInDate;
 
     @NotNull(message = "Vui lòng nhập ngày trả phòng!")
