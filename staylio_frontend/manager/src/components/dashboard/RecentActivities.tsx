@@ -30,14 +30,14 @@ export default function RecentActivities({ hotelBranchId }: { hotelBranchId: num
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-[#0066FF]" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
 
   if (isError || !data || data.items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+      <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
         <Activity className="w-10 h-10 mb-3 opacity-30" />
         <p>Chưa có hoạt động nào được ghi nhận</p>
       </div>
@@ -49,20 +49,20 @@ export default function RecentActivities({ hotelBranchId }: { hotelBranchId: num
       {data.items.map((booking) => {
         const statusConfig = getBookingStatusConfig(booking.status);
         return (
-          <div key={booking.id} className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors rounded-xl border border-gray-100">
+          <div key={booking.id} className="flex items-center justify-between p-4 bg-muted/50 hover:bg-muted transition-colors rounded-xl">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-semibold text-gray-900">{booking.customerName}</span>
-                <span className="text-xs text-gray-500 bg-white border border-gray-200 px-2 py-0.5 rounded-full">{booking.bookingCode}</span>
+                <span className="font-semibold text-foreground">{booking.customerName}</span>
+                <span className="text-xs text-muted-foreground bg-background px-2 py-0.5 rounded-full shadow-sm">{booking.bookingCode}</span>
                 <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${statusConfig.color}`}>
                   {statusConfig.label}
                 </span>
               </div>
-              <p className="text-sm text-gray-500 mt-1">Đã đặt <span className="font-medium text-gray-700">{booking.roomName}</span></p>
+              <p className="text-sm text-muted-foreground mt-1">Đã đặt <span className="font-medium text-foreground">{booking.roomName}</span></p>
             </div>
             <div className="text-right">
               <p className="font-semibold text-emerald-600">{formatCurrency(booking.finalPrice)}</p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 {formatDistanceToNow(new Date(booking.createdAt), { addSuffix: true, locale: vi })}
               </p>
             </div>

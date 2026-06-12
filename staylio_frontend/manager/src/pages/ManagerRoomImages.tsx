@@ -21,6 +21,7 @@ import ManagerLayout from "../layout/ManagerLayout";
 import ManagerRoomImageDetail from "../components/room-images/ManagerRoomImageDetail";
 import RoomImageListView from "../components/room-images/RoomImageListView";
 import ConfirmRoomImageStatusModal from "@common/components/ConfirmRoomImageStatusModal";
+import { Button } from "@common/components/ui/button";
 
 const SORT_OPTIONS = [
   { value: "createdAt", label: "Ngày tạo" },
@@ -112,20 +113,20 @@ export default function ManagerRoomImages() {
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-                <ImageIcon className="w-8 h-8 text-[#0066FF]" />
+              <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-3">
+                <ImageIcon className="w-8 h-8 text-primary" />
                 Quản lý hình ảnh phòng
               </h1>
-              <p className="text-gray-500">
+              <p className="text-muted-foreground">
                 Xem và kiểm duyệt hình ảnh của tất cả các phòng trong hệ thống
                 Staylio
               </p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col gap-5">
+          <div className="bg-card text-foreground rounded-2xl p-6 border border-border shadow-sm flex flex-col gap-5">
             <div className="w-full relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Tìm kiếm hình ảnh theo tên phòng, mã phòng..."
@@ -134,17 +135,17 @@ export default function ManagerRoomImages() {
                   setSearchQuery(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-background border border-input rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-foreground"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="relative">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground z-10 pointer-events-none" />
                 <select
                   value={selectedBranch}
                   onChange={(e) => setSelectedBranch(e.target.value)}
-                  className="w-full pl-12 pr-10 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700 truncate"
+                  className="w-full pl-12 pr-10 py-3 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer font-medium text-foreground truncate"
                 >
                   <option value="all">Tất cả chi nhánh</option>
                   {branches?.map((b) => (
@@ -153,12 +154,12 @@ export default function ManagerRoomImages() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
               </div>
 
               <div className="relative">
                 <Bed
-                  className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 z-10 pointer-events-none ${selectedBranch === "all" ? "text-gray-300" : "text-gray-400"}`}
+                  className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 z-10 pointer-events-none ${selectedBranch === "all" ? "text-muted-foreground/50" : "text-muted-foreground"}`}
                 />
                 <select
                   value={selectedRoom}
@@ -167,9 +168,9 @@ export default function ManagerRoomImages() {
                     setPage(0);
                   }}
                   disabled={selectedBranch === "all"}
-                  className={`w-full pl-12 pr-10 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 transition-all font-medium truncate ${selectedBranch === "all"
-                    ? "opacity-60 cursor-not-allowed text-gray-400"
-                    : "cursor-pointer focus:bg-white text-gray-700"
+                  className={`w-full pl-12 pr-10 py-3 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-medium truncate ${selectedBranch === "all"
+                    ? "opacity-60 cursor-not-allowed text-muted-foreground"
+                    : "cursor-pointer text-foreground"
                     }`}
                 >
                   {selectedBranch === "all" ? (
@@ -184,18 +185,18 @@ export default function ManagerRoomImages() {
                     ))
                   )}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
               </div>
 
               <div className="relative">
-                <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
+                <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground z-10 pointer-events-none" />
                 <select
                   value={selectedStatus}
                   onChange={(e) => {
                     setSelectedStatus(e.target.value);
                     setPage(0);
                   }}
-                  className="w-full pl-12 pr-10 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700 truncate"
+                  className="w-full pl-12 pr-10 py-3 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer font-medium text-foreground truncate"
                 >
                   {STATUS_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -203,12 +204,12 @@ export default function ManagerRoomImages() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2 border-t border-gray-100">
-              <span className="text-xs text-gray-500 font-bold uppercase tracking-wider self-center mr-auto sm:mb-0 mb-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2 border-t border-border">
+              <span className="text-xs text-muted-foreground font-bold uppercase tracking-wider self-center mr-auto sm:mb-0 mb-2">
                 Sắp xếp danh sách
               </span>
               <div className="flex flex-wrap gap-2">
@@ -219,7 +220,7 @@ export default function ManagerRoomImages() {
                       setSortBy(e.target.value);
                       setPage(0);
                     }}
-                    className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700 text-sm"
+                    className="w-full pl-4 pr-10 py-2.5 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer font-medium text-foreground text-sm"
                   >
                     {SORT_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -227,36 +228,37 @@ export default function ManagerRoomImages() {
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                 </div>
 
-                <button
+                <Button
+                  variant="outline"
                   onClick={() => {
                     setDirection(direction === "asc" ? "desc" : "asc");
                     setPage(0);
                   }}
-                  className="px-4 py-2.5 bg-gray-50 border border-transparent rounded-xl hover:bg-gray-100 text-gray-700 font-medium text-sm transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl flex items-center gap-1.5 h-auto text-sm"
                 >
                   {direction === "asc" ? "↑ Tăng dần" : "↓ Giảm dần"}
-                </button>
+                </Button>
               </div>
             </div>
           </div>
 
           {isLoading ? (
-            <div className="bg-white rounded-2xl border border-gray-100 p-20 flex flex-col items-center justify-center gap-3 shadow-sm">
-              <div className="w-10 h-10 border-4 border-[#0066FF] border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-gray-500 font-medium">
+            <div className="bg-card rounded-2xl border border-border p-20 flex flex-col items-center justify-center gap-3 shadow-sm">
+              <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-muted-foreground font-medium">
                 Đang tải danh sách hình ảnh...
               </p>
             </div>
           ) : roomImages.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-gray-100 p-20 flex flex-col items-center justify-center text-center shadow-sm">
-              <ImageIcon className="w-16 h-16 text-gray-300 mb-4" />
-              <h3 className="text-lg font-bold text-gray-900 mb-1">
+            <div className="bg-card rounded-2xl border border-border p-20 flex flex-col items-center justify-center text-center shadow-sm">
+              <ImageIcon className="w-16 h-16 text-muted mb-4" />
+              <h3 className="text-lg font-bold text-foreground mb-1">
                 Không tìm thấy hình ảnh nào
               </h3>
-              <p className="text-gray-500 max-w-md">
+              <p className="text-muted-foreground max-w-md">
                 Thử thay đổi bộ lọc tìm kiếm hoặc các cấp thương hiệu, chi nhánh
                 để tìm được kết quả mong muốn.
               </p>
@@ -276,14 +278,14 @@ export default function ManagerRoomImages() {
               />
 
               {totalPages > 0 && (
-                <div className="p-4 bg-white rounded-2xl border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between text-sm text-gray-500 gap-4 shadow-sm">
+                <div className="p-4 bg-card rounded-2xl border border-border flex flex-col sm:flex-row sm:items-center justify-between text-sm text-muted-foreground gap-4 shadow-sm">
                   <div>
                     Hiển thị{" "}
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-foreground">
                       {roomImages.length}
                     </span>{" "}
                     trên tổng số{" "}
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-foreground">
                       {totalElements}
                     </span>{" "}
                     hình ảnh phòng

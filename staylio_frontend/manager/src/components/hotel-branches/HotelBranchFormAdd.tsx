@@ -11,27 +11,30 @@ import { useApiErrors } from "@common/hooks/useApiErrors";
 import type { HotelBranchRequest } from "@common/interfaces/request/HotelBranchRequest";
 import { uploadToCloudinary } from "@common/utils/cloudinary";
 import LocationPickerMap from "./LocationPickerMap";
+import { Button } from "@common/components/ui/button";
 
 type SelectOption = { value: number; label: string };
 
 const rsStyles = {
   control: (base: object, s: { isFocused: boolean; isDisabled: boolean }) => ({
     ...base,
-    borderColor: s.isFocused ? "#0066FF" : "#D1D5DB",
-    boxShadow: s.isFocused ? "0 0 0 1px #0066FF" : "none",
+    borderColor: s.isFocused ? "var(--primary)" : "var(--border)",
+    boxShadow: s.isFocused ? "0 0 0 1px var(--primary)" : "none",
     borderRadius: "0.5rem",
     padding: "2px 0",
     opacity: s.isDisabled ? 0.5 : 1,
-    "&:hover": { borderColor: "#0066FF" },
+    "&:hover": { borderColor: "var(--primary)" },
+    backgroundColor: "hsl(var(--background))",
   }),
-  placeholder: (base: object) => ({ ...base, color: "#9CA3AF", fontSize: "0.875rem" }),
-  singleValue: (base: object) => ({ ...base, fontSize: "0.875rem" }),
+  placeholder: (base: object) => ({ ...base, color: "hsl(var(--muted-foreground))", fontSize: "0.875rem" }),
+  singleValue: (base: object) => ({ ...base, fontSize: "0.875rem", color: "hsl(var(--foreground))" }),
   option: (base: object, s: { isSelected: boolean; isFocused: boolean }) => ({
     ...base,
     fontSize: "0.875rem",
-    backgroundColor: s.isSelected ? "#0066FF" : s.isFocused ? "#EFF6FF" : "white",
-    color: s.isSelected ? "white" : "#111827",
+    backgroundColor: s.isSelected ? "hsl(var(--primary))" : s.isFocused ? "hsl(var(--muted))" : "hsl(var(--background))",
+    color: s.isSelected ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",
   }),
+  menu: (base: object) => ({ ...base, backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))" }),
   menuPortal: (base: object) => ({ ...base, zIndex: 9999 }),
 };
 
@@ -136,13 +139,13 @@ export default function HotelBranchFormAdd({ onClose }: { onClose: () => void })
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
+      <div className="bg-card text-foreground rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50/50 shrink-0">
-          <h2 className="text-xl font-semibold text-gray-900">Thêm chi nhánh mới</h2>
-          <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-colors">
+        <div className="flex items-center justify-between p-6 border-b border-border bg-muted/50 shrink-0">
+          <h2 className="text-xl font-semibold">Thêm chi nhánh mới</h2>
+          <Button variant="ghost" size="icon" onClick={onClose} className="text-muted-foreground hover:text-foreground">
             <X className="w-5 h-5" />
-          </button>
+          </Button>
         </div>
 
         {/* Form */}
@@ -189,24 +192,24 @@ export default function HotelBranchFormAdd({ onClose }: { onClose: () => void })
             <label className="block text-sm mb-2">Hình ảnh chi nhánh</label>
             <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" id="branch-image-upload" />
             {imagePreview ? (
-              <div className="relative w-full rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center">
+              <div className="relative w-full rounded-lg overflow-hidden border border-border bg-muted flex items-center justify-center">
                 <img src={imagePreview} alt="preview" className="w-full max-h-75 object-contain" />
                 {isUploading && (
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <Loader2 className="w-6 h-6 text-white animate-spin" />
                   </div>
                 )}
-                <button type="button" onClick={handleRemoveImage}
-                  className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow text-red-500 hover:bg-red-50 transition-colors">
+                <Button type="button" variant="destructive" size="icon" onClick={handleRemoveImage}
+                  className="absolute top-2 right-2 rounded-full shadow w-8 h-8">
                   <Trash2 className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             ) : (
               <label htmlFor="branch-image-upload"
-                className="flex flex-col items-center justify-center gap-2 w-full h-44 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#0066FF] hover:bg-blue-50/30 transition-colors">
-                <ImagePlus className="w-8 h-8 text-gray-400" />
-                <span className="text-sm text-gray-500">Nhấn để chọn ảnh</span>
-                <span className="text-xs text-gray-400">PNG, JPG, WEBP tối đa 5MB</span>
+                className="flex flex-col items-center justify-center gap-2 w-full h-44 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary hover:bg-primary/10 transition-colors">
+                <ImagePlus className="w-8 h-8 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Nhấn để chọn ảnh</span>
+                <span className="text-xs text-muted-foreground">PNG, JPG, WEBP tối đa 5MB</span>
               </label>
             )}
           </div>
@@ -215,7 +218,7 @@ export default function HotelBranchFormAdd({ onClose }: { onClose: () => void })
             <label className="block text-sm mb-2">Mô tả</label>
             <textarea name="description" value={formData.description} onChange={handleChange}
               placeholder="Mô tả ngắn về chi nhánh..." rows={3}
-              className="w-full box-border px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors resize-none text-sm" />
+              className="w-full box-border px-4 py-3 border border-input bg-background rounded-lg focus:outline-none focus:border-primary transition-colors resize-none text-sm text-foreground" />
           </div>
 
           <div className="mb-6">
@@ -229,16 +232,14 @@ export default function HotelBranchFormAdd({ onClose }: { onClose: () => void })
             {(!formData.latitude || !formData.longitude) && <p className="text-xs text-red-500 mt-1">Vui lòng chọn vị trí trên bản đồ</p>}
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-            <button type="button" onClick={onClose}
-              className="px-6 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+          <div className="flex justify-end gap-3 pt-4 border-t border-border">
+            <Button variant="outline" type="button" onClick={onClose}>
               Hủy
-            </button>
-            <button type="submit" disabled={isPending || isUploading || !formData.latitude}
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#0066FF] text-white font-medium rounded-lg hover:bg-[#0052CC] shadow-sm shadow-blue-500/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
-              {(isPending || isUploading) && <Loader2 className="w-4 h-4 animate-spin" />}
+            </Button>
+            <Button type="submit" disabled={isPending || isUploading || !formData.latitude}>
+              {(isPending || isUploading) && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               {isPending ? "Đang tạo..." : isUploading ? "Đang tải ảnh..." : "Tạo chi nhánh"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

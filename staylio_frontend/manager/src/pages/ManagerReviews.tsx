@@ -13,6 +13,7 @@ import { useHotelByManager } from "@common/hooks/useHotels";
 import { useMyHotelBranchs } from "@common/hooks/useHotelBranch";
 import { useAllRooms } from "@common/hooks/useRooms";
 import type { ReviewResponse } from "@common/interfaces/response/ReviewResponse";
+import { Button } from "@common/components/ui/button";
 
 const SORT_OPTIONS = [
   { value: "createdAt", label: "Ngày tạo" },
@@ -97,20 +98,20 @@ export default function ManagerReviews() {
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-foreground mb-2">
               Quản lý Đánh giá
             </h1>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               Danh sách và thông tin các đánh giá từ khách hàng
             </p>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col gap-4">
+        <div className="bg-card text-foreground rounded-2xl p-6 border border-border shadow-sm flex flex-col gap-4">
           {/* Top row: Search & Date Filters */}
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="w-full lg:w-1/3 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Tìm kiếm đánh giá, tên khách..."
@@ -119,31 +120,31 @@ export default function ManagerReviews() {
                   setSearchQuery(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-background border border-input rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-foreground"
               />
             </div>
 
             <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col sm:flex-row items-center gap-2">
-                <span className="text-sm font-medium text-gray-600 w-full sm:w-auto shrink-0">
+                <span className="text-sm font-medium text-muted-foreground w-full sm:w-auto shrink-0">
                   Từ ngày:
                 </span>
                 <input
                   type="date"
                   value={createdFrom}
                   onChange={(e) => setCreatedFrom(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 rounded-xl border-transparent focus:border-[#0066FF] text-sm"
+                  className="w-full px-3 py-2 bg-background text-foreground rounded-xl border border-input focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none text-sm"
                 />
               </div>
               <div className="flex flex-col sm:flex-row items-center gap-2">
-                <span className="text-sm font-medium text-gray-600 w-full sm:w-auto shrink-0">
+                <span className="text-sm font-medium text-muted-foreground w-full sm:w-auto shrink-0">
                   Đến ngày:
                 </span>
                 <input
                   type="date"
                   value={createdTo}
                   onChange={(e) => setCreatedTo(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 rounded-xl border-transparent focus:border-[#0066FF] text-sm"
+                  className="w-full px-3 py-2 bg-background text-foreground rounded-xl border border-input focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none text-sm"
                 />
               </div>
             </div>
@@ -152,14 +153,14 @@ export default function ManagerReviews() {
           {/* Bottom row: Dropdown filters */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <select
                 value={selectedStatus}
                 onChange={(e) => {
                   setSelectedStatus(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
+                className="w-full pl-9 pr-8 py-2.5 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary text-sm text-foreground truncate cursor-pointer"
               >
                 <option value="all">Tất cả trạng thái</option>
                 {Object.values(ReviewStatus).map((status) => (
@@ -171,14 +172,14 @@ export default function ManagerReviews() {
             </div>
 
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <select
                 value={selectedBranch}
                 onChange={(e) => {
                   setSelectedBranch(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
+                className="w-full pl-9 pr-8 py-2.5 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary text-sm text-foreground truncate cursor-pointer"
               >
                 <option value="all">Tất cả chi nhánh</option>
                 {hotelBranches?.map((branch) => (
@@ -191,7 +192,7 @@ export default function ManagerReviews() {
 
             <div className="relative">
               <Filter
-                className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${selectedBranch === "all" ? "text-gray-300" : "text-gray-400"}`}
+                className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${selectedBranch === "all" ? "text-muted-foreground/50" : "text-muted-foreground"}`}
               />
               <select
                 value={selectedRoom}
@@ -200,7 +201,7 @@ export default function ManagerReviews() {
                   setPage(0);
                 }}
                 disabled={selectedBranch === "all"}
-                className={`w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm truncate ${selectedBranch === "all" ? "text-gray-400 cursor-not-allowed opacity-60" : "text-gray-700 cursor-pointer"}`}
+                className={`w-full pl-9 pr-8 py-2.5 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary text-sm truncate ${selectedBranch === "all" ? "text-muted-foreground cursor-not-allowed opacity-60" : "text-foreground cursor-pointer"}`}
               >
                 <option value="all">
                   {selectedBranch === "all"
@@ -216,14 +217,14 @@ export default function ManagerReviews() {
             </div>
 
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <select
                 value={selectedUser}
                 onChange={(e) => {
                   setSelectedUser(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
+                className="w-full pl-9 pr-8 py-2.5 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary text-sm text-foreground truncate cursor-pointer"
               >
                 <option value="all">Tất cả khách hàng</option>
                 {reviewers?.map((reviewer) => (
@@ -243,7 +244,7 @@ export default function ManagerReviews() {
                   setSortBy(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-4 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
+                className="w-full pl-4 pr-8 py-2.5 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary text-sm text-foreground truncate cursor-pointer"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -252,15 +253,16 @@ export default function ManagerReviews() {
                 ))}
               </select>
             </div>
-            <button
+            <Button
+              variant="outline"
               onClick={() => {
                 setDirection(direction === "asc" ? "desc" : "asc");
                 setPage(0);
               }}
-              className="px-4 py-2.5 bg-gray-50 rounded-xl hover:bg-gray-100 text-gray-700 font-medium transition-colors text-sm border-gray-100 border"
+              className="px-4 py-2.5 rounded-xl text-sm"
             >
               {direction === "asc" ? "↑ Tăng dần" : "↓ Giảm dần"}
-            </button>
+            </Button>
           </div>
         </div>
 

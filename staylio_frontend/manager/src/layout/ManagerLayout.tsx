@@ -22,6 +22,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import ConfirmLogoutModal from "../../../common/components/ConfirmLogoutModal";
 import NotificationPopover from "../../../common/components/NotificationPopover";
+import { Button } from "@common/components/ui/button";
 
 interface ManagerLayoutProps {
   children: React.ReactNode;
@@ -54,13 +55,13 @@ function SidebarItem({ name, icon: Icon, active, isCollapsed, onClick }: Sidebar
         onClick={onClick}
         className={`w-full flex items-center h-11 rounded-xl transition-all duration-200 ${isCollapsed ? "justify-center px-0" : "px-3 gap-3.5"
           } ${active
-            ? "bg-[#0066FF] text-white shadow-md shadow-[#0066FF]/20"
-            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 group-hover:shadow-sm"
+            ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+            : "text-muted-foreground hover:bg-muted hover:text-foreground group-hover:shadow-sm"
           }`}
       >
         <Icon
           className={`shrink-0 transition-colors duration-200 ${isCollapsed ? "w-6 h-6" : "w-5 h-5"
-            } ${active ? "text-white" : "text-gray-400 group-hover:text-[#0066FF]"
+            } ${active ? "text-primary-foreground" : "text-muted-foreground group-hover:text-primary"
             }`}
         />
         {!isCollapsed && (
@@ -72,9 +73,9 @@ function SidebarItem({ name, icon: Icon, active, isCollapsed, onClick }: Sidebar
 
       {/* Tooltip for collapsed state */}
       {isCollapsed && (
-        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl">
+        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-popover text-popover-foreground text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl border border-border">
           {name}
-          <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
+          <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-popover border-l border-b border-border rotate-45"></div>
         </div>
       )}
     </div>
@@ -127,52 +128,56 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
   const sidebarWidth = isCollapsed ? "w-[80px]" : "w-[280px]";
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-gray-900 flex">
+    <div className="min-h-screen bg-background font-sans text-foreground flex">
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden transition-opacity"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full bg-white border-r border-gray-100 shadow-sm flex flex-col transition-all duration-300 ease-in-out lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 z-50 h-full bg-card border-r border-border shadow-sm flex flex-col transition-all duration-300 ease-in-out lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
           } ${sidebarWidth}`}
       >
         {/* Logo area */}
-        <div className="h-16 flex items-center justify-between px-4 lg:px-6 border-b border-gray-100 shrink-0">
+        <div className="h-16 flex items-center justify-between px-4 lg:px-6 border-b border-border shrink-0">
           <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ${isCollapsed ? "w-8 opacity-0" : "w-32 opacity-100"}`}>
             {!isCollapsed && (
               <img
                 src="/slogan.png"
                 alt="Staylio"
-                className="w-full h-auto object-contain whitespace-nowrap"
+                className="w-full h-auto object-contain whitespace-nowrap dark:invert"
               />
             )}
           </div>
           {/* Mobile close */}
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-500 transition-colors"
+            className="lg:hidden text-muted-foreground"
           >
             <X className="w-5 h-5" />
-          </button>
+          </Button>
 
           {/* Desktop collapse toggle */}
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden lg:flex items-center justify-center p-1.5 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-gray-600 transition-colors"
+            className="hidden lg:flex text-muted-foreground"
           >
             {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-          </button>
+          </Button>
         </div>
 
         {/* Navigation */}
         <nav className="flex-1 py-6 px-3 space-y-1.5 overflow-y-auto custom-scrollbar">
           {!isCollapsed && (
-            <p className="px-3 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <p className="px-3 pb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Menu Quản Lý
             </p>
           )}
@@ -193,21 +198,21 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
         </nav>
 
         {/* User Profile */}
-        <div className="p-4 border-t border-gray-100 bg-gray-50/30">
-          <div className={`flex items-center rounded-xl bg-white border border-gray-100 shadow-sm mb-3 transition-all ${isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-3"
+        <div className="p-4 border-t border-border bg-muted/10">
+          <div className={`flex items-center rounded-xl bg-card border border-border shadow-sm mb-3 transition-all ${isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-3"
             }`}>
             <img
               src={user?.avatarUrl}
-              className={`rounded-full object-cover border-2 border-gray-50 shrink-0 ${isCollapsed ? "w-8 h-8" : "w-10 h-10"
+              className={`rounded-full object-cover border-2 border-background shrink-0 ${isCollapsed ? "w-8 h-8" : "w-10 h-10"
                 }`}
               alt={user?.fullName}
             />
             {!isCollapsed && (
               <div className="flex-1 min-w-0 text-left">
-                <div className="font-semibold text-[14px] text-gray-900 truncate">
+                <div className="font-semibold text-[14px] text-foreground truncate">
                   {user?.fullName}
                 </div>
-                <div className="text-xs text-gray-500 truncate mt-0.5" title={user?.email}>
+                <div className="text-xs text-muted-foreground truncate mt-0.5" title={user?.email}>
                   {user?.email}
                 </div>
               </div>
@@ -217,16 +222,16 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
           <div className="relative group">
             <button
               onClick={() => setShowLogoutModal(true)}
-              className={`w-full flex items-center justify-center h-11 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors font-medium text-[14px] border border-transparent hover:border-red-100 ${isCollapsed ? "px-0" : "gap-2 px-4"
+              className={`w-full flex items-center justify-center h-11 rounded-xl text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors font-medium text-[14px] border border-transparent hover:border-destructive/20 ${isCollapsed ? "px-0" : "gap-2 px-4"
                 }`}
             >
               <LogOut className={`shrink-0 ${isCollapsed ? "w-5 h-5" : "w-4 h-4"}`} />
               {!isCollapsed && <span>Đăng xuất</span>}
             </button>
             {isCollapsed && (
-              <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl">
+              <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-destructive text-destructive-foreground text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl border border-border">
                 Đăng xuất
-                <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-red-600 rotate-45"></div>
+                <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-destructive border-l border-b border-border rotate-45"></div>
               </div>
             )}
           </div>
@@ -236,33 +241,35 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
       {/* Main Content */}
       <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${isCollapsed ? "lg:ml-20" : "lg:ml-70"}`}>
         {/* Header */}
-        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-30 shrink-0 shadow-sm">
+        <header className="h-16 bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-30 shrink-0 shadow-sm">
           <div className="h-full px-4 lg:px-8 flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-600 transition-colors"
+                className="lg:hidden text-muted-foreground"
               >
                 <Menu className="w-6 h-6" />
-              </button>
-              <h2 className="text-lg font-bold text-gray-800 hidden sm:block">
+              </Button>
+              <h2 className="text-lg font-bold text-foreground hidden sm:block">
                 {NAVIGATION_ITEMS.find((n) => isActive(n.path))?.name || "Manager Dashboard"}
               </h2>
             </div>
 
             <div className="flex-1 max-w-md hidden md:flex mx-auto">
               <div className="relative w-full group">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[#0066FF] transition-colors" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 <input
                   type="text"
                   placeholder="Tìm kiếm thông tin nhanh..."
-                  className="w-full pl-10 pr-4 py-2 bg-gray-50 border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-[#0066FF]/20 focus:bg-white focus:border-[#0066FF] transition-all text-sm font-medium"
+                  className="w-full pl-10 pr-4 py-2 bg-muted/50 border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-background focus:border-primary transition-all text-sm font-medium"
                 />
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <NotificationPopover forceLight={true} />
+              <NotificationPopover />
             </div>
           </div>
         </header>

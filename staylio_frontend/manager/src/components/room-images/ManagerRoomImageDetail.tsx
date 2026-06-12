@@ -20,6 +20,7 @@ import { ImageStatus } from "@common/enums/ImageStatus";
 import type { RoomImageDetailProps } from "@common/interfaces";
 import ManagerLayout from "../../layout/ManagerLayout";
 import ConfirmRoomImageStatusModal from "@common/components/ConfirmRoomImageStatusModal";
+import { Button } from "@common/components/ui/button";
 
 export default function ManagerRoomImageDetail({
   imageId: propsImageId,
@@ -115,8 +116,8 @@ export default function ManagerRoomImageDetail({
   if (isLoading || !imageDetail) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
-        <div className="w-10 h-10 border-4 border-[#0066FF] border-t-transparent rounded-full animate-spin" />
-        <p className="text-gray-500 font-medium animate-pulse">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        <p className="text-muted-foreground font-medium animate-pulse">
           Đang tải chi tiết hình ảnh...
         </p>
       </div>
@@ -126,28 +127,29 @@ export default function ManagerRoomImageDetail({
   const content = (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
       <div className="flex items-center gap-4">
-        <button
+        <Button
+          variant="outline"
+          size="icon"
           onClick={handleBack}
-          className="p-2.5 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 rounded-xl transition-all shadow-sm cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
           title="Quay lại danh sách"
         >
           <ArrowLeft className="w-5 h-5" />
-        </button>
+        </Button>
 
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 leading-tight">
+          <h1 className="text-2xl font-bold text-foreground leading-tight">
             Chi tiết hình ảnh phòng #{imageDetail.id}
           </h1>
-          <p className="text-sm text-gray-500 font-medium">
-            Thông tin đầy đủ và kiểm duyệt hình ảnh của phòng{" "}
+          <p className="text-sm text-muted-foreground font-medium">
+            Thông định đầy đủ và kiểm duyệt hình ảnh của phòng{" "}
             {imageDetail.roomNumber}
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div className="lg:col-span-7 bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm p-4 space-y-4">
-          <div className="relative aspect-4/3 w-full rounded-xl overflow-hidden bg-gray-50 group border border-gray-100 flex items-center justify-center">
+        <div className="lg:col-span-7 bg-card rounded-2xl overflow-hidden border border-border shadow-sm p-4 space-y-4">
+          <div className="relative aspect-4/3 w-full rounded-xl overflow-hidden bg-muted group border border-border flex items-center justify-center">
             <img
               src={imageDetail.imageUrl}
               alt={imageDetail.roomName}
@@ -162,14 +164,14 @@ export default function ManagerRoomImageDetail({
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between px-1 text-xs text-gray-400 gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between px-1 text-xs text-muted-foreground gap-2">
             <span className="truncate">
               URL:{" "}
               <a
                 href={imageDetail.imageUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[#0066FF] hover:underline font-semibold"
+                className="text-primary hover:underline font-semibold"
               >
                 {imageDetail.imageUrl}
               </a>
@@ -178,10 +180,10 @@ export default function ManagerRoomImageDetail({
         </div>
 
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm space-y-4">
-            <div className="pb-3 border-b border-gray-100 flex items-center justify-between">
-              <h4 className="font-bold text-gray-900 flex items-center gap-2">
-                <Bed className="w-4 h-4 text-[#0066FF]" />
+          <div className="bg-card rounded-2xl p-5 border border-border shadow-sm space-y-4">
+            <div className="pb-3 border-b border-border flex items-center justify-between">
+              <h4 className="font-bold text-foreground flex items-center gap-2">
+                <Bed className="w-4 h-4 text-primary" />
                 Đặc điểm phòng
               </h4>
 
@@ -190,53 +192,53 @@ export default function ManagerRoomImageDetail({
 
             <div className="space-y-4">
               <div>
-                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">
+                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider block">
                   Tên phòng
                 </span>
-                <h3 className="font-bold text-gray-900 text-base leading-snug mt-0.5">
+                <h3 className="font-bold text-foreground text-base leading-snug mt-0.5">
                   {imageDetail.roomName}
                 </h3>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 rounded-lg bg-gray-50 border border-gray-100">
-                  <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">
+                <div className="p-3 rounded-lg bg-muted/50 border border-border">
+                  <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mb-0.5">
                     Số phòng
                   </div>
-                  <div className="text-sm font-bold text-gray-900">
+                  <div className="text-sm font-bold text-foreground">
                     {imageDetail.roomNumber}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-lg bg-gray-50 border border-gray-100">
-                  <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">
+                <div className="p-3 rounded-lg bg-muted/50 border border-border">
+                  <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mb-0.5">
                     Mã hình ảnh
                   </div>
-                  <div className="text-sm font-bold text-[#0066FF]">
+                  <div className="text-sm font-bold text-primary">
                     #{imageDetail.id}
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2.5">
-                <div className="flex items-center gap-2 text-sm text-gray-600 font-semibold pl-1">
-                  <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
+                <div className="flex items-center gap-2 text-sm text-foreground font-semibold pl-1">
+                  <MapPin className="w-4 h-4 text-muted-foreground shrink-0" />
                   <span className="truncate" title={imageDetail.hotelBranchName}>
                     {imageDetail.hotelBranchName}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-gray-600 font-semibold pl-1">
-                  <Building2 className="w-4 h-4 text-gray-400 shrink-0" />
+                <div className="flex items-center gap-2 text-sm text-foreground font-semibold pl-1">
+                  <Building2 className="w-4 h-4 text-muted-foreground shrink-0" />
                   <span className="truncate" title={imageDetail.ownerName}>
                     Chủ thương hiệu: {imageDetail.ownerName}
                   </span>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500 font-bold">
+              <div className="pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground font-bold">
                 <div className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-gray-400" />
+                  <Calendar className="w-4 h-4 text-muted-foreground" />
                   <span>
                     Ngày tải lên:{" "}
                     {new Date(imageDetail.createdAt).toLocaleDateString(
@@ -250,20 +252,20 @@ export default function ManagerRoomImageDetail({
 
           {imageDetail.status === ImageStatus.REJECTED &&
             imageDetail.rejectionReason && (
-              <div className="bg-red-50/50 rounded-2xl p-4 border border-red-100 text-sm text-red-700 leading-relaxed font-semibold space-y-1.5 shadow-sm">
-                <strong className="text-red-800 text-xs font-bold uppercase tracking-wider block">
+              <div className="bg-destructive/10 rounded-2xl p-4 border border-destructive/20 text-sm text-destructive leading-relaxed font-semibold space-y-1.5 shadow-sm">
+                <strong className="text-destructive font-bold uppercase tracking-wider block text-xs">
                   Lý do từ chối kiểm duyệt:
                 </strong>
-                <p className="text-sm text-red-700 font-medium bg-white p-3 rounded-xl border border-red-100/50 mt-1 shadow-sm leading-relaxed">
+                <p className="text-sm text-destructive font-medium bg-background p-3 rounded-xl border border-destructive/20 mt-1 shadow-sm leading-relaxed">
                   {imageDetail.rejectionReason}
                 </p>
               </div>
             )}
 
-          <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm space-y-4">
-            <div className="pb-3 border-b border-gray-100">
-              <h4 className="font-bold text-gray-900 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#0066FF]" />
+          <div className="bg-card rounded-2xl p-5 border border-border shadow-sm space-y-4">
+            <div className="pb-3 border-b border-border">
+              <h4 className="font-bold text-foreground flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-primary" />
                 Thao tác hình ảnh phòng
               </h4>
             </div>
@@ -271,47 +273,49 @@ export default function ManagerRoomImageDetail({
             <div className="space-y-3">
               {!isManager && imageDetail.status === ImageStatus.PENDING && (
                 <div className="grid grid-cols-2 gap-3">
-                  <button
+                  <Button
                     onClick={handleApprove}
-                    className="py-2.5 bg-[#0066FF] hover:bg-[#0052cc] text-white font-bold rounded-lg text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 shadow-md shadow-blue-500/10"
+                    className="flex items-center justify-center gap-1.5"
                   >
                     <Check className="w-4 h-4 stroke-[3px]" />
                     Duyệt ảnh
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant="destructive"
                     onClick={handleRejectClick}
-                    className="py-2.5 bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 hover:text-red-700 font-bold rounded-lg text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+                    className="flex items-center justify-center gap-1.5 bg-destructive/10 text-destructive hover:bg-destructive/20 hover:text-destructive"
                   >
                     <X className="w-4 h-4" />
                     Từ chối ảnh
-                  </button>
+                  </Button>
                 </div>
               )}
 
               {!isManager && imageDetail.status !== ImageStatus.PENDING && (
-                <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-center text-xs text-gray-500 font-semibold leading-relaxed">
+                <div className="p-3 bg-muted rounded-xl border border-border text-center text-xs text-muted-foreground font-semibold leading-relaxed">
                   Hình ảnh này đã được kiểm duyệt và chuyển sang trạng thái{" "}
                   <strong>{imageDetail.status}</strong>.
                 </div>
               )}
 
               {isManager && (
-                <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-center text-xs text-gray-500 font-semibold leading-relaxed">
+                <div className="p-3 bg-muted rounded-xl border border-border text-center text-xs text-muted-foreground font-semibold leading-relaxed">
                   Trạng thái kiểm duyệt hiện tại:{" "}
-                  <strong className="text-gray-900">{imageDetail.status}</strong>.
+                  <strong className="text-foreground">{imageDetail.status}</strong>.
                 </div>
               )}
 
               {((isManager && imageDetail.status !== ImageStatus.DELETED) ||
                 (!isManager && imageDetail.status === ImageStatus.REJECTED)) && (
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={handleDeleteClick}
-                    className="w-full py-2.5 bg-white border border-gray-200 text-red-600 hover:bg-red-50/50 font-bold rounded-lg text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 shadow-sm"
+                    className="w-full text-destructive hover:bg-destructive/10 hover:text-destructive"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-4 h-4 mr-2" />
                     Xóa hình ảnh phòng
-                  </button>
+                  </Button>
                 )}
             </div>
           </div>

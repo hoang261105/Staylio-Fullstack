@@ -12,6 +12,7 @@ import HotelBranchFormAdd from "../components/hotel-branches/HotelBranchFormAdd"
 import HotelBranchFormUpdate from "../components/hotel-branches/HotelBranchFormUpdate";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ManagerBranchChatsModal from "../components/hotel-branches/ManagerBranchChatsModal";
+import { Button } from "@common/components/ui/button";
 
 export default function ManagerHotelBranches() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -80,26 +81,26 @@ export default function ManagerHotelBranches() {
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-foreground mb-2">
               Quản lý chi nhánh
             </h1>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               Danh sách các chi nhánh thuộc quyền quản lý của bạn
             </p>
           </div>
-          <button
+          <Button
             onClick={() => setShowAddForm(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#0066FF] text-white rounded-xl hover:bg-[#0052CC] shadow-sm shadow-[#0066FF]/20 font-medium transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-sm shadow-primary/20"
           >
             <Plus className="w-5 h-5" />
             <span>Thêm chi nhánh mới</span>
-          </button>
+          </Button>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <div className="bg-card rounded-2xl p-6 shadow-sm">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Tìm kiếm theo tên chi nhánh, địa chỉ..."
@@ -108,19 +109,19 @@ export default function ManagerHotelBranches() {
                   setSearchQuery(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-muted/50 border border-transparent rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-background transition-all text-foreground"
               />
             </div>
 
             <div className="relative min-w-50">
-              <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <select
                 value={selectedFilter}
                 onChange={(e) => {
                   setSelectedFilter(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-12 pr-8 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700"
+                className="w-full pl-12 pr-8 py-3 bg-muted/50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-background transition-all cursor-pointer font-medium text-foreground"
               >
                 {filters.map((filter) => (
                   <option key={filter.value} value={filter.value}>
@@ -128,7 +129,7 @@ export default function ManagerHotelBranches() {
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-muted-foreground">
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"

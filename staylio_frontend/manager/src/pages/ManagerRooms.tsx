@@ -16,6 +16,7 @@ import RoomToggleActiveModal from "../components/rooms/RoomToggleActiveModal";
 import RoomToggleVoucherModal from "../components/rooms/RoomToggleVoucherModal";
 import RoomUpdateStatusModal from "../components/rooms/RoomUpdateStatusModal";
 import { BranchStatus } from "@common/enums/BranchStatus";
+import { Button } from "@common/components/ui/button";
 
 const SORT_OPTIONS = [
   { value: "id", label: "Mặc định" },
@@ -145,25 +146,25 @@ export default function ManagerRooms() {
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-foreground mb-2">
               Quản lý phòng
             </h1>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               Danh sách tất cả các phòng thuộc các chi nhánh của bạn
             </p>
           </div>
-          <button
+          <Button
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#0066FF] text-white rounded-xl hover:bg-[#0052CC] shadow-sm shadow-[#0066FF]/20 font-medium transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 shadow-sm shadow-primary/20"
           >
             <Plus className="w-5 h-5" />
             <span>Thêm phòng mới</span>
-          </button>
+          </Button>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col gap-4">
+        <div className="bg-card text-foreground rounded-2xl p-6 border border-border shadow-sm flex flex-col gap-4">
           <div className="w-full relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <input
               type="text"
               placeholder="Tìm kiếm theo tên phòng, số phòng, chi nhánh..."
@@ -172,20 +173,20 @@ export default function ManagerRooms() {
                 setSearchQuery(e.target.value);
                 setPage(0);
               }}
-              className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all"
+              className="w-full pl-12 pr-4 py-3 bg-background border border-input rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-foreground"
             />
           </div>
 
           <div className="flex flex-col lg:flex-row flex-wrap gap-4">
             <div className="relative min-w-48 lg:flex-1 xl:flex-none">
-              <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <select
                 value={selectedBranchFilter}
                 onChange={(e) => {
                   setSelectedBranchFilter(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-12 pr-8 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700 truncate"
+                className="w-full pl-12 pr-8 py-3 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer font-medium text-foreground truncate"
               >
                 <option value="all">Tất cả chi nhánh</option>
                 {hotelBranches?.map((filter) => (
@@ -194,7 +195,7 @@ export default function ManagerRooms() {
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-muted-foreground">
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
@@ -206,14 +207,14 @@ export default function ManagerRooms() {
             </div>
 
             <div className="relative min-w-40 lg:flex-1 xl:flex-none">
-              <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <select
                 value={selectedFilter}
                 onChange={(e) => {
                   setSelectedFilter(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-12 pr-8 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700 truncate"
+                className="w-full pl-12 pr-8 py-3 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer font-medium text-foreground truncate"
               >
                 {filters.map((filter) => (
                   <option key={filter.value} value={filter.value}>
@@ -221,7 +222,7 @@ export default function ManagerRooms() {
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-muted-foreground">
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
@@ -241,7 +242,7 @@ export default function ManagerRooms() {
                     setSortBy(e.target.value);
                     setPage(0);
                   }}
-                  className="w-full pl-4 pr-8 py-3 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all cursor-pointer font-medium text-gray-700 truncate"
+                  className="w-full pl-4 pr-8 py-3 bg-background border border-input rounded-xl appearance-none focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer font-medium text-foreground truncate"
                 >
                   {SORT_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -249,7 +250,7 @@ export default function ManagerRooms() {
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-muted-foreground">
                   <svg
                     className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
@@ -260,15 +261,16 @@ export default function ManagerRooms() {
                 </div>
               </div>
 
-              <button
+              <Button
+                variant="outline"
                 onClick={() => {
                   setDirection(direction === "asc" ? "desc" : "asc");
                   setPage(0);
                 }}
-                className="px-4 py-3 bg-gray-50 border border-transparent rounded-xl hover:bg-gray-100 text-gray-700 font-medium transition-colors whitespace-nowrap"
+                className="px-4 py-3 rounded-xl h-auto"
               >
                 {direction === "asc" ? "↑ Tăng dần" : "↓ Giảm dần"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

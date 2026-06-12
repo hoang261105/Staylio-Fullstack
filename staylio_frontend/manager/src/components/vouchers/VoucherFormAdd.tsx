@@ -10,34 +10,41 @@ import { DiscountType } from "@common/enums/DiscountType";
 import type { VoucherRequest } from "@common/interfaces/request/VoucherRequest";
 import { useCreateVoucherMutation } from "@common/hooks/useVouchers";
 import { BranchStatus } from "@common/enums/BranchStatus";
+import { Button } from "@common/components/ui/button";
 
 type SelectOption = { value: number; label: string };
 
 const rsStyles = {
   control: (base: object, s: { isFocused: boolean; isDisabled: boolean }) => ({
     ...base,
-    borderColor: s.isFocused ? "#0066FF" : "#D1D5DB",
-    boxShadow: s.isFocused ? "0 0 0 1px #0066FF" : "none",
+    borderColor: s.isFocused ? "var(--primary)" : "var(--input)",
+    backgroundColor: "var(--background)",
+    boxShadow: s.isFocused ? "0 0 0 1px var(--primary)" : "none",
     borderRadius: "0.5rem",
     padding: "2px 0",
     opacity: s.isDisabled ? 0.5 : 1,
-    "&:hover": { borderColor: "#0066FF" },
+    "&:hover": { borderColor: "var(--primary)" },
   }),
   placeholder: (base: object) => ({
     ...base,
-    color: "#9CA3AF",
+    color: "var(--muted-foreground)",
     fontSize: "0.875rem",
   }),
-  singleValue: (base: object) => ({ ...base, fontSize: "0.875rem" }),
+  singleValue: (base: object) => ({ ...base, fontSize: "0.875rem", color: "var(--foreground)" }),
   option: (base: object, s: { isSelected: boolean; isFocused: boolean }) => ({
     ...base,
     fontSize: "0.875rem",
     backgroundColor: s.isSelected
-      ? "#0066FF"
+      ? "var(--primary)"
       : s.isFocused
-        ? "#EFF6FF"
-        : "white",
-    color: s.isSelected ? "white" : "#111827",
+        ? "var(--muted)"
+        : "var(--background)",
+    color: s.isSelected ? "var(--primary-foreground)" : "var(--foreground)",
+  }),
+  menu: (base: object) => ({
+    ...base,
+    backgroundColor: "var(--background)",
+    border: "1px solid var(--border)",
   }),
   menuPortal: (base: object) => ({ ...base, zIndex: 9999 }),
 };
@@ -136,15 +143,15 @@ export default function VoucherFormAdd({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       onClick={(e) => e.target === e.currentTarget && handleClose()}
     >
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50/50 shrink-0">
-          <h2 className="text-xl font-semibold text-gray-900">
+      <div className="bg-card text-foreground rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
+        <div className="flex items-center justify-between p-6 border-b border-border bg-muted/50 shrink-0">
+          <h2 className="text-xl font-semibold text-foreground">
             Thêm Voucher mới
           </h2>
           <button
             type="button"
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-colors"
+            className="text-muted-foreground hover:text-foreground hover:bg-muted p-2 rounded-full transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -181,13 +188,13 @@ export default function VoucherFormAdd({
                   name="discountType"
                   value={formData.discountType}
                   onChange={handleChange}
-                  className={`w-full box-border px-4 py-3 border ${fieldErrors.discountType ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors bg-white appearance-none`}
+                  className={`w-full box-border px-4 py-3 border ${fieldErrors.discountType ? "border-red-500" : "border-input"} rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors bg-background text-foreground appearance-none`}
                   required
                 >
                   <option value={DiscountType.PERCENTAGE}>Giảm theo %</option>
                   <option value={DiscountType.FIXED}>Giảm tiền trực tiếp (VNĐ)</option>
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-muted-foreground">
                   <svg
                     className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
@@ -317,7 +324,7 @@ export default function VoucherFormAdd({
               onChange={handleChange}
               placeholder="Mô tả các điều kiện, hướng dẫn sử dụng voucher..."
               rows={4}
-              className={`w-full box-border px-4 py-3 border ${fieldErrors.description ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors resize-none text-sm`}
+              className={`w-full box-border px-4 py-3 border ${fieldErrors.description ? "border-red-500" : "border-input"} rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none text-sm bg-background text-foreground`}
             />
             {fieldErrors.description && (
               <p className="text-xs text-red-500 mt-1">
@@ -326,22 +333,22 @@ export default function VoucherFormAdd({
             )}
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-            <button
+          <div className="flex justify-end gap-3 pt-4 border-t border-border">
+            <Button
+              variant="outline"
               type="button"
               onClick={handleClose}
-              className="px-6 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
             >
               Hủy
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={isPending}
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#0066FF] text-white font-medium rounded-lg hover:bg-[#0052CC] shadow-sm shadow-blue-500/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex items-center gap-2"
             >
               {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
               {isPending ? "Đang tạo..." : "Thêm Voucher mới"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

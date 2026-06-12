@@ -8,7 +8,7 @@ export default function DashboardStats() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-10">
-        <Loader2 className="w-8 h-8 animate-spin text-[#0066FF]" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -76,7 +76,7 @@ export default function DashboardStats() {
         return (
           <div
             key={index}
-            className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group"
+            className="bg-card rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 group"
           >
             <div className="flex items-center justify-between mb-4">
               <div
@@ -86,10 +86,10 @@ export default function DashboardStats() {
               </div>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500 mb-1">
+              <p className="text-sm font-medium text-muted-foreground mb-1">
                 {stat.label}
               </p>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              <h3 className="text-2xl font-bold text-foreground mb-2">
                 {stat.value}
               </h3>
               <p className={`text-xs font-medium inline-flex px-2 py-1 rounded-full ${

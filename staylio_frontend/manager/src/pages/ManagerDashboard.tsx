@@ -8,6 +8,7 @@ import CreateHotelModal from "../components/CreateHotelModal";
 import EditHotelModal from "../components/EditHotelModal";
 import RecentActivities from "../components/dashboard/RecentActivities";
 import UpcomingBookings from "../components/dashboard/UpcomingBookings";
+import { Button } from "@common/components/ui/button";
 
 const getStatusConfig = (status: HotelStatus) => {
   switch (status) {
@@ -36,56 +37,55 @@ export default function ManagerDashboard() {
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-foreground mb-2">
               Tổng quan
             </h1>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               Xin chào, đây là tình hình kinh doanh hôm nay.
             </p>
           </div>
           {hasHotelBranch && (
             <div className="flex items-center gap-3">
-              <button 
+              <Button 
                 onClick={() => setIsEditModalOpen(true)}
-                className="px-4 py-2 bg-[#0066FF] text-white rounded-lg hover:bg-[#0052CC] shadow-sm shadow-[#0066FF]/20 font-medium transition-all"
               >
                 Chỉnh sửa thông tin
-              </button>
+              </Button>
             </div>
           )}
         </div>
 
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-[#0066FF]" />
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : !hasHotelBranch ? (
-          <div className="bg-white rounded-2xl p-12 border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center mt-8">
-            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6">
-              <Building2 className="w-10 h-10 text-[#0066FF]" />
+          <div className="bg-card rounded-2xl p-12 border border-border shadow-sm flex flex-col items-center justify-center text-center mt-8">
+            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+              <Building2 className="w-10 h-10 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            <h2 className="text-2xl font-bold text-foreground mb-3">
               Chưa có thương hiệu khách sạn
             </h2>
-            <p className="text-gray-500 max-w-md mb-8 leading-relaxed">
+            <p className="text-muted-foreground max-w-md mb-8 leading-relaxed">
               Tài khoản của bạn hiện chưa được liên kết với bất kỳ thương hiệu
               khách sạn nào. Vui lòng tạo mới để bắt đầu quản lý kinh doanh.
             </p>
-            <button
+            <Button
               onClick={() => setIsCreateModalOpen(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-[#0066FF] text-white rounded-xl hover:bg-[#0052CC] shadow-lg shadow-[#0066FF]/30 font-medium transition-all transform active:scale-95"
+              className="flex items-center gap-2 px-6 py-6 rounded-xl font-medium"
             >
               <Plus className="w-5 h-5" />
               <span>Tạo mới thương hiệu</span>
-            </button>
+            </Button>
           </div>
         ) : (
           <>
             {/* Hotel Info Banner */}
-            <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-card rounded-2xl overflow-hidden shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex flex-col md:flex-row">
                 {/* Image Section */}
-                <div className="w-full md:w-1/3 h-56 md:h-auto bg-gray-50 relative border-r border-gray-100">
+                <div className="w-full md:w-1/3 h-56 md:h-auto bg-muted relative">
                   {hotel.imageUrl ? (
                     <img
                       src={hotel.imageUrl}
@@ -93,7 +93,7 @@ export default function ManagerDashboard() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 p-6 text-center">
+                    <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground p-6 text-center">
                       <ImageIcon className="w-12 h-12 mb-3 opacity-30" />
                       <span className="text-sm font-medium">Chưa có hình ảnh thương hiệu</span>
                     </div>
@@ -114,18 +114,18 @@ export default function ManagerDashboard() {
                 <div className="p-6 md:p-8 flex-1 flex flex-col justify-center">
                   <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900 mb-2">{hotel.name}</h2>
-                      <div className="flex flex-wrap items-center text-gray-500 text-sm gap-4">
-                        <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
-                          <User className="w-4 h-4 text-gray-400" />
-                          <span>Chủ quản lý: <strong className="text-gray-700">{hotel.hostHotelName}</strong></span>
+                      <h2 className="text-2xl font-bold text-foreground mb-2">{hotel.name}</h2>
+                      <div className="flex flex-wrap items-center text-muted-foreground text-sm gap-4">
+                        <div className="flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-lg">
+                          <User className="w-4 h-4 text-muted-foreground" />
+                          <span>Chủ quản lý: <strong className="text-foreground">{hotel.hostHotelName}</strong></span>
                         </div>
                       </div>
                     </div>
                     {(() => {
                       const StatusIcon = getStatusConfig(hotel.status).icon;
                       return (
-                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-medium whitespace-nowrap ${getStatusConfig(hotel.status).color}`}>
+                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap ${getStatusConfig(hotel.status).color}`}>
                           <StatusIcon className="w-4 h-4" />
                           {getStatusConfig(hotel.status).label}
                         </div>
@@ -133,9 +133,9 @@ export default function ManagerDashboard() {
                     })()}
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-gray-100">
-                    <h4 className="text-sm font-semibold text-gray-900 mb-2">Mô tả thương hiệu</h4>
-                    <p className="text-gray-600 leading-relaxed text-sm">
+                  <div className="mt-4 pt-4 border-t border-border/50">
+                    <h4 className="text-sm font-semibold text-foreground mb-2">Mô tả thương hiệu</h4>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
                       {hotel.description || "Chưa có mô tả chi tiết cho thương hiệu này."}
                     </p>
                   </div>
@@ -146,16 +146,16 @@ export default function ManagerDashboard() {
             <DashboardStats />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col h-full">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="bg-card rounded-2xl p-6 shadow-sm flex flex-col h-full">
+                <h3 className="text-lg font-semibold text-foreground mb-4">
                   Hoạt động gần đây
                 </h3>
                 <div className="flex-1 overflow-y-auto min-h-[300px] pr-2 custom-scrollbar">
                   <RecentActivities hotelBranchId={hotel.id} />
                 </div>
               </div>
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col h-full">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="bg-card rounded-2xl p-6 shadow-sm flex flex-col h-full">
+                <h3 className="text-lg font-semibold text-foreground mb-4">
                   Phòng sắp Check-in/Check-out
                 </h3>
                 <div className="flex-1 overflow-y-auto min-h-[300px] pr-2 custom-scrollbar">

@@ -186,26 +186,26 @@ export default function Home() {
 
       {/* Newsletter CTA */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 mb-12">
-        <div className="bg-linear-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 md:p-16 relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-white dark:bg-gray-800/10 blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-blue-400/20 blur-3xl"></div>
+        <div className="bg-primary rounded-3xl p-10 md:p-16 relative overflow-hidden">
+          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-primary-foreground/10 blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-primary-foreground/20 blur-3xl"></div>
 
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
-            <div className="text-white max-w-xl text-center md:text-left">
+            <div className="text-primary-foreground max-w-xl text-center md:text-left">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('homeScreen.newsletter.title')}</h2>
-              <p className="text-blue-100 text-lg">
+              <p className="text-primary-foreground/80 text-lg">
                 {t('homeScreen.newsletter.desc')}
               </p>
             </div>
 
             <div className="w-full md:w-auto">
               <form className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
-                <div className="relative flex-1">
+                <div className="relative flex-1 text-foreground">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
                   <Input
                     type="email"
                     placeholder={t('homeScreen.newsletter.emailPlaceholder')}
-                    className="w-full pl-12 pr-4 h-12 md:h-14 rounded-xl font-medium"
+                    className="w-full pl-12 pr-4 h-12 md:h-14 rounded-xl font-medium bg-background border-border"
                     required
                   />
                 </div>

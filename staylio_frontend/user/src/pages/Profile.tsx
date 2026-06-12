@@ -8,7 +8,6 @@ import {
   Settings,
   LogOut,
   ChevronRight,
-  Heart,
   Lock,
 } from "lucide-react";
 import Header from "../layout/Header";
@@ -33,40 +32,32 @@ export default function Profile() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="space-y-4">
-            <div className="bg-card rounded-2xl border border-border shadow-sm p-2">
-              <button
+            <div className="bg-card rounded-2xl border border-border shadow-sm p-2 space-y-1">
+              <Button
+                variant="secondary"
                 onClick={() => navigate("/profile")}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-medium shadow-sm"
+                className="w-full h-auto flex items-center justify-start gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 shadow-none font-medium"
               >
                 <Settings size={20} />
                 {t('profile.personalInfo')}
-              </button>
+              </Button>
 
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => navigate("/history-bookings")}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-accent transition group"
+                className="w-full h-auto flex items-center justify-between px-4 py-3 rounded-xl hover:bg-accent transition group"
               >
                 <div className="flex items-center gap-3 text-muted-foreground group-hover:text-foreground">
                   <Calendar size={20} />
                   <span>{t('profile.myTrips')}</span>
                 </div>
                 <ChevronRight size={16} className="text-muted-foreground" />
-              </button>
+              </Button>
 
-              <button
-                onClick={() => navigate("/favorites")}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-accent transition group"
-              >
-                <div className="flex items-center gap-3 text-muted-foreground group-hover:text-foreground">
-                  <Heart size={20} />
-                  <span>{t('profile.savedHotels')}</span>
-                </div>
-                <ChevronRight size={16} className="text-muted-foreground" />
-              </button>
-
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => navigate("/change-password")}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-accent transition group"
+                className="w-full h-auto flex items-center justify-between px-4 py-3 rounded-xl hover:bg-accent transition group"
               >
                 <div className="flex items-center gap-3 text-muted-foreground group-hover:text-foreground">
                   <Lock size={20} />
@@ -74,13 +65,16 @@ export default function Profile() {
                 </div>
 
                 <ChevronRight size={16} className="text-muted-foreground" />
-              </button>
+              </Button>
             </div>
 
-            <button className="w-full flex items-center gap-3 px-6 py-4 bg-destructive/10 text-destructive rounded-2xl font-medium hover:bg-destructive/20 transition">
+            <Button 
+              variant="destructive"
+              className="w-full h-auto flex items-center justify-start gap-3 px-6 py-4 bg-destructive/10 text-destructive rounded-2xl font-medium hover:bg-destructive/20 shadow-none"
+            >
               <LogOut size={20} />
               {t('profile.logout')}
-            </button>
+            </Button>
           </div>
 
           <div className="lg:col-span-2 space-y-6">
@@ -146,9 +140,9 @@ export default function Profile() {
                 <h3 className="text-lg font-semibold text-card-foreground">
                   {t('profile.payment')}
                 </h3>
-                <button className="text-sm text-primary font-medium hover:underline">
+                <Button variant="link" className="text-primary px-0 h-auto font-medium">
                   {t('profile.addNew')}
-                </button>
+                </Button>
               </div>
 
               <div className="p-4 rounded-xl border border-border bg-muted flex items-center justify-between">

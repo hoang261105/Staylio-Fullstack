@@ -22,7 +22,7 @@ const TwitterIcon = ({ className }: { className?: string }) => (
 export default function Footer() {
   const { t } = useTranslation();
   return (
-    <footer className="bg-blue-600 dark:bg-gray-950 pt-20 pb-10 border-t border-blue-800 dark:border-gray-900 mt-auto transition-colors duration-200">
+    <footer className="bg-card pt-20 pb-10 border-t border-border mt-auto transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
@@ -30,23 +30,23 @@ export default function Footer() {
               <img
                 src="/slogan.png"
                 alt="Staylio"
-                className="h-20 object-contain brightness-0 invert opacity-90"
+                className="h-20 object-contain dark:brightness-0 dark:invert opacity-90"
               />
             </div>
-            <p className="text-blue-200 text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               {t('components.footer.description')}
             </p>
             <div className="space-y-3">
-              <div className="flex items-center gap-3 text-blue-200 text-sm hover:text-white transition-colors cursor-pointer">
-                <MapPin className="w-4 h-4 text-blue-400" />
+              <div className="flex items-center gap-3 text-muted-foreground text-sm hover:text-primary transition-colors cursor-pointer">
+                <MapPin className="w-4 h-4 text-primary" />
                 <span>123 Đường Cầu Giấy, Hà Nội, VN</span>
               </div>
-              <div className="flex items-center gap-3 text-blue-200 text-sm hover:text-white transition-colors cursor-pointer">
-                <Phone className="w-4 h-4 text-blue-400" />
+              <div className="flex items-center gap-3 text-muted-foreground text-sm hover:text-primary transition-colors cursor-pointer">
+                <Phone className="w-4 h-4 text-primary" />
                 <span>+84 (24) 1234-5678</span>
               </div>
-              <div className="flex items-center gap-3 text-blue-200 text-sm hover:text-white transition-colors cursor-pointer">
-                <Mail className="w-4 h-4 text-blue-400" />
+              <div className="flex items-center gap-3 text-muted-foreground text-sm hover:text-primary transition-colors cursor-pointer">
+                <Mail className="w-4 h-4 text-primary" />
                 <span>support@staylio.com</span>
               </div>
             </div>
@@ -54,7 +54,7 @@ export default function Footer() {
 
           {/* Links 1 */}
           <div>
-            <h4 className="text-white font-bold mb-6 text-lg tracking-wide">
+            <h4 className="text-foreground font-bold mb-6 text-lg tracking-wide">
               {t('components.footer.aboutUs')}
             </h4>
             <ul className="space-y-3 text-sm font-medium">
@@ -62,7 +62,7 @@ export default function Footer() {
                 <li key={item}>
                   <a
                     href="#"
-                    className="text-blue-200 hover:text-white hover:translate-x-1 inline-block transition-all duration-300"
+                    className="text-muted-foreground hover:text-primary hover:translate-x-1 inline-block transition-all duration-300"
                   >
                     {t(`components.footer.aboutUsLinks.${item}`)}
                   </a>
@@ -73,7 +73,7 @@ export default function Footer() {
 
           {/* Links 2 */}
           <div>
-            <h4 className="text-white font-bold mb-6 text-lg tracking-wide">
+            <h4 className="text-foreground font-bold mb-6 text-lg tracking-wide">
               {t('components.footer.support')}
             </h4>
             <ul className="space-y-3 text-sm font-medium">
@@ -81,7 +81,7 @@ export default function Footer() {
                 <li key={item}>
                   <a
                     href="#"
-                    className="text-blue-200 hover:text-white hover:translate-x-1 inline-block transition-all duration-300"
+                    className="text-muted-foreground hover:text-primary hover:translate-x-1 inline-block transition-all duration-300"
                   >
                     {t(`components.footer.supportLinks.${item}`)}
                   </a>
@@ -92,19 +92,19 @@ export default function Footer() {
 
           {/* Newsletter & Socials */}
           <div>
-            <h4 className="text-white font-bold mb-6 text-lg tracking-wide">
+            <h4 className="text-foreground font-bold mb-6 text-lg tracking-wide">
               {t('components.footer.newsletterSocial')}
             </h4>
-            <p className="text-blue-200 text-sm mb-4">
+            <p className="text-muted-foreground text-sm mb-4">
               {t('components.footer.newsletterDesc')}
             </p>
             <div className="flex mb-8 relative">
               <input
                 type="email"
                 placeholder={t('components.footer.emailPlaceholder')}
-                className="bg-blue-800/50 text-white border border-blue-700/50 rounded-xl pl-4 pr-12 py-3 text-sm w-full focus:ring-2 focus:ring-white/50 focus:border-white/50 outline-none transition-all placeholder:text-blue-300"
+                className="bg-muted text-foreground border border-border rounded-xl pl-4 pr-12 py-3 text-sm w-full focus:ring-2 focus:ring-primary/50 focus:border-primary/50 outline-none transition-all placeholder:text-muted-foreground"
               />
-              <button className="absolute right-1.5 top-1.5 bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-lg transition-colors flex items-center justify-center group">
+              <button className="absolute right-1.5 top-1.5 bg-primary hover:bg-primary/90 text-primary-foreground p-2 rounded-lg transition-colors flex items-center justify-center group">
                 <Send className="w-4 h-4 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
@@ -112,19 +112,19 @@ export default function Footer() {
             <div className="flex gap-3">
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-blue-800/50 border border-blue-700/50 flex items-center justify-center text-blue-200 hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-all duration-300 hover:-translate-y-1 shadow-lg"
+                className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center text-muted-foreground hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-all duration-300 hover:-translate-y-1 shadow-lg"
               >
                 <FacebookIcon className="w-5 h-5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-blue-800/50 border border-blue-700/50 flex items-center justify-center text-blue-200 hover:bg-[#E4405F] hover:text-white hover:border-[#E4405F] transition-all duration-300 hover:-translate-y-1 shadow-lg"
+                className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center text-muted-foreground hover:bg-[#E4405F] hover:text-white hover:border-[#E4405F] transition-all duration-300 hover:-translate-y-1 shadow-lg"
               >
                 <InstagramIcon className="w-5 h-5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-blue-800/50 border border-blue-700/50 flex items-center justify-center text-blue-200 hover:bg-[#1DA1F2] hover:text-white hover:border-[#1DA1F2] transition-all duration-300 hover:-translate-y-1 shadow-lg"
+                className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center text-muted-foreground hover:bg-[#1DA1F2] hover:text-white hover:border-[#1DA1F2] transition-all duration-300 hover:-translate-y-1 shadow-lg"
               >
                 <TwitterIcon className="w-5 h-5" />
               </a>
@@ -133,13 +133,13 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-blue-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-blue-300">
+        <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
           <p className="font-medium">© 2026 Staylio. All rights reserved.</p>
           <div className="flex gap-6 font-medium">
-            <a href="#" className="hover:text-white transition-colors">
+            <a href="#" className="hover:text-primary transition-colors">
               VN | VND
             </a>
-            <a href="#" className="hover:text-white transition-colors">
+            <a href="#" className="hover:text-primary transition-colors">
               Sitemap
             </a>
           </div>

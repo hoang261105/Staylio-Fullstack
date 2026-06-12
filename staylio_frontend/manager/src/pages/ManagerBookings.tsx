@@ -15,6 +15,7 @@ import { useBookings } from "@common/hooks/useBookings";
 import { useHotelByManager } from "@common/hooks/useHotels";
 import { useMyHotelBranchs } from "@common/hooks/useHotelBranch";
 import { useAllRooms } from "@common/hooks/useRooms";
+import { Button } from "@common/components/ui/button";
 
 const SORT_OPTIONS = [
   { value: "createdAt", label: "Ngày tạo" },
@@ -113,20 +114,20 @@ export default function ManagerBookings() {
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-foreground mb-2">
               Quản lý Đơn đặt phòng
             </h1>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               Danh sách và thông tin các đơn đặt phòng thuộc chi nhánh của bạn
             </p>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col gap-4">
+        <div className="bg-card rounded-2xl p-6 shadow-sm flex flex-col gap-4">
           {/* Top row: Search & Date Filters */}
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="w-full lg:w-1/3 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Tìm kiếm mã đơn, tên khách..."
@@ -135,45 +136,45 @@ export default function ManagerBookings() {
                   setSearchQuery(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:outline-none focus:border-[#0066FF] focus:ring-4 focus:ring-[#0066FF]/10 focus:bg-white transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-muted/50 border border-transparent rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-background transition-all"
               />
             </div>
 
             <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col sm:flex-row items-center gap-2">
-                <span className="text-sm font-medium text-gray-600 w-full sm:w-auto shrink-0">
+                <span className="text-sm font-medium text-muted-foreground w-full sm:w-auto shrink-0">
                   Check-In:
                 </span>
                 <input
                   type="date"
                   value={checkInFrom}
                   onChange={(e) => setCheckInFrom(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 rounded-xl border-transparent focus:border-[#0066FF] text-sm"
+                  className="w-full px-3 py-2 bg-muted/50 rounded-xl border-transparent focus:border-primary text-sm bg-background text-foreground"
                 />
-                <span className="text-gray-400">-</span>
+                <span className="text-muted-foreground">-</span>
                 <input
                   type="date"
                   value={checkInTo}
                   onChange={(e) => setCheckInTo(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 rounded-xl border-transparent focus:border-[#0066FF] text-sm"
+                  className="w-full px-3 py-2 bg-muted/50 rounded-xl border-transparent focus:border-primary text-sm bg-background text-foreground"
                 />
               </div>
               <div className="flex flex-col sm:flex-row items-center gap-2">
-                <span className="text-sm font-medium text-gray-600 w-full sm:w-auto shrink-0">
+                <span className="text-sm font-medium text-muted-foreground w-full sm:w-auto shrink-0">
                   Check-Out:
                 </span>
                 <input
                   type="date"
                   value={checkOutFrom}
                   onChange={(e) => setCheckOutFrom(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 rounded-xl border-transparent focus:border-[#0066FF] text-sm"
+                  className="w-full px-3 py-2 bg-muted/50 rounded-xl border-transparent focus:border-primary text-sm bg-background text-foreground"
                 />
-                <span className="text-gray-400">-</span>
+                <span className="text-muted-foreground">-</span>
                 <input
                   type="date"
                   value={checkOutTo}
                   onChange={(e) => setCheckOutTo(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 rounded-xl border-transparent focus:border-[#0066FF] text-sm"
+                  className="w-full px-3 py-2 bg-muted/50 rounded-xl border-transparent focus:border-primary text-sm bg-background text-foreground"
                 />
               </div>
             </div>
@@ -182,14 +183,14 @@ export default function ManagerBookings() {
           {/* Bottom row: Dropdown filters */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <select
                 value={selectedStatus}
                 onChange={(e) => {
                   setSelectedStatus(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
+                className="w-full pl-9 pr-8 py-2.5 bg-muted/50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-primary text-sm text-foreground truncate cursor-pointer"
               >
                 <option value="all">Tất cả trạng thái</option>
                 {Object.values(BookingStatus).map((status) => (
@@ -201,14 +202,14 @@ export default function ManagerBookings() {
             </div>
 
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <select
                 value={selectedPaymentStatus}
                 onChange={(e) => {
                   setSelectedPaymentStatus(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
+                className="w-full pl-9 pr-8 py-2.5 bg-muted/50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-primary text-sm text-foreground truncate cursor-pointer"
               >
                 <option value="all">TT Thanh toán</option>
                 {Object.values(PaymentStatus).map((status) => (
@@ -220,14 +221,14 @@ export default function ManagerBookings() {
             </div>
 
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <select
                 value={selectedPaymentMethod}
                 onChange={(e) => {
                   setSelectedPaymentMethod(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
+                className="w-full pl-9 pr-8 py-2.5 bg-muted/50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-primary text-sm text-foreground truncate cursor-pointer"
               >
                 <option value="all">Phương thức TT</option>
                 {Object.values(PaymentMethod).map((method) => (
@@ -239,14 +240,14 @@ export default function ManagerBookings() {
             </div>
 
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <select
                 value={selectedBranch}
                 onChange={(e) => {
                   setSelectedBranch(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
+                className="w-full pl-9 pr-8 py-2.5 bg-muted/50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-primary text-sm text-foreground truncate cursor-pointer"
               >
                 <option value="all">Tất cả chi nhánh</option>
                 {hotelBranches?.map((branch) => (
@@ -259,7 +260,7 @@ export default function ManagerBookings() {
 
             <div className="relative">
               <Filter
-                className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${selectedBranch === "all" ? "text-gray-300" : "text-gray-400"}`}
+                className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${selectedBranch === "all" ? "text-muted" : "text-muted-foreground"}`}
               />
               <select
                 value={selectedRoom}
@@ -268,7 +269,7 @@ export default function ManagerBookings() {
                   setPage(0);
                 }}
                 disabled={selectedBranch === "all"}
-                className={`w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm truncate ${selectedBranch === "all" ? "text-gray-400 cursor-not-allowed opacity-60" : "text-gray-700 cursor-pointer"}`}
+                className={`w-full pl-9 pr-8 py-2.5 bg-muted/50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-primary text-sm truncate ${selectedBranch === "all" ? "text-muted-foreground cursor-not-allowed opacity-60" : "text-foreground cursor-pointer"}`}
               >
                 <option value="all">
                   {selectedBranch === "all"
@@ -292,7 +293,7 @@ export default function ManagerBookings() {
                   setSortBy(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-4 pr-8 py-2.5 bg-gray-50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-[#0066FF] text-sm text-gray-700 truncate cursor-pointer"
+                className="w-full pl-4 pr-8 py-2.5 bg-muted/50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-primary text-sm text-foreground truncate cursor-pointer"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -301,15 +302,16 @@ export default function ManagerBookings() {
                 ))}
               </select>
             </div>
-            <button
+            <Button
+              variant="outline"
               onClick={() => {
                 setDirection(direction === "asc" ? "desc" : "asc");
                 setPage(0);
               }}
-              className="px-4 py-2.5 bg-gray-50 rounded-xl hover:bg-gray-100 text-gray-700 font-medium transition-colors text-sm border-gray-100 border"
+              className="px-4 py-2.5 h-auto rounded-xl"
             >
               {direction === "asc" ? "↑ Tăng dần" : "↓ Giảm dần"}
-            </button>
+            </Button>
           </div>
         </div>
 

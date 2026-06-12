@@ -2,6 +2,7 @@ import { Eye, Edit, Trash2, MapPin, Building, Users } from "lucide-react";
 import { BranchStatus } from "@common/enums/BranchStatus";
 import type { HotelBranchResponse } from "@common/interfaces/response/HotelBranchResponse";
 import Pagination from "@common/components/Pagination";
+import { Button } from "@common/components/ui/button";
 
 interface HotelBranchesListViewProps {
   branches: HotelBranchResponse[];
@@ -58,10 +59,10 @@ export default function HotelBranchesListView({
   onViewChats
 }: HotelBranchesListViewProps) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-card rounded-2xl shadow-sm overflow-hidden border border-border">
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-gray-500">
-          <thead className="bg-gray-50/80 text-xs uppercase text-gray-700 font-semibold border-b border-gray-100">
+        <table className="w-full text-left text-sm text-muted-foreground">
+          <thead className="bg-muted/50 text-xs uppercase text-foreground font-semibold border-b border-border">
             <tr>
               <th className="px-6 py-4">Chi nhánh</th>
               <th className="px-6 py-4">Địa chỉ</th>
@@ -70,12 +71,12 @@ export default function HotelBranchesListView({
               <th className="px-6 py-4 text-right">Thao tác</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-border">
             {isLoading ? (
               <tr>
                 <td
                   colSpan={5}
-                  className="px-6 py-12 text-center text-gray-500"
+                  className="px-6 py-12 text-center text-muted-foreground"
                 >
                   Đang tải dữ liệu...
                 </td>
@@ -84,7 +85,7 @@ export default function HotelBranchesListView({
               <tr>
                 <td
                   colSpan={5}
-                  className="px-6 py-12 text-center text-gray-500"
+                  className="px-6 py-12 text-center text-muted-foreground"
                 >
                   Không tìm thấy chi nhánh nào
                 </td>
@@ -93,7 +94,7 @@ export default function HotelBranchesListView({
               branches.map((branch) => (
                 <tr
                   key={branch.id}
-                  className="hover:bg-gray-50/50 transition-colors group"
+                  className="hover:bg-muted/50 transition-colors group"
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
@@ -101,20 +102,20 @@ export default function HotelBranchesListView({
                         <img
                           src={branch.imageUrl}
                           alt={branch.hotelBranchName}
-                          className="w-12 h-12 rounded-lg object-cover border border-gray-100"
+                          className="w-12 h-12 rounded-lg object-cover border border-border"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500">
+                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                           <Building className="w-6 h-6" />
                         </div>
                       )}
                       <div>
-                        <div className="font-semibold text-gray-900">
+                        <div className="font-semibold text-foreground">
                           {branch.hotelBranchName}
                         </div>
-                        <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                        <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                           Thuộc:{" "}
-                          <span className="font-medium text-gray-700">
+                          <span className="font-medium text-foreground">
                             {branch.hotelName}
                           </span>
                         </div>
@@ -123,7 +124,7 @@ export default function HotelBranchesListView({
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-start gap-1.5 max-w-xs">
-                      <MapPin className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
+                      <MapPin className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
                       <span
                         className="truncate"
                         title={`${branch.address}, ${branch.wardName}, ${branch.provinceName}`}
@@ -134,10 +135,10 @@ export default function HotelBranchesListView({
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-1.5 text-gray-700 font-medium">
-                      <Users className="w-4 h-4 text-gray-400" />
+                    <div className="flex items-center gap-1.5 text-foreground font-medium">
+                      <Users className="w-4 h-4 text-muted-foreground" />
                       {branch.capacity}{" "}
-                      <span className="text-gray-500 font-normal">người</span>
+                      <span className="text-muted-foreground font-normal">người</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -152,35 +153,39 @@ export default function HotelBranchesListView({
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
+                      <Button
+                        variant="ghost" size="icon"
                         onClick={() => onView(branch)}
-                        className="p-1.5 text-gray-400 hover:text-[#0066FF] hover:bg-blue-50 rounded-lg transition-colors"
+                        className="text-muted-foreground hover:text-primary hover:bg-primary/10"
                         title="Xem chi tiết"
                       >
                         <Eye className="w-4 h-4" />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="ghost" size="icon"
                         onClick={() => onViewChats && onViewChats(branch.id)}
-                        className="p-1.5 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors"
+                        className="text-muted-foreground hover:text-emerald-500 hover:bg-emerald-50"
                         title="Xem tin nhắn khách hàng"
                       >
                         <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="ghost" size="icon"
                         onClick={() => onEdit(branch)}
-                        className="p-1.5 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors"
+                        className="text-muted-foreground hover:text-amber-500 hover:bg-amber-50"
                         title="Chỉnh sửa"
                       >
                         <Edit className="w-4 h-4" />
-                      </button>
+                      </Button>
                       {branch.status !== BranchStatus.CONFIRMED && (
-                        <button
+                        <Button
+                          variant="ghost" size="icon"
                           onClick={() => onDelete(branch.id)}
-                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                           title="Xóa chi nhánh"
                         >
                           <Trash2 className="w-4 h-4" />
-                        </button>
+                        </Button>
                       )}
                     </div>
                   </td>
@@ -193,12 +198,12 @@ export default function HotelBranchesListView({
 
       {/* Pagination */}
       {!isLoading && branches.length > 0 && (
-        <div className="p-4 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between text-sm text-gray-500 gap-4">
+        <div className="p-4 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between text-sm text-muted-foreground gap-4 bg-muted/50">
           <div>
             Hiển thị{" "}
-            <span className="font-medium text-gray-900">{branches.length}</span>{" "}
+            <span className="font-medium text-foreground">{branches.length}</span>{" "}
             trên tổng số{" "}
-            <span className="font-medium text-gray-900">{totalElements}</span>{" "}
+            <span className="font-medium text-foreground">{totalElements}</span>{" "}
             chi nhánh
           </div>
           <Pagination

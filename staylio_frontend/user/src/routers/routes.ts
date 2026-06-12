@@ -4,7 +4,6 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import VerifyEmail from "../pages/VerifyEmail";
 import Profile from "../pages/Profile";
-import Favorites from "../pages/Favourite";
 import { EditProfile } from "../pages/EditProfile";
 import ChangePassword from "../pages/ChangePassword";
 import ForgotPassword from "../pages/ForgotPassword";
@@ -55,10 +54,6 @@ export const routers = createBrowserRouter([
   {
     path: "/profile/me",
     Component: Profile,
-  },
-  {
-    path: "/favorites",
-    Component: Favorites,
   },
   {
     path: "/booking-history",

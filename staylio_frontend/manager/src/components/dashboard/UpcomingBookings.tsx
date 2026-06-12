@@ -30,7 +30,7 @@ export default function UpcomingBookings({ hotelBranchId }: { hotelBranchId: num
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-[#0066FF]" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -56,7 +56,7 @@ export default function UpcomingBookings({ hotelBranchId }: { hotelBranchId: num
 
   if ((isErrorIn && isErrorOut) || upcomingEvents.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+      <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
         <CalendarClock className="w-10 h-10 mb-3 opacity-30" />
         <p>Không có dữ liệu hôm nay</p>
       </div>
@@ -66,22 +66,22 @@ export default function UpcomingBookings({ hotelBranchId }: { hotelBranchId: num
   return (
     <div className="space-y-4">
       {upcomingEvents.map((event) => (
-        <div key={`${event.id}-${event.eventType}`} className="flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 transition-colors rounded-xl border border-gray-100">
-          <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm border ${event.eventType === 'checkin' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-orange-50 text-orange-600 border-orange-100'
+        <div key={`${event.id}-${event.eventType}`} className="flex items-center gap-4 p-4 bg-muted/50 hover:bg-muted transition-colors rounded-xl">
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${event.eventType === 'checkin' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'
             }`}>
             {event.eventType === 'checkin' ? <ArrowRightToLine className="w-6 h-6" /> : <ArrowLeftFromLine className="w-6 h-6" />}
           </div>
           <div className="flex-1">
             <div className="flex flex-wrap justify-between items-start mb-1 gap-2">
-              <span className="font-semibold text-gray-900">{event.roomName}</span>
+              <span className="font-semibold text-foreground">{event.roomName}</span>
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${event.eventType === 'checkin' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'
                 }`}>
                 {event.eventType === 'checkin' ? 'Sắp Check-in' : 'Sắp Check-out'}
               </span>
             </div>
-            <div className="flex flex-wrap justify-between items-center text-sm text-gray-500 gap-2">
+            <div className="flex flex-wrap justify-between items-center text-sm text-muted-foreground gap-2">
               <span className="truncate max-w-[150px]">{event.customerName}</span>
-              <span className="font-medium text-gray-700">
+              <span className="font-medium text-foreground">
                 {format(event.date, "HH:mm, dd/MM/yyyy")}
               </span>
             </div>

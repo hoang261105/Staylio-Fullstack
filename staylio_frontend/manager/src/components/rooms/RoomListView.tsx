@@ -4,6 +4,7 @@ import type { RoomResponse } from "../../../../common/interfaces/response/RoomRe
 import { RoomStatus } from "../../../../common/enums/RoomStatus";
 import { RoomType } from "../../../../common/enums/RoomType";
 import { getUtilityIcon } from "../../../../common/utils/iconUtils";
+import { Button } from "../../../../common/components/ui/button";
 
 interface RoomListViewProps {
   rooms: RoomResponse[];
@@ -54,10 +55,10 @@ export default function RoomListView({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-card text-foreground rounded-2xl border border-border shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-gray-500">
-          <thead className="bg-gray-50/80 border-b border-gray-100 text-xs uppercase text-gray-700 font-semibold">
+        <table className="w-full text-left text-sm text-muted-foreground">
+          <thead className="bg-muted/50 border-b border-border text-xs uppercase text-foreground font-semibold">
             <tr>
               <th className="px-6 py-4">Phòng</th>
               <th className="px-6 py-4">Chi nhánh</th>
@@ -67,39 +68,39 @@ export default function RoomListView({
               <th className="px-6 py-4 text-right">Thao tác</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-border">
             {isLoading ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-[#0066FF] border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
                     <span>Đang tải dữ liệu...</span>
                   </div>
                 </td>
               </tr>
             ) : rooms.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">
                   Không tìm thấy phòng nào
                 </td>
               </tr>
             ) : (
               rooms.map((room) => (
-                <tr key={room.id} className="hover:bg-gray-50/50 transition-colors group">
+                <tr key={room.id} className="hover:bg-muted/50 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       {(() => {
                         const primaryImg = room.images?.find(img => img.isPrimary)?.imageUrl || room.images?.[0]?.imageUrl;
                         return (
-                          <div className={`w-12 h-12 bg-linear-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center shrink-0 overflow-hidden border border-gray-100 ${!primaryImg ? 'p-2' : ''}`}>
+                          <div className={`w-12 h-12 bg-muted rounded-lg flex items-center justify-center shrink-0 overflow-hidden border border-border ${!primaryImg ? 'p-2' : ''}`}>
                             <img src={primaryImg || "/slogan.png"} alt="Room Image" className={`w-full h-full ${primaryImg ? 'object-cover' : 'object-contain'}`} />
                           </div>
                         );
                       })()}
                       <div>
-                        <div className="font-semibold text-gray-900">{room.roomName}</div>
-                        <div className="text-xs text-gray-500 mt-0.5 font-medium">Số phòng: {room.roomNumber}</div>
-                        <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600 uppercase tracking-wider">
+                        <div className="font-semibold text-foreground">{room.roomName}</div>
+                        <div className="text-xs text-muted-foreground mt-0.5 font-medium">Số phòng: {room.roomNumber}</div>
+                        <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-medium bg-muted text-muted-foreground uppercase tracking-wider">
                           {typeLabels[room.roomType] || room.roomType}
                         </span>
                       </div>
@@ -107,32 +108,32 @@ export default function RoomListView({
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-start gap-1.5 max-w-37.5">
-                      <MapPin className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
-                      <span className="font-medium text-gray-700 truncate" title={room.hotelBranchName}>
+                      <MapPin className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                      <span className="font-medium text-foreground truncate" title={room.hotelBranchName}>
                         {room.hotelBranchName}
                       </span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="space-y-1.5">
-                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                        <Users className="w-3.5 h-3.5 text-gray-400" />
+                      <div className="flex items-center gap-1.5 text-xs text-foreground">
+                        <Users className="w-3.5 h-3.5 text-muted-foreground" />
                         <span>{room.capacity} khách (Tối đa {room.maxAdults} NL, {room.maxChildren} TE)</span>
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                        <Bed className="w-3.5 h-3.5 text-gray-400" />
+                      <div className="flex items-center gap-1.5 text-xs text-foreground">
+                        <Bed className="w-3.5 h-3.5 text-muted-foreground" />
                         <span className="truncate max-w-37.5" title={room.bedInfo}>{room.bedInfo}</span>
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                        <Maximize className="w-3.5 h-3.5 text-gray-400" />
+                      <div className="flex items-center gap-1.5 text-xs text-foreground">
+                        <Maximize className="w-3.5 h-3.5 text-muted-foreground" />
                         <span>{room.area} m²</span>
                       </div>
                       {room.utilities && room.utilities.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-2 pt-2 border-t border-gray-100">
+                        <div className="flex flex-wrap gap-1 mt-2 pt-2 border-t border-border">
                           {room.utilities.map((util) => {
                             const Icon = getUtilityIcon(util.iconName);
                             return (
-                              <div key={util.id} className="p-1 bg-gray-50 rounded-md border border-gray-100 text-gray-500" title={util.title}>
+                              <div key={util.id} className="p-1 bg-muted rounded-md border border-border text-muted-foreground" title={util.title}>
                                 <Icon className="w-3.5 h-3.5" />
                               </div>
                             );
@@ -142,11 +143,11 @@ export default function RoomListView({
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="font-medium text-[#0066FF]">
+                    <div className="font-medium text-primary">
                       {room.price.toLocaleString("vi-VN")} ₫
                     </div>
                     {room.isVoucherApplicable && (
-                      <div className="flex items-center gap-1 mt-1 text-[10px] font-medium text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded-sm w-fit">
+                      <div className="flex items-center gap-1 mt-1 text-[10px] font-medium text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded-sm w-fit border border-orange-200">
                         <Tag className="w-3 h-3" />
                         <span>Áp dụng Voucher</span>
                       </div>
@@ -156,14 +157,14 @@ export default function RoomListView({
                     <div className="flex flex-col gap-2 items-start">
                       <button
                         onClick={() => onUpdateStatus(room)}
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border transition-colors hover:opacity-80 cursor-pointer ${statusColors[room.status] || "bg-gray-50 text-gray-700 border-gray-200"
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border transition-colors hover:opacity-80 cursor-pointer ${statusColors[room.status] || "bg-muted text-muted-foreground border-border"
                           }`}
                         title="Cập nhật trạng thái phòng"
                       >
                         {statusLabels[room.status] || room.status}
                       </button>
                       {!room.isActive && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-red-50 text-red-600 border border-red-100">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-destructive/10 text-destructive border border-destructive/20">
                           Ngừng hoạt động
                         </span>
                       )}
@@ -171,40 +172,48 @@ export default function RoomListView({
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => onToggleVoucher(room)}
-                        className={`p-1.5 rounded-lg transition-colors ${room.isVoucherApplicable
-                          ? "text-orange-500 hover:bg-orange-50"
-                          : "text-gray-400 hover:text-blue-500 hover:bg-blue-50"
+                        className={`${room.isVoucherApplicable
+                          ? "text-orange-500 hover:bg-orange-50 hover:text-orange-600"
+                          : "text-muted-foreground hover:text-primary hover:bg-primary/10"
                           }`}
                         title={room.isVoucherApplicable ? "Hủy áp dụng Voucher" : "Cho phép áp dụng Voucher"}
                       >
                         <Tag className="w-4 h-4" />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => onToggleActive(room)}
-                        className={`p-1.5 rounded-lg transition-colors ${room.isActive
-                          ? "text-red-500 hover:bg-red-50"
-                          : "text-green-500 hover:bg-green-50"
+                        className={`${room.isActive
+                          ? "text-destructive hover:bg-destructive/10 hover:text-destructive"
+                          : "text-green-500 hover:bg-green-50 hover:text-green-600"
                           }`}
                         title={room.isActive ? "Ngừng hoạt động" : "Kích hoạt"}
                       >
                         <Power className="w-4 h-4" />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => onEdit(room)}
-                        className="p-1.5 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-colors"
+                        className="text-muted-foreground hover:text-orange-500 hover:bg-orange-50"
                         title="Sửa thông tin"
                       >
                         <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => onView(room)}
-                        className="p-1.5 text-gray-400 hover:text-[#0066FF] hover:bg-blue-50 rounded-lg transition-colors"
+                        className="text-muted-foreground hover:text-primary hover:bg-primary/10"
                         title="Xem chi tiết"
                       >
                         <Eye className="w-4 h-4" />
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -216,10 +225,10 @@ export default function RoomListView({
 
       {/* Pagination */}
       {!isLoading && rooms.length > 0 && (
-        <div className="p-4 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between text-sm text-gray-500 gap-4 bg-gray-50/50">
+        <div className="p-4 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between text-sm text-muted-foreground gap-4 bg-muted/50">
           <div>
-            Hiển thị <span className="font-medium text-gray-900">{rooms.length}</span> trên tổng số{" "}
-            <span className="font-medium text-gray-900">{totalElements}</span> phòng
+            Hiển thị <span className="font-medium text-foreground">{rooms.length}</span> trên tổng số{" "}
+            <span className="font-medium text-foreground">{totalElements}</span> phòng
           </div>
           <Pagination page={currentPage} totalPages={totalPages} onChange={onPageChange} />
         </div>

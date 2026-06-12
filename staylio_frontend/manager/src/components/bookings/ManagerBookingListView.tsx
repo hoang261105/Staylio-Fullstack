@@ -4,6 +4,7 @@ import type { BookingResponse } from "@common/interfaces/response/BookingRespons
 import dayjs from "dayjs";
 import { bookingStatusColors, bookingStatusLabels, paymentStatusColors, paymentStatusLabels } from "@common/utils/booking.util";
 import { paymentMethodLabels } from "@common/utils/booking.util";
+import { Button } from "@common/components/ui/button";
 
 interface ManagerBookingListViewProps {
   bookings: BookingResponse[];
@@ -29,10 +30,10 @@ export default function ManagerBookingListView({
   onUpdateStatus,
 }: ManagerBookingListViewProps) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-card rounded-2xl shadow-sm overflow-hidden border border-border">
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-gray-500">
-          <thead className="bg-gray-50/80 border-b border-gray-100 text-xs uppercase text-gray-700 font-semibold">
+        <table className="w-full text-left text-sm text-muted-foreground">
+          <thead className="bg-muted/50 border-b border-border text-xs uppercase text-foreground font-semibold">
             <tr>
               <th className="px-6 py-4">Mã đơn / Khách hàng</th>
               <th className="px-6 py-4">Chi nhánh / Phòng</th>
@@ -44,33 +45,33 @@ export default function ManagerBookingListView({
               <th className="px-6 py-4 text-right">Thao tác</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-border">
             {isLoading ? (
               <tr>
-                <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={8} className="px-6 py-12 text-center text-muted-foreground">
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-[#0066FF] border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
                     <span>Đang tải dữ liệu...</span>
                   </div>
                 </td>
               </tr>
             ) : bookings.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={8} className="px-6 py-12 text-center text-muted-foreground">
                   Không tìm thấy đơn đặt phòng nào
                 </td>
               </tr>
             ) : (
               bookings.map((booking) => (
-                <tr key={booking.id} className="hover:bg-gray-50/50 transition-colors group">
+                <tr key={booking.id} className="hover:bg-muted/50 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-50 text-[#0066FF] rounded-lg flex items-center justify-center shrink-0 border border-blue-100">
+                      <div className="w-10 h-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center shrink-0 border border-primary/20">
                         <Hash className="w-5 h-5" />
                       </div>
                       <div>
-                        <div className="font-semibold text-gray-900">{booking.bookingCode}</div>
-                        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-gray-500">
+                        <div className="font-semibold text-foreground">{booking.bookingCode}</div>
+                        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
                           <User className="w-3.5 h-3.5" />
                           <span>{booking.customerName}</span>
                         </div>
@@ -79,87 +80,90 @@ export default function ManagerBookingListView({
                   </td>
                   <td className="px-6 py-4">
                     <div className="space-y-1">
-                      <div className="flex items-center gap-1.5 font-medium text-gray-900">
-                        <Building2 className="w-3.5 h-3.5 text-gray-400" />
+                      <div className="flex items-center gap-1.5 font-medium text-foreground">
+                        <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
                         <span>{booking.hotelBranchName}</span>
                       </div>
-                      <div className="text-xs text-gray-500">
-                        Phòng: <span className="font-semibold text-gray-700">{booking.roomName}</span> - Số: <span className="font-semibold text-gray-700">{booking.roomNumber}</span>
+                      <div className="text-xs text-muted-foreground">
+                        Phòng: <span className="font-semibold text-foreground">{booking.roomName}</span> - Số: <span className="font-semibold text-foreground">{booking.roomNumber}</span>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="space-y-1">
-                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Calendar className="w-3.5 h-3.5 text-emerald-500" />
-                        <span>In: <span className="font-medium text-gray-900">{dayjs(booking.checkInDate).format("DD/MM/YYYY")}</span></span>
+                        <span>In: <span className="font-medium text-foreground">{dayjs(booking.checkInDate).format("DD/MM/YYYY")}</span></span>
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Calendar className="w-3.5 h-3.5 text-rose-500" />
-                        <span>Out: <span className="font-medium text-gray-900">{dayjs(booking.checkOutDate).format("DD/MM/YYYY")}</span></span>
+                        <span>Out: <span className="font-medium text-foreground">{dayjs(booking.checkOutDate).format("DD/MM/YYYY")}</span></span>
                       </div>
-                      <div className="text-[10px] text-gray-500 mt-0.5">
+                      <div className="text-[10px] text-muted-foreground mt-0.5">
                         Tổng cộng: <span className="font-semibold">{booking.totalNights}</span> đêm
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="space-y-1">
-                      <div className="font-bold text-[#0066FF]">
+                      <div className="font-bold text-primary">
                         {booking.finalPrice.toLocaleString("vi-VN")} ₫
                       </div>
                       {booking.discountAmount > 0 && (
-                        <div className="text-xs text-gray-500 line-through">
+                        <div className="text-xs text-muted-foreground line-through">
                           {booking.originalPrice.toLocaleString("vi-VN")} ₫
                         </div>
                       )}
-                      <div className="flex items-center gap-1.5 text-[10px] font-medium text-gray-500 uppercase">
+                      <div className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground uppercase">
                         <CreditCard className="w-3 h-3" />
                         <span>{paymentMethodLabels[booking.paymentMethod] || booking.paymentMethod}</span>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${bookingStatusColors[booking.status] || "bg-gray-50 text-gray-700 border-gray-200"}`}>
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${bookingStatusColors[booking.status] || "bg-muted text-foreground border-border"}`}>
                       {bookingStatusLabels[booking.status] || booking.status}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${paymentStatusColors[booking.paymentStatus] || "bg-gray-50 text-gray-700 border-gray-200"}`}>
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${paymentStatusColors[booking.paymentStatus] || "bg-muted text-foreground border-border"}`}>
                       {paymentStatusLabels[booking.paymentStatus] || booking.paymentStatus}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-sm font-medium text-foreground">
                       {dayjs(booking.createdAt).format("DD/MM/YYYY")}
                     </div>
-                    <div className="text-xs text-gray-500 mt-0.5">
+                    <div className="text-xs text-muted-foreground mt-0.5">
                       {dayjs(booking.createdAt).format("HH:mm")}
                     </div>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
+                      <Button
+                        variant="ghost" size="icon"
                         onClick={() => onUpdatePayment(booking)}
                         title="Cập nhật thanh toán"
-                        className="p-2 hover:bg-emerald-50 text-emerald-600 rounded-lg transition-colors border border-transparent hover:border-emerald-100"
+                        className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
                       >
                         <Wallet className="w-4 h-4" />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="ghost" size="icon"
                         onClick={() => onUpdateStatus(booking)}
                         title="Cập nhật đặt phòng"
-                        className="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition-colors border border-transparent hover:border-blue-100"
+                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                       >
                         <Activity className="w-4 h-4" />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="ghost" size="icon"
                         onClick={() => onView(booking)}
                         title="Xem chi tiết"
-                        className="p-2 hover:bg-gray-100 text-gray-600 rounded-lg transition-colors border border-transparent hover:border-gray-200"
+                        className="text-muted-foreground hover:text-foreground"
                       >
                         <Eye className="w-4 h-4" />
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -171,10 +175,10 @@ export default function ManagerBookingListView({
 
       {/* Pagination */}
       {!isLoading && bookings.length > 0 && (
-        <div className="p-4 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between text-sm text-gray-500 gap-4 bg-gray-50/50">
+        <div className="p-4 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between text-sm text-muted-foreground gap-4 bg-muted/50">
           <div>
-            Hiển thị <span className="font-medium text-gray-900">{bookings.length}</span> trên tổng số{" "}
-            <span className="font-medium text-gray-900">{totalElements}</span> đơn đặt phòng
+            Hiển thị <span className="font-medium text-foreground">{bookings.length}</span> trên tổng số{" "}
+            <span className="font-medium text-foreground">{totalElements}</span> đơn đặt phòng
           </div>
           <Pagination page={currentPage} totalPages={totalPages} onChange={onPageChange} />
         </div>

@@ -3,6 +3,7 @@ import { AlertTriangle, CheckCircle, XCircle, X, Power } from "lucide-react";
 import { VoucherStatus } from "@common/enums/VoucherStatus";
 import type { VoucherResponse } from "@common/interfaces/response/VoucherResponse";
 import { useUpdateStatusVoucherMutation } from "@common/hooks/useVouchers";
+import { Button } from "@common/components/ui/button";
 
 interface VoucherToggleStatusModalProps {
   voucher: VoucherResponse | null;
@@ -39,38 +40,38 @@ export default function VoucherToggleStatusModal({
       }}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+        className="bg-card text-foreground rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         <div
           className={`px-6 py-5 flex items-center justify-between border-b ${
             isActivating
-              ? "border-green-100 bg-green-50"
-              : "border-red-100 bg-red-50"
+              ? "border-green-500/20 bg-green-500/10"
+              : "border-red-500/20 bg-red-500/10"
           }`}
         >
           <div className="flex items-center gap-3">
             <div
               className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                 isActivating
-                  ? "bg-green-100 text-green-600"
-                  : "bg-red-100 text-red-500"
+                  ? "bg-green-500/20 text-green-600 dark:text-green-500"
+                  : "bg-red-500/20 text-red-600 dark:text-red-500"
               }`}
             >
               <Power className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-bold text-gray-900 text-base">
+              <h2 className="font-bold text-foreground text-base">
                 {isActivating ? "Kích hoạt Voucher" : "Vô hiệu hóa Voucher"}
               </h2>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Xác nhận thay đổi trạng thái
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -80,8 +81,8 @@ export default function VoucherToggleStatusModal({
           <div
             className={`flex items-start gap-3 p-4 rounded-xl border ${
               isActivating
-                ? "bg-green-50 border-green-200 text-green-800"
-                : "bg-amber-50 border-amber-200 text-amber-800"
+                ? "bg-green-500/10 border-green-500/20 text-green-700 dark:text-green-400"
+                : "bg-amber-500/10 border-amber-500/20 text-amber-700 dark:text-amber-400"
             }`}
           >
             <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -92,16 +93,16 @@ export default function VoucherToggleStatusModal({
             </p>
           </div>
 
-          <div className="bg-gray-50 rounded-xl border border-gray-100 p-4 space-y-3">
+          <div className="bg-muted/50 rounded-xl border border-border p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+              <span className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
                 Voucher
               </span>
               <span
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${
                   voucher.status === VoucherStatus.ACTIVE
-                    ? "bg-green-50 text-green-700 border-green-200"
-                    : "bg-gray-100 text-gray-600 border-gray-200"
+                    ? "bg-green-500/10 text-green-600 border-green-500/20 dark:text-green-400"
+                    : "bg-muted text-muted-foreground border-border"
                 }`}
               >
                 {voucher.status === VoucherStatus.ACTIVE
@@ -111,29 +112,29 @@ export default function VoucherToggleStatusModal({
             </div>
 
             <div>
-              <p className="font-semibold text-gray-900 text-sm">
+              <p className="font-semibold text-foreground text-sm">
                 {voucher.title}
               </p>
-              <span className="inline-flex mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-gray-200 text-gray-700 border border-gray-300">
+              <span className="inline-flex mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-muted text-foreground border border-border">
                 {voucher.code}
               </span>
             </div>
 
-            <div className="pt-2 border-t border-gray-200 flex items-center gap-3">
-              <div className="flex-1 flex flex-col items-center gap-1.5 bg-white rounded-lg p-2.5 border border-gray-200">
+            <div className="pt-2 border-t border-border flex items-center gap-3">
+              <div className="flex-1 flex flex-col items-center gap-1.5 bg-card rounded-lg p-2.5 border border-border">
                 {voucher.status === VoucherStatus.ACTIVE ? (
                   <CheckCircle className="w-5 h-5 text-green-500" />
                 ) : (
-                  <XCircle className="w-5 h-5 text-gray-400" />
+                  <XCircle className="w-5 h-5 text-muted-foreground" />
                 )}
-                <span className="text-[10px] font-medium text-gray-500 text-center">
+                <span className="text-[10px] font-medium text-muted-foreground text-center">
                   Hiện tại
                 </span>
                 <span
                   className={`text-[11px] font-semibold ${
                     voucher.status === VoucherStatus.ACTIVE
-                      ? "text-green-600"
-                      : "text-gray-500"
+                      ? "text-green-500"
+                      : "text-muted-foreground"
                   }`}
                 >
                   {voucher.status === VoucherStatus.ACTIVE
@@ -142,26 +143,26 @@ export default function VoucherToggleStatusModal({
                 </span>
               </div>
 
-              <div className="text-gray-300 text-xl font-light">→</div>
+              <div className="text-muted-foreground text-xl font-light">→</div>
 
               <div
                 className={`flex-1 flex flex-col items-center gap-1.5 rounded-lg p-2.5 border ${
                   isActivating
-                    ? "bg-green-50 border-green-200"
-                    : "bg-red-50 border-red-200"
+                    ? "bg-green-500/10 border-green-500/20"
+                    : "bg-red-500/10 border-red-500/20"
                 }`}
               >
                 {isActivating ? (
                   <CheckCircle className="w-5 h-5 text-green-500" />
                 ) : (
-                  <XCircle className="w-5 h-5 text-red-400" />
+                  <XCircle className="w-5 h-5 text-red-500" />
                 )}
-                <span className="text-[10px] font-medium text-gray-500 text-center">
+                <span className="text-[10px] font-medium text-muted-foreground text-center">
                   Sau khi xác nhận
                 </span>
                 <span
                   className={`text-[11px] font-semibold ${
-                    isActivating ? "text-green-600" : "text-red-500"
+                    isActivating ? "text-green-500" : "text-red-500"
                   }`}
                 >
                   {isActivating ? "ACTIVE" : "DISABLED"}
@@ -171,26 +172,23 @@ export default function VoucherToggleStatusModal({
           </div>
         </div>
 
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-3">
-          <button
+        <div className="px-6 py-4 bg-muted/50 border-t border-border flex items-center justify-end gap-3">
+          <Button
+            variant="outline"
             onClick={onClose}
             disabled={isPending}
-            className="px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors disabled:opacity-50"
           >
             Hủy bỏ
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={isActivating ? "default" : "destructive"}
             onClick={handleConfirm}
             disabled={isPending}
-            className={`px-5 py-2.5 text-sm font-semibold text-white rounded-xl transition-all flex items-center gap-2 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed ${
-              isActivating
-                ? "bg-green-500 hover:bg-green-600 shadow-green-500/25"
-                : "bg-red-500 hover:bg-red-600 shadow-red-500/25"
-            }`}
+            className="flex items-center gap-2"
           >
             {isPending ? (
               <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                 <span>Đang xử lý...</span>
               </>
             ) : (
@@ -201,7 +199,7 @@ export default function VoucherToggleStatusModal({
                 </span>
               </>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

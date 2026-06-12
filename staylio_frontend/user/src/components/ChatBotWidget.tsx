@@ -102,8 +102,8 @@ export default function ChatBotWidget() {
       <button
         onClick={handleOpenChat}
         className={`fixed bottom-6 right-6 p-4 rounded-full z-100 transition-all duration-300 flex items-center justify-center ${isOpen
-          ? "bg-gray-900 text-white hover:bg-gray-800 rotate-90 scale-0 opacity-0 pointer-events-none"
-          : "bg-linear-to-r from-blue-600 to-indigo-600 text-white hover:-translate-y-1 rotate-0 scale-100 opacity-100"
+          ? "bg-secondary text-secondary-foreground hover:bg-secondary/80 rotate-90 scale-0 opacity-0 pointer-events-none"
+          : "bg-primary text-primary-foreground hover:-translate-y-1 rotate-0 scale-100 opacity-100"
           }`}
         aria-label="Open Chat"
       >
@@ -117,29 +117,29 @@ export default function ChatBotWidget() {
           }`}
         style={{ height: "600px", maxHeight: "calc(100vh - 100px)" }}
       >
-        <div className="bg-linear-to-r from-blue-600 to-indigo-600 p-4 flex items-center justify-between relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mr-10 -mt-10 w-32 h-32 bg-white dark:bg-gray-800/10 rounded-full blur-2xl"></div>
+        <div className="bg-primary p-4 flex items-center justify-between relative overflow-hidden">
+          <div className="absolute top-0 right-0 -mr-10 -mt-10 w-32 h-32 bg-primary-foreground/10 rounded-full blur-2xl"></div>
           <div className="flex items-center gap-3 relative z-10">
-            <div className="w-10 h-10 bg-white dark:bg-gray-800/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
-              {chatType === "AI" ? <Bot className="w-6 h-6 text-white" /> : <User className="w-6 h-6 text-white" />}
+            <div className="w-10 h-10 bg-primary-foreground/20 backdrop-blur-md rounded-full flex items-center justify-center border border-primary-foreground/30">
+              {chatType === "AI" ? <Bot className="w-6 h-6 text-primary-foreground" /> : <User className="w-6 h-6 text-primary-foreground" />}
             </div>
             <div>
-              <h3 className="text-white font-semibold text-lg leading-tight">
+              <h3 className="text-primary-foreground font-semibold text-lg leading-tight">
                 {chatType === "AI" ? "Staylio AI" : `${managerName || t('components.chatBotWidget.updating')}`}
               </h3>
-              <p className="text-blue-100 text-xs font-medium">{t('components.chatBotWidget.online')}</p>
+              <p className="text-primary-foreground/80 text-xs font-medium">{t('components.chatBotWidget.online')}</p>
             </div>
           </div>
           <button
             onClick={closeChat}
-            className="text-white/80 hover:text-white hover:bg-white dark:bg-gray-800/20 p-2 rounded-full transition-colors relative z-10"
+            className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/20 p-2 rounded-full transition-colors relative z-10"
             aria-label="Close chat"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 bg-background space-y-4 scrollbar-thin scrollbar-thumb-gray-300">
+        <div className="flex-1 overflow-y-auto p-4 bg-background space-y-4 scrollbar-thin scrollbar-thumb-muted">
           {messages.length === 0 && currentSessionId !== 0 && (
             <div className="text-center text-muted-foreground text-sm mt-4">
               {t('components.chatBotWidget.startChatWith')} {chatType === "AI" ? t('components.chatBotWidget.ai') : t('components.chatBotWidget.manager')}...
@@ -154,8 +154,8 @@ export default function ChatBotWidget() {
                   }`}
               >
                 {!isCustomer && (
-                  <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-100 to-indigo-100 flex items-center justify-center shrink-0 border border-b dark:border-gray-700lue-200">
-                    {msg.senderType === MessageSenderType.AI ? <Bot className="w-4 h-4 text-blue-600" /> : <User className="w-4 h-4 text-blue-600" />}
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-border">
+                    {msg.senderType === MessageSenderType.AI ? <Bot className="w-4 h-4 text-primary" /> : <User className="w-4 h-4 text-primary" />}
                   </div>
                 )}
 

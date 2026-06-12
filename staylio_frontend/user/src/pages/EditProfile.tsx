@@ -171,6 +171,7 @@ export function EditProfile() {
                 value={formData?.email}
                 onChange={(v: string) => handleChange("email", v)}
                 error={errors.email}
+                disabled
               />
               <Input
                 label={t('editProfile.phone')}
@@ -247,6 +248,7 @@ function Input({
   type = "text",
   full,
   error,
+  disabled,
 }: any) {
   return (
     <div className={full ? "md:col-span-2" : ""}>
@@ -262,7 +264,8 @@ function Input({
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full px-4 py-3 bg-background text-foreground ${Icon ? "pl-10" : ""} border border-input rounded-lg focus:ring-2 focus:ring-primary/30 outline-none ${error ? "border-destructive" : ""}`}
+          disabled={disabled}
+          className={`w-full px-4 py-3 bg-background text-foreground ${Icon ? "pl-10" : ""} border border-input rounded-lg focus:ring-2 focus:ring-primary/30 outline-none ${error ? "border-destructive" : ""} ${disabled ? "opacity-50 cursor-not-allowed bg-muted" : ""}`}
         />
       </div>
       {error && <p className="text-sm text-destructive mt-1">{error}</p>}

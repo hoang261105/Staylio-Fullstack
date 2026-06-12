@@ -1,3 +1,5 @@
+import { Button } from "@common/components/ui/button";
+
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -18,28 +20,28 @@ export default function ConfirmDeleteModal({
         onClick={onClose}
       />
 
-      <div className="relative bg-white rounded-xl shadow-lg w-full max-w-sm p-6 z-10">
+      <div className="relative bg-card text-foreground rounded-xl shadow-lg w-full max-w-sm p-6 z-10">
         <h2 className="text-lg font-semibold mb-2">
           Xác nhận xóa chi nhánh
         </h2>
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-muted-foreground mb-6">
           Bạn có chắc chắn muốn xóa chi nhánh này không?
         </p>
 
         <div className="flex justify-end gap-3">
-          <button
+          <Button
+            variant="outline"
             onClick={onClose}
-            className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
           >
             Hủy
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="destructive"
             onClick={onConfirm}
-            className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
           >
             Xóa
-          </button>
+          </Button>
         </div>
       </div>
     </div>

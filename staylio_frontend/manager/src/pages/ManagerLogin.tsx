@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { InputField } from "../../../common/components/InputField";
 import { ArrowRight } from "lucide-react";
 import { useLoginForm } from "../../../common/hooks/useLoginForm";
+import { Button } from "@common/components/ui/button";
 
 export default function ManagerLogin() {
   const navigate = useNavigate();
@@ -17,9 +18,9 @@ export default function ManagerLogin() {
   });
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-400/20 blur-[100px] mix-blend-multiply" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#0066FF]/10 blur-[100px] mix-blend-multiply" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[100px] mix-blend-multiply" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
         <div className="flex justify-center items-center gap-3">
@@ -31,16 +32,16 @@ export default function ManagerLogin() {
             />
           </div>
         </div>
-        <h2 className="mt-6 text-center text-2xl font-bold text-gray-900">
+        <h2 className="mt-6 text-center text-2xl font-bold text-foreground">
           Cổng Quản Lý Chi Nhánh
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-500">
+        <p className="mt-2 text-center text-sm text-muted-foreground">
           Vui lòng đăng nhập để tiếp tục
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <div className="bg-white/80 backdrop-blur-xl py-8 px-4 shadow-2xl shadow-black/5 sm:rounded-2xl sm:px-10 border border-white/50">
+        <div className="bg-card/80 backdrop-blur-xl py-8 px-4 shadow-2xl shadow-black/5 sm:rounded-2xl sm:px-10 border border-border">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <InputField
@@ -72,11 +73,11 @@ export default function ManagerLogin() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-[#0066FF] focus:ring-[#0066FF] border-gray-300 rounded"
+                  className="h-4 w-4 text-primary focus:ring-primary border-input rounded"
                 />
                 <label
                   htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-700"
+                  className="ml-2 block text-sm text-foreground"
                 >
                   Ghi nhớ đăng nhập
                 </label>
@@ -85,7 +86,7 @@ export default function ManagerLogin() {
               <div className="text-sm">
                 <a
                   href="#"
-                  className="font-medium text-[#0066FF] hover:text-[#0052CC] transition-colors"
+                  className="font-medium text-primary hover:text-primary/80 transition-colors"
                 >
                   Quên mật khẩu?
                 </a>
@@ -93,14 +94,14 @@ export default function ManagerLogin() {
             </div>
 
             <div>
-              <button
+              <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-[#0066FF] hover:bg-[#0052CC] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0066FF] transition-all transform active:scale-[0.98]"
+                className="w-full h-12 flex justify-center items-center gap-2"
               >
                 {isLoading ? "Đang đăng nhập..." : "Đăng nhập hệ thống"}
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           </form>
         </div>
