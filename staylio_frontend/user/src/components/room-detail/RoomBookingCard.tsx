@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -5,10 +6,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { InputField } from "../../../../common/components/InputField";
 import { useApiErrors } from "../../../../common/hooks/useApiErrors";
-import { useBookedDates } from "../../../../common/hooks/useBookings";
+import { useBookedDates, usePreviewBookingMutation } from "../../../../common/hooks/useBookings";
 import { useProfile } from "../../../../common/hooks/useProfile";
 import { useTranslation } from "react-i18next";
 import type { RoomResponse } from "../../../../common/interfaces/response/RoomResponse";
+import { PaymentMethod } from "../../../../common/enums/PaymentMethod";
 import { Button } from "../../../../common/components/ui/button";
 
 interface RoomBookingCardProps {
@@ -19,9 +21,10 @@ interface RoomBookingCardProps {
 export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) {
   const navigate = useNavigate();
   const { data: user } = useProfile();
-  const { fieldErrors, clearFieldError } = useApiErrors();
+  const { fieldErrors, clearFieldError, handleApiErrors } = useApiErrors();
   const { t } = useTranslation();
-  
+  const { mutateAsync: previewBooking, isPending } = usePreviewBookingMutation();
+
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
   const [adults, setAdults] = useState<number | "">(1);
@@ -36,7 +39,6 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
 
   const excludeCheckInIntervals = useMemo(() => {
     if (!bookedDatesData) return [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return bookedDatesData.map((d: any) => {
       const end = new Date(d.checkOutDate);
       end.setDate(end.getDate() - 1);
@@ -49,7 +51,6 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
 
   const excludeCheckOutIntervals = useMemo(() => {
     if (!bookedDatesData) return [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return bookedDatesData.map((d: any) => {
       const start = new Date(d.checkInDate);
       start.setDate(start.getDate() + 1);
@@ -87,7 +88,7 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
     clearFieldError("children");
   };
 
-  const handleBookNow = () => {
+  const handleBookNow = async () => {
     if (!checkInDate || !checkOutDate) {
       toast.error(t("roomDetail.missingDates"));
       return;
@@ -104,15 +105,37 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
       return `${year}-${month}-${day}`;
     };
 
-    navigate("/booking/confirmation", {
-      state: {
+    const checkInDateStr = formatDate(checkInDate);
+    const checkOutDateStr = formatDate(checkOutDate);
+
+    try {
+      await previewBooking({
         roomId,
-        checkInDate: formatDate(checkInDate),
-        checkOutDate: formatDate(checkOutDate),
+        checkInDate: checkInDateStr,
+        checkOutDate: checkOutDateStr,
         adults: Number(adults),
         children: Number(children) || 0,
-      },
-    });
+        note: "",
+        preferences: "{}",
+        paymentMethod: PaymentMethod.CASH,
+      });
+
+      navigate("/booking/confirmation", {
+        state: {
+          roomId,
+          checkInDate: checkInDateStr,
+          checkOutDate: checkOutDateStr,
+          adults: Number(adults),
+          children: Number(children) || 0,
+        },
+      });
+    } catch (error: any) {
+      if (error?.response?.data?.errors) {
+        handleApiErrors(error.response.data.errors);
+      } else {
+        toast.error(error?.response?.data?.message || t("roomDetail.bookingFailed"));
+      }
+    }
   };
 
   return (
@@ -149,7 +172,6 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
             </label>
             <DatePicker
               selected={checkOutDate}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               onChange={(date: any) => setCheckOutDate(date)}
               minDate={minCheckOutDate}
               excludeDateIntervals={excludeCheckOutIntervals}
@@ -167,6 +189,12 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
             max={room.maxAdults}
             value={adults}
             onChange={handleAdultsChange}
+            onKeyDown={(e: any) => {
+              if (!["ArrowUp", "ArrowDown", "Tab"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
+            onPaste={(e: any) => e.preventDefault()}
             error={fieldErrors.adults}
             placeholder={`${t("roomDetail.max")}: ${room.maxAdults}`}
           />
@@ -177,6 +205,12 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
             max={room.maxChildren}
             value={children}
             onChange={handleChildrenChange}
+            onKeyDown={(e: any) => {
+              if (!["ArrowUp", "ArrowDown", "Tab"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
+            onPaste={(e: any) => e.preventDefault()}
             error={fieldErrors.children}
             placeholder={`${t("roomDetail.max")}: ${room.maxChildren}`}
           />
@@ -187,9 +221,10 @@ export default function RoomBookingCard({ room, roomId }: RoomBookingCardProps) 
         <>
           <Button
             onClick={handleBookNow}
+            disabled={isPending}
             className="w-full py-6 font-bold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all"
           >
-            {t("roomDetail.bookNow")}
+            {isPending ? "Đang kiểm tra..." : t("roomDetail.bookNow")}
           </Button>
           <p className="text-center text-xs text-muted-foreground mt-4">
             {t("roomDetail.notChargedYet")}
