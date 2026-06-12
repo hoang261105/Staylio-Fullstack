@@ -129,7 +129,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public JWTResponse login(UserLoginRequest userLoginRequest) {
+    public JWTResponse login(UserLoginRequest userLoginRequest, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -143,7 +143,7 @@ public class AuthServiceImpl implements AuthService {
             String accessToken = jwtTokenProvider.generateAccessToken(principal);
             String refreshToken = jwtTokenProvider.generateRefreshToken(principal);
 
-            return JWTResponse.builder()
+            JWTResponse jwtResponse = JWTResponse.builder()
                     .id(principal.getId())
                     .email(principal.getEmail())
                     .fullName(principal.getFullName())
@@ -157,6 +157,11 @@ public class AuthServiceImpl implements AuthService {
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .build();
+
+            setCookies(response, accessToken, refreshToken);
+            jwtResponse.setAccessToken(null);
+            jwtResponse.setRefreshToken(null);
+            return jwtResponse;
         } catch (BadCredentialsException e) {
             throw new AppException(ErrorCode.INVALID_PASSWORD_OR_EMAIL, "password");
         } catch (LockedException e) {
@@ -201,7 +206,24 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void logout(String accessToken, String refreshToken) {
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = null;
+        String refreshToken = null;
+
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("accessToken".equals(cookie.getName())) {
+                    accessToken = cookie.getValue();
+                } else if ("refreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                }
+            }
+        }
+
+        if (accessToken == null || refreshToken == null) {
+            throw new AppException(ErrorCode.INVALID_TOKEN, "Token không hợp lệ hoặc đã đăng xuất!");
+        }
+
         verificationTokenRepo.deleteByTokenAndType(refreshToken, VerificationType.REFRESH_TOKEN);
 
         long remainingTime = jwtTokenProvider.getRemainingTime(accessToken);
@@ -218,11 +240,13 @@ public class AuthServiceImpl implements AuthService {
         blToken.setToken(accessToken);
         blToken.setExpiredDate(jwtTokenProvider.getExpiryDateFromToken(accessToken));
         blacklistTokenRepo.save(blToken);
+
+        clearCookies(response);
     }
 
     @Transactional
     @Override
-    public TokenResponse authenticateGoogleUser(String idTokenString) throws Exception {
+    public TokenResponse authenticateGoogleUser(String idTokenString, HttpServletResponse response) throws Exception {
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
                 .setAudience(Collections.singletonList(googleClientId)).build();
 
@@ -260,7 +284,13 @@ public class AuthServiceImpl implements AuthService {
             return accountRepo.save(newUser);
         });
 
-        return generateTokenResponse(user);
+        TokenResponse tokenResponse = generateTokenResponse(user);
+        
+        setCookies(response, tokenResponse.getAccessToken(), tokenResponse.getRefreshToken());
+        tokenResponse.setAccessToken(null);
+        tokenResponse.setRefreshToken(null);
+
+        return tokenResponse;
     }
 
     @Override
@@ -312,7 +342,7 @@ public class AuthServiceImpl implements AuthService {
         return newAccessToken;
     }
 
-    public TokenResponse generateTokenResponse(User user) {
+    private TokenResponse generateTokenResponse(User user) {
         User findUser = accountRepo.findByEmail(user.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("Không tìm thấy user!"));
 
@@ -335,5 +365,47 @@ public class AuthServiceImpl implements AuthService {
                         .roleName(user.getRole().getRoleName())
                         .build())
                 .build();
+    }
+
+    private void setCookies(HttpServletResponse response, String accessToken, String refreshToken) {
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.ofMinutes(15))
+                .sameSite("None")
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.ofDays(7))
+                .sameSite("None")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+    }
+
+    private void clearCookies(HttpServletResponse response) {
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("None")
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("None")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
     }
 }
