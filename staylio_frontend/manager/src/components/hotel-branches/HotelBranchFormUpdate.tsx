@@ -137,7 +137,6 @@ export default function HotelBranchFormUpdate({
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div className="bg-card text-foreground rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border bg-muted/50 shrink-0">
           <h2 className="text-xl font-semibold">Cập nhật chi nhánh</h2>
           <Button variant="ghost" size="icon" onClick={onClose} className="text-muted-foreground hover:text-foreground">
@@ -145,7 +144,6 @@ export default function HotelBranchFormUpdate({
           </Button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="overflow-y-auto flex-1 p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
             <InputField label="Tên chi nhánh" name="branchName" value={formData.branchName}
