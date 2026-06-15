@@ -16,40 +16,7 @@ import { Button } from "@common/components/ui/button";
 
 type SelectOption = { value: number; label: string };
 
-const rsStyles = {
-  control: (base: object, s: { isFocused: boolean; isDisabled: boolean }) => ({
-    ...base,
-    borderColor: s.isFocused ? "var(--primary)" : "var(--input)",
-    backgroundColor: "var(--background)",
-    boxShadow: s.isFocused ? "0 0 0 1px var(--primary)" : "none",
-    borderRadius: "0.5rem",
-    padding: "2px 0",
-    opacity: s.isDisabled ? 0.5 : 1,
-    "&:hover": { borderColor: "var(--primary)" },
-  }),
-  placeholder: (base: object) => ({
-    ...base,
-    color: "var(--muted-foreground)",
-    fontSize: "0.875rem",
-  }),
-  singleValue: (base: object) => ({ ...base, fontSize: "0.875rem", color: "var(--foreground)" }),
-  option: (base: object, s: { isSelected: boolean; isFocused: boolean }) => ({
-    ...base,
-    fontSize: "0.875rem",
-    backgroundColor: s.isSelected
-      ? "var(--primary)"
-      : s.isFocused
-        ? "var(--muted)"
-        : "var(--background)",
-    color: s.isSelected ? "var(--primary-foreground)" : "var(--foreground)",
-  }),
-  menu: (base: object) => ({
-    ...base,
-    backgroundColor: "var(--background)",
-    border: "1px solid var(--border)",
-  }),
-  menuPortal: (base: object) => ({ ...base, zIndex: 9999 }),
-};
+import { rsStyles } from "@common/styles/reactSelectStyles";
 
 const initForm: VoucherRequest = {
   code: "",

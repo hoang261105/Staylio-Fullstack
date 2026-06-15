@@ -45,6 +45,8 @@ export const useSearchRooms = (params: SearchRoomRequest) => {
       params.minPrice,
       params.maxPrice,
       params.minRating,
+      params.provinceId,
+      params.wardId,
       params.sortBy,
       params.direction
     ],

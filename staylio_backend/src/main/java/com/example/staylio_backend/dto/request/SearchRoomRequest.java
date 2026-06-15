@@ -21,6 +21,8 @@ public class SearchRoomRequest {
     private BigDecimal maxPrice;
 
     private Double minRating;
+    private Long provinceId;
+    private Long wardId;
     private int page;
     private int size;
     private String sortBy;

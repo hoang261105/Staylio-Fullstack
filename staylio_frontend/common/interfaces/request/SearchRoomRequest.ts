@@ -13,6 +13,8 @@ export interface SearchRoomRequest {
     minPrice: number;
     maxPrice: number;
     minRating: number;
+    provinceId?: number;
+    wardId?: number;
     sortBy: string;
     direction: string;
 }

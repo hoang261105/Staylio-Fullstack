@@ -4,17 +4,12 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import ConfirmLogoutModal from "../../../common/components/ConfirmLogoutModal";
 import NotificationPopover from "../../../common/components/NotificationPopover";
-import { History, LogOut, User, ChevronDown, Menu, X, Sun, Moon, Globe } from "lucide-react";
+import { History, LogOut, User, Menu, X, Sun, Moon, Globe } from "lucide-react";
 import { useTheme } from "../components/ThemeProvider";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { useProfile } from "../../../common/hooks/useProfile";
 import { useLogoutMutation } from "../../../common/hooks/useAuthMutation";
-import { useAllHotels } from "../../../common/hooks/useHotels";
-import { useFeaturedProvinces } from "../../../common/hooks/useProvinces";
-import { HotelStatus } from "../../../common/enums/HotelStatus";
-import type { HotelResponse } from "../../../common/interfaces/response/HotelResponse";
-import type { FeaturedLocationResponse } from "../../../common/interfaces/response/FeaturedLocationResponse";
 import { Button } from "../../../common/components/ui/button";
 
 export default function Header() {
@@ -24,8 +19,6 @@ export default function Header() {
   const { t, i18n } = useTranslation();
 
   const { data: user } = useProfile();
-  const { data: hotelsData } = useAllHotels();
-  const { data: featuredLocations } = useFeaturedProvinces();
   const [open, setOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -74,50 +67,13 @@ export default function Header() {
                 {t('components.header.home')}
               </a>
 
-              {/* Khách sạn Dropdown */}
-              <div className="relative group py-4">
-                <div className="flex items-center gap-1 cursor-pointer text-foreground hover:text-primary transition-colors">
-                  {t('components.header.hotels')}
-                  <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform" />
-                </div>
-                <div className="absolute top-full left-0 mt-0 w-64 bg-popover rounded-xl shadow-lg border border-border p-2 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity z-50 text-popover-foreground">
-                  <div className="max-h-80 overflow-y-auto">
-                    {hotelsData?.filter((h: HotelResponse) => h.status === HotelStatus.CONFIRMED).map((hotel: HotelResponse) => (
-                      <div key={hotel.id} onClick={() => navigate(`/hotel/${hotel.id}`)} className="flex items-center gap-3 px-3 py-2 hover:bg-accent hover:text-accent-foreground rounded-lg cursor-pointer transition-colors">
-                        <img src={hotel.imageUrl} alt={hotel.name} className="w-8 h-8 rounded-md object-cover" />
-                        <span className="text-sm font-medium">{hotel.name}</span>
-                      </div>
-                    ))}
-                    {(!hotelsData || hotelsData.filter((h: HotelResponse) => h.status === HotelStatus.CONFIRMED).length === 0) && (
-                      <div className="px-3 py-2 text-sm text-muted-foreground">{t('components.header.noData')}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <a href="/hotels" className="text-foreground hover:text-primary transition-colors">
+                {t('components.header.hotels')}
+              </a>
 
-              {/* Điểm đến Dropdown */}
-              <div className="relative group py-4">
-                <div className="flex items-center gap-1 cursor-pointer text-foreground hover:text-primary transition-colors">
-                  {t('components.header.destinations')}
-                  <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform" />
-                </div>
-                <div className="absolute top-full left-0 mt-0 w-64 bg-popover rounded-xl shadow-lg border border-border p-2 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity z-50 text-popover-foreground">
-                  <div className="max-h-80 overflow-y-auto">
-                    {featuredLocations?.map((location: FeaturedLocationResponse) => (
-                      <div key={location.provinceId} onClick={() => navigate(`/location/${location.provinceId}`)} className="flex items-center gap-3 px-3 py-2 hover:bg-accent hover:text-accent-foreground rounded-lg cursor-pointer transition-colors">
-                        <img src={location.imageUrl || 'https://images.unsplash.com/photo-1596422846543-75c6ef08b739?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=100'} alt={location.provinceName} className="w-8 h-8 rounded-md object-cover" />
-                        <div>
-                          <p className="text-sm font-medium">{location.provinceName}</p>
-                          <p className="text-xs text-muted-foreground">{location.totalBranches} {t('components.header.hotelsCount')}</p>
-                        </div>
-                      </div>
-                    ))}
-                    {(!featuredLocations || featuredLocations.length === 0) && (
-                      <div className="px-3 py-2 text-sm text-muted-foreground">{t('components.header.noData')}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <a href="/locations" className="text-foreground hover:text-primary transition-colors">
+                {t('components.header.destinations')}
+              </a>
 
               <a href="#" className="text-foreground hover:text-primary transition-colors">
                 {t('components.header.offers')}
@@ -226,10 +182,10 @@ export default function Header() {
               />
 
               {/* Hamburger Menu Icon */}
-              <Button 
+              <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="md:hidden"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -244,28 +200,14 @@ export default function Header() {
                 <a href="/" className="font-medium text-foreground hover:text-primary transition-colors">
                   {t('components.header.home')}
                 </a>
-                
-                <div className="flex flex-col gap-2">
-                  <div className="font-medium text-foreground">{t('components.header.hotels')}</div>
-                  <div className="flex flex-col gap-2 pl-4 max-h-48 overflow-y-auto">
-                    {hotelsData?.filter((h: HotelResponse) => h.status === HotelStatus.CONFIRMED).map((hotel: HotelResponse) => (
-                      <div key={hotel.id} onClick={() => { navigate(`/hotel/${hotel.id}`); setMobileMenuOpen(false); }} className="text-sm text-muted-foreground hover:text-primary cursor-pointer transition-colors">
-                        {hotel.name}
-                      </div>
-                    ))}
-                  </div>
-                </div>
 
-                <div className="flex flex-col gap-2">
-                  <div className="font-medium text-foreground">{t('components.header.destinations')}</div>
-                  <div className="flex flex-col gap-2 pl-4 max-h-48 overflow-y-auto">
-                    {featuredLocations?.map((location: FeaturedLocationResponse) => (
-                      <div key={location.provinceId} onClick={() => { navigate(`/location/${location.provinceId}`); setMobileMenuOpen(false); }} className="text-sm text-muted-foreground hover:text-primary cursor-pointer transition-colors">
-                        {location.provinceName}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <a href="/hotels" className="font-medium text-foreground hover:text-primary transition-colors">
+                  {t('components.header.hotels')}
+                </a>
+
+                <a href="/destinations" className="font-medium text-foreground hover:text-primary transition-colors">
+                  {t('components.header.destinations')}
+                </a>
 
                 <a href="#" className="font-medium text-foreground hover:text-primary transition-colors">
                   {t('components.header.offers')}

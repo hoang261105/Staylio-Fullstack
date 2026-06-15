@@ -386,6 +386,8 @@ public class RoomServiceImpl implements RoomService {
 
         Page<Room> roomsPage = roomRepo.searchAvailableRooms(
                 request.getKeyword(),
+                request.getProvinceId(),
+                request.getWardId(),
                 request.getCheckInDate(),
                 request.getCheckOutDate(),
                 request.getStatus(),

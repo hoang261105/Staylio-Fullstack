@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
@@ -7,12 +8,18 @@ import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { RoomSearchCard } from "../components/RoomSearchCard";
 import { useSearchRooms } from "../../../common/hooks/useRooms";
+import { useProvinces, useWardsByProvinceId } from "../../../common/hooks/useProvinces";
 import Pagination from "../../../common/components/Pagination";
 import { RoomStatus } from "../../../common/enums/RoomStatus";
 import type { RoomSearchResponse } from "../../../common/interfaces/response/RoomSearchResponse";
 import { useDebounce } from "../../../common/hooks/useDebounce";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../../common/components/ui/button";
+import Select from "react-select";
+
+type SelectOption = { value: number; label: string };
+
+import { rsStyles } from "../../../common/styles/reactSelectStyles";
 
 export default function SearchRooms() {
   const { t } = useTranslation();
@@ -31,11 +38,29 @@ export default function SearchRooms() {
   const [minRating, setMinRating] = useState<number | "">("");
   const [status, setStatus] = useState<RoomStatus | "">("");
   const [capacity, setCapacity] = useState<number | "">("");
+  const [provinceId, setProvinceId] = useState<number | "">("");
+  const [wardId, setWardId] = useState<number | "">("");
 
   const [sortBy, setSortBy] = useState<string>("roomName");
   const [direction, setDirection] = useState<"asc" | "desc">("asc");
 
   const [page, setPage] = useState(1);
+
+  const [provinceSearch, setProvinceSearch] = useState("");
+  const [wardSearch, setWardSearch] = useState("");
+  const debouncedProvinceSearch = useDebounce(provinceSearch, 400);
+  const debouncedWardSearch = useDebounce(wardSearch, 400);
+
+  const { data: provincesData, isLoading: loadingProvinces } = useProvinces({ search: debouncedProvinceSearch || undefined, page: 0, size: 100 });
+  const { data: wardsData, isLoading: loadingWards } = useWardsByProvinceId(Number(provinceId), { search: debouncedWardSearch || undefined, page: 0, size: 100 });
+
+  const provinceOptions: SelectOption[] =
+    provincesData?.map((p: any) => ({ value: p.id, label: p.provinceName })) ?? [];
+  const wardOptions: SelectOption[] =
+    wardsData?.map((w: any) => ({ value: w.id, label: w.wardName })) ?? [];
+
+  const selectedProvince = provinceOptions.find(o => o.value === provinceId) || null;
+  const selectedWard = wardOptions.find(o => o.value === wardId) || null;
 
   useEffect(() => {
     const newParams = new URLSearchParams(searchParams);
@@ -46,7 +71,7 @@ export default function SearchRooms() {
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearch, minPrice, maxPrice, minRating, status, sortBy, direction, capacity]);
+  }, [debouncedSearch, minPrice, maxPrice, minRating, status, sortBy, direction, capacity, provinceId, wardId]);
 
   const { data: searchResults, isLoading } = useSearchRooms({
     keyword: debouncedSearch,
@@ -60,6 +85,8 @@ export default function SearchRooms() {
     minPrice: minPrice !== "" ? Number(minPrice) : undefined,
     maxPrice: maxPrice !== "" ? Number(maxPrice) : undefined,
     minRating: minRating !== "" ? Number(minRating) : undefined,
+    provinceId: provinceId !== "" ? Number(provinceId) : undefined,
+    wardId: wardId !== "" ? Number(wardId) : undefined,
     status: status || undefined,
     sortBy,
     direction
@@ -153,12 +180,57 @@ export default function SearchRooms() {
               />
             </div>
 
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-card-foreground mb-3">{t('searchRooms.provinceLabel')}</label>
+              <Select<SelectOption>
+                options={provinceOptions}
+                value={selectedProvince}
+                onChange={(option) => {
+                  setProvinceId(option?.value || "");
+                  setWardId("");
+                  setWardSearch("");
+                }}
+                onInputChange={setProvinceSearch}
+                inputValue={provinceSearch}
+                isLoading={loadingProvinces}
+                placeholder={t('searchRooms.provinceSearchPlaceholder')}
+                noOptionsMessage={() => t('searchRooms.noOptions')}
+                loadingMessage={() => t('searchRooms.loading')}
+                styles={rsStyles}
+                menuPortalTarget={document.body}
+                menuPosition="fixed"
+                isClearable
+              />
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-card-foreground mb-3">{t('searchRooms.wardLabel')}</label>
+              <Select<SelectOption>
+                options={wardOptions}
+                value={selectedWard}
+                onChange={(option) => setWardId(option?.value || "")}
+                onInputChange={setWardSearch}
+                inputValue={wardSearch}
+                isLoading={loadingWards && !!provinceId}
+                isDisabled={!provinceId}
+                placeholder={provinceId ? t('searchRooms.wardSearchPlaceholder') : t('searchRooms.wardSelectProvinceFirst')}
+                noOptionsMessage={() => t('searchRooms.noOptions')}
+                loadingMessage={() => t('searchRooms.loading')}
+                styles={rsStyles}
+                menuPortalTarget={document.body}
+                menuPosition="fixed"
+                isClearable
+              />
+            </div>
+
             <Button
               variant="outline"
               onClick={() => {
                 setMinPrice(""); setMaxPrice("");
                 setMinRating(""); setStatus("");
                 setCapacity("");
+                setProvinceId("");
+                setWardId("");
               }}
               className="w-full mt-2 py-6 font-semibold rounded-xl text-sm"
             >

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { RoomSearchResponse } from "../../../common/interfaces/response/RoomSearchResponse";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../../common/components/ui/button";
+import type { RoomStatus } from "../../../common/enums/RoomStatus";
 
 interface RoomSearchCardProps {
   room: RoomSearchResponse;
@@ -18,6 +19,21 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
     ? room.images[0]
     : "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=800&auto=format&fit=crop";
 
+  const getStatusInfo = (status: RoomStatus) => {
+    switch (status) {
+      case "AVAILABLE":
+        return { label: t("searchRooms.statusAvailable"), color: "bg-emerald-100 text-emerald-700 border-emerald-200" };
+      case "OCCUPIED":
+        return { label: t("searchRooms.statusOccupied"), color: "bg-rose-100 text-rose-700 border-rose-200" };
+      case "RESERVED":
+        return { label: t("searchRooms.statusReserved"), color: "bg-amber-100 text-amber-700 border-amber-200" };
+      default:
+        return { label: status, color: "bg-slate-100 text-slate-700 border-slate-200" };
+    }
+  };
+
+  const statusInfo = getStatusInfo(room.status);
+
   return (
     <div className="bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-border grid grid-cols-1 md:grid-cols-12 group">
       <div className="relative w-full h-56 md:h-full overflow-hidden md:col-span-5">
@@ -28,6 +44,9 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
         />
         <div className="absolute top-3 left-3 bg-primary/90 backdrop-blur-sm text-primary-foreground text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm z-10 uppercase tracking-wider">
           {room.roomType}
+        </div>
+        <div className={`absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm z-10 uppercase tracking-wider border ${statusInfo.color}`}>
+          {statusInfo.label}
         </div>
       </div>
 
@@ -59,7 +78,7 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
           <span className="text-sm font-medium line-clamp-1">{room.address}, {room.provinceName}</span>
         </div>
 
-        <div className="flex items-center gap-4 mb-4">
+        <div className="flex flex-wrap items-center gap-4 mb-4">
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Users className="w-4 h-4 text-emerald-500" />
             <span className="text-sm font-medium">{t('components.roomSearchCard.capacity', {

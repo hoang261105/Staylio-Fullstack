@@ -149,6 +149,9 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
                         OR LOWER(p.province) LIKE LOWER(CONCAT('%', :keyword, '%'))
                 )
 
+                AND (:provinceId IS NULL OR p.id = :provinceId)
+                AND (:wardId IS NULL OR w.id = :wardId)
+
                 AND (:adults IS NULL OR r.maxAdults >= :adults)
                 AND (:children IS NULL OR r.maxChildren >= :children)
                 AND (:capacity IS NULL OR r.capacity >= :capacity)
@@ -181,6 +184,8 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
             """)
     Page<Room> searchAvailableRooms(
             @Param("keyword") String keyword,
+            @Param("provinceId") Long provinceId,
+            @Param("wardId") Long wardId,
             @Param("checkInDate") LocalDate checkInDate,
             @Param("checkOutDate") LocalDate checkOutDate,
             @Param("status") RoomStatus status,
