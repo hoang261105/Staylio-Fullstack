@@ -20,6 +20,7 @@ import com.example.staylio_backend.model.enums.VerificationType;
 import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.AuthService;
 import com.example.staylio_backend.service.EmailService;
+import com.example.staylio_backend.service.UserVoucherService;
 import com.example.staylio_backend.service.VerificationService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -66,6 +67,7 @@ public class AuthServiceImpl implements AuthService {
     private final RedisTemplate<String, String> redisTemplate;
     private final BlacklistTokenRepo blacklistTokenRepo;
     private final ProfileRepo profileRepo;
+    private final UserVoucherService userVoucherService;
 
     @Value(value = "${spring.security.oauth2.client.registration.google.client-id}")
     private String googleClientId;
@@ -107,6 +109,10 @@ public class AuthServiceImpl implements AuthService {
         user.setProfile(profile);
 
         User savedUser = accountRepo.save(user);
+        
+        // Cấp voucher tân thủ ngay khi đăng ký thành công
+        userVoucherService.grantWelcomeVouchers(savedUser);
+
         String token = verificationService.createVerificationToken(savedUser, VerificationType.VERIFY_EMAIL);
 
         try {
@@ -276,16 +282,18 @@ public class AuthServiceImpl implements AuthService {
             Profile profile = new Profile();
             profile.setFullName((String) payload.get("name"));
             profile.setAvatarUrl((String) payload.get("picture"));
-            profile.setDateOfBirth(LocalDate.now()); // Set default dateOfBirth because it's non-null
+            profile.setDateOfBirth(LocalDate.now());
 
             newUser.setProfile(profile);
             profile.setUser(newUser);
 
-            return accountRepo.save(newUser);
+            User savedUser = accountRepo.save(newUser);
+            userVoucherService.grantWelcomeVouchers(savedUser);
+            return savedUser;
         });
 
         TokenResponse tokenResponse = generateTokenResponse(user);
-        
+
         setCookies(response, tokenResponse.getAccessToken(), tokenResponse.getRefreshToken());
         tokenResponse.setAccessToken(null);
         tokenResponse.setRefreshToken(null);

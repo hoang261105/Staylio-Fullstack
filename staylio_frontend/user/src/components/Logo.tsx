@@ -18,7 +18,7 @@ export default function Logo({ size = "md", variant = "full", className = "", on
     return (
       <div
         onClick={onClick}
-        className={`${sizeClasses[size]} aspect-square bg-gradient-to-br from-[#C9A961] to-[#1B2B4D] rounded-lg flex items-center justify-center ${onClick ? 'cursor-pointer' : ''} ${className}`}
+        className={`${sizeClasses[size]} aspect-square bg-linear-to-br from-[#C9A961] to-[#1B2B4D] rounded-lg flex items-center justify-center ${onClick ? 'cursor-pointer' : ''} ${className}`}
       >
         <span className="text-white" style={{ fontSize: size === 'lg' ? '1.5rem' : size === 'md' ? '1.25rem' : '1rem' }}>🏨</span>
       </div>

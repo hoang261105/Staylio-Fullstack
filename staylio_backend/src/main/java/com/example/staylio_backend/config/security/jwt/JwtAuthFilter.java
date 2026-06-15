@@ -43,8 +43,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         try {
 
@@ -67,20 +66,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                     String email = jwtTokenProvider.getEmailFromToken(token);
 
-                    UserDetails userDetails =
-                            userDetailsService.loadUserByUsername(email);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails,
-                                    null,
-                                    userDetails.getAuthorities()
-                            );
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities());
 
                     authentication.setDetails(
                             new WebAuthenticationDetailsSource()
-                                    .buildDetails(request)
-                    );
+                                    .buildDetails(request));
 
                     SecurityContextHolder.getContext()
                             .setAuthentication(authentication);
@@ -98,8 +93,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             unauthorizedResponse(
                     response,
                     request,
-                    "Token has expired"
-            );
+                    "Token has expired");
 
         } catch (TokenRevokedException ex) {
 
@@ -108,8 +102,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             unauthorizedResponse(
                     response,
                     request,
-                    ex.getMessage()
-            );
+                    ex.getMessage());
 
         } catch (JwtException | IllegalArgumentException ex) {
 
@@ -118,8 +111,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             unauthorizedResponse(
                     response,
                     request,
-                    "Invalid token"
-            );
+                    "Invalid token");
 
         } catch (Exception ex) {
 
@@ -128,8 +120,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             unauthorizedResponse(
                     response,
                     request,
-                    "Authentication failed"
-            );
+                    "Authentication failed");
         }
     }
 
@@ -163,8 +154,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private void unauthorizedResponse(
             HttpServletResponse response,
             HttpServletRequest request,
-            String message
-    ) throws IOException {
+            String message) throws IOException {
 
         SecurityContextHolder.clearContext();
 
@@ -180,9 +170,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         body.setErrors(List.of(
                 Map.of(
                         "path", request.getRequestURI(),
-                        "message", message
-                )
-        ));
+                        "message", message)));
         body.setTimestamp(LocalDateTime.now());
 
         mapper.writeValue(response.getWriter(), body);

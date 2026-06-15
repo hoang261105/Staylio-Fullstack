@@ -12,10 +12,11 @@ interface ManagerBranchChatsModalProps {
   branchId: number;
   branchName: string;
   onClose: () => void;
+  initialSessionId?: number;
 }
 
-export default function ManagerBranchChatsModal({ branchId, branchName, onClose }: ManagerBranchChatsModalProps) {
-  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
+export default function ManagerBranchChatsModal({ branchId, branchName, onClose, initialSessionId }: ManagerBranchChatsModalProps) {
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(initialSessionId || null);
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -33,9 +34,13 @@ export default function ManagerBranchChatsModal({ branchId, branchName, onClose 
 
   useEffect(() => {
     if (sessions.length > 0 && !selectedSessionId) {
-      setSelectedSessionId(sessions[0].id);
+      if (initialSessionId) {
+        setSelectedSessionId(initialSessionId);
+      } else {
+        setSelectedSessionId(sessions[0].id);
+      }
     }
-  }, [sessions, selectedSessionId]);
+  }, [sessions, selectedSessionId, initialSessionId]);
 
   const handleSend = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();

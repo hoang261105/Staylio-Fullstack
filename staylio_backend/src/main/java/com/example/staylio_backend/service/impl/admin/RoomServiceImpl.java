@@ -194,10 +194,24 @@ public class RoomServiceImpl implements RoomService {
                     .room(room)
                     .imageUrl(request.getImageUrls().get(i))
                     .isPrimary(i == 0)
+                    .is360(false)
                     .status(ImageStatus.PENDING)
                     .build();
 
             images.add(image);
+        }
+
+        if (request.getVr360Urls() != null) {
+            for (String vrUrl : request.getVr360Urls()) {
+                RoomImage image = RoomImage.builder()
+                        .room(room)
+                        .imageUrl(vrUrl)
+                        .isPrimary(false)
+                        .is360(true)
+                        .status(ImageStatus.PENDING)
+                        .build();
+                images.add(image);
+            }
         }
 
         room.setImages(images);
@@ -270,10 +284,24 @@ public class RoomServiceImpl implements RoomService {
                         .room(room)
                         .imageUrl(request.getImageUrls().get(i))
                         .isPrimary(i == 0)
+                        .is360(false)
                         .status(ImageStatus.PENDING)
                         .build();
 
                 images.add(image);
+            }
+
+            if (request.getVr360Urls() != null) {
+                for (String vrUrl : request.getVr360Urls()) {
+                    RoomImage image = RoomImage.builder()
+                            .room(room)
+                            .imageUrl(vrUrl)
+                            .isPrimary(false)
+                            .is360(true)
+                            .status(ImageStatus.PENDING)
+                            .build();
+                    images.add(image);
+                }
             }
 
             room.getImages().addAll(images);
@@ -403,6 +431,7 @@ public class RoomServiceImpl implements RoomService {
                         rm.getRoom().getRoomName(),
                         rm.getImageUrl(),
                         rm.getIsPrimary(),
+                        rm.getIs360(),
                         rm.getStatus()
                 ))
                 .collect(Collectors.toSet());

@@ -679,6 +679,10 @@ public class BookingServiceImpl implements BookingService {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
+        if (room.getIsVoucherApplicable() != null && !room.getIsVoucherApplicable()) {
+            throw new AppException(ErrorCode.VOUCHER_NOT_APPLICABLE_FOR_ROOM);
+        }
+
         if (userVoucher.getStatus() != UserVoucherStatus.UNUSED) {
             throw new AppException(ErrorCode.USER_VOUCHER_INVALID);
         }
@@ -704,6 +708,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if (voucher.getHotelBranch() != null
+                && !Boolean.TRUE.equals(voucher.getIsWelcomeVoucher())
                 && !voucher.getHotelBranch().getId()
                         .equals(room.getHotelBranch().getId())) {
             throw new AppException(ErrorCode.VOUCHER_NOT_APPLICABLE_FOR_BRANCH);

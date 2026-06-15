@@ -62,6 +62,7 @@ const initForm: VoucherRequest = {
   usageLimitPerUser: 1,
   startDate: "",
   expiryDate: "",
+  isWelcomeVoucher: false,
 };
 
 export default function VoucherFormAdd({
@@ -314,6 +315,20 @@ export default function VoucherFormAdd({
               onChange={handleChange}
               required
             />
+            
+            <div className="mb-4 flex items-center col-span-1 md:col-span-2 mt-4">
+              <input
+                type="checkbox"
+                id="isWelcomeVoucher"
+                name="isWelcomeVoucher"
+                checked={formData.isWelcomeVoucher}
+                onChange={(e) => setFormData(prev => ({ ...prev, isWelcomeVoucher: e.target.checked }))}
+                className="w-4 h-4 text-primary bg-background border-input rounded focus:ring-primary focus:ring-2"
+              />
+              <label htmlFor="isWelcomeVoucher" className="ml-2 text-sm font-medium text-foreground">
+                Là voucher chào mừng (Tự động tặng cho người dùng mới đăng ký, chỉ sử dụng cho đơn đặt phòng đầu tiên)
+              </label>
+            </div>
           </div>
 
           <div className="mb-4">

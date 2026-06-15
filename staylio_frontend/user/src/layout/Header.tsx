@@ -30,7 +30,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const { mutate: logoutMutate } = useLogoutMutation();
+  const { mutate: logoutMutate, isPending: isLoggingOut } = useLogoutMutation();
 
   useEffect(() => {
     const handleClickOutside = (e: any) => {
@@ -154,8 +154,8 @@ export default function Header() {
                     {open && (
                       <div className="absolute right-0 mt-3 w-56 bg-popover text-popover-foreground rounded-xl shadow-lg border border-border p-2 z-50">
                         <div className="px-3 py-2 border-b border-border mb-1">
-                          <p className="font-medium">{user.fullName}</p>
-                          <p className="text-sm text-muted-foreground">{user.email}</p>
+                          <p className="font-medium truncate" title={user.fullName}>{user.fullName}</p>
+                          <p className="text-sm text-muted-foreground truncate" title={user.email}>{user.email}</p>
                         </div>
 
                         <button
@@ -200,12 +200,6 @@ export default function Header() {
                         </button>
                       </div>
                     )}
-
-                    <ConfirmLogoutModal
-                      open={showLogoutModal}
-                      onClose={() => setShowLogoutModal(false)}
-                      onConfirm={handleLogout}
-                    />
                   </div>
                 </>
               ) : (
@@ -223,6 +217,13 @@ export default function Header() {
                   </Button>
                 </>
               )}
+
+              <ConfirmLogoutModal
+                open={showLogoutModal}
+                onClose={() => setShowLogoutModal(false)}
+                onConfirm={handleLogout}
+                isLoading={isLoggingOut}
+              />
 
               {/* Hamburger Menu Icon */}
               <Button 

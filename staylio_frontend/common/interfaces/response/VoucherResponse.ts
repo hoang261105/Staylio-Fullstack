@@ -19,5 +19,6 @@ export interface VoucherResponse {
     startDate: string,
     expiryDate: string,
     status: VoucherStatus,
-    approvalStatus: ApprovalStatus
+    approvalStatus: ApprovalStatus,
+    isWelcomeVoucher: boolean
 }

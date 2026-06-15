@@ -1,4 +1,7 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Search, Filter, Plus } from "lucide-react";
 import ManagerLayout from "../layout/ManagerLayout";
 import HotelBranchesListView from "../components/hotel-branches/HotelBranchesListView";
@@ -13,8 +16,14 @@ import HotelBranchFormUpdate from "../components/hotel-branches/HotelBranchFormU
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ManagerBranchChatsModal from "../components/hotel-branches/ManagerBranchChatsModal";
 import { Button } from "@common/components/ui/button";
+import { useGetChatSessionByIdQuery } from "@common/hooks/useChatSession";
 
 export default function ManagerHotelBranches() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const chatSessionId = location.state?.chatSessionId;
+  const { data: targetSession } = useGetChatSessionByIdQuery(chatSessionId || 0);
+  const [initialSessionId, setInitialSessionId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [selectedBranch, setSelectedBranch] = useState<HotelBranchResponse | null>(null);
@@ -75,6 +84,17 @@ export default function ManagerHotelBranches() {
       }
     }
   }
+
+  useEffect(() => {
+    if (chatSessionId && targetSession && branches.length > 0) {
+      const branch = branches.find(b => b.id === targetSession.branchId);
+      if (branch) {
+        setChatBranch(branch);
+        setInitialSessionId(chatSessionId);
+        navigate(location.pathname, { replace: true });
+      }
+    }
+  }, [chatSessionId, targetSession, branches, navigate, location.pathname]);
 
   return (
     <ManagerLayout>
@@ -169,17 +189,17 @@ export default function ManagerHotelBranches() {
       )}
 
       {editingBranch && (
-        <HotelBranchFormUpdate 
-          branch={editingBranch} 
-          onClose={() => setEditingBranch(null)} 
+        <HotelBranchFormUpdate
+          branch={editingBranch}
+          onClose={() => setEditingBranch(null)}
         />
       )}
 
       {
         deletingBranchId && (
-          <ConfirmDeleteModal 
-            open={!!deletingBranchId} 
-            onClose={() => setDeletingBranchId(null)} 
+          <ConfirmDeleteModal
+            open={!!deletingBranchId}
+            onClose={() => setDeletingBranchId(null)}
             onConfirm={handleConfirmDelete}
           />
         )
@@ -189,7 +209,11 @@ export default function ManagerHotelBranches() {
         <ManagerBranchChatsModal
           branchId={chatBranch.id}
           branchName={chatBranch.hotelBranchName}
-          onClose={() => setChatBranch(null)}
+          initialSessionId={initialSessionId || undefined}
+          onClose={() => {
+            setChatBranch(null);
+            setInitialSessionId(null);
+          }}
         />
       )}
     </ManagerLayout>

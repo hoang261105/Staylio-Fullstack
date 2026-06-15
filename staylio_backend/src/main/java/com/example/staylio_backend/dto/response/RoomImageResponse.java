@@ -15,5 +15,6 @@ public class RoomImageResponse {
     private String roomName;
     private String imageUrl;
     private Boolean isPrimary;
+    private Boolean is360;
     private ImageStatus status;
 }

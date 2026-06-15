@@ -94,9 +94,9 @@ public class NotificationServiceImpl implements NotificationService {
         private NotificationResponse convertToResponse(Notification notification) {
                 return new NotificationResponse(
                                 notification.getId(),
-                                notification.getSender().getId(),
-                                notification.getSender().getFullName(),
-                                notification.getSender().getAvatarUrl(),
+                                notification.getSender() != null ? notification.getSender().getId() : null,
+                                notification.getSender() != null ? notification.getSender().getFullName() : "Hệ thống",
+                                notification.getSender() != null ? notification.getSender().getAvatarUrl() : null,
                                 notification.getReceiver().getId(),
                                 notification.getTitle(),
                                 notification.getContent(),

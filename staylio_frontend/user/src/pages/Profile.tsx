@@ -44,12 +44,12 @@ export default function Profile() {
 
               <Button
                 variant="ghost"
-                onClick={() => navigate("/history-bookings")}
+                onClick={() => navigate("/booking-history")}
                 className="w-full h-auto flex items-center justify-between px-4 py-3 rounded-xl hover:bg-accent transition group"
               >
                 <div className="flex items-center gap-3 text-muted-foreground group-hover:text-foreground">
                   <Calendar size={20} />
-                  <span>{t('profile.myTrips')}</span>
+                  <span>{t('components.header.bookingHistory')}</span>
                 </div>
                 <ChevronRight size={16} className="text-muted-foreground" />
               </Button>

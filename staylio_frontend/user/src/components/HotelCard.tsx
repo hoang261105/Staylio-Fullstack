@@ -5,7 +5,7 @@ interface HotelCardProps {
   hotel: Hotel;
 }
 
-export function HotelCard({ hotel }: HotelCardProps) {
+export default function HotelCard({ hotel }: HotelCardProps) {
   if (!hotel) return null;
 
   return (

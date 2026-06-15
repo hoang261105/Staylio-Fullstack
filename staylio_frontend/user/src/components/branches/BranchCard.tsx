@@ -26,7 +26,7 @@ export default function BranchCard({ branch }: BranchCardProps) {
           alt={branch.hotelBranchName}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
         
         {/* Rating Badge */}
         <div className="absolute top-4 right-4 bg-background/90 backdrop-blur-sm px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm">

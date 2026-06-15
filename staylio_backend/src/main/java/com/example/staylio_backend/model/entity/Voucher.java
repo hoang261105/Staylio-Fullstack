@@ -81,4 +81,7 @@ public class Voucher extends BaseObject {
             inverseJoinColumns = @JoinColumn(name = "room_id")
     )
     private Set<Room> rooms;
+
+    @Column(name = "is_welcome_voucher")
+    private Boolean isWelcomeVoucher;
 }

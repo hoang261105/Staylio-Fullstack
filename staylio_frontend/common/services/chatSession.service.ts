@@ -38,6 +38,17 @@ export const getMessages = async (sessionId: number): Promise<ApiResponse<ChatMe
     }
 }
 
+// API lấy chi tiết phiên chat
+export const getChatSessionById = async (sessionId: number): Promise<ApiResponse<ChatSessionResponse>> => {
+    try {
+        const response = await axiosInstance.get(`/chat/sessions/${sessionId}/detail`);
+        return response.data;
+    } catch (error) {
+        console.error("Lấy chi tiết phiên chat thất bại!", error);
+        throw error;
+    }
+}
+
 // API bắt đâu phiên chat với Manager
 export const startChatWithManager = async (request: StartManagerChatRequest): Promise<ApiResponse<ChatSessionResponse>> => {
     try {

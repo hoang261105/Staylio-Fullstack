@@ -8,17 +8,27 @@ import com.example.staylio_backend.model.entity.User;
 import com.example.staylio_backend.model.entity.UserVoucher;
 import com.example.staylio_backend.model.entity.Voucher;
 import com.example.staylio_backend.model.enums.DiscountType;
+import com.example.staylio_backend.model.enums.UserVoucherStatus;
+import com.example.staylio_backend.model.enums.VoucherStatus;
+import com.example.staylio_backend.model.enums.ApprovalStatus;
+import com.example.staylio_backend.model.enums.NotificationType;
+import com.example.staylio_backend.dto.request.NotificationRequest;
 import com.example.staylio_backend.repository.RoomRepo;
 import com.example.staylio_backend.repository.UserRepo;
 import com.example.staylio_backend.repository.UserVoucherRepo;
+import com.example.staylio_backend.repository.VoucherRepo;
+import com.example.staylio_backend.service.NotificationService;
 import com.example.staylio_backend.service.UserVoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -28,9 +38,12 @@ public class UserVoucherServiceImpl implements UserVoucherService {
     private final UserVoucherRepo userVoucherRepo;
     private final UserRepo userRepo;
     private final RoomRepo roomRepo;
+    private final VoucherRepo voucherRepo;
+    private final NotificationService notificationService;
 
     @Override
-    public List<ApplicableVoucherResponse> getApplicableVouchers(Long roomId, LocalDate checkInDate, LocalDate checkOutDate, UserPrincipal principal) {
+    public List<ApplicableVoucherResponse> getApplicableVouchers(Long roomId, LocalDate checkInDate,
+            LocalDate checkOutDate, UserPrincipal principal) {
         User user = userRepo.findById(principal.getId())
                 .orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
@@ -44,13 +57,16 @@ public class UserVoucherServiceImpl implements UserVoucherService {
             originalPrice = room.getPrice().multiply(BigDecimal.valueOf(nights));
         }
 
-        List<UserVoucher> userVouchers =
-                userVoucherRepo.findApplicableUserVouchers(
-                        user.getId(),
-                        room.getHotelBranch().getId(),
-                        room.getId(),
-                        originalPrice
-                );
+        if (room.getIsVoucherApplicable() != null && !room.getIsVoucherApplicable()) {
+            return Collections.emptyList();
+        }
+
+        List<UserVoucher> userVouchers = userVoucherRepo.findApplicableUserVouchers(
+                user.getId(),
+                room.getHotelBranch().getId(),
+                room.getId(),
+                originalPrice,
+                LocalDateTime.now());
 
         BigDecimal finalOriginalPrice = originalPrice;
 
@@ -61,12 +77,12 @@ public class UserVoucherServiceImpl implements UserVoucherService {
 
     private ApplicableVoucherResponse convertToApplicableVoucherResponse(
             UserVoucher userVoucher,
-            BigDecimal originalPrice
-    ) {
+            BigDecimal originalPrice) {
         Voucher voucher = userVoucher.getVoucher();
-        
-        boolean isUsed = userVoucher.getStatus() == com.example.staylio_backend.model.enums.UserVoucherStatus.USED || 
-                         (voucher.getUsageLimitPerUser() != null && userVoucher.getUsedCount() >= voucher.getUsageLimitPerUser());
+
+        boolean isUsed = userVoucher.getStatus() == com.example.staylio_backend.model.enums.UserVoucherStatus.USED ||
+                (voucher.getUsageLimitPerUser() != null
+                        && userVoucher.getUsedCount() >= voucher.getUsageLimitPerUser());
 
         BigDecimal discountPreview = BigDecimal.ZERO;
 
@@ -94,8 +110,7 @@ public class UserVoucherServiceImpl implements UserVoucherService {
 
     private BigDecimal calculateDiscountPreview(
             BigDecimal originalPrice,
-            Voucher voucher
-    ) {
+            Voucher voucher) {
         if (voucher.getMinOrderValue() != null
                 && originalPrice.compareTo(voucher.getMinOrderValue()) < 0) {
             return BigDecimal.ZERO;
@@ -121,5 +136,30 @@ public class UserVoucherServiceImpl implements UserVoucherService {
         }
 
         return discountAmount;
+    }
+
+    @Override
+    public void grantWelcomeVouchers(User user) {
+        List<Voucher> welcomeVouchers = voucherRepo.findWelcomeVouchers(VoucherStatus.ACTIVE, ApprovalStatus.CONFIRMED);
+
+        for (Voucher voucher : welcomeVouchers) {
+            UserVoucher userVoucher = UserVoucher.builder()
+                    .user(user)
+                    .voucher(voucher)
+                    .usedCount(0)
+                    .status(UserVoucherStatus.UNUSED)
+                    .assignedAt(LocalDateTime.now())
+                    .build();
+            userVoucherRepo.save(userVoucher);
+
+            NotificationRequest notifRequest = NotificationRequest.builder()
+                    .receiverId(user.getId())
+                    .title("Quà tặng chào mừng!")
+                    .content("Bạn đã nhận được voucher " + voucher.getTitle() + " cho đơn đặt phòng đầu tiên.")
+                    .type(NotificationType.SYSTEM_NOTIFICATION)
+                    .referenceId(voucher.getId())
+                    .build();
+            notificationService.create(notifRequest);
+        }
     }
 }

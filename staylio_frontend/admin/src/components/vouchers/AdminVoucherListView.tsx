@@ -109,6 +109,11 @@ export default function AdminVoucherListView({
                           <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700 border border-gray-200">
                             {voucher.code}
                           </span>
+                          {voucher.isWelcomeVoucher && (
+                            <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-primary/10 text-primary border border-primary/20">
+                              Tân thủ
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>

@@ -58,8 +58,8 @@ export default function HotelBranchFormUpdate({
     capacity: branch.capacity,
     imageUrl: branch.imageUrl || "",
     hotelId: null,
-    latitude: branch.latitude,
-    longitude: branch.longitude,
+    latitude: branch.latitude || null,
+    longitude: branch.longitude || null,
   });
 
   const [selectedProvince, setSelectedProvince] = useState<SelectOption | null>({
@@ -227,7 +227,7 @@ export default function HotelBranchFormUpdate({
                 className="flex flex-col items-center justify-center gap-2 w-full h-44 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary hover:bg-primary/10 transition-colors">
                 <ImagePlus className="w-8 h-8 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Nhấn để chọn ảnh</span>
-                <span className="text-xs text-muted-foreground">PNG, JPG, WEBP tối đa 5MB</span>
+                <span className="text-xs text-muted-foreground">PNG, JPG</span>
               </label>
             )}
           </div>

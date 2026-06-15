@@ -4,16 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../../common/components/ui/button";
 
 interface VerifyResetEmailProps {
-    email: string;
-    setIsSubmitted: (isSubmitted: boolean) => void;
+  email: string;
+  setIsSubmitted: (isSubmitted: boolean) => void;
 }
 
 export default function VerifyResetEmail({ email, setIsSubmitted }: VerifyResetEmailProps) {
   const navigate = useNavigate();
-  
+
   return (
     <div className="min-h-screen flex bg-background font-sans">
-      {/* Left Side - Image */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden group bg-slate-900">
         <div className="absolute inset-0">
           <img
@@ -44,7 +43,6 @@ export default function VerifyResetEmail({ email, setIsSubmitted }: VerifyResetE
         </div>
       </div>
 
-      {/* Right Side - Success Message */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 relative overflow-hidden">
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none hidden lg:block"></div>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SearchBar } from "./SearchBar";
@@ -9,7 +10,7 @@ const images = [
   "https://bcp.cdnchinhphu.vn/334894974524682240/2025/6/30/tphcm-1-1751245519173693919081.jpg"
 ];
 
-export function HeroCarousel() {
+export default function HeroCarousel() {
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -33,8 +34,7 @@ export function HeroCarousel() {
   }, [currentIndex]);
 
   return (
-    <section className="relative h-[750px] w-full overflow-hidden bg-slate-900">
-      {/* 1. Phần hình ảnh nền */}
+    <section className="relative h-187.5 w-full overflow-hidden bg-slate-900">
       {images.map((img, index) => (
         <div
           key={index}
@@ -45,20 +45,18 @@ export function HeroCarousel() {
           <img
             src={img}
             alt={`Slide ${index}`}
-            className={`w-full h-full object-cover transition-transform duration-[10000ms] ease-out ${
+            className={`w-full h-full object-cover transition-transform duration-10000 ease-out ${
               index === currentIndex ? "scale-110" : "scale-100"
             }`}
           />
-          {/* Lớp phủ gradient để chữ và SearchBar nổi bật hơn */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/60"></div>
+          <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/30 to-black/60"></div>
         </div>
       ))}
 
-      {/* 2. Nội dung Text và SearchBar */}
       <div className="relative z-10 h-full max-w-7xl mx-auto px-4 flex flex-col justify-start pt-20 md:pt-0 md:justify-center items-center md:-mt-10">
         <div className="text-center mb-10 md:mb-12 space-y-4 md:space-y-6 mt-6 md:mt-0">
-          <h1 className="text-4xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/90 drop-shadow-2xl leading-tight">
-            {t('homeScreen.hero.titlePrefix')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">{t('homeScreen.hero.titleHighlight')}</span>
+          <h1 className="text-4xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-white to-white/90 drop-shadow-2xl leading-tight">
+            {t('homeScreen.hero.titlePrefix')} <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-indigo-400">{t('homeScreen.hero.titleHighlight')}</span>
           </h1>
           <p className="text-base md:text-2xl text-white/90 max-w-2xl mx-auto font-medium drop-shadow-lg px-4">
             {t('homeScreen.hero.subtitle')}
@@ -76,13 +74,13 @@ export function HeroCarousel() {
         onClick={prevSlide}
         className="absolute left-2 md:left-8 top-[15%] md:top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-black/20 hover:bg-black/40 text-white backdrop-blur-md transition-all border border-white/10 hover:scale-110"
       >
-        <ChevronLeft size={24} className="md:w-[30px] md:h-[30px]" />
+        <ChevronLeft size={24} className="md:w-7.5 md:h-7.5" />
       </button>
       <button
         onClick={nextSlide}
         className="absolute right-2 md:right-8 top-[15%] md:top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-black/20 hover:bg-black/40 text-white backdrop-blur-md transition-all border border-white/10 hover:scale-110"
-      >
-        <ChevronRight size={24} className="md:w-[30px] md:h-[30px]" />
+        >
+          <ChevronRight size={24} className="md:w-7.5 md:h-7.5" />
       </button>
 
       {/* 4. Chỉ số Dots */}

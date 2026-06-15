@@ -17,4 +17,5 @@ export interface RoomRequest {
     floor: number;
     utilityIds: number[];
     imageUrls: string[];
+    vr360Urls?: string[];
 }

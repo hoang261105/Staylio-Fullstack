@@ -77,6 +77,22 @@ public class ChatController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/sessions/{sessionId}/detail")
+    public ResponseEntity<ApiResponse<ChatSessionResponse>> getChatSessionById(
+            @PathVariable Long sessionId,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        ApiResponse<ChatSessionResponse> response = new ApiResponse<>(
+                true,
+                "Lấy thông tin phiên chat thành công!",
+                chatSessionService.getChatSessionById(sessionId, principal),
+                null,
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("/manager/start")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ApiResponse<ChatSessionResponse>> startChatWithManager(

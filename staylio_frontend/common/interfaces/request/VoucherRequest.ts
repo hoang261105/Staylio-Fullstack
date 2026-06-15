@@ -13,4 +13,5 @@ export interface VoucherRequest {
     usageLimitPerUser: number;
     startDate: string;
     expiryDate: string;
+    isWelcomeVoucher: boolean;
 }

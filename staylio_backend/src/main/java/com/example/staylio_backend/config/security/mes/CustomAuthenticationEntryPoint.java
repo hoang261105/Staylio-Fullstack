@@ -1,6 +1,5 @@
 package com.example.staylio_backend.config.security.mes;
 
-
 import com.example.staylio_backend.dto.response.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,8 +21,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException authException) throws IOException {
+            HttpServletResponse response,
+            AuthenticationException authException) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -35,8 +34,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         res.setData(null);
         res.setErrors(List.of(Map.of(
                 "path", request.getRequestURI(),
-                "message", authException.getMessage()
-        )));
+                "message", authException.getMessage())));
         res.setTimestamp(LocalDateTime.now());
 
         mapper.writeValue(response.getWriter(), res);

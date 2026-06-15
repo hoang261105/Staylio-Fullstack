@@ -4,7 +4,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import VerifyEmail from "../pages/VerifyEmail";
 import Profile from "../pages/Profile";
-import { EditProfile } from "../pages/EditProfile";
+import EditProfile from "../pages/EditProfile";
 import ChangePassword from "../pages/ChangePassword";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
@@ -17,6 +17,9 @@ import BookingHistory from "../pages/BookingHistory";
 import RoomReviews from "../pages/RoomReviews";
 import LocationBranches from "../pages/LocationBranches";
 import { LocationsPage } from "../pages/LocationsPage";
+import BranchesPage from "../pages/BranchesPage";
+import HotelsPage from "../pages/HotelsPage";
+import NotificationsPage from "../pages/NotificationsPage";
 
 export const routers = createBrowserRouter([
   {
@@ -30,6 +33,14 @@ export const routers = createBrowserRouter([
   {
     path: "/locations",
     Component: LocationsPage,
+  },
+  {
+    path: "/branches",
+    Component: BranchesPage,
+  },
+  {
+    path: "/hotels",
+    Component: HotelsPage,
   },
   {
     path: "/location/:provinceId",
@@ -66,6 +77,10 @@ export const routers = createBrowserRouter([
   {
     path: "/change-password",
     Component: ChangePassword,
+  },
+  {
+    path: "/notifications",
+    Component: NotificationsPage,
   },
   {
     path: "*",

@@ -72,7 +72,7 @@ export default function RoomCard({ room, branchInfo }: RoomCardProps) {
             const Icon = getUtilityIcon(utility.iconName);
             return (
               <div key={utility.id} className="flex items-center gap-2 text-muted-foreground">
-                <div className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                <div className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
                   <Icon className="w-2.5 h-2.5 text-emerald-600" />
                 </div>
                 <span className="text-xs font-medium truncate">{utility.title}</span>

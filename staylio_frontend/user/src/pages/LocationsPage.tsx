@@ -13,7 +13,6 @@ export const LocationsPage = () => {
   const { data: response, isLoading } = useFeaturedLocationsPaged(page, limit);
 
   const handlePageChange = (newPage: number) => {
-    // Pagination component is 0-indexed
     setPage(newPage + 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -39,7 +38,7 @@ export const LocationsPage = () => {
           </div>
         ) : (
           <>
-            <LocationGrid locations={response?.items || []} />
+            <LocationGrid locations={response?.items || []} layout="grid" />
 
             {response?.pagination && response.pagination.totalPages > 1 && (
               <div className="mt-12">

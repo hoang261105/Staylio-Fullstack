@@ -12,6 +12,7 @@ import AdminRoomImageDetail from "../components/room-images/AdminRoomImageDetail
 import AdminVouchers from "../pages/AdminVouchers";
 import AdminBookings from "../pages/AdminBookings";
 import AdminReviews from "../pages/AdminReviews";
+import NotificationsPage from "../pages/NotificationsPage";
 
 export const routers = createBrowserRouter([
     {
@@ -61,6 +62,10 @@ export const routers = createBrowserRouter([
     {
         path: "/reviews",
         Component: AdminReviews
+    },
+    {
+        path: "/notifications",
+        Component: NotificationsPage
     },
     {
         path: "*",

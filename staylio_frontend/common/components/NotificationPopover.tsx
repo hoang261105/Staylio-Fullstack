@@ -6,7 +6,7 @@ import { NotificationType } from "../enums/NotificationType";
 import { useMarkNotificationReadMutation } from "../hooks/useNotifications";
 import { useNavigate } from "react-router-dom";
 import { NotificationResponse } from "../interfaces/response/NotificationResponse";
-import { getReviewById } from "../services/review.service";
+import { navigateByNotification } from "../utils/notification.util";
 import { useTranslation } from "react-i18next";
 import { Button } from "./ui/button";
 
@@ -16,7 +16,7 @@ interface NotificationPopoverProps {
 
 export default function NotificationPopover({ forceLight = false }: NotificationPopoverProps) {
   const { t } = useTranslation();
-  
+
   const cx = (classes: string) => {
     if (!forceLight) return classes;
     return classes.split(' ').filter(c => !c.startsWith('dark:')).join(' ');
@@ -40,38 +40,7 @@ export default function NotificationPopover({ forceLight = false }: Notification
     }
 
     setIsOpen(false);
-
-    if (!notification.referenceId) return;
-
-    const role = localStorage.getItem("roleName");
-    const type = notification.type;
-
-    if (type.startsWith("BOOKING_")) {
-      if (role === "ROLE_CUSTOMER") navigate("/booking-history", { state: { bookingId: notification.referenceId } });
-      if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/bookings", { state: { bookingId: notification.referenceId } });
-    } else if (type.startsWith("REVIEW_")) {
-      if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/reviews", { state: { reviewId: notification.referenceId } });
-      if (role === "ROLE_CUSTOMER") {
-        getReviewById(notification.referenceId).then(res => {
-          const review = res.data;
-          if (review) {
-            navigate(`/hotel/${review.hotelId}/branch/${review.hotelBranchId}/room/${review.roomId}/reviews`);
-          }
-        }).catch(err => {
-          console.error("Lỗi khi lấy thông tin đánh giá:", err);
-        });
-      }
-    } else if (type.startsWith("VOUCHER_")) {
-      if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/vouchers", { state: { voucherId: notification.referenceId } });
-    } else if (type.startsWith("ROOM_IMAGE_")) {
-      if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/room-images", { state: { imageId: notification.referenceId } });
-    } else if (type.startsWith("HOTEL_BRANCH_") || type.startsWith("HOTEL_BRAND_")) {
-      if (role === "ROLE_ADMIN") navigate("/hotel-branches", { state: { branchId: notification.referenceId } });
-      if (role === "ROLE_MANAGER") navigate("/branches", { state: { branchId: notification.referenceId } });
-    } else if (type === "CHAT_MESSAGE_CREATED") {
-      if (role === "ROLE_MANAGER") navigate("/branches");
-      // For customer, they can open the chat widget manually
-    }
+    navigateByNotification(notification, navigate);
   };
 
   useEffect(() => {
@@ -178,7 +147,13 @@ export default function NotificationPopover({ forceLight = false }: Notification
             )}
           </div>
           {notifications.length > 0 && (
-            <div className={cx("p-3 border-t border-border bg-muted/50 text-center hover:bg-muted transition-colors cursor-pointer")}>
+            <div
+              onClick={() => {
+                setIsOpen(false);
+                navigate('/notifications');
+              }}
+              className={cx("p-3 border-t border-border bg-muted/50 text-center hover:bg-muted transition-colors cursor-pointer")}
+            >
               <span className={cx("text-sm font-semibold text-primary")}>
                 {t('components.notification.viewAll', 'Xem tất cả')}
               </span>

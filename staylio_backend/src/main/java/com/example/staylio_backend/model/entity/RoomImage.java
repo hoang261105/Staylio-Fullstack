@@ -23,6 +23,9 @@ public class RoomImage extends BaseObject {
     @Column(name = "is_primary")
     private Boolean isPrimary;
 
+    @Column(name = "is_360")
+    private Boolean is360;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private ImageStatus status;

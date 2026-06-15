@@ -22,7 +22,7 @@ import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../../common/components/ui/button";
 
-export function EditProfile() {
+export default function EditProfile() {
   const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState(false);
   const {

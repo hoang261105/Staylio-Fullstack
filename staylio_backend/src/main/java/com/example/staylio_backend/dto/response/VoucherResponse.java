@@ -33,4 +33,5 @@ public class VoucherResponse {
     private LocalDateTime expiryDate;
     private VoucherStatus status;
     private ApprovalStatus approvalStatus;
+    private Boolean isWelcomeVoucher;
 }

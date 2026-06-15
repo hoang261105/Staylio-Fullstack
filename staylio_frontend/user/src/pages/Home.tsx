@@ -1,7 +1,5 @@
 import { Shield, Star, Users, Globe2, Headset, CreditCard, ArrowRight, Mail } from "lucide-react";
-import { HeroCarousel } from "../components/HeroCarousel";
-import { HotelBranchCard } from "../components/HotelBranchCard";
-import { FeaturedLocations } from "../components/FeaturedLocations";
+import HotelBranchCard from "../components/HotelBranchCard";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import ChatBotWidget from "../components/ChatBotWidget";
@@ -14,9 +12,13 @@ import type { HotelResponse } from "../../../common/interfaces/response/HotelRes
 import type { HotelBranchResponse } from "../../../common/interfaces/response/HotelBranchResponse";
 import { BranchStatus } from "../../../common/enums/BranchStatus";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import FeaturedLocations from "../components/FeaturedLocations";
+import HeroCarousel from "../components/HeroCarousel";
 
 export default function Home() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: hotelsData } = useAllHotels();
 
   const { data: branchesData } = useHotelBranchs({ page: 0, size: 1000, search: "", status: BranchStatus.CONFIRMED });
@@ -25,6 +27,7 @@ export default function Home() {
     if (!hotelsData) return [];
 
     return [...hotelsData]
+      .filter((brand: HotelResponse) => (brand.branchCount || 0) > 0)
       .sort((a: HotelResponse, b: HotelResponse) => (b.branchCount || 0) - (a.branchCount || 0))
       .slice(0, 4);
   }, [hotelsData]);
@@ -86,7 +89,11 @@ export default function Home() {
                 {t('homeScreen.popularBrands.desc')}
               </p>
             </div>
-            <Button variant="link" className="group text-primary font-semibold flex items-center gap-2">
+            <Button 
+              variant="link" 
+              className="group text-primary font-semibold flex items-center gap-2"
+              onClick={() => navigate('/hotels')}
+            >
               {t('homeScreen.popularBrands.viewAll')} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
@@ -96,6 +103,7 @@ export default function Home() {
               <div
                 key={brand.id}
                 className="relative h-80 rounded-2xl overflow-hidden group cursor-pointer transition-all duration-300"
+                onClick={() => navigate(`/branches?hotelId=${brand.id}`)}
               >
                 <img
                   src={brand.imageUrl || "https://images.unsplash.com/photo-1562790351-d273a961e0e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600"}
@@ -171,7 +179,11 @@ export default function Home() {
                 {t('homeScreen.featuredBranches.desc')}
               </p>
             </div>
-            <Button variant="link" className="group text-primary font-semibold flex items-center gap-2">
+            <Button 
+              variant="link" 
+              className="group text-primary font-semibold flex items-center gap-2"
+              onClick={() => navigate('/branches')}
+            >
               {t('homeScreen.featuredBranches.viewAll')} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>

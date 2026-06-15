@@ -91,7 +91,7 @@ export default function RoomFormAdd({
     null,
   );
 
-  type ImageState = { id: string; url: string; preview: string; isUploading: boolean; isError?: boolean };
+  type ImageState = { id: string; url: string; preview: string; isUploading: boolean; isError?: boolean; is360: boolean };
   const [images, setImages] = useState<ImageState[]>([]);
 
   const { mutateAsync: addRoom, isPending } = useCreateRoomMutation();
@@ -154,6 +154,7 @@ export default function RoomFormAdd({
       url: "",
       preview: URL.createObjectURL(file),
       isUploading: true,
+      is360: false,
     }));
 
     setImages((prev) => [...prev, ...newImages]);
@@ -180,6 +181,10 @@ export default function RoomFormAdd({
     setImages((prev) => prev.filter((img) => img.id !== idToRemove));
   };
 
+  const handleToggle360 = (idToToggle: string) => {
+    setImages((prev) => prev.map(img => img.id === idToToggle ? { ...img, is360: !img.is360 } : img));
+  };
+
   const handleClose = () => {
     clearAllErrors();
     onClose();
@@ -189,8 +194,9 @@ export default function RoomFormAdd({
     e.preventDefault();
     clearAllErrors();
     try {
-      const imageUrls = images.map(img => img.url).filter(url => url !== "");
-      const payload: RoomRequest = { ...formData, imageUrls };
+      const imageUrls = images.filter(img => !img.is360).map(img => img.url).filter(url => url !== "");
+      const vr360Urls = images.filter(img => img.is360).map(img => img.url).filter(url => url !== "");
+      const payload: RoomRequest = { ...formData, imageUrls, vr360Urls };
       
       await addRoom(payload);
 
@@ -441,6 +447,19 @@ export default function RoomFormAdd({
                   {img.isError && (
                     <div className="absolute inset-0 bg-red-500/20 flex items-center justify-center">
                       <span className="text-xs text-red-600 bg-card px-2 py-1 rounded shadow">Lỗi tải lên</span>
+                    </div>
+                  )}
+
+                  <div className="absolute bottom-2 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <label className="flex items-center gap-1 bg-black/70 px-2 py-1 rounded text-white text-xs cursor-pointer hover:bg-black">
+                          <input type="checkbox" checked={img.is360} onChange={() => handleToggle360(img.id)} className="w-3 h-3 accent-primary" />
+                          Ảnh 360°
+                      </label>
+                  </div>
+                  
+                  {img.is360 && (
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-primary/90 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm pointer-events-none">
+                      360°
                     </div>
                   )}
                   <button type="button" onClick={() => handleRemoveImage(img.id)}

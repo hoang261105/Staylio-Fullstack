@@ -47,4 +47,6 @@ public interface ChatSessionService {
             int size,
             UserPrincipal principal
     );
+
+    ChatSessionResponse getChatSessionById(Long sessionId, UserPrincipal principal);
 }

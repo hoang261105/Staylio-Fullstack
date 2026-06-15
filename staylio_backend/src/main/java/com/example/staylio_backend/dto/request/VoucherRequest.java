@@ -76,4 +76,6 @@ public class VoucherRequest {
 
     @NotNull(message = "Ngày hết hạn không được để trống")
     private LocalDateTime expiryDate;
+
+    private Boolean isWelcomeVoucher = false;
 }

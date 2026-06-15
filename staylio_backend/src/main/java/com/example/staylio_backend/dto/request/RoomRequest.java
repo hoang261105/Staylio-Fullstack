@@ -69,4 +69,6 @@ public class RoomRequest {
 
     @NotEmpty(message = "Vui lòng chọn ít nhất 1 hình ảnh")
     private List<String> imageUrls;
+
+    private List<String> vr360Urls;
 }

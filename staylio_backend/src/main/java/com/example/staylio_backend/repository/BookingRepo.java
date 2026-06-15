@@ -205,4 +205,6 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
         BigDecimal calculateEstimatedRevenue(
                 @Param("managerId") Long managerId
         );
+
+        long countByUserId(Long userId);
 }

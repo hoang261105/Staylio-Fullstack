@@ -105,6 +105,7 @@ public class RoomImageServiceImpl implements RoomImageService {
                 branch.getBranchName(),
                 roomImage.getStatus(),
                 roomImage.getIsPrimary(),
+                roomImage.getIs360(),
                 roomImage.getCreatedAt(),
                 roomImage.getRejectionReason()
         );

@@ -369,6 +369,22 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                 return new PaginationResponse<>(content, pagination);
         }
 
+        @Override
+        public ChatSessionResponse getChatSessionById(Long sessionId, UserPrincipal principal) {
+                ChatSession session = chatSessionRepo.findById(sessionId)
+                                .orElseThrow(() -> new NoSuchElementException(ErrorCode.CHAT_SESSION_NOT_FOUND.getMessage()));
+
+                boolean isCustomer = session.getUser() != null && session.getUser().getId().equals(principal.getId());
+                boolean isManager = session.getManager() != null && session.getManager().getId().equals(principal.getId());
+                boolean isAdmin = principal.hasRole(RoleName.ROLE_ADMIN);
+
+                if (!isCustomer && !isManager && !isAdmin) {
+                        throw new AppException(ErrorCode.UNAUTHORIZED);
+                }
+
+                return convertSessionToResponse(session);
+        }
+
         // Các helper methods cũ đã được xóa vì Spring AI tự động gọi Tool (Function
         // Calling).
 

@@ -22,6 +22,7 @@ public class RoomImageAdminResponse {
     private String hotelBranchName;
     private ImageStatus status;
     private Boolean isPrimary;
+    private Boolean is360;
     private LocalDateTime createdAt;
     private String rejectionReason;
 }

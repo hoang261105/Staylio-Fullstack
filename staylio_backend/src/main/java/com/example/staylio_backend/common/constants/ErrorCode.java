@@ -110,8 +110,16 @@ public enum ErrorCode {
             "Voucher không áp dụng cho chi nhánh này!"
     ),
 
+    VOUCHER_NOT_APPLICABLE_FOR_ROOM(
+            "Mã giảm giá không áp dụng cho phòng này!"
+    ),
+
     MIN_ORDER_NOT_REACHED(
             "Đơn đặt phòng chưa đạt giá trị tối thiểu để áp dụng voucher!"
+    ),
+    
+    WELCOME_VOUCHER_ONLY_FOR_FIRST_BOOKING(
+            "Voucher này chỉ áp dụng cho lần đặt phòng đầu tiên!"
     ),
 
     VOUCHER_USAGE_LIMIT_EXCEEDED(

@@ -5,5 +5,6 @@ export interface RoomImageResponse {
     roomName: string;
     imageUrl: string;
     isPrimary: boolean;
+    is360?: boolean;
     status: ImageStatus
 }

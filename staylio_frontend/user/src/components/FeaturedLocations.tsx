@@ -4,7 +4,7 @@ import { useFeaturedProvinces } from "../../../common/hooks/useProvinces";
 import { LocationGrid } from "./location/LocationGrid";
 import { useTranslation } from "react-i18next";
 
-export const FeaturedLocations = () => {
+export default function FeaturedLocations () {
   const { t } = useTranslation();
   const { data: featuredLocations } = useFeaturedProvinces();
 

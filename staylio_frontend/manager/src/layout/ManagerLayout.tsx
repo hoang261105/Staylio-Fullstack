@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import ConfirmLogoutModal from "../../../common/components/ConfirmLogoutModal";
 import NotificationPopover from "../../../common/components/NotificationPopover";
 import { Button } from "@common/components/ui/button";
+import { useLogoutMutation } from "../../../common/hooks/useAuthMutation";
 
 interface ManagerLayoutProps {
   children: React.ReactNode;
@@ -90,6 +91,7 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
   const [isCollapsed, setIsCollapsed] = useState(false); // Desktop icon-only mode
   const { data: user } = useProfile();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const { mutate: logoutMutate, isPending: isLoggingOut } = useLogoutMutation();
 
   // Auto collapse on small screens
   useEffect(() => {
@@ -103,24 +105,31 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
   }, []);
 
   const handleLogout = () => {
-    const cookies = document.cookie.split("; ");
-    const domain = window.location.hostname;
-    const past = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
+    logoutMutate(undefined, {
+      onSettled: () => {
+        const cookies = document.cookie.split("; ");
+        const domain = window.location.hostname;
+        const past = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
 
-    for (const cookie of cookies) {
-      const name = cookie.split("=")[0];
-      if (name) {
-        document.cookie = `${name}=; ${past}; path=/; secure; samesite=strict`;
-        document.cookie = `${name}=; ${past}; path=/;`;
-        document.cookie = `${name}=; ${past}; path=/; domain=${domain}`;
+        for (const cookie of cookies) {
+          const name = cookie.split("=")[0];
+          if (name) {
+            document.cookie = `${name}=; ${past}; path=/; secure; samesite=strict`;
+            document.cookie = `${name}=; ${past}; path=/;`;
+            document.cookie = `${name}=; ${past}; path=/; domain=${domain}`;
+          }
+        }
+        
+        localStorage.removeItem("roleName");
+        localStorage.removeItem("user");
+        queryClient.clear();
+
+        toast.success("Đăng xuất thành công!");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 500);
       }
-    }
-    queryClient.clear();
-
-    toast.success("Đăng xuất thành công!");
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 500);
+    });
   };
 
   const isActive = (path: string) => location.pathname === path;
@@ -129,7 +138,6 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground flex">
-      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden transition-opacity"
@@ -137,12 +145,10 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 z-50 h-full bg-card border-r border-border shadow-sm flex flex-col transition-all duration-300 ease-in-out lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
           } ${sidebarWidth}`}
       >
-        {/* Logo area */}
         <div className="h-16 flex items-center justify-between px-4 lg:px-6 border-b border-border shrink-0">
           <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ${isCollapsed ? "w-8 opacity-0" : "w-32 opacity-100"}`}>
             {!isCollapsed && (
@@ -153,7 +159,6 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
               />
             )}
           </div>
-          {/* Mobile close */}
           <Button
             variant="ghost"
             size="icon"
@@ -163,7 +168,6 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
             <X className="w-5 h-5" />
           </Button>
 
-          {/* Desktop collapse toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -174,7 +178,6 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
           </Button>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 py-6 px-3 space-y-1.5 overflow-y-auto custom-scrollbar">
           {!isCollapsed && (
             <p className="px-3 pb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -197,7 +200,6 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
           ))}
         </nav>
 
-        {/* User Profile */}
         <div className="p-4 border-t border-border bg-muted/10">
           <div className={`flex items-center rounded-xl bg-card border border-border shadow-sm mb-3 transition-all ${isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-3"
             }`}>
@@ -238,9 +240,7 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
         </div>
       </aside>
 
-      {/* Main Content */}
       <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out ${isCollapsed ? "lg:ml-20" : "lg:ml-70"}`}>
-        {/* Header */}
         <header className="h-16 bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-30 shrink-0 shadow-sm">
           <div className="h-full px-4 lg:px-8 flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -274,7 +274,6 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
           </div>
         </header>
 
-        {/* Page Content */}
         <main className="flex-1 p-4 lg:p-8 overflow-x-hidden overflow-y-auto">
           {children}
         </main>
@@ -284,6 +283,7 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
         open={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}
         onConfirm={handleLogout}
+        isLoading={isLoggingOut}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { createChatWithAI, getMessages, sendAIMessage, startChatWithManager, sendManagerMessage, replyToCustomer, getChatSessions, getManagerSessionsByBranchId } from "@common/services/chatSession.service";
+import { createChatWithAI, getMessages, sendAIMessage, startChatWithManager, sendManagerMessage, replyToCustomer, getChatSessions, getManagerSessionsByBranchId, getChatSessionById } from "@common/services/chatSession.service";
 import { useMutation, useQuery } from "@tanstack/react-query"
 import toast from "react-hot-toast";
 import { StartManagerChatRequest } from "@common/interfaces/request/StartManagerChatRequest";
@@ -35,6 +35,17 @@ export const useGetMessagesQuery = (sessionId: number) => {
         queryKey: ["getMessages", sessionId],
         queryFn: async () => {
             const response = await getMessages(sessionId);
+            return response.data;
+        },
+        enabled: sessionId > 0
+    });
+}
+
+export const useGetChatSessionByIdQuery = (sessionId: number) => {
+    return useQuery({
+        queryKey: ["getChatSessionById", sessionId],
+        queryFn: async () => {
+            const response = await getChatSessionById(sessionId);
             return response.data;
         },
         enabled: sessionId > 0

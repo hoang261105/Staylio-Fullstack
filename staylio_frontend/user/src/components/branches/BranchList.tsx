@@ -14,7 +14,7 @@ export default function BranchList({ branches, isLoading }: BranchListProps) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="animate-pulse bg-card rounded-2xl border border-border overflow-hidden flex flex-col h-[360px]">
+          <div key={i} className="animate-pulse bg-card rounded-2xl border border-border overflow-hidden flex flex-col h-90">
             <div className="h-48 sm:h-56 bg-muted"></div>
             <div className="p-5 flex flex-col grow gap-3">
               <div className="h-6 bg-muted rounded w-3/4"></div>

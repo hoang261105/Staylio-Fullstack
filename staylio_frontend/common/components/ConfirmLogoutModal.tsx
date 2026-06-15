@@ -14,12 +14,14 @@ type Props = {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isLoading?: boolean;
 };
 
 export default function ConfirmLogoutModal({
   open,
   onClose,
   onConfirm,
+  isLoading
 }: Props) {
   const { t } = useTranslation();
   return (
@@ -32,9 +34,9 @@ export default function ConfirmLogoutModal({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onClose}>{t('components.confirmLogoutModal.cancel', 'Hủy')}</AlertDialogCancel>
-          <AlertDialogAction onClick={(e) => { e.preventDefault(); onConfirm(); }} className="bg-red-500 hover:bg-red-600">
-            {t('components.confirmLogoutModal.confirm', 'Đăng xuất')}
+          <AlertDialogCancel onClick={onClose} disabled={isLoading}>{t('components.confirmLogoutModal.cancel', 'Hủy')}</AlertDialogCancel>
+          <AlertDialogAction onClick={(e) => { e.preventDefault(); onConfirm(); }} disabled={isLoading} className="bg-red-500 hover:bg-red-600 min-w-[110px]">
+            {isLoading ? "Đang đăng xuất..." : t('components.confirmLogoutModal.confirm', 'Đăng xuất')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

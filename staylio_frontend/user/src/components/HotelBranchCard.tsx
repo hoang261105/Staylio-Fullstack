@@ -9,7 +9,7 @@ interface HotelBranchCardProps {
   branch: HotelBranchResponse;
 }
 
-export function HotelBranchCard({ branch }: HotelBranchCardProps) {
+export default function HotelBranchCard({ branch }: HotelBranchCardProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { openManagerChat } = useChatContext();
@@ -42,7 +42,7 @@ export function HotelBranchCard({ branch }: HotelBranchCardProps) {
             {branch.hotelBranchName}
           </h3>
           <div className="flex items-center gap-1 text-muted-foreground mt-1">
-            <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+            <MapPin className="w-3.5 h-3.5 shrink-0" />
             <span className="text-xs line-clamp-1">{branch.address}, {branch.wardName}, {branch.provinceName}</span>
           </div>
         </div>

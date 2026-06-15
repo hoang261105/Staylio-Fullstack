@@ -71,6 +71,11 @@ export default function AdminVoucherDetailModal({ voucher, onClose }: AdminVouch
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
                       Code: {voucher.code}
                     </span>
+                    {voucher.isWelcomeVoucher && (
+                      <span className="inline-flex px-2.5 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+                        Voucher Tân thủ
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

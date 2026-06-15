@@ -8,6 +8,7 @@ import ManagerVoucher from "../pages/ManagerVoucher";
 import ManagerRoomImages from "../pages/ManagerRoomImages";
 import ManagerBookings from "../pages/ManagerBookings";
 import ManagerReviews from "../pages/ManagerReviews";
+import NotificationsPage from "../pages/NotificationsPage";
 
 export const routers = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const routers = createBrowserRouter([
   {
     path: "/reviews",
     Component: ManagerReviews
+  },
+  {
+    path: "/notifications",
+    Component: NotificationsPage,
   },
   {
     path: "*",

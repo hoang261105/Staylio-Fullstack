@@ -15,6 +15,7 @@ import com.example.staylio_backend.model.entity.Voucher;
 import com.example.staylio_backend.model.enums.ApprovalStatus;
 import com.example.staylio_backend.model.enums.DiscountType;
 import com.example.staylio_backend.model.enums.RoleName;
+import com.example.staylio_backend.model.enums.VoucherScope;
 import com.example.staylio_backend.model.enums.VoucherStatus;
 import com.example.staylio_backend.repository.HotelBranchRepo;
 import com.example.staylio_backend.repository.VoucherRepo;
@@ -38,30 +39,32 @@ public class VoucherServiceImpl implements VoucherService {
     private final HotelBranchRepo branchRepo;
 
     @Override
-    public PaginationResponse<VoucherResponse> getAllVouchers(String search, Long hotelBranchId, int page, int size, VoucherStatus status, String sortBy, String direction) {
+    public PaginationResponse<VoucherResponse> getAllVouchers(String search, Long hotelBranchId, int page, int size,
+            VoucherStatus status, String sortBy, String direction) {
         Pageable pageable = PageRequest.of(page, size, getSort(sortBy, direction));
         UserPrincipal principal = SecurityUtils.getCurrentUser();
 
         Page<Voucher> vouchersPage;
 
-        if (principal.hasRole(RoleName.ROLE_MANAGER)){
+        if (principal.hasRole(RoleName.ROLE_MANAGER)) {
             if (hotelBranchId != null) {
                 boolean owned = branchRepo.existsByIdAndHotelManagerId(
                         hotelBranchId,
-                        principal.getId()
-                );
+                        principal.getId());
 
-                if (!owned){
+                if (!owned) {
                     throw new AccessDeniedException("Bạn không có quyền xem voucher của chi nhánh này");
                 }
 
-                vouchersPage = voucherRepo.searchVouchersByHotelBranchIdAndStatus(hotelBranchId, status, search, pageable);
+                vouchersPage = voucherRepo.searchVouchersByHotelBranchIdAndStatus(hotelBranchId, status, search,
+                        pageable);
             } else {
                 vouchersPage = voucherRepo.findAllVouchersByManager(principal.getId(), status, search, pageable);
             }
         } else {
             if (hotelBranchId != null) {
-                vouchersPage = voucherRepo.searchVouchersByHotelBranchIdAndStatus(hotelBranchId, status, search, pageable);
+                vouchersPage = voucherRepo.searchVouchersByHotelBranchIdAndStatus(hotelBranchId, status, search,
+                        pageable);
             } else {
                 vouchersPage = voucherRepo.findAllVouchers(status, search, pageable);
             }
@@ -75,19 +78,19 @@ public class VoucherServiceImpl implements VoucherService {
                 vouchersPage.getNumber() + 1,
                 vouchersPage.getSize(),
                 vouchersPage.getTotalPages(),
-                vouchersPage.getTotalElements()
-        );
+                vouchersPage.getTotalElements());
 
         return new PaginationResponse<>(voucherResponses, paginationDTO);
     }
 
     @Override
     public VoucherResponse getVoucherById(Long id, UserPrincipal userPrincipal) {
-        Voucher voucher = voucherRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.VOUCHER_NOT_FOUND.getMessage()));
+        Voucher voucher = voucherRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.VOUCHER_NOT_FOUND.getMessage()));
 
         HotelBranch branch = voucher.getHotelBranch();
 
-        if (!branch.getHotel().getManager().getId().equals(userPrincipal.getId())){
+        if (!branch.getHotel().getManager().getId().equals(userPrincipal.getId())) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
@@ -106,8 +109,7 @@ public class VoucherServiceImpl implements VoucherService {
 
         HotelBranch branch = branchRepo.findById(request.getHotelBranchId())
                 .orElseThrow(() -> new NoSuchElementException(
-                        ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()
-                ));
+                        ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()));
 
         if (!branch.getHotel().getManager().getId().equals(userPrincipal.getId())) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
@@ -132,8 +134,7 @@ public class VoucherServiceImpl implements VoucherService {
                 .maxDiscountAmount(
                         request.getDiscountType() == DiscountType.FIXED
                                 ? null
-                                : request.getMaxDiscountAmount()
-                )
+                                : request.getMaxDiscountAmount())
                 .hotelBranch(branch)
                 .totalUsageLimit(request.getTotalUsageLimit())
                 .currentUsageCount(0)
@@ -142,6 +143,8 @@ public class VoucherServiceImpl implements VoucherService {
                 .expiryDate(request.getExpiryDate())
                 .status(VoucherStatus.ACTIVE)
                 .approvalStatus(ApprovalStatus.PENDING)
+                .scope(VoucherScope.ALL_ROOMS)
+                .isWelcomeVoucher(request.getIsWelcomeVoucher() != null ? request.getIsWelcomeVoucher() : false)
                 .build();
 
         Voucher savedVoucher = voucherRepo.save(voucher);
@@ -160,8 +163,7 @@ public class VoucherServiceImpl implements VoucherService {
 
         HotelBranch branch = branchRepo.findById(request.getHotelBranchId())
                 .orElseThrow(() -> new NoSuchElementException(
-                        ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()
-                ));
+                        ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()));
 
         if (!branch.getHotel().getManager().getId().equals(userPrincipal.getId())) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
@@ -176,7 +178,8 @@ public class VoucherServiceImpl implements VoucherService {
             throw new AppException(ErrorCode.INVALID_DISCOUNT_VALUE);
         }
 
-        Voucher voucher = voucherRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.VOUCHER_NOT_FOUND.getMessage()));
+        Voucher voucher = voucherRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.VOUCHER_NOT_FOUND.getMessage()));
 
         voucher.setCode(code);
         voucher.setTitle(request.getTitle());
@@ -186,13 +189,17 @@ public class VoucherServiceImpl implements VoucherService {
         voucher.setMinOrderValue(request.getMinOrderValue());
         voucher.setMaxDiscountAmount(
                 request.getDiscountType() == DiscountType.FIXED
-                    ? null : request.getMaxDiscountAmount()
-        );
+                        ? null
+                        : request.getMaxDiscountAmount());
         voucher.setHotelBranch(branch);
         voucher.setTotalUsageLimit(request.getTotalUsageLimit());
         voucher.setUsageLimitPerUser(request.getUsageLimitPerUser());
         voucher.setStartDate(request.getStartDate());
         voucher.setExpiryDate(request.getExpiryDate());
+        if (voucher.getScope() == null) {
+            voucher.setScope(VoucherScope.ALL_ROOMS);
+        }
+        voucher.setIsWelcomeVoucher(request.getIsWelcomeVoucher() != null ? request.getIsWelcomeVoucher() : false);
 
         Voucher updatedVoucher = voucherRepo.save(voucher);
         return convertToResponse(updatedVoucher);
@@ -200,11 +207,12 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public void updateStatus(Long id, VoucherStatusRequest request, UserPrincipal userPrincipal) {
-        Voucher voucher = voucherRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.VOUCHER_NOT_FOUND.getMessage()));
+        Voucher voucher = voucherRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.VOUCHER_NOT_FOUND.getMessage()));
 
         HotelBranch branch = voucher.getHotelBranch();
-        if (userPrincipal.getRoleName() == RoleName.ROLE_MANAGER){
-            if (!branch.getHotel().getManager().getId().equals(userPrincipal.getId())){
+        if (userPrincipal.getRoleName() == RoleName.ROLE_MANAGER) {
+            if (!branch.getHotel().getManager().getId().equals(userPrincipal.getId())) {
                 throw new AppException(ErrorCode.UNAUTHORIZED);
             }
         }
@@ -215,7 +223,8 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public void updateApprovalStatus(Long id, ApprovalStatusRequest request) {
-        Voucher voucher = voucherRepo.findById(id).orElseThrow(() -> new NoSuchElementException(ErrorCode.VOUCHER_NOT_FOUND.getMessage()));
+        Voucher voucher = voucherRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.VOUCHER_NOT_FOUND.getMessage()));
         UserPrincipal principal = SecurityUtils.getCurrentUser();
 
         if (principal.hasRole(RoleName.ROLE_MANAGER)) {
@@ -251,8 +260,8 @@ public class VoucherServiceImpl implements VoucherService {
                 voucher.getStartDate(),
                 voucher.getExpiryDate(),
                 voucher.getStatus(),
-                voucher.getApprovalStatus()
-        );
+                voucher.getApprovalStatus(),
+                voucher.getIsWelcomeVoucher());
     }
 
     private Sort getSort(String sortBy, String direction) {

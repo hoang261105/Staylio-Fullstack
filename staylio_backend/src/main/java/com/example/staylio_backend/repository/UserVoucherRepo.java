@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -23,8 +24,8 @@ public interface UserVoucherRepo extends JpaRepository<UserVoucher, Long> {
           AND v.status = VoucherStatus.ACTIVE
           AND v.approvalStatus = ApprovalStatus.CONFIRMED
 
-          AND (v.startDate IS NULL OR v.startDate <= CURRENT_TIMESTAMP)
-          AND (v.expiryDate IS NULL OR v.expiryDate >= CURRENT_TIMESTAMP)
+          AND (v.startDate IS NULL OR v.startDate <= :now)
+          AND (v.expiryDate IS NULL OR v.expiryDate >= :now)
 
           AND (v.totalUsageLimit IS NULL OR v.currentUsageCount < v.totalUsageLimit)
 
@@ -32,11 +33,13 @@ public interface UserVoucherRepo extends JpaRepository<UserVoucher, Long> {
 
           AND (
                 v.hotelBranch IS NULL
+                OR v.isWelcomeVoucher = true
                 OR hb.id = :branchId
           )
 
           AND (
-                v.scope = VoucherScope.ALL_ROOMS
+                v.scope IS NULL
+                OR v.scope = VoucherScope.ALL_ROOMS
                 OR (
                     v.scope = VoucherScope.SPECIFIC_ROOMS
                     AND vr.id = :roomId
@@ -47,6 +50,7 @@ public interface UserVoucherRepo extends JpaRepository<UserVoucher, Long> {
             @Param("userId") Long userId,
             @Param("branchId") Long branchId,
             @Param("roomId") Long roomId,
-            @Param("originalPrice") BigDecimal originalPrice
+            @Param("originalPrice") BigDecimal originalPrice,
+            @Param("now") LocalDateTime now
     );
 }

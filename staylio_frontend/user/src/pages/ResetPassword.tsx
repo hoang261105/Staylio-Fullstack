@@ -10,6 +10,7 @@ import ResetPassSideBar from "../components/ResetPassSideBar";
 import toast from "react-hot-toast";
 import { InputField } from "../../../common/components/InputField";
 import { Button } from "../../../common/components/ui/button";
+import { useApiErrors } from "../../../common/hooks/useApiErrors";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function ResetPassword() {
     newPassword: "",
     confirmNewPassword: "",
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const { fieldErrors: errors, handleApiErrors, clearAllErrors } = useApiErrors();
 
   const { mutateAsync, isPending } = useResetPasswordMutation(() =>
     navigate("/reset-password?success=true"),
@@ -41,7 +42,7 @@ export default function ResetPassword() {
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setErrors({});
+    clearAllErrors();
 
     try {
       await mutateAsync({ token, newPasswordRequest: formData });
@@ -50,19 +51,11 @@ export default function ResetPassword() {
       const apiErrors = error?.response?.data?.errors;
 
       if (apiErrors) {
-        const fieldErrors: Record<string, string> = {};
-
-        apiErrors.forEach((err: any) => {
-            fieldErrors[err.field] = err.message;
-        });
-
-        setErrors(fieldErrors);
+        handleApiErrors(apiErrors);
       } else {
-        toast.error("Đặt lại mật khẩu thất bại. Vui lòng thử lại.");
+        toast.error(error?.response?.data?.message || "Đặt lại mật khẩu thất bại. Vui lòng thử lại.");
       }
     }
-
-    
   };
 
   if (isSuccess) {

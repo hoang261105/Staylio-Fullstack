@@ -10,9 +10,9 @@ export default function RegisterSideBar() {
           <img
             src="https://images.unsplash.com/photo-1772127822607-2343696cf82e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
             alt="Travel"
-            className="w-full h-full object-cover opacity-50 scale-100 group-hover:scale-105 transition-transform duration-[10000ms] ease-out"
+            className="w-full h-full object-cover opacity-50 scale-100 group-hover:scale-105 transition-transform duration-10000 ease-out"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-900/60 to-emerald-900/80 backdrop-blur-[2px]"></div>
+          <div className="absolute inset-0 bg-linear-to-br from-blue-900/80 via-blue-900/60 to-emerald-900/80 backdrop-blur-[2px]"></div>
         </div>
 
         <div className="relative z-10 flex flex-col justify-between p-16 text-white h-full w-full">

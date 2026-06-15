@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
@@ -22,6 +23,7 @@ import RoomReviewForm from "../components/room-detail/RoomReviewForm";
 
 import type { RoomResponse } from "../../../common/interfaces/response/RoomResponse";
 import type { RoomImageResponse } from "../../../common/interfaces/response/RoomImageResponse";
+import { ImageStatus } from "../../../common/enums/ImageStatus";
 import { Button } from "../../../common/components/ui/button";
 
 export default function RoomDetail() {
@@ -86,19 +88,31 @@ export default function RoomDetail() {
     .filter((r: RoomResponse) => r.id !== Number(roomId))
     .slice(0, 3);
 
+  const confirmedImages = room.images?.filter((img: RoomImageResponse) => img.status === ImageStatus.CONFIRMED) || [];
+
   const primaryImage =
-    room.images?.find((img: RoomImageResponse) => img.isPrimary)?.imageUrl ||
-    room.images?.[0]?.imageUrl ||
+    confirmedImages.find((img: RoomImageResponse) => img.is360)?.imageUrl ||
+    confirmedImages.find((img: RoomImageResponse) => img.isPrimary)?.imageUrl ||
+    confirmedImages[0]?.imageUrl ||
     "https://images.unsplash.com/photo-1631049307264-da0ec9d70304";
 
-  const otherImages =
-    room.images
-      ?.filter((img: RoomImageResponse) => img.imageUrl !== primaryImage)
-      .slice(0, 4) || [];
+  const remainingImages = confirmedImages
+    .filter((img: RoomImageResponse) => img.imageUrl !== primaryImage)
+    .sort((a: any, b: any) => {
+      if (a.is360 && !b.is360) return -1;
+      if (!a.is360 && b.is360) return 1;
+      return 0;
+    });
 
-  const allImageUrls = room.images?.length
-    ? room.images.map((img: RoomImageResponse) => img.imageUrl)
+  const otherImages = remainingImages.slice(0, 4) || [];
+
+  const allImageUrls = confirmedImages.length > 0
+    ? [primaryImage, ...remainingImages.map((img: RoomImageResponse) => img.imageUrl)]
     : [primaryImage];
+
+  const vr360ImageUrls = confirmedImages
+    .filter((img: RoomImageResponse) => img.is360)
+    .map((img: RoomImageResponse) => img.imageUrl);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
@@ -158,6 +172,7 @@ export default function RoomDetail() {
           primaryImage={primaryImage}
           otherImages={otherImages}
           allImageUrls={allImageUrls}
+          vr360ImageUrls={vr360ImageUrls}
         />
 
         <div className="flex flex-col lg:flex-row gap-8">

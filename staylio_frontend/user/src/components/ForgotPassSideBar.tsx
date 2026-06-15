@@ -8,9 +8,9 @@ export default function ForgotPassSideBar() {
           <img
             src="https://images.unsplash.com/photo-1561501900-3701fa6a0864?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
             alt="Travel"
-            className="w-full h-full object-cover opacity-50 scale-100 group-hover:scale-105 transition-transform duration-[10000ms] ease-out"
+            className="w-full h-full object-cover opacity-50 scale-100 group-hover:scale-105 transition-transform duration-10000 ease-out"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-900/60 to-emerald-900/80 backdrop-blur-[2px]"></div>
+          <div className="absolute inset-0 bg-linear-to-br from-blue-900/80 via-blue-900/60 to-emerald-900/80 backdrop-blur-[2px]"></div>
         </div>
 
         <div className="relative z-10 flex flex-col justify-between p-16 text-white h-full w-full">
@@ -32,7 +32,7 @@ export default function ForgotPassSideBar() {
 
             <div className="space-y-6">
               <div className="flex items-center gap-4 group/item">
-                <div className="w-12 h-12 bg-white dark:bg-gray-800/10 backdrop-blur-md rounded-xl flex items-center justify-center shrink-0 border border-white/20 group-hover/item:bg-white dark:bg-gray-800/20 transition-colors shadow-lg">
+                <div className="w-12 h-12 bg-white dark:bg-gray-800/10 backdrop-blur-md rounded-xl flex items-center justify-center shrink-0 border border-white/20 group-hover/item:bg-white transition-colors shadow-lg">
                   <ShieldCheck className="w-6 h-6 text-emerald-200" />
                 </div>
                 <div>
@@ -42,7 +42,7 @@ export default function ForgotPassSideBar() {
               </div>
 
               <div className="flex items-center gap-4 group/item">
-                <div className="w-12 h-12 bg-white dark:bg-gray-800/10 backdrop-blur-md rounded-xl flex items-center justify-center shrink-0 border border-white/20 group-hover/item:bg-white dark:bg-gray-800/20 transition-colors shadow-lg">
+                <div className="w-12 h-12 bg-white dark:bg-gray-800/10 backdrop-blur-md rounded-xl flex items-center justify-center shrink-0 border border-white/20 group-hover/item:bg-white transition-colors shadow-lg">
                   <Zap className="w-6 h-6 text-yellow-200" />
                 </div>
                 <div>

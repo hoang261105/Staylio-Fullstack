@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
 import { Coffee, MapPin, Utensils, Navigation, Landmark, Plane, TreePine, Hospital } from "lucide-react";
 import type { NearbyPlace } from "../../../common/hooks/useNearbyPlaces";

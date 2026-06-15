@@ -95,7 +95,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [isCollapsed, setIsCollapsed] = useState(false); // Desktop icon-only mode
   const { data: user } = useProfile();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const { mutate: logoutMutate } = useLogoutMutation();
+  const { mutate: logoutMutate, isPending: isLoggingOut } = useLogoutMutation();
 
   // Auto collapse on small screens
   useEffect(() => {
@@ -266,6 +266,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         open={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}
         onConfirm={handleLogout}
+        isLoading={isLoggingOut}
       />
     </div>
   );
