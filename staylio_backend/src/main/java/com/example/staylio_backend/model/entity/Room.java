@@ -95,4 +95,7 @@ public class Room extends BaseObject {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomImage> images = new ArrayList<>();
+
+    @Column(name = "traveloka_room_id")
+    private String travelokaRoomId;
 }

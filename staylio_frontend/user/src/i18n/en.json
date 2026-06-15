@@ -383,7 +383,10 @@
     "missingDates": "Please select check-in and check-out dates",
     "missingAdults": "Please enter the number of adults",
     "submitReviewError": "An error occurred while submitting the review.",
-    "viewAllImages": "View all images"
+    "viewAllImages": "View all images",
+    "reviewSuccess": "Room review submitted successfully!",
+    "reviewPending": "Your review has been submitted and is pending manager approval.",
+    "toxicComment": "Your review contains language that violates community standards!"
   },
   "bookingConfirmation": {
     "back": "Back",

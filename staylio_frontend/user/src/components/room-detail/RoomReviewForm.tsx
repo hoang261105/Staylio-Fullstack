@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Star } from "lucide-react";
+import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useCreateReviewMutation, useReviews } from "../../../../common/hooks/useReviews";
 import { InputField } from "../../../../common/components/InputField";
@@ -35,8 +36,9 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
 
   const [rating, setRating] = useState<number>(5);
   const [comment, setComment] = useState<string>("");
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-  const { fieldErrors, formError, handleApiErrors, clearAllErrors } =
+  const { fieldErrors, handleApiErrors, clearAllErrors } =
     useApiErrors();
 
   const checkedOutBooking = historyBookings?.items?.find(
@@ -54,7 +56,7 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
     comment,
   });
 
-  if (!user || !checkedOutBooking || isLoadingReviews || hasReviewed) {
+  if (!user || !checkedOutBooking || isLoadingReviews || hasReviewed || isSubmitted) {
     return null;
   }
 
@@ -66,15 +68,23 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
         const errorData = err.response?.data;
         if (errorData?.errors) {
           handleApiErrors(errorData.errors);
+        } else if (errorData?.code === "TOXIC_COMMENT_DETECTED" || errorData?.message?.includes("ngôn từ không phù hợp")) {
+          handleApiErrors([{ message: t("roomDetail.toxicComment") }]);
         } else if (errorData?.message) {
           handleApiErrors([{ message: errorData.message }]);
         } else {
           handleApiErrors([{ message: t("roomDetail.submitReviewError") }]);
         }
       },
-      onSuccess: () => {
+      onSuccess: (data: any) => {
         setComment("");
         setRating(5);
+        setIsSubmitted(true);
+        if (data?.data?.status === 'PENDING') {
+          toast.success(t("roomDetail.reviewPending"));
+        } else {
+          toast.success(t("roomDetail.reviewSuccess"));
+        }
       },
     });
   };
@@ -85,11 +95,6 @@ export default function RoomReviewForm({ roomId }: RoomReviewFormProps) {
         {t("roomDetail.writeReviewTitle")}
       </h3>
       <form onSubmit={handleSubmit}>
-        {formError && (
-          <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-            {formError}
-          </div>
-        )}
         <div className="mb-4">
           <label className="block text-sm font-medium text-foreground mb-2">
             {t("roomDetail.ratingLabel")} <span className="text-red-500">*</span>

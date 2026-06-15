@@ -1,6 +1,7 @@
 package com.example.staylio_backend.model.entity;
 
 import com.example.staylio_backend.common.base.BaseObject;
+import com.example.staylio_backend.model.enums.BookingSource;
 import com.example.staylio_backend.model.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -57,6 +58,14 @@ public class Booking extends BaseObject {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private BookingStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "booking_source", nullable = false)
+    @Builder.Default
+    private BookingSource bookingSource = BookingSource.DIRECT;
+
+    @Column(name = "external_booking_id")
+    private String externalBookingId;
 
     @Column(name = "note", columnDefinition = "TEXT")
     private String note;

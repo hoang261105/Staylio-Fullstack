@@ -65,8 +65,7 @@ export const useCreateReviewMutation = (request: ReviewRequest) => {
             const response = await createReview(request);
             return response;
         },
-        onSuccess: (response) => {
-            toast.success(response.message);
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["reviewers"] });
             queryClient.invalidateQueries({ queryKey: ["reviews"] });
         }

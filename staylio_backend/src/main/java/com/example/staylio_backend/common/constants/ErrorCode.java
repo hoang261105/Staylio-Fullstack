@@ -42,6 +42,9 @@ public enum ErrorCode {
     CANNOT_REVIEW_BEFORE_CHECKOUT(
             "Bạn chỉ có thể đánh giá sau khi đã trả phòng!"
     ),
+    TOXIC_COMMENT_DETECTED(
+            "Đánh giá của bạn chứa ngôn từ không phù hợp với tiêu chuẩn cộng đồng!"
+    ),
     INVALID_CHECK_IN_DATE(
             "Ngày nhận phòng không hợp lệ!"
     ),

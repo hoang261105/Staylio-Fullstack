@@ -383,7 +383,10 @@
     "missingDates": "Vui lòng chọn ngày nhận và trả phòng",
     "missingAdults": "Vui lòng nhập số lượng người lớn",
     "submitReviewError": "Đã có lỗi xảy ra khi gửi đánh giá.",
-    "viewAllImages": "Xem tất cả ảnh"
+    "viewAllImages": "Xem tất cả ảnh",
+    "reviewSuccess": "Đánh giá phòng thành công!",
+    "reviewPending": "Đánh giá của bạn đã được gửi và đang chờ quản lý kiểm duyệt.",
+    "toxicComment": "Đánh giá của bạn chứa ngôn từ không phù hợp với tiêu chuẩn cộng đồng!"
   },
   "bookingConfirmation": {
     "back": "Quay lại",

@@ -86,3 +86,11 @@ jwt:
     token: 3600000
     access: 1800000        # 1 giờ = 60 * 60 * 1000
     refresh: 608000000
+
+openai:
+  api-key: ${OPENAI_API_KEY:}
+
+traveloka:
+  api:
+    url: "https://api.travelokapartnersnetwork.com/v1"
+    key: ${TRAVELOKA_API_KEY:}

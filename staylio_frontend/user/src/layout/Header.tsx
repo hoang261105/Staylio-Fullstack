@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import ConfirmLogoutModal from "../../../common/components/ConfirmLogoutModal";
 import NotificationPopover from "../../../common/components/NotificationPopover";
 import { History, LogOut, User, Menu, X, Sun, Moon, Globe } from "lucide-react";
@@ -14,8 +14,14 @@ import { Button } from "../../../common/components/ui/button";
 
 export default function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const { theme, setTheme } = useTheme();
+
+  const isActive = (path: string) => {
+    if (path === "/") return location.pathname === "/";
+    return location.pathname.startsWith(path);
+  };
   const { t, i18n } = useTranslation();
 
   const { data: user } = useProfile();
@@ -63,21 +69,21 @@ export default function Header() {
             </div>
 
             <nav className="hidden md:flex items-center gap-6">
-              <a href="/" className="text-foreground hover:text-primary transition-colors">
+              <Link to="/" className={`transition-colors ${isActive('/') ? 'text-primary font-semibold' : 'text-foreground hover:text-primary'}`}>
                 {t('components.header.home')}
-              </a>
+              </Link>
 
-              <a href="/hotels" className="text-foreground hover:text-primary transition-colors">
+              <Link to="/hotels" className={`transition-colors ${isActive('/hotels') ? 'text-primary font-semibold' : 'text-foreground hover:text-primary'}`}>
                 {t('components.header.hotels')}
-              </a>
+              </Link>
 
-              <a href="/locations" className="text-foreground hover:text-primary transition-colors">
+              <Link to="/locations" className={`transition-colors ${isActive('/locations') ? 'text-primary font-semibold' : 'text-foreground hover:text-primary'}`}>
                 {t('components.header.destinations')}
-              </a>
+              </Link>
 
-              <a href="#" className="text-foreground hover:text-primary transition-colors">
+              <Link to="#" className="text-foreground hover:text-primary transition-colors">
                 {t('components.header.offers')}
-              </a>
+              </Link>
             </nav>
 
             <div className="flex items-center gap-3">
@@ -197,21 +203,21 @@ export default function Header() {
           {mobileMenuOpen && (
             <div className="md:hidden mt-4 pt-4 border-t border-border">
               <nav className="flex flex-col gap-4">
-                <a href="/" className="font-medium text-foreground hover:text-primary transition-colors">
+                <Link to="/" onClick={() => setMobileMenuOpen(false)} className={`transition-colors ${isActive('/') ? 'text-primary font-bold' : 'font-medium text-foreground hover:text-primary'}`}>
                   {t('components.header.home')}
-                </a>
+                </Link>
 
-                <a href="/hotels" className="font-medium text-foreground hover:text-primary transition-colors">
+                <Link to="/hotels" onClick={() => setMobileMenuOpen(false)} className={`transition-colors ${isActive('/hotels') ? 'text-primary font-bold' : 'font-medium text-foreground hover:text-primary'}`}>
                   {t('components.header.hotels')}
-                </a>
+                </Link>
 
-                <a href="/destinations" className="font-medium text-foreground hover:text-primary transition-colors">
+                <Link to="/locations" onClick={() => setMobileMenuOpen(false)} className={`transition-colors ${isActive('/locations') ? 'text-primary font-bold' : 'font-medium text-foreground hover:text-primary'}`}>
                   {t('components.header.destinations')}
-                </a>
+                </Link>
 
-                <a href="#" className="font-medium text-foreground hover:text-primary transition-colors">
+                <Link to="#" onClick={() => setMobileMenuOpen(false)} className="font-medium text-foreground hover:text-primary transition-colors">
                   {t('components.header.offers')}
-                </a>
+                </Link>
               </nav>
             </div>
           )}

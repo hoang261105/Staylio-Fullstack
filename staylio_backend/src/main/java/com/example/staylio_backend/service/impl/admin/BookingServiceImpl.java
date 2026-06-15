@@ -12,6 +12,7 @@ import com.example.staylio_backend.model.enums.*;
 import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.BookingService;
 import com.example.staylio_backend.service.NotificationService;
+import com.example.staylio_backend.service.TravelokaIntegrationService;
 import com.example.staylio_backend.service.ZaloPayService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,7 @@ public class BookingServiceImpl implements BookingService {
     private final PaymentRepo paymentRepo;
     private final NotificationService notificationService;
     private final ZaloPayService zaloPayService;
+    private final TravelokaIntegrationService travelokaIntegrationService;
 
     @Override
     public PaginationResponse<BookingResponse> getAllBookings(
@@ -267,6 +269,9 @@ public class BookingServiceImpl implements BookingService {
             userVoucher.setUsedAt(LocalDateTime.now());
             userVoucher.setUsedCount(userVoucher.getUsedCount() == null ? 1 : userVoucher.getUsedCount() + 1);
             userVoucherRepo.save(userVoucher);
+
+            Voucher voucher = userVoucher.getVoucher();
+            voucher.setCurrentUsageCount(voucher.getCurrentUsageCount() == null ? 1 : voucher.getCurrentUsageCount() + 1);
         }
 
         BigDecimal finalPrice = originalPrice.subtract(discountAmount);
@@ -298,6 +303,9 @@ public class BookingServiceImpl implements BookingService {
                 .build();
 
         Payment savedPayment = paymentRepo.save(payment);
+
+        // Gọi API Traveloka để giảm trừ phòng (Mock)
+        travelokaIntegrationService.pushInventory(room, request.getCheckInDate(), 0);
 
         if (request.getPaymentMethod() == PaymentMethod.ZALOPAY) {
             ZaloPayCreateOrderResponse zaloPayResponse = zaloPayService.createOrder(savedBooking, savedPayment);

@@ -18,6 +18,7 @@ import com.example.staylio_backend.repository.ProfileRepo;
 import com.example.staylio_backend.repository.ReviewRepo;
 import com.example.staylio_backend.service.NotificationService;
 import com.example.staylio_backend.service.ReviewService;
+import com.example.staylio_backend.service.ModerationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ProfileRepo profileRepo;
     private final BookingRepo bookingRepo;
     private final NotificationService notificationService;
+    private final ModerationService moderationService;
 
     @Override
     public PaginationResponse<ReviewResponse> getReviews(ReviewFilterRequest request, UserPrincipal principal) {
@@ -149,13 +151,23 @@ public class ReviewServiceImpl implements ReviewService {
             throw new AppException(ErrorCode.BOOKING_ALREADY_REVIEWED);
         }
 
+        double toxicityScore = moderationService.getToxicityScore(request.getComment());
+        if (toxicityScore > 0.8) {
+            throw new AppException(ErrorCode.TOXIC_COMMENT_DETECTED);
+        }
+
+        ReviewStatus finalStatus = ReviewStatus.VISIBLE;
+        if (toxicityScore >= 0.4) {
+            finalStatus = ReviewStatus.PENDING;
+        }
+
         Review review = Review.builder()
                 .booking(booking)
                 .room(booking.getRoom())
                 .profile(profile)
                 .rating(request.getRating())
                 .comment(request.getComment())
-                .status(ReviewStatus.VISIBLE)
+                .status(finalStatus)
                 .isDeleted(false)
                 .build();
 

@@ -52,4 +52,7 @@ public class HotelBranch extends AuditableObject {
 
     @Column(name = "longitude")
     private Double longitude;
+
+    @Column(name = "traveloka_property_id")
+    private String travelokaPropertyId;
 }
