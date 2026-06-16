@@ -13,7 +13,11 @@ import com.example.staylio_backend.repository.*;
 import com.example.staylio_backend.service.BookingService;
 import com.example.staylio_backend.service.NotificationService;
 import com.example.staylio_backend.service.TravelokaIntegrationService;
+import com.example.staylio_backend.service.PayPalService;
 import com.example.staylio_backend.service.ZaloPayService;
+import com.example.staylio_backend.service.VNPayService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -43,7 +48,9 @@ public class BookingServiceImpl implements BookingService {
     private final PaymentRepo paymentRepo;
     private final NotificationService notificationService;
     private final ZaloPayService zaloPayService;
+    private final PayPalService payPalService;
     private final TravelokaIntegrationService travelokaIntegrationService;
+    private final VNPayService vnPayService;
 
     @Override
     public PaginationResponse<BookingResponse> getAllBookings(
@@ -223,6 +230,7 @@ public class BookingServiceImpl implements BookingService {
                 .build();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     @Transactional
     public BookingResponse createBooking(
@@ -271,7 +279,8 @@ public class BookingServiceImpl implements BookingService {
             userVoucherRepo.save(userVoucher);
 
             Voucher voucher = userVoucher.getVoucher();
-            voucher.setCurrentUsageCount(voucher.getCurrentUsageCount() == null ? 1 : voucher.getCurrentUsageCount() + 1);
+            voucher.setCurrentUsageCount(
+                    voucher.getCurrentUsageCount() == null ? 1 : voucher.getCurrentUsageCount() + 1);
         }
 
         BigDecimal finalPrice = originalPrice.subtract(discountAmount);
@@ -314,6 +323,37 @@ public class BookingServiceImpl implements BookingService {
             savedPayment.setPaymentUrl(zaloPayResponse.getPaymentUrl());
             savedPayment.setRawResponse(zaloPayResponse.getRawResponse());
 
+            paymentRepo.save(savedPayment);
+        } else if (request.getPaymentMethod() == PaymentMethod.PAYPAL) {
+            java.util.Map<String, Object> payPalResponse = payPalService.createOrder(savedBooking, savedPayment);
+
+            String orderId = (String) payPalResponse.get("id");
+            String approveUrl = null;
+
+            List<Map<String, String>> links = (List<Map<String, String>>) payPalResponse.get("links");
+            if (links != null) {
+                for (Map<String, String> link : links) {
+                    if ("approve".equals(link.get("rel"))) {
+                        approveUrl = link.get("href");
+                        break;
+                    }
+                }
+            }
+
+            savedPayment.setGatewayOrderId(orderId);
+            savedPayment.setPaymentUrl(approveUrl);
+
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                savedPayment.setRawResponse(objectMapper.writeValueAsString(payPalResponse));
+            } catch (Exception e) {
+                // ignore
+            }
+
+            paymentRepo.save(savedPayment);
+        } else if (request.getPaymentMethod() == PaymentMethod.VNPAY) {
+            String vnPayUrl = vnPayService.createOrder(savedBooking, savedPayment);
+            savedPayment.setPaymentUrl(vnPayUrl);
             paymentRepo.save(savedPayment);
         }
 
@@ -804,7 +844,9 @@ public class BookingServiceImpl implements BookingService {
                 .finalPrice(booking.getFinalPrice())
                 .status(booking.getStatus())
                 .createdAt(booking.getCreatedAt())
-                .paymentMethod(latestPayment != null && latestPayment.getPaymentMethod() != null ? latestPayment.getPaymentMethod().name() : null)
+                .paymentMethod(latestPayment != null && latestPayment.getPaymentMethod() != null
+                        ? latestPayment.getPaymentMethod().name()
+                        : null)
                 .paymentUrl(latestPayment != null ? latestPayment.getPaymentUrl() : null)
                 .build();
     }

@@ -72,7 +72,7 @@ zalopay:
   key2: ${ZALOPAY_KEY2}
   create-order-url: https://sb-openapi.zalopay.vn/v2/create
   callback-url: https://thinning-primate-renegade.ngrok-free.dev/api/v1/payments/zalopay/callback
-  redirect-url: http://localhost:3000/payment/result
+  redirect-url: http://localhost:3002/booking-history
 
 cloudinary:
   cloud_name: dtc7mun2h
@@ -84,7 +84,7 @@ jwt:
     key: ${JWT_SECRET}
   expired:
     token: 3600000
-    access: 1800000        # 1 giờ = 60 * 60 * 1000
+    access: 1800000    
     refresh: 608000000
 
 openai:
@@ -94,3 +94,20 @@ traveloka:
   api:
     url: "https://api.travelokapartnersnetwork.com/v1"
     key: ${TRAVELOKA_API_KEY:}
+
+paypal:
+  client-id: ${PAYPAL_CLIENT_ID}
+  client-secret: ${PAYPAL_CLIENT_SECRET}
+  mode: ${PAYPAL_MODE:sandbox}
+  base-url: https://api-m.sandbox.paypal.com
+  return-url: ${APP_SERVER_URL:http://localhost:8080}/api/v1/payments/paypal/capture
+  cancel-url: ${APP_SERVER_URL:http://localhost:8080}/api/v1/payments/paypal/cancel
+
+vnpay:
+  tmn-code: ${VNPAY_TMN_CODE}
+  hash-secret: ${VNPAY_HASH_SECRET}
+  pay-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  return-url: ${APP_SERVER_URL:http://localhost:8080}/api/v1/payments/vnpay/callback
+  api-url: https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
+  version: "2.1.0"
+  command: "pay"

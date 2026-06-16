@@ -18,56 +18,79 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/payments")
 @RequiredArgsConstructor
 public class PaymentController {
-    private final PaymentService paymentService;
+        private final PaymentService paymentService;
 
-    @GetMapping
-    @Operation(summary = "Danh sách đơn thanh toán")
-    public ResponseEntity<ApiResponse<PaginationResponse<PaymentResponse>>> getAllPayments(
-            @ParameterObject PaymentFilterRequest request,
-            @AuthenticationPrincipal UserPrincipal principal
-    ){
-        ApiResponse<PaginationResponse<PaymentResponse>> response = new ApiResponse<>(
-                true,
-                "Lấy danh sách thanh toán thành công!",
-                paymentService.getAllPayments(request, principal),
-                null,
-                LocalDateTime.now()
-        );
+        @GetMapping
+        @Operation(summary = "Danh sách đơn thanh toán")
+        public ResponseEntity<ApiResponse<PaginationResponse<PaymentResponse>>> getAllPayments(
+                        @ParameterObject PaymentFilterRequest request,
+                        @AuthenticationPrincipal UserPrincipal principal) {
+                ApiResponse<PaginationResponse<PaymentResponse>> response = new ApiResponse<>(
+                                true,
+                                "Lấy danh sách thanh toán thành công!",
+                                paymentService.getAllPayments(request, principal),
+                                null,
+                                LocalDateTime.now());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @PatchMapping("/{id}/status")
-    @Operation(summary = "Cập nhật trạng thái thanh toán")
-    @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<PaymentResponse>> updateStatus(
-            @PathVariable Long id,
-            @RequestBody PaymentStatusRequest request
-    ){
-        paymentService.updateStatus(id, request);
+        @PatchMapping("/{id}/status")
+        @Operation(summary = "Cập nhật trạng thái thanh toán")
+        @PreAuthorize("hasRole('MANAGER')")
+        public ResponseEntity<ApiResponse<PaymentResponse>> updateStatus(
+                        @PathVariable Long id,
+                        @RequestBody PaymentStatusRequest request) {
+                paymentService.updateStatus(id, request);
 
-        ApiResponse<PaymentResponse> response = new ApiResponse<>(
-                true,
-                "Cập nhật thành công!",
-                null,
-                null,
-                LocalDateTime.now()
-        );
+                ApiResponse<PaymentResponse> response = new ApiResponse<>(
+                                true,
+                                "Cập nhật thành công!",
+                                null,
+                                null,
+                                LocalDateTime.now());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @PostMapping("/zalopay/callback")
-    public ResponseEntity<Map<String, Object>> zaloPayCallback(
-            @RequestBody Map<String, Object> body
-    ) {
-        return ResponseEntity.ok(
-                paymentService.handleZaloPayCallback(body)
-        );
-    }
+        @PostMapping("/zalopay/callback")
+        public ResponseEntity<Map<String, Object>> zaloPayCallback(
+                        @RequestBody Map<String, Object> body) {
+                return ResponseEntity.ok(
+                                paymentService.handleZaloPayCallback(body));
+        }
+
+        @GetMapping("/paypal/capture")
+        public ResponseEntity<Void> payPalCapture(
+                        @RequestParam("token") String token,
+                        @RequestParam("bookingId") Long bookingId) {
+                paymentService.handlePayPalCapture(token, bookingId);
+                return ResponseEntity.status(HttpStatus.FOUND)
+                                .location(URI.create("http://localhost:3002/booking-history"))
+                                .build();
+        }
+
+        @GetMapping("/paypal/cancel")
+        public ResponseEntity<Void> payPalCancel(
+                        @RequestParam("token") String token,
+                        @RequestParam("bookingId") Long bookingId) {
+                paymentService.handlePayPalCancel(token, bookingId);
+                return ResponseEntity.status(HttpStatus.FOUND)
+                                .location(URI.create("http://localhost:3002/booking-history"))
+                                .build();
+        }
+
+        @GetMapping("/vnpay/callback")
+        public ResponseEntity<Void> vnPayCallback(@RequestParam Map<String, String> params) {
+                paymentService.handleVNPayCallback(params);
+                return ResponseEntity.status(HttpStatus.FOUND)
+                                .location(URI.create("http://localhost:3002/booking-history"))
+                                .build();
+        }
 }

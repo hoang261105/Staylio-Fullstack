@@ -23,4 +23,10 @@ public interface PaymentService {
     );
 
     Map<String, Object> handleZaloPayCallback(Map<String, Object> body);
+
+    void handlePayPalCapture(String token, Long bookingId);
+
+    void handlePayPalCancel(String token, Long bookingId);
+
+    void handleVNPayCallback(Map<String, String> params);
 }

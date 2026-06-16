@@ -188,6 +188,22 @@ public enum ErrorCode {
             "Chữ ký callback ZaloPay không hợp lệ!"
     ),
 
+    PAYPAL_CREATE_ORDER_FAILED(
+            "Không thể tạo giao dịch PayPal!"
+    ),
+
+    PAYPAL_CAPTURE_FAILED(
+            "Thực hiện capture thanh toán PayPal thất bại!"
+    ),
+
+    PAYPAL_GET_TOKEN_FAILED(
+            "Không thể lấy access token từ PayPal!"
+    ),
+
+    PAYMENT_FAILED(
+            "Thanh toán thất bại!"
+    ),
+
     // 3xxx: Business Logic (Duplicates, DB logic)
     USER_EXISTED("Tên người dùng đã tồn tại"),
     EMAIL_EXISTED("Email đã được sử dụng"),

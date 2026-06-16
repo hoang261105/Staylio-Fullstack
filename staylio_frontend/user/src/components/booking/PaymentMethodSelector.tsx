@@ -37,6 +37,12 @@ export const PaymentMethodSelector = ({ selectedMethod, onChange, error }: Payme
             icon: <Landmark className="w-6 h-6 text-green-600" />
         },
         {
+            id: PaymentMethod.PAYPAL,
+            name: t("bookingConfirmation.paymentMethods.paypal", "PayPal"),
+            description: t("bookingConfirmation.paymentMethods.paypalDesc", "Pay via PayPal account or Credit Card"),
+            icon: <CreditCard className="w-6 h-6 text-blue-600" />
+        },
+        {
             id: PaymentMethod.CASH,
             name: t("bookingConfirmation.paymentMethods.cash"),
             description: t("bookingConfirmation.paymentMethods.cashDesc"),

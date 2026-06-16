@@ -5,7 +5,11 @@ public class APIConstants {
             "/auth/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/swagger-ui.html"
+            "/swagger-ui.html",
+            "/payments/zalopay/callback",
+            "/payments/paypal/capture",
+            "/payments/paypal/cancel",
+            "/payments/vnpay/callback"
     };
 
     public static final String ADMIN_USERS = "/api/v1/admin/users";

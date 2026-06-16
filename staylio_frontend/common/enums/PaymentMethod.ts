@@ -3,5 +3,6 @@ export enum PaymentMethod {
     MOMO = "MOMO",
     ZALOPAY = "ZALOPAY",
     CASH = "CASH",
-    BANK_TRANSFER = "BANK_TRANSFER"
+    BANK_TRANSFER = "BANK_TRANSFER",
+    PAYPAL = "PAYPAL"
 }

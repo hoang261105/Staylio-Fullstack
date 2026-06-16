@@ -53,10 +53,10 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
       <div className="p-5 flex flex-col md:col-span-7 justify-between">
         <div className="flex justify-between items-start mb-2 gap-4">
           <div>
-            <h3 className="font-bold text-card-foreground text-xl line-clamp-1 group-hover:text-primary transition-colors">
+            <h3 className="font-bold text-card-foreground text-xl line-clamp-1 group-hover:text-primary transition-colors" title={room.roomName}>
               {room.roomName}
             </h3>
-            <div className="flex items-center gap-1.5 text-primary font-semibold text-sm mt-1 mb-2 bg-primary/10 w-fit px-2.5 py-1 rounded-lg">
+            <div className="flex items-center gap-1.5 text-primary font-semibold text-sm mt-1 mb-2 bg-primary/10 w-fit px-2.5 py-1 rounded-lg" title={`${room.hotelName} - ${room.hotelBranchName}`}>
               <Building className="w-3.5 h-3.5" />
               <span className="line-clamp-1">{room.hotelName} - {room.hotelBranchName}</span>
             </div>
@@ -73,7 +73,7 @@ export function RoomSearchCard({ room }: RoomSearchCardProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 text-muted-foreground mb-4">
+        <div className="flex items-center gap-1.5 text-muted-foreground mb-4" title={`${room.address}, ${room.provinceName}`}>
           <MapPin className="w-4 h-4 shrink-0" />
           <span className="text-sm font-medium line-clamp-1">{room.address}, {room.provinceName}</span>
         </div>

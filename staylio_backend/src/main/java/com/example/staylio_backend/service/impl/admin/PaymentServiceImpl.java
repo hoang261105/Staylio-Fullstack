@@ -3,6 +3,8 @@ package com.example.staylio_backend.service.impl.admin;
 import com.example.staylio_backend.common.constants.ErrorCode;
 import com.example.staylio_backend.common.exception.AppException;
 import com.example.staylio_backend.config.security.ZaloPayProperties;
+import com.example.staylio_backend.config.payment.VNPayProperties;
+import com.example.staylio_backend.common.utils.VNPayUtil;
 import com.example.staylio_backend.config.security.principle.UserPrincipal;
 import com.example.staylio_backend.dto.request.PaymentFilterRequest;
 import com.example.staylio_backend.dto.request.PaymentStatusRequest;
@@ -17,6 +19,7 @@ import com.example.staylio_backend.model.enums.PaymentStatus;
 import com.example.staylio_backend.model.enums.RoleName;
 import com.example.staylio_backend.repository.PaymentRepo;
 import com.example.staylio_backend.repository.ProfileRepo;
+import com.example.staylio_backend.service.PayPalService;
 import com.example.staylio_backend.service.PaymentService;
 import com.example.staylio_backend.service.ZaloPayService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,11 +33,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
-import static com.google.common.hash.Hashing.hmacSha256;
+import java.util.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +45,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final ZaloPayProperties zaloPayProperties;
     private final ObjectMapper objectMapper;
     private final ZaloPayService zaloPayService;
+    private final PayPalService payPalService;
+    private final VNPayProperties vnPayProperties;
 
     @Override
     public PaginationResponse<PaymentResponse> getAllPayments(PaymentFilterRequest request, UserPrincipal principal) {
@@ -52,8 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
         Pageable pageable = PageRequest.of(
                 page,
                 request.getSize(),
-                getSort(request.getSortBy(), request.getDirection())
-        );
+                getSort(request.getSortBy(), request.getDirection()));
 
         String search = request.getSearch();
         search = (search == null || search.isBlank()) ? null : search.trim();
@@ -72,8 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
                     request.getCreatedTo(),
                     request.getMinAmount(),
                     request.getMaxAmount(),
-                    pageable
-            );
+                    pageable);
         } else if (principal.hasRole(RoleName.ROLE_MANAGER)) {
             Profile profile = profileRepo.findById(principal.getId())
                     .orElseThrow(() -> new NoSuchElementException("Không tìm thấy profile!"));
@@ -90,16 +91,14 @@ public class PaymentServiceImpl implements PaymentService {
                     request.getCreatedTo(),
                     request.getMinAmount(),
                     request.getMaxAmount(),
-                    pageable
-            );
+                    pageable);
         } else if (principal.hasRole(RoleName.ROLE_CUSTOMER)) {
 
             paymentPage = paymentRepo.searchPaymentsByUser(
                     principal.getId(),
                     request.getStatus(),
                     request.getPaymentMethod(),
-                    pageable
-            );
+                    pageable);
 
         } else {
             throw new AppException(ErrorCode.UNAUTHORIZED);
@@ -114,15 +113,15 @@ public class PaymentServiceImpl implements PaymentService {
                 paymentPage.getNumber() + 1,
                 paymentPage.getSize(),
                 paymentPage.getTotalPages(),
-                paymentPage.getTotalElements()
-        );
+                paymentPage.getTotalElements());
 
         return new PaginationResponse<>(content, paginationDTO);
     }
 
     @Override
     public PaymentResponse getByBookingId(Long bookingId) {
-        Payment payment = paymentRepo.findByBooking_Id(bookingId).orElseThrow(() -> new NoSuchElementException(ErrorCode.PAYMENT_NOT_FOUND.getMessage()));
+        Payment payment = paymentRepo.findByBooking_Id(bookingId)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.PAYMENT_NOT_FOUND.getMessage()));
 
         return convertToResponse(payment);
     }
@@ -131,9 +130,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public void updateStatus(Long paymentId, PaymentStatusRequest request) {
         Payment payment = paymentRepo.findById(paymentId)
-                .orElseThrow(() ->
-                        new NoSuchElementException(ErrorCode.PAYMENT_NOT_FOUND.getMessage())
-                );
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.PAYMENT_NOT_FOUND.getMessage()));
 
         PaymentStatus newPaymentStatus = request.getPaymentStatus();
         BookingStatus newBookingStatus = request.getBookingStatus();
@@ -177,8 +174,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (!mac.equals(reqMac)) {
                 return Map.of(
                         "return_code", -1,
-                        "return_message", "Invalid MAC"
-                );
+                        "return_message", "Invalid MAC");
             }
 
             JsonNode dataNode = objectMapper.readTree(data);
@@ -188,8 +184,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             Payment payment = paymentRepo.findByGatewayOrderId(appTransId)
                     .orElseThrow(() -> new NoSuchElementException(
-                            ErrorCode.PAYMENT_NOT_FOUND.getMessage()
-                    ));
+                            ErrorCode.PAYMENT_NOT_FOUND.getMessage()));
 
             payment.setTransactionId(zpTransId);
             payment.setStatus(PaymentStatus.PAID);
@@ -204,14 +199,128 @@ public class PaymentServiceImpl implements PaymentService {
 
             return Map.of(
                     "return_code", 1,
-                    "return_message", "success"
-            );
+                    "return_message", "success");
 
         } catch (Exception e) {
             return Map.of(
                     "return_code", 0,
-                    "return_message", e.getMessage()
-            );
+                    "return_message", e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void handlePayPalCapture(String token, Long bookingId) {
+        Payment payment = paymentRepo.findByBooking_Id(bookingId)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.PAYMENT_NOT_FOUND.getMessage()));
+
+        // Capture payment via PayPal Service
+        Map<String, Object> captureResponse = payPalService.captureOrder(token);
+
+        String status = (String) captureResponse.get("status");
+
+        if ("COMPLETED".equals(status)) {
+            payment.setStatus(PaymentStatus.PAID);
+            payment.setPaidAt(LocalDateTime.now());
+
+            try {
+                payment.setRawResponse(objectMapper.writeValueAsString(captureResponse));
+            } catch (Exception e) {
+                // ignore
+            }
+
+            Booking booking = payment.getBooking();
+            booking.setStatus(BookingStatus.CONFIRMED);
+            booking.setConfirmedAt(LocalDateTime.now());
+
+            paymentRepo.save(payment);
+        } else {
+            throw new AppException(ErrorCode.PAYMENT_FAILED);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void handlePayPalCancel(String token, Long bookingId) {
+        Payment payment = paymentRepo.findByBooking_Id(bookingId)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.PAYMENT_NOT_FOUND.getMessage()));
+
+        payment.setStatus(PaymentStatus.CANCELLED);
+
+        Booking booking = payment.getBooking();
+        booking.setStatus(BookingStatus.CANCELLED);
+        booking.setCancellationReason("Customer cancelled PayPal payment");
+        booking.setCancelledAt(LocalDateTime.now());
+
+        paymentRepo.save(payment);
+    }
+
+    @Override
+    @Transactional
+    public void handleVNPayCallback(Map<String, String> params) {
+        String vnp_SecureHash = params.get("vnp_SecureHash");
+        params.remove("vnp_SecureHash");
+        params.remove("vnp_SecureHashType");
+
+        List<String> fieldNames = new ArrayList<>(params.keySet());
+        Collections.sort(fieldNames);
+        StringBuilder hashData = new StringBuilder();
+        Iterator<String> itr = fieldNames.iterator();
+        while (itr.hasNext()) {
+            String fieldName = itr.next();
+            String fieldValue = params.get(fieldName);
+            if ((fieldValue != null) && (fieldValue.length() > 0)) {
+                hashData.append(fieldName);
+                hashData.append('=');
+                try {
+                    hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                } catch (Exception e) {
+                    hashData.append(fieldValue);
+                }
+                if (itr.hasNext()) {
+                    hashData.append('&');
+                }
+            }
+        }
+
+        String signValue = VNPayUtil.hmacSHA512(vnPayProperties.getHashSecret(), hashData.toString());
+
+        if (!signValue.equals(vnp_SecureHash)) {
+            throw new AppException(ErrorCode.PAYMENT_FAILED);
+        }
+
+        String responseCode = params.get("vnp_ResponseCode");
+        String txnRef = params.get("vnp_TxnRef");
+        String bankCode = params.get("vnp_BankCode");
+
+        String bookingCode = txnRef.split("_")[0];
+
+        Payment payment = paymentRepo.findByBooking_BookingCode(bookingCode)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.PAYMENT_NOT_FOUND.getMessage()));
+
+        if ("00".equals(responseCode)) {
+            payment.setStatus(PaymentStatus.PAID);
+            payment.setPaidAt(LocalDateTime.now());
+            payment.setTransactionId(params.get("vnp_TransactionNo"));
+
+            try {
+                payment.setRawResponse(objectMapper.writeValueAsString(params));
+            } catch (Exception e) {
+                // ignore
+            }
+
+            Booking booking = payment.getBooking();
+            booking.setStatus(BookingStatus.CONFIRMED);
+            booking.setConfirmedAt(LocalDateTime.now());
+
+            paymentRepo.save(payment);
+        } else {
+            payment.setStatus(PaymentStatus.FAILED);
+            Booking booking = payment.getBooking();
+            booking.setStatus(BookingStatus.CANCELLED);
+            booking.setCancellationReason("VNPay payment failed. Code: " + responseCode);
+            booking.setCancelledAt(LocalDateTime.now());
+            paymentRepo.save(payment);
         }
     }
 
@@ -245,14 +354,12 @@ public class PaymentServiceImpl implements PaymentService {
                 payment.getAmount(),
                 payment.getStatus(),
                 payment.getPaidAt(),
-                payment.getCreatedAt()
-        );
+                payment.getCreatedAt());
     }
 
     private void validatePaymentTransition(
             Payment payment,
-            PaymentStatus newStatus
-    ) {
+            PaymentStatus newStatus) {
         PaymentStatus currentStatus = payment.getStatus();
 
         if (currentStatus == PaymentStatus.PAID) {
@@ -281,8 +388,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private void validateBookingPaymentMatch(
             PaymentStatus paymentStatus,
-            BookingStatus bookingStatus
-    ) {
+            BookingStatus bookingStatus) {
         switch (paymentStatus) {
             case PAID -> {
                 if (bookingStatus != BookingStatus.PAID
