@@ -129,4 +129,9 @@ public interface PaymentRepo extends JpaRepository<Payment, Long> {
     BigDecimal sumTotalRevenue();
 
     Optional<Payment> findByBooking_BookingCode(String bookingCode);
+
+    @Query("SELECT MONTH(p.paidAt) as month, COALESCE(SUM(p.amount), 0) as revenue " +
+           "FROM Payment p WHERE p.status = 'PAID' AND YEAR(p.paidAt) = :year " +
+           "GROUP BY MONTH(p.paidAt)")
+    java.util.List<Object[]> getMonthlyRevenueByYear(@Param("year") int year);
 }

@@ -44,4 +44,5 @@ export const paymentMethodLabels: Record<PaymentMethod, string> = {
   [PaymentMethod.ZALOPAY]: "ZaloPay",
   [PaymentMethod.CASH]: "Tiền mặt",
   [PaymentMethod.BANK_TRANSFER]: "Chuyển khoản",
+  [PaymentMethod.PAYPAL]: "PayPal",
 };

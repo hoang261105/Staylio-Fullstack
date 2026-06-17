@@ -207,4 +207,7 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
         );
 
         long countByUserId(Long userId);
+
+        @Query("SELECT b FROM Booking b WHERE b.createdAt >= :startDate AND b.createdAt <= :endDate")
+        List<Booking> findBookingsBetweenDates(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }

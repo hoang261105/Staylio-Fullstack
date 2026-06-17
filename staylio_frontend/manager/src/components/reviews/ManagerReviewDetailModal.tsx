@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import { X, Building2, Star, MessageSquareQuote, Info, Reply, Calendar } from "lucide-react";
 import { useReviewById, useReplyCommentMutation } from "@common/hooks/useReviews";

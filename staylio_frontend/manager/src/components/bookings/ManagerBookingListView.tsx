@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { bookingStatusColors, bookingStatusLabels, paymentStatusColors, paymentStatusLabels } from "@common/utils/booking.util";
 import { paymentMethodLabels } from "@common/utils/booking.util";
 import { Button } from "@common/components/ui/button";
+import { BookingStatus } from "@common/enums/BookingStatus";
 
 interface ManagerBookingListViewProps {
   bookings: BookingResponse[];
@@ -140,22 +141,29 @@ export default function ManagerBookingListView({
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button
-                        variant="ghost" size="icon"
-                        onClick={() => onUpdatePayment(booking)}
-                        title="Cập nhật thanh toán"
-                        className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-                      >
-                        <Wallet className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost" size="icon"
-                        onClick={() => onUpdateStatus(booking)}
-                        title="Cập nhật đặt phòng"
-                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                      >
-                        <Activity className="w-4 h-4" />
-                      </Button>
+                      {
+                        ![BookingStatus.CONFIRMED, BookingStatus.CANCELLED, BookingStatus.CHECKED_OUT].includes(booking.status as BookingStatus) && (
+                          <Button
+                            variant="ghost" size="icon"
+                            onClick={() => onUpdatePayment(booking)}
+                            title="Cập nhật thanh toán"
+                            className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                          >
+                            <Wallet className="w-4 h-4" />
+                          </Button>
+                        )
+                      }
+
+                      {![BookingStatus.CONFIRMED, BookingStatus.CANCELLED, BookingStatus.CHECKED_OUT].includes(booking.status as BookingStatus) && (
+                        <Button
+                          variant="ghost" size="icon"
+                          onClick={() => onUpdateStatus(booking)}
+                          title="Cập nhật đặt phòng"
+                          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                        >
+                          <Activity className="w-4 h-4" />
+                        </Button>
+                      )}
                       <Button
                         variant="ghost" size="icon"
                         onClick={() => onView(booking)}

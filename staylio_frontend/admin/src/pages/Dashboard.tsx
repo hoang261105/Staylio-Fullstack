@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/purity */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import {
   TrendingUp,
   TrendingDown,
@@ -7,8 +8,21 @@ import {
   DollarSign,
   Tags,
 } from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
 import AdminLayout from "../layout/AdminLayout";
 import { useAdminStats } from "@common/hooks/useAdminStats";
+import { useAdminRevenueStats } from "@common/hooks/useAdminRevenueStats";
+import { useAdminWeeklyBookings } from "@common/hooks/useAdminWeeklyBookings";
 
 const RECENT_BOOKINGS = [1, 2, 3, 4, 5];
 
@@ -20,11 +34,17 @@ const TOP_HOTELS = [
   { name: "Modern City Resort", bookings: 123, rating: 4.6 },
 ];
 
-const MONTHLY_REVENUE = [65, 78, 85, 72, 90, 88, 95, 82, 78, 85, 92, 98];
-const WEEK_DAYS = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
-
 export default function Dashboard() {
+  const [year, setYear] = useState<number>(2026);
+
   const { data: statsData } = useAdminStats();
+  const { data: revenueData } = useAdminRevenueStats(year);
+  const { data: weeklyBookings } = useAdminWeeklyBookings();
+
+  const formattedRevenueData = revenueData?.map((item) => ({
+    name: `T${item.month}`,
+    revenue: item.revenue,
+  })) || [];
 
   const STATS_DATA = [
     { name: "Tổng doanh thu", value: statsData ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(statsData.totalRevenue) : "$0", change: "+12.5%", trend: "up", icon: DollarSign, color: "bg-blue-500" },
@@ -79,22 +99,35 @@ export default function Dashboard() {
           <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-gray-900">Doanh thu theo tháng</h2>
-              <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option>2026</option>
-                <option>2025</option>
-                <option>2024</option>
+              <select
+                value={year}
+                onChange={(e) => setYear(Number(e.target.value))}
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value={2026}>2026</option>
+                <option value={2025}>2025</option>
+                <option value={2024}>2024</option>
               </select>
             </div>
-            <div className="h-64 flex items-end justify-between gap-2">
-              {MONTHLY_REVENUE.map((height, idx) => (
-                <div key={idx} className="flex-1 flex flex-col items-center">
-                  <div
-                    className="w-full bg-linear-to-t from-[#0066FF] to-[#00C896] rounded-t-sm hover:opacity-80 transition-opacity cursor-pointer"
-                    style={{ height: `${height}%` }}
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={formattedRevenueData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#0066FF" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#0066FF" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6B7280' }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6B7280' }} tickFormatter={(value) => `$${value}`} dx={-10} />
+                  <RechartsTooltip
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    formatter={(value: any) => [`$${value}`, 'Doanh thu']}
                   />
-                  <div className="text-xs text-gray-500 mt-2">T{idx + 1}</div>
-                </div>
-              ))}
+                  <Area type="monotone" dataKey="revenue" stroke="#0066FF" fillOpacity={1} fill="url(#colorRevenue)" />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </div>
 
@@ -113,26 +146,20 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            <div className="h-64 flex items-end justify-between gap-3">
-              {WEEK_DAYS.map((day, idx) => {
-                const confirmed = Math.random() * 80 + 20;
-                const pending = Math.random() * 40 + 10;
-                return (
-                  <div key={idx} className="flex-1 flex flex-col items-center">
-                    <div className="w-full flex flex-col gap-1">
-                      <div
-                        className="w-full bg-[#00C896] rounded-t-sm hover:opacity-80 transition-opacity cursor-pointer"
-                        style={{ height: `${pending}px` }}
-                      />
-                      <div
-                        className="w-full bg-[#0066FF] rounded-b-sm hover:opacity-80 transition-opacity cursor-pointer"
-                        style={{ height: `${confirmed}px` }}
-                      />
-                    </div>
-                    <div className="text-xs text-gray-500 mt-2">{day}</div>
-                  </div>
-                );
-              })}
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={weeklyBookings || []} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="dayOfWeek" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6B7280' }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6B7280' }} dx={-10} />
+                  <RechartsTooltip
+                    cursor={{ fill: 'transparent' }}
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  />
+                  <Bar dataKey="confirmed" name="Đã xác nhận" stackId="a" fill="#0066FF" radius={[0, 0, 4, 4]} barSize={32} />
+                  <Bar dataKey="pending" name="Chờ xử lý" stackId="a" fill="#00C896" radius={[4, 4, 0, 0]} barSize={32} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>

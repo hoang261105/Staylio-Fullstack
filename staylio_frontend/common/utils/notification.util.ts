@@ -8,15 +8,15 @@ export const navigateByNotification = (
 ) => {
   if (!notification.referenceId) return;
 
-  const role = localStorage.getItem("roleName");
+  const role = localStorage.getItem("roleName")?.replace("ROLE_", "");
   const type = notification.type;
 
   if (type.startsWith("BOOKING_")) {
-    if (role === "ROLE_CUSTOMER") navigate("/booking-history", { state: { bookingId: notification.referenceId } });
-    if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/bookings", { state: { bookingId: notification.referenceId } });
+    if (role === "CUSTOMER") navigate("/booking-history", { state: { bookingId: notification.referenceId } });
+    if (role === "MANAGER" || role === "ADMIN") navigate("/bookings", { state: { bookingId: notification.referenceId } });
   } else if (type.startsWith("REVIEW_")) {
-    if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/reviews", { state: { reviewId: notification.referenceId } });
-    if (role === "ROLE_CUSTOMER") {
+    if (role === "MANAGER" || role === "ADMIN") navigate("/reviews", { state: { reviewId: notification.referenceId } });
+    if (role === "CUSTOMER") {
       getReviewById(notification.referenceId).then(res => {
         const review = res.data;
         if (review) {
@@ -27,13 +27,13 @@ export const navigateByNotification = (
       });
     }
   } else if (type.startsWith("VOUCHER_")) {
-    if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/vouchers", { state: { voucherId: notification.referenceId } });
+    if (role === "MANAGER" || role === "ADMIN") navigate("/vouchers", { state: { voucherId: notification.referenceId } });
   } else if (type.startsWith("ROOM_IMAGE_")) {
-    if (role === "ROLE_MANAGER" || role === "ROLE_ADMIN") navigate("/room-images", { state: { imageId: notification.referenceId } });
+    if (role === "MANAGER" || role === "ADMIN") navigate("/room-images", { state: { imageId: notification.referenceId } });
   } else if (type.startsWith("HOTEL_BRANCH_") || type.startsWith("HOTEL_BRAND_")) {
-    if (role === "ROLE_ADMIN") navigate("/hotel-branches", { state: { branchId: notification.referenceId } });
-    if (role === "ROLE_MANAGER") navigate("/branches", { state: { branchId: notification.referenceId } });
+    if (role === "ADMIN") navigate("/hotel-branches", { state: { branchId: notification.referenceId } });
+    if (role === "MANAGER") navigate("/branches", { state: { branchId: notification.referenceId } });
   } else if (type === "CHAT_MESSAGE_CREATED") {
-    if (role === "ROLE_MANAGER") navigate("/branches", { state: { chatSessionId: notification.referenceId } });
+    if (role === "MANAGER") navigate("/branches", { state: { chatSessionId: notification.referenceId } });
   }
 };

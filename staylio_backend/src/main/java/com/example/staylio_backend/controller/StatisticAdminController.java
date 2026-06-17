@@ -10,7 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.staylio_backend.dto.response.MonthlyRevenueResponse;
+import com.example.staylio_backend.dto.response.WeeklyBookingResponse;
+import java.util.List;
 
 import java.time.LocalDateTime;
 
@@ -33,6 +37,35 @@ public class StatisticAdminController {
                 LocalDateTime.now()
         );
 
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/dashboard/revenue")
+    @Operation(summary = "Doanh thu theo tháng của năm")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<MonthlyRevenueResponse>>> getMonthlyRevenue(
+            @RequestParam(name = "year", defaultValue = "2026") int year) {
+        ApiResponse<List<MonthlyRevenueResponse>> response = new ApiResponse<>(
+                true,
+                "Lấy dữ liệu doanh thu thành công!",
+                statisticAdminService.getMonthlyRevenue(year),
+                null,
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/dashboard/bookings/weekly")
+    @Operation(summary = "Đặt phòng theo tuần")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<WeeklyBookingResponse>>> getWeeklyBookings() {
+        ApiResponse<List<WeeklyBookingResponse>> response = new ApiResponse<>(
+                true,
+                "Lấy dữ liệu đặt phòng theo tuần thành công!",
+                statisticAdminService.getWeeklyBookings(),
+                null,
+                LocalDateTime.now()
+        );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
