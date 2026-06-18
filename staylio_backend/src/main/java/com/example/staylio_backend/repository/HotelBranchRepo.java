@@ -11,60 +11,63 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HotelBranchRepo extends JpaRepository<HotelBranch, Long> {
-    @Query("""
-    SELECT b FROM HotelBranch b
-    WHERE (:hotelId IS NULL OR b.hotel.id = :hotelId)
-      AND (:search IS NULL OR LOWER(b.branchName) LIKE LOWER(CONCAT('%', :search, '%')))
-      AND (:status IS NULL OR b.status = :status)
-      AND b.status <> 'DELETED'
-""")
-    Page<HotelBranch> searchBranches(
-            Long hotelId,
-            String search,
-            BranchStatus status,
-            Pageable pageable
-    );
-
-    List<HotelBranch> findAllByHotel_IdAndStatus(Long hotelId, BranchStatus status);
-    boolean existsByIdAndHotelManagerId(Long branchId, Long managerId);
-
-    boolean existsByBranchNameAndHotel_Id(String branchName, Long hotelId);
-    boolean existsByPhone(String phone);
-    boolean existsByBranchNameAndHotel_IdAndIdNot(
-            String branchName,
-            Long hotelId,
-            Long id
-    );
-    boolean existsByPhoneAndIdNot(String phone, Long id);
-
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
         @Query("""
-        UPDATE HotelBranch hb
-        SET hb.isActive = :active
-        WHERE hb.hotel.id = :hotelId
-    """)
-    int updateActiveByHotelId(
-            @Param("hotelId") Long hotelId,
-            @Param("active") Boolean active
-    );
+                            SELECT b FROM HotelBranch b
+                            WHERE (:hotelId IS NULL OR b.hotel.id = :hotelId)
+                              AND (:search IS NULL OR LOWER(b.branchName) LIKE LOWER(CONCAT('%', :search, '%')))
+                              AND (:status IS NULL OR b.status = :status)
+                              AND b.status <> 'DELETED'
+                        """)
+        Page<HotelBranch> searchBranches(
+                        Long hotelId,
+                        String search,
+                        BranchStatus status,
+                        Pageable pageable);
 
-    @Query("""
-        SELECT hb
-        FROM HotelBranch hb
-        JOIN hb.ward w
-        JOIN w.province p
-        WHERE p.id = :provinceId
-          AND hb.isActive = true
-          AND hb.status = com.example.staylio_backend.model.enums.BranchStatus.CONFIRMED
-        ORDER BY hb.createdAt DESC
-    """)
-    Page<HotelBranch> findBranchesByProvinceId(
-            @Param("provinceId") Long provinceId,
-            Pageable pageable
-    );
+        List<HotelBranch> findAllByHotel_IdAndStatus(Long hotelId, BranchStatus status);
 
-    long countByStatus(BranchStatus status);
+        Optional<HotelBranch> findFirstByHotel_Manager_IdOrderByIdAsc(Long managerId);
+
+        boolean existsByIdAndHotelManagerId(Long branchId, Long managerId);
+
+        boolean existsByBranchNameAndHotel_Id(String branchName, Long hotelId);
+
+        boolean existsByPhone(String phone);
+
+        boolean existsByBranchNameAndHotel_IdAndIdNot(
+                        String branchName,
+                        Long hotelId,
+                        Long id);
+
+        boolean existsByPhoneAndIdNot(String phone, Long id);
+
+        @Modifying(clearAutomatically = true, flushAutomatically = true)
+        @Query("""
+                            UPDATE HotelBranch hb
+                            SET hb.isActive = :active
+                            WHERE hb.hotel.id = :hotelId
+                        """)
+        int updateActiveByHotelId(
+                        @Param("hotelId") Long hotelId,
+                        @Param("active") Boolean active);
+
+        @Query("""
+                            SELECT hb
+                            FROM HotelBranch hb
+                            JOIN hb.ward w
+                            JOIN w.province p
+                            WHERE p.id = :provinceId
+                              AND hb.isActive = true
+                              AND hb.status = com.example.staylio_backend.model.enums.BranchStatus.CONFIRMED
+                            ORDER BY hb.createdAt DESC
+                        """)
+        Page<HotelBranch> findBranchesByProvinceId(
+                        @Param("provinceId") Long provinceId,
+                        Pageable pageable);
+
+        long countByStatus(BranchStatus status);
 }

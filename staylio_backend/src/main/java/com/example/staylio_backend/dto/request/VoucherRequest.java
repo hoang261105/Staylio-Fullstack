@@ -57,9 +57,9 @@ public class VoucherRequest {
     )
     private BigDecimal maxDiscountAmount;
 
-    @NotNull(message = "Chi nhánh không được để trống")
-    @Positive(message = "ID chi nhánh phải lớn hơn 0")
     private Long hotelBranchId;
+
+    private Boolean applyToAllBranches;
 
 
     @NotNull(message = "Tổng lượt sử dụng không được để trống")

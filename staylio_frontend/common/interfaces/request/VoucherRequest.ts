@@ -8,7 +8,8 @@ export interface VoucherRequest {
     discountValue: number;
     minOrderValue: number;
     maxDiscountAmount: number;
-    hotelBranchId: number;
+    hotelBranchId?: number;
+    applyToAllBranches?: boolean;
     totalUsageLimit: number;
     usageLimitPerUser: number;
     startDate: string;

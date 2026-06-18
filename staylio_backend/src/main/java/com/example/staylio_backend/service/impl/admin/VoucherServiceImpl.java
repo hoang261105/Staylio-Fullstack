@@ -107,12 +107,25 @@ public class VoucherServiceImpl implements VoucherService {
             throw new AppException(ErrorCode.VOUCHER_CODE_EXISTED);
         }
 
-        HotelBranch branch = branchRepo.findById(request.getHotelBranchId())
-                .orElseThrow(() -> new NoSuchElementException(
-                        ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()));
+        HotelBranch branch = null;
+        VoucherScope scope = VoucherScope.ALL_ROOMS;
 
-        if (!branch.getHotel().getManager().getId().equals(userPrincipal.getId())) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
+        if (Boolean.TRUE.equals(request.getApplyToAllBranches())) {
+            if (userPrincipal.getRoleName() == RoleName.ROLE_MANAGER) {
+                branch = branchRepo.findFirstByHotel_Manager_IdOrderByIdAsc(userPrincipal.getId())
+                        .orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()));
+                scope = VoucherScope.ALL_BRANCHES;
+            }
+        } else if (request.getHotelBranchId() != null) {
+            branch = branchRepo.findById(request.getHotelBranchId())
+                    .orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()));
+
+            if (userPrincipal.getRoleName() == RoleName.ROLE_MANAGER && 
+                !branch.getHotel().getManager().getId().equals(userPrincipal.getId())) {
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
+        } else if (userPrincipal.getRoleName() == RoleName.ROLE_MANAGER) {
+            throw new NoSuchElementException(ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage());
         }
 
         if (request.getExpiryDate().isBefore(request.getStartDate())) {
@@ -143,7 +156,7 @@ public class VoucherServiceImpl implements VoucherService {
                 .expiryDate(request.getExpiryDate())
                 .status(VoucherStatus.ACTIVE)
                 .approvalStatus(ApprovalStatus.PENDING)
-                .scope(VoucherScope.ALL_ROOMS)
+                .scope(scope)
                 .isWelcomeVoucher(request.getIsWelcomeVoucher() != null ? request.getIsWelcomeVoucher() : false)
                 .build();
 
@@ -161,12 +174,25 @@ public class VoucherServiceImpl implements VoucherService {
             throw new AppException(ErrorCode.VOUCHER_CODE_EXISTED);
         }
 
-        HotelBranch branch = branchRepo.findById(request.getHotelBranchId())
-                .orElseThrow(() -> new NoSuchElementException(
-                        ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()));
+        HotelBranch branch = null;
+        VoucherScope scope = VoucherScope.ALL_ROOMS;
 
-        if (!branch.getHotel().getManager().getId().equals(userPrincipal.getId())) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
+        if (Boolean.TRUE.equals(request.getApplyToAllBranches())) {
+            if (userPrincipal.getRoleName() == RoleName.ROLE_MANAGER) {
+                branch = branchRepo.findFirstByHotel_Manager_IdOrderByIdAsc(userPrincipal.getId())
+                        .orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()));
+                scope = VoucherScope.ALL_BRANCHES;
+            }
+        } else if (request.getHotelBranchId() != null) {
+            branch = branchRepo.findById(request.getHotelBranchId())
+                    .orElseThrow(() -> new NoSuchElementException(ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage()));
+
+            if (userPrincipal.getRoleName() == RoleName.ROLE_MANAGER && 
+                !branch.getHotel().getManager().getId().equals(userPrincipal.getId())) {
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
+        } else if (userPrincipal.getRoleName() == RoleName.ROLE_MANAGER) {
+            throw new NoSuchElementException(ErrorCode.HOTEL_BRANCH_NOT_FOUND.getMessage());
         }
 
         if (request.getExpiryDate().isBefore(request.getStartDate())) {
@@ -196,9 +222,7 @@ public class VoucherServiceImpl implements VoucherService {
         voucher.setUsageLimitPerUser(request.getUsageLimitPerUser());
         voucher.setStartDate(request.getStartDate());
         voucher.setExpiryDate(request.getExpiryDate());
-        if (voucher.getScope() == null) {
-            voucher.setScope(VoucherScope.ALL_ROOMS);
-        }
+        voucher.setScope(scope);
         voucher.setIsWelcomeVoucher(request.getIsWelcomeVoucher() != null ? request.getIsWelcomeVoucher() : false);
 
         Voucher updatedVoucher = voucherRepo.save(voucher);
@@ -252,8 +276,8 @@ public class VoucherServiceImpl implements VoucherService {
                 voucher.getDiscountValue(),
                 voucher.getMinOrderValue(),
                 voucher.getMaxDiscountAmount(),
-                voucher.getHotelBranch().getId(),
-                voucher.getHotelBranch().getBranchName(),
+                voucher.getHotelBranch() != null ? voucher.getHotelBranch().getId() : null,
+                voucher.getScope() == VoucherScope.ALL_BRANCHES ? "Tất cả chi nhánh" : (voucher.getHotelBranch() != null ? voucher.getHotelBranch().getBranchName() : null),
                 voucher.getTotalUsageLimit(),
                 voucher.getCurrentUsageCount(),
                 voucher.getUsageLimitPerUser(),

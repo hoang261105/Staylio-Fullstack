@@ -50,7 +50,7 @@ export default function Dashboard() {
     size: 1000,
     search: "",
   } as QueryParams);
-  
+
   const topHotels = useMemo(() => {
     if (!topHotelsData?.items) return [];
 

@@ -20,6 +20,7 @@ import { LocationsPage } from "../pages/LocationsPage";
 import BranchesPage from "../pages/BranchesPage";
 import HotelsPage from "../pages/HotelsPage";
 import NotificationsPage from "../pages/NotificationsPage";
+import OffersPage from "../pages/OffersPage";
 
 export const routers = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const routers = createBrowserRouter([
   {
     path: "/hotels",
     Component: HotelsPage,
+  },
+  {
+    path: "/offers",
+    Component: OffersPage,
   },
   {
     path: "/location/:provinceId",

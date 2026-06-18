@@ -134,7 +134,11 @@ export default function VoucherFormUpdate({
 
   const handleBranchChange = (option: SelectOption | null) => {
     setSelectedBranch(option);
-    setFormData((prev) => ({ ...prev, hotelBranchId: option?.value ?? 0 }));
+    if (!option) {
+      setFormData((prev) => ({ ...prev, hotelBranchId: undefined, applyToAllBranches: true }));
+    } else {
+      setFormData((prev) => ({ ...prev, hotelBranchId: option.value, applyToAllBranches: false }));
+    }
     clearFieldError("hotelBranchId");
   };
 
@@ -232,19 +236,19 @@ export default function VoucherFormUpdate({
 
             <div className="mb-4">
               <label className="block text-sm mb-2">
-                Chi nhánh <span className="text-red-500">*</span>
+                Chi nhánh  áp dụng (nếu có)
               </label>
               <Select<SelectOption>
                 options={branchOptions}
                 value={selectedBranch}
                 onChange={handleBranchChange}
                 isLoading={loadingBranches}
-                placeholder="Chọn chi nhánh..."
+                placeholder="Tất cả chi nhánh..."
+                isClearable={true}
                 noOptionsMessage={() => "Không tìm thấy"}
                 loadingMessage={() => "Đang tải..."}
                 styles={rsStyles}
                 menuPortalTarget={document.body}
-                required
               />
               {fieldErrors.hotelBranchId && (
                 <p className="text-xs text-red-500 mt-1">

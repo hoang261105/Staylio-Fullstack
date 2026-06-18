@@ -81,7 +81,7 @@ export default function Header() {
                 {t('components.header.destinations')}
               </Link>
 
-              <Link to="#" className="text-foreground hover:text-primary transition-colors">
+              <Link to="/offers" className={`transition-colors ${isActive('/offers') ? 'text-primary font-semibold' : 'text-foreground hover:text-primary'}`}>
                 {t('components.header.offers')}
               </Link>
             </nav>
@@ -215,7 +215,7 @@ export default function Header() {
                   {t('components.header.destinations')}
                 </Link>
 
-                <Link to="#" onClick={() => setMobileMenuOpen(false)} className="font-medium text-foreground hover:text-primary transition-colors">
+                <Link to="/offers" onClick={() => setMobileMenuOpen(false)} className={`transition-colors ${isActive('/offers') ? 'text-primary font-bold' : 'font-medium text-foreground hover:text-primary'}`}>
                   {t('components.header.offers')}
                 </Link>
               </nav>

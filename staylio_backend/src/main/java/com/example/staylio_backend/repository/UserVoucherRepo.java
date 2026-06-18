@@ -35,11 +35,13 @@ public interface UserVoucherRepo extends JpaRepository<UserVoucher, Long> {
                 v.hotelBranch IS NULL
                 OR v.isWelcomeVoucher = true
                 OR hb.id = :branchId
+                OR (v.scope = VoucherScope.ALL_BRANCHES AND hb.hotel.id = (SELECT hb2.hotel.id FROM HotelBranch hb2 WHERE hb2.id = :branchId))
           )
 
           AND (
                 v.scope IS NULL
                 OR v.scope = VoucherScope.ALL_ROOMS
+                OR v.scope = VoucherScope.ALL_BRANCHES
                 OR (
                     v.scope = VoucherScope.SPECIFIC_ROOMS
                     AND vr.id = :roomId
