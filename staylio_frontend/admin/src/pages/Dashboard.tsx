@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   TrendingUp,
   TrendingDown,
@@ -23,16 +23,12 @@ import AdminLayout from "../layout/AdminLayout";
 import { useAdminStats } from "@common/hooks/useAdminStats";
 import { useAdminRevenueStats } from "@common/hooks/useAdminRevenueStats";
 import { useAdminWeeklyBookings } from "@common/hooks/useAdminWeeklyBookings";
+import { useBookings } from "@common/hooks/useBookings";
+import { useHotelBranchs } from "@common/hooks/useHotelBranch";
+import { formatCurrency } from "@common/utils/currency.util";
+import dayjs from "dayjs";
+import type { BookingQueryParams, QueryParams } from "@common/interfaces/request/QueryParams";
 
-const RECENT_BOOKINGS = [1, 2, 3, 4, 5];
-
-const TOP_HOTELS = [
-  { name: "Paradise Island Resort", bookings: 234, rating: 4.9 },
-  { name: "Coastal Luxury Resort", bookings: 189, rating: 4.8 },
-  { name: "Ocean Breeze Resort", bookings: 156, rating: 4.7 },
-  { name: "Cliff View Hotel", bookings: 145, rating: 4.9 },
-  { name: "Modern City Resort", bookings: 123, rating: 4.6 },
-];
 
 export default function Dashboard() {
   const [year, setYear] = useState<number>(2026);
@@ -41,6 +37,27 @@ export default function Dashboard() {
   const { data: revenueData } = useAdminRevenueStats(year);
   const { data: weeklyBookings } = useAdminWeeklyBookings();
 
+  const { data: recentBookingsData } = useBookings({
+    page: 0,
+    size: 5,
+    sortBy: "createdAt",
+    direction: "desc",
+  } as BookingQueryParams);
+  const recentBookings = recentBookingsData?.items || [];
+
+  const { data: topHotelsData } = useHotelBranchs({
+    page: 0,
+    size: 1000,
+    search: "",
+  } as QueryParams);
+  
+  const topHotels = useMemo(() => {
+    if (!topHotelsData?.items) return [];
+
+    return [...topHotelsData.items]
+      .sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0))
+      .slice(0, 5);
+  }, [topHotelsData]);
   const formattedRevenueData = revenueData?.map((item) => ({
     name: `T${item.month}`,
     revenue: item.revenue,
@@ -170,26 +187,31 @@ export default function Dashboard() {
           <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Đặt phòng gần đây</h2>
             <div className="space-y-2">
-              {RECENT_BOOKINGS.map((i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-linear-to-br from-[#0066FF] to-[#00C896] rounded-lg flex items-center justify-center text-white font-semibold">
-                      {String.fromCharCode(65 + i)}
+              {recentBookings.map((booking) => {
+                const daysAgo = dayjs().diff(dayjs(booking.createdAt), "day");
+                const timeText = daysAgo === 0 ? "Hôm nay" : `${daysAgo} ngày trước`;
+
+                return (
+                  <div
+                    key={booking.id}
+                    className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-linear-to-br from-[#0066FF] to-[#00C896] rounded-lg flex items-center justify-center text-white font-semibold">
+                        {booking.customerName?.charAt(0)?.toUpperCase() || "G"}
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900">{booking.customerName}</div>
+                        <div className="text-sm text-gray-500">{booking.hotelBranchName}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-medium text-gray-900">Khách hàng #{i}</div>
-                      <div className="text-sm text-gray-500">Paradise Resort</div>
+                    <div className="text-right">
+                      <div className="font-medium text-[#0066FF]">{formatCurrency(booking.finalPrice)}</div>
+                      <div className="text-sm text-gray-500">{timeText}</div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="font-medium text-[#0066FF]">$450</div>
-                    <div className="text-sm text-gray-500">{i} ngày trước</div>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
 
@@ -197,9 +219,9 @@ export default function Dashboard() {
           <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Khách sạn nổi bật</h2>
             <div className="space-y-2">
-              {TOP_HOTELS.map((hotel, idx) => (
+              {topHotels.map((hotel, idx) => (
                 <div
-                  key={idx}
+                  key={hotel.id}
                   className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100"
                 >
                   <div className="flex items-center gap-3">
@@ -207,13 +229,13 @@ export default function Dashboard() {
                       #{idx + 1}
                     </div>
                     <div>
-                      <div className="font-medium text-gray-900">{hotel.name}</div>
-                      <div className="text-sm text-gray-500">{hotel.bookings} đặt phòng</div>
+                      <div className="font-medium text-gray-900">{hotel.hotelBranchName}</div>
+                      <div className="text-sm text-gray-500">{hotel.countReview} đánh giá</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 text-yellow-500">
                     <span>★</span>
-                    <span className="font-medium text-gray-700">{hotel.rating}</span>
+                    <span className="font-medium text-gray-700">{hotel.averageRating || 0}</span>
                   </div>
                 </div>
               ))}
