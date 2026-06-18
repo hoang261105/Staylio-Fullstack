@@ -220,4 +220,6 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
     Long countTotalRooms(
             @Param("managerId") Long managerId
     );
+
+    java.util.Optional<Room> findByTravelokaRoomId(String travelokaRoomId);
 }

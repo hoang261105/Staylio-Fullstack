@@ -6,5 +6,6 @@ public enum PaymentMethod {
     ZALOPAY,
     CASH,
     BANK_TRANSFER,
-    PAYPAL
+    PAYPAL,
+    TRAVELOKA
 }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.staylio_backend.dto.response.ApiResponse;
 
+import com.example.staylio_backend.service.TravelokaIntegrationService;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -18,16 +20,16 @@ import java.util.Map;
 @Slf4j
 public class TravelokaWebhookController {
 
-    /**
-     * Nhận Webhook từ Traveloka khi có khách đặt phòng trên nền tảng của họ.
-     */
+    private final TravelokaIntegrationService travelokaIntegrationService;
+
     @PostMapping("/booking")
     public ResponseEntity<ApiResponse<Object>> handleBookingWebhook(@RequestBody Map<String, Object> payload) {
         log.info("Nhận được Webhook đặt phòng từ Traveloka: {}", payload);
+        travelokaIntegrationService.processWebhookBooking(payload);
 
         ApiResponse<Object> response = new ApiResponse<>(
                 true,
-                "Webhook received successfully",
+                "Webhook received and processed successfully",
                 null,
                 null,
                 LocalDateTime.now());
