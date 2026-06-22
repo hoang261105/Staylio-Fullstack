@@ -464,5 +464,20 @@
       "anniversary": "Kỷ niệm / Trăng mật",
       "business": "Công tác"
     }
+  },
+  "offersPage": {
+    "title": "Mã Giảm Giá & Ưu Đãi",
+    "subtitle": "Khám phá các ưu đãi độc quyền dành riêng cho bạn tại Staylio",
+    "noOffersTitle": "Chưa có ưu đãi nào",
+    "noOffersDesc": "Vui lòng quay lại sau để cập nhật các chương trình khuyến mãi mới nhất.",
+    "discountPercentage": "Giảm {{value}}%",
+    "discountFixed": "Giảm {{value}}",
+    "noDescription": "Không có mô tả chi tiết.",
+    "scope": "Phạm vi:",
+    "allBranches": "Tất cả chi nhánh",
+    "minOrder": "Đơn tối thiểu:",
+    "code": "Mã Code:",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép mã giảm giá: {{code}}"
   }
 }

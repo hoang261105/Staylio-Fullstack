@@ -26,15 +26,15 @@ export default function OffersPage() {
       <main className="flex-1 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="mb-10 text-center">
-            <h1 className="text-4xl font-bold text-foreground mb-4">Mã Giảm Giá & Ưu Đãi</h1>
-            <p className="text-lg text-muted-foreground">Khám phá các ưu đãi độc quyền dành riêng cho bạn tại Staylio</p>
+            <h1 className="text-4xl font-bold text-foreground mb-4">{t("offersPage.title")}</h1>
+            <p className="text-lg text-muted-foreground">{t("offersPage.subtitle")}</p>
           </div>
 
           {vouchers.length === 0 ? (
             <div className="text-center py-20 bg-card rounded-2xl border border-border shadow-sm">
               <Gift className="w-16 h-16 mx-auto text-muted-foreground opacity-50 mb-4" />
-              <h3 className="text-xl font-medium text-foreground mb-2">Chưa có ưu đãi nào</h3>
-              <p className="text-muted-foreground">Vui lòng quay lại sau để cập nhật các chương trình khuyến mãi mới nhất.</p>
+              <h3 className="text-xl font-medium text-foreground mb-2">{t("offersPage.noOffersTitle")}</h3>
+              <p className="text-muted-foreground">{t("offersPage.noOffersDesc")}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -50,26 +50,26 @@ export default function OffersPage() {
                       </div>
                       <span className="text-lg font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                         {voucher.discountType === 'PERCENTAGE'
-                          ? `Giảm ${voucher.discountValue}%`
-                          : `Giảm ${formatCurrency(voucher.discountValue)}`
+                          ? t("offersPage.discountPercentage", { value: voucher.discountValue })
+                          : t("offersPage.discountFixed", { value: formatCurrency(voucher.discountValue) })
                         }
                       </span>
                     </div>
 
                     <h3 className="text-xl font-bold text-foreground mb-2">{voucher.title}</h3>
                     <p className="text-muted-foreground text-sm mb-4 line-clamp-2" title={voucher.description}>
-                      {voucher.description || "Không có mô tả chi tiết."}
+                      {voucher.description || t("offersPage.noDescription")}
                     </p>
 
                     <div className="space-y-2 mt-auto">
                       <div className="flex items-center text-sm">
-                        <span className="text-muted-foreground w-28">Phạm vi:</span>
+                        <span className="text-muted-foreground w-28">{t("offersPage.scope")}</span>
                         <span className="font-medium text-foreground truncate">
-                          {voucher.hotelBranchId ? voucher.hotelBranchName : "Tất cả chi nhánh"}
+                          {voucher.hotelBranchId ? voucher.hotelBranchName : t("offersPage.allBranches")}
                         </span>
                       </div>
                       <div className="flex items-center text-sm">
-                        <span className="text-muted-foreground w-28">Đơn tối thiểu:</span>
+                        <span className="text-muted-foreground w-28">{t("offersPage.minOrder")}</span>
                         <span className="font-medium text-foreground">
                           {formatCurrency(voucher.minOrderValue || 0)}
                         </span>
@@ -79,18 +79,17 @@ export default function OffersPage() {
 
                   <div className="border-t border-dashed border-border p-4 bg-muted/30 flex items-center justify-between">
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">Mã Code:</div>
+                      <div className="text-xs text-muted-foreground mb-1">{t("offersPage.code")}</div>
                       <div className="font-mono font-bold tracking-wider text-foreground uppercase">{voucher.code}</div>
                     </div>
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(voucher.code);
-                        // Using a simple alert since toast requires the library to be available globally or imported
-                        alert("Đã sao chép mã giảm giá: " + voucher.code);
+                        alert(t("offersPage.copied", { code: voucher.code }));
                       }}
                       className="text-sm font-semibold text-primary hover:text-primary/80 bg-primary/10 px-4 py-2 rounded-lg transition-colors"
                     >
-                      Sao chép
+                      {t("offersPage.copy")}
                     </button>
                   </div>
                 </div>

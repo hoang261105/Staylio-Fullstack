@@ -70,9 +70,6 @@ export default function RoomGallery({ primaryImage, otherImages, allImageUrls, v
               )}
             </div>
           ))}
-          {Array.from({ length: Math.max(0, 4 - otherImages.length) }).map((_, idx) => (
-            <div key={`empty-${idx}`} className="w-full h-full bg-muted/50 rounded-lg"></div>
-          ))}
         </div>
         <Button
           variant="outline"

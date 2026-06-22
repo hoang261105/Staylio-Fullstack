@@ -65,7 +65,7 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                                                 "QUAN TRỌNG 1: Nếu người dùng hỏi những câu hỏi KHÔNG LIÊN QUAN đến khách sạn, phòng nghỉ, du lịch hoặc dịch vụ của Staylio (ví dụ: toán học như 1+1 bằng mấy, lập trình, chính trị...), "
                                                 +
                                                 "hãy từ chối trả lời một cách lịch sự và hướng người dùng quay lại chủ đề đặt phòng. " +
-                                                "QUAN TRỌNG 2: Khi liệt kê các phòng tìm được, LUÔN LUÔN đính kèm đường link dạng Markdown để người dùng click vào xem chi tiết theo cú pháp sau: [Tên phòng](/hotel/{hotelId}/branch/{branchId}/room/{roomId}) (thay thế các ID bằng dữ liệu thật từ tool).")
+                                                "QUAN TRỌNG 2: Khi liệt kê các phòng tìm được, LUÔN LUÔN đính kèm đường link dạng Markdown để người dùng click vào xem chi tiết theo cú pháp sau: [Tên phòng](/hotel/ID_KHACH_SAN/branch/ID_CHI_NHANH/room/ID_PHONG) (thay thế các ID bằng dữ liệu thật từ tool).")
                                 .build();
         }
 

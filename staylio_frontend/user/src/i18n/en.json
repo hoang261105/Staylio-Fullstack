@@ -464,5 +464,20 @@
       "anniversary": "Anniversary / Honeymoon",
       "business": "Business"
     }
+  },
+  "offersPage": {
+    "title": "Discount Codes & Offers",
+    "subtitle": "Discover exclusive offers just for you at Staylio",
+    "noOffersTitle": "No offers available yet",
+    "noOffersDesc": "Please come back later for the latest promotions.",
+    "discountPercentage": "{{value}}% Off",
+    "discountFixed": "{{value}} Off",
+    "noDescription": "No detailed description.",
+    "scope": "Scope:",
+    "allBranches": "All branches",
+    "minOrder": "Min order:",
+    "code": "Code:",
+    "copy": "Copy",
+    "copied": "Copied discount code: {{code}}"
   }
 }
